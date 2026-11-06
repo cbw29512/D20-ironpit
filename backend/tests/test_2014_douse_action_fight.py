@@ -62,7 +62,7 @@ def test_self_douse_uses_action_and_prevents_turn_end_damage():
             6, 2, burned, scene, FixedDiceProvider([4]),
         )
         assert after == [] and sequence == 6 and burned.state.current_hp == before
-        with pytest.raises(ValueError, match="Target has no"):
+        with pytest.raises(ValueError, match="Helper dousing"):
             resolve_douse_action(7, 2, helper, burned)
     except Exception:
         logger.exception("Self-douse turn lifecycle failed")
