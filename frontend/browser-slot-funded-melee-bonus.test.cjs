@@ -58,7 +58,7 @@ const caster = { combatant_id: "caster", side: "heroes", state };
 const enemy = {
   combatant_id: "target", side: "monsters",
   state: { template: { name: "Target", max_hp: 100 }, current_hp: 100,
-    temporary_hp: 0, active_modifiers: [], timed_effects: [] },
+    temporary_hp: 0, active_modifiers: [], timed_effects: [], active_effect_ids: [] },
 };
 const setup = { heroes: [caster], monsters: [enemy] };
 
