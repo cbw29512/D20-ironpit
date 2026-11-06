@@ -103,6 +103,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row["resourceCost"] = attack.resource_cost
         if attack.unavailable_reason is not None:
             row["unavailableReason"] = attack.unavailable_reason
+        if attack.target_max_size is not None:
+            row["targetMaxSize"] = attack.target_max_size.value
         if attack.fixed_damage is not None:
             row["fixedDamage"] = attack.fixed_damage
         if attack.rage_eligible:
