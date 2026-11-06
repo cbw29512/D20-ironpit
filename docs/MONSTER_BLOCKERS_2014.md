@@ -13,7 +13,7 @@ Blocker categories overlap: a monster may require several fixes.
 | `source:trait` | 50 |
 | `mechanic:spellcasting` | 33 |
 | `source:extra-action` | 28 |
-| `attack:incomplete` | 14 |
+| `attack:incomplete` | 13 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
 | `mechanic:recharge` | 6 |
@@ -47,7 +47,7 @@ the underlying ability is already implemented or trivial.
 | Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Spellcasting |
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
 | Balor | attack:incomplete, source:trait | Fire Aura |
-| Chuul | attack:incomplete, multiattack:complex, source:extra-action | — |
+| Chuul | multiattack:complex, source:extra-action | — |
 | Cloaker | attack:incomplete, source:extra-action, source:trait | Damage Transfer, Light Sensitivity |
 | Cloud Giant | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Couatl | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |

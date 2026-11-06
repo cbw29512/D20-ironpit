@@ -1,17 +1,24 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Will-o'-Wisp — generic zero-HP Bonus Action finisher + Invisible exit (PR #1177, certification pending)
+## Chuul Pincer — shared inline grapple capacity (PR #1179; exact-head CI pending)
+
+- **2014 source:** Pincer +6 melee at 10 ft., 2d6+4 Bludgeoning. On a hit, a Large-or-smaller creature is Grappled (escape DC 14) only while the attacker has fewer than two other creatures grappled. Both size and capacity come from the complete printed clause, not a creature-name handler.
+- **Wiring:** Existing universal `GrappleEffectDefinition` compiles the source-derived `max_target_size: large` and `max_active_grapples: 2` into Python/browser on-hit hit-control state. Ordinary damage, grapple release, cap exhaustion, fresh-fight reset and Huge-target rejection stay with the shared engine. Source cards stay immutable.
+- **Scope/status:** Generated branch report confirms Chuul's Pincer `attack:incomplete` obligation is removed (total category 14→13; 265/327 source-admitted remains unchanged); exact-head CI and merge are still pending. Its separate Tentacles conditional held-target save and conditional Multiattack remain blocked; do not declare Chuul fully playable yet. No equipment durability, new monster-specific resolver or production deployment.
+
+
+## Will-o'-Wisp — merged generic zero-HP Bonus Action finisher + Invisible exit (PR #1177, merge ab466988)
 
 - **Printed source:** Consume Life is a Bonus Action, one **visible living target at 0 HP within 5 feet**, DC 10 Constitution save; failure causes terminal death, then if actual death occurred owner heals **3d6 HP**. No healing on success, prevented death, or invalid target. Target legality applies the same generic save range, visibility, saving throws, effects and instant-death prevention used elsewhere.
 - **Shared schema / Python / browser:** `requires_target_zero_hp_alive`, `instant_death_on_failed_save`, `heal_source_on_kill_dice_count/size` feed universal Bonus Action selection, saving-throw resolution, terminal death, conditional healing, and logs; the same generic Bonus Action save selector runs before and after a main Action so an attack that newly downs a target can trigger a still-available legal finisher; no creature-name runtime branches. Printed Invisibility is an Action/Concentration self-buff ending on an attack, use of declared `consume-life`, or concentration loss. The printed light becomes Invisible with its owner. Its independent equipment-only Ephemeral rule uses exact source proof and the locked no-gear rule.
-- **Full 2014 roster proof:** full clauses from all 327 immutable source cards, mutation rejection and renamed-card equivalence; independent browser and Python live save/HP/concentration/turn-economy tests. Generator-owned artifacts must be synchronized by workflow, not manually edited. Do not count as finished or source-admitted until exact-head gates pass, the PR merges, and generated status is refreshed; actual webpage fights remain separately unverified.
+- **Full 2014 roster proof:** full clauses from all 327 immutable source cards, mutation rejection and renamed-card equivalence; independent browser and Python live save/HP/concentration/turn-economy tests. Generator-owned artifacts must be synchronized by workflow, not manually edited. Five required workflows passed on the final head and PR #1177 merged as ab466988; generated 2014 source admission became 265/327. Independent manual webpage fights remain unverified.
 
 
-## Will-o'-Wisp Ephemeral — 2014 equipment-only source proof (staged)
+## Will-o'-Wisp Ephemeral — merged equipment-only source proof in PR #1177
 
 - **Semantics:** printed Ephemeral only says the creature cannot wear/carry items, with no combat state effect in the fixed-loadout arena. No equipment inventory/durability mechanics are added and no other Will-o'-Wisp rule is suppressed.
 - **Source proof:** one exact complete-clause verifier, including unheaded continuations, runs over all 327 immutable 2014 cards. The sole matching card is Will-o'-Wisp; renamed identical source is accepted, while changed source or appended damage/conditions fail closed. `Consume Life` and attack/`consume-life`-ending `Invisibility` are now source-bound separately in PR #1177; this historical Ephemeral-only isolation is superseded.
-- **Status:** historical equipment-only proof carried into current-main PR #1177 after #1175 merged. PR #1176 was closed as superseded. Final merge still requires all five exact-head workflow gates. No webpage battle or production Netlify publish.
+- **Status:** historical equipment-only proof carried into current-main PR #1177 after #1175 merged. PR #1176 was closed as superseded. All five exact-head workflow gates passed and PR #1177 merged. No manual webpage battle or production Netlify publish.
 
 
 ## Equipment corrosion/destruction universally omitted — 2026-11-05 user decision
@@ -263,7 +270,7 @@ Checked against main `72fe95258db3793c5aba4d86ba5487217c03da51`, including close
 | Bearded Devil | `attack:incomplete`, `source:trait` | Steadfast | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
 | Behir | `mechanic:recharge`, `source:extra-action` | — | Bind the card's recharge trigger/dice and resource to a universal Action or save effect. |
 | Bulette | `source:extra-action` | — | **Updated Chris rule 2026-10-19:** Deadly Leap is **opener only** when the Bulette wins round-one initiative (strictly ahead of every enemy). It replaces the first Bite Action, with no modeled jump/movement prerequisite and no use after that opening. If initiative is lost/tied, or in all subsequent turns, use ordinary Bite melee. Area: 2×2; each affected other creature (including allies, excluding the Bulette itself) chooses STR/DEX DC16; 3d6+4 Bludgeoning + 3d6+4 Slashing; half each on success, Prone on failure, no push. Preserve printed source text; reusable opening-only area/save primitives, never name dispatch. PR #966 pending final tests/merge. |
-| Chuul | `attack:incomplete`, `multiattack:complex`, `source:extra-action` | — | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Chuul | `multiattack:complex`, `source:extra-action` (Pincer `attack:incomplete` resolved on branch, pending CI) | — | Pincer now compiles its full source-owned +6/10-ft/2d6+4 hit, Large-or-smaller cap-two Grapple via existing Python/browser engine. Next wire Tentacles DC13 Constitution Poisoned+Paralyzed and conditional third Multiattack slot. |
 | Clay Golem | `mechanic:recharge`, `source:extra-action` | — | Bind the card's recharge trigger/dice and resource to a universal Action or save effect. |
 | Cloaker | `attack:incomplete`, `source:extra-action`, `source:trait` | Damage Transfer, Light Sensitivity | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
 | Cloud Giant | `mechanic:spellcasting`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |

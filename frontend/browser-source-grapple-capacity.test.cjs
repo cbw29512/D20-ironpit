@@ -12,6 +12,7 @@ const original = structuredClone(template);
 const weapon = structuredClone(template.attacks.find(a => a.controlEffect?.grappleEscapeDc));
 assert.ok(weapon);
 weapon.controlEffect.grappleMaxActiveGrapples = 2;
+weapon.controlEffect.maxTargetSize = "large";
 weapon.controlEffect.restrainsWhileGrappled = true;
 const member = (id, side) => ({
   combatant_id: id, side, position_ft: 5,
@@ -54,6 +55,25 @@ assert.deepEqual(
 targets[0].state.is_dead = true;
 G.cleanup(setup);
 assert.equal(G.sourceGrappleCount(setup, "source"), 2);
+
+// The same universal effect refuses too-large targets even when capacity
+// becomes available; ordinary attack damage still resolves normally.
+G.release(targets[1].state, "source");
+const hugeTemplate = structuredClone(template);
+hugeTemplate.size = "huge";
+const huge = {
+  combatant_id: "oversized", side: "heroes", position_ft: 5,
+  state: State.buildState(hugeTemplate),
+};
+setup.heroes.push(huge);
+const hugeBefore = huge.state.current_hp;
+const hugeHit = Attack.resolveAttack(3, 3, attacker, huge, weapon, 5, {
+  setup, spendAction: false, turnKey: "3:source",
+});
+assert.equal(hugeHit.hit, true);
+assert.ok(huge.state.current_hp < hugeBefore);
+assert.deepEqual(huge.state.grapple_sources, []);
+assert.equal(G.sourceGrappleCount(setup, "source"), 1);
 assert.deepEqual(template, original, "Immutable source combat template must stay unchanged.");
 assert.throws(() => G.sourceGrappleCount(null, "source"), /setup/);
 console.log("Universal limited-grapple source capacity browser attack regression passed.");
