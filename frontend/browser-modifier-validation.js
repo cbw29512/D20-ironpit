@@ -11,6 +11,10 @@
 
   function validate(item) {
     if (!item?.id || !item.source_id || !item.source_effect_id || !KINDS.has(item.kind)) throw new Error("Invalid combat modifier.");
+    if (item.required_weapon_attack_kind != null
+      && (item.kind !== "bonus-damage" || !["melee", "ranged"].includes(item.required_weapon_attack_kind))) {
+      throw new Error("Weapon-kind eligibility is only allowed on typed bonus damage.");
+    }
     const count = item.dice_count || 0, sides = item.dice_size || 0;
     if (DIE_KINDS.has(item.kind) ? count < 1 || sides < 2 : count || sides) throw new Error(`Invalid dice for ${item.kind}.`);
     if (item.kind === "armor-class-minimum") {
