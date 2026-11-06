@@ -78,6 +78,12 @@
       repeat_save_failure_condition_id: options.repeatSaveFailureConditionId || null,
       escape_check_ability: options.escapeCheckAbility || null,
       escape_check_dc: options.escapeCheckDc ?? null,
+      breakable_object: options.breakableObject ? {
+        armor_class: options.breakableObject.armorClass,
+        current_hp: options.breakableObject.hitPoints,
+        damage_vulnerabilities: [...options.breakableObject.damageVulnerabilities],
+        damage_immunities: [...options.breakableObject.damageImmunities],
+      } : null,
       ground_contact: Boolean(options.groundContact),
       ends_on_teleport: Boolean(options.endsOnTeleport || options.groundContact),
       source_effect_immunity_on_end: Boolean(options.sourceEffectImmunityOnEnd),
