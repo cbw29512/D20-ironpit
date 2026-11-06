@@ -1,7 +1,7 @@
 """Source-authorized action removal of a continuing timed-damage effect.
 
-No range is fabricated. AI chooses self or an ally; the reusable resolver
-accepts any legal combatant target authorized by the effect's source data.
+The source does not define how another creature targets the fire. Only
+self-dousing is resolved until helper geometry is source-proven.
 """
 from __future__ import annotations
 
@@ -30,19 +30,11 @@ def douseable_effects(target: EncounterCombatant):
 
 
 def choose_douse_target(actor: EncounterCombatant, setup: EncounterSetup):
-    """A deterministic ally-only AI choice; mechanics impose no invented range."""
+    """The affected creature may spend its own Action without a range assumption."""
     try:
         if not is_available(actor.state, "action"):
             return None
-        members = setup.heroes if actor.side == "heroes" else setup.monsters
-        ordered = [actor, *(member for member in members
-                             if member.combatant_id != actor.combatant_id)]
-        return next(
-            (target for target in ordered
-             if target.state.is_alive and not target.state.is_dead
-             and douseable_effects(target)),
-            None,
-        )
+        return actor if actor.state.is_alive and not actor.state.is_dead and douseable_effects(actor) else None
     except Exception:
         logger.exception("Douse target selection failed for %s", actor.combatant_id)
         raise
@@ -54,6 +46,8 @@ def resolve_douse_action(
 ) -> BattleEvent:
     """Spend one Action and remove only the approved recurring fire effect."""
     try:
+        if actor.combatant_id != target.combatant_id:
+            raise ValueError("Helper dousing requires an unspecified target range.")
         effects = douseable_effects(target)
         if not effects or not target.state.is_alive or target.state.is_dead:
             raise ValueError("Target has no source-authorized douseable effect.")
