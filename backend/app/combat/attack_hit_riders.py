@@ -11,6 +11,7 @@ from app.combat.melee_hit_retaliation import apply_melee_hit_retaliation
 from app.combat.melee_hit_save_retaliation import apply_melee_hit_save_retaliation
 from app.combat.on_hit_condition_save import resolve_on_hit_condition_save
 from app.combat.on_hit_ongoing_hp_loss import resolve_on_hit_ongoing_hp_loss
+from app.combat.on_hit_recurring_damage import apply_on_hit_recurring_damage
 from app.combat.on_hit_contested_movement import resolve_on_hit_contested_movement
 from app.combat.on_hit_maximum_hp_save import resolve_on_hit_maximum_hp_save
 from app.combat.post_hit_spell_riders import resolve_paid_post_hit_spell_riders
@@ -97,6 +98,11 @@ def resolve_attack_hit_riders(
             defender, attack, dice, source_id=attacker_event_id,
             round_number=round_number,
         )
+    recurring = apply_on_hit_recurring_damage(
+        defender, attack, source_id=attacker_event_id,
+    )
+    if recurring and recurring not in result.applied_conditions:
+        result.applied_conditions.append(recurring)
     damage_taken = sum(
         component.applied_total or 0 for component in result.damage_components
     )
