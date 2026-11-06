@@ -52,7 +52,7 @@ def source_invisibility_action_2014(monster: SourceMonster2014) -> list[TimedSel
         named = match or light_match
         named_action = named.group("action")
         action_ids = (
-            [re.sub(r"\\s+", "-", named_action.strip().casefold())]
+            [re.sub(r"\s+", "-", named_action.strip().casefold())]
             if named_action else []
         )
         return [TimedSelfBuffAction(
