@@ -863,10 +863,28 @@ modifiers ([approved decision #818](https://github.com/cbw29512/D20-ironpit/issu
 Its **Rust Metal** trait is also arena-neutral: retain the complete source text
 without equipment corrosion, destruction or weapon penalties
 ([approved decision #819](https://github.com/cbw29512/D20-ironpit/issues/819)).
-These are individually source-proven policies. They do not apply to Gray Ooze's
-separately approved fight-only Corrode Metal mechanic (#784), nor do they decide
-the Rust Monster's independent Antennae Action. Unknown or changed source effects
-remain blocked. No original card or equipment record is mutated.
+### Equipment durability exclusion — approved 2026-11-05 (2014 and 2024)
+
+The arena never tracks equipment corrosion, rusting, wear, cumulative weapon-damage
+penalties, item AC deterioration, ammunition destruction, weapon destruction,
+shield destruction, or gear repair. **All** equipment-only clauses are arena-neutral,
+not just Rust Metal. This explicitly supersedes the prior fight-only Gray Ooze
+Corrode Metal decision (#784) and the outstanding Rust Monster Antennae policy
+question. An Action exclusively targeting metal objects, including Rust Monster
+Antennae, has no selectable fight action or target and cannot mutate equipment.
+
+A creature hit still takes **every printed, non-equipment** effect. For example,
+Gray Ooze Pseudopod still performs one +3 melee attack and inflicts 1d6+1
+Bludgeoning plus 2d6 Acid on a hit; the appended permanent armor AC penalty is
+omitted. Black Pudding's Acid damage and Corrosive Form contact retaliation
+likewise remain combat-active. Rust Monster Bite still deals Piercing damage.
+
+The original source and card text are preserved. Source-only full-clause proofs
+can classify a known gear-only effect as nonactionable; unknown or changed printed
+creature damage, saves, debuffs or conditions must still block admission. Generic
+corrosion helpers may exist but remain unbound to combat; no original card or
+fight-local equipment state is mutated by equipment corrosion. Apply the same
+product policy to 2024 sources only after independent 2024 source verification.
 
 ## 26. Homebrew target architecture
 
