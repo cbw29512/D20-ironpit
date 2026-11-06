@@ -30,7 +30,7 @@ def test_source_inline_grapple_compiles_and_enforces_two_large_or_smaller():
         assert weapon.control_effect.max_target_size == CreatureSize.LARGE
         assert not weapon.control_effect.restrains_while_grappled
         assert weapon.weapon.reach_ft == 10
-        assert weapon.weapon.attack_bonus == 6
+        assert weapon.attack_bonus == 6
         assert weapon.weapon.damage_type.value == "bludgeoning"
 
         def member(identifier, side, size=CreatureSize.MEDIUM):
