@@ -25,6 +25,11 @@ def legal_save_action(
 ) -> bool:
     try:
         template = target.state.template
+        if action.requires_target_zero_hp_alive and not (
+            target.state.current_hp == 0 and target.state.is_alive
+            and not target.state.is_dead
+        ):
+            return False
         if source_id and has_source_effect_immunity(target.state, action.id, source_id):
             return False
         if (
