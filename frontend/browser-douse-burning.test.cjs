@@ -45,7 +45,7 @@ try {
     assert.equal(victim.state.active_effect_ids.includes("burning"), false);
     assert.equal(End.resolve(2, 1, victim, setup).events.length, 0);
     assert.equal(victim.state.current_hp, oldHp);
-    assert.throws(() => D.resolve(3, 1, helper, victim), /no source-authorized/);
+    assert.throws(() => D.resolve(3, 1, helper, victim), /Helper dousing/);
   }
   {
     const { victim, helper, setup } = scene();
