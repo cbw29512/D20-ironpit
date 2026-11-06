@@ -7,9 +7,39 @@ from __future__ import annotations
 
 import logging
 from app.combat.timed_condition_lifecycle import remove_effect_group
-from app.domain.models import CombatantState, TimedEffect
+from app.combat.condition_immunity import condition_is_immune
+from app.domain.models import CombatantState, TimedEffect, WeaponAttack, WeaponAttackKind
 
 logger = logging.getLogger(__name__)
+
+
+def prefer_fresh_limited_breakable_control(
+    attacker: CombatantState, target: CombatantState, attack: WeaponAttack,
+) -> bool:
+    """Spend a printed finite control attack on a target not already affected.
+
+    This is universal policy for zero-damage ranged breakable restraints, not
+    a source-name or creature-name resolver. Actual targeting and resource
+    checks remain in the normal attack-choice and hit engines.
+    """
+    try:
+        control = attack.control_effect
+        if (
+            attack.weapon.attack_kind is not WeaponAttackKind.RANGED
+            or attack.resource_id is None or attack.fixed_damage != 0
+            or attack.on_hit_damage or attack.on_hit_save_damage
+            or attack.on_hit_condition_save or attack.conditional_damage
+            or control is None or control.breakable_object is None
+            or not control.condition_id
+        ):
+            return False
+        return (
+            control.condition_id not in target.active_effect_ids
+            and not condition_is_immune(target, control.condition_id, attacker.template)
+        )
+    except Exception:
+        logger.exception("Breakable-control attack policy failed for %s.", attack.id)
+        raise
 
 
 def damage_breakable_condition_object(
