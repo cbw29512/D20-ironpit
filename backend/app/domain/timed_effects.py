@@ -12,6 +12,7 @@ from app.domain.delayed_effect_transition import DelayedTimedEffectTransition
 from app.domain.movement import MovementModeGrant
 from app.domain.saving_throw_context import SavingThrowContext
 from app.domain.timed_control_limits import TimedControlLimits
+from app.domain.breakable_restraints import BreakableObjectState
 
 logger = logging.getLogger(__name__)
 
@@ -90,6 +91,7 @@ class TimedEffect(BaseModel):
     repeat_save_failure_condition_id: str | None = None
     escape_check_ability: AbilityName | None = None
     escape_check_dc: int | None = Field(default=None, ge=1, le=40)
+    breakable_object: BreakableObjectState | None = None
     ground_contact: bool = False
     ends_on_teleport: bool = False
     source_effect_immunity_on_end: bool = False
