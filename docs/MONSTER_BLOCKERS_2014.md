@@ -104,4 +104,4 @@ the underlying ability is already implemented or trivial.
 | Vampire | attack:incomplete, mechanic:legendary, source:extra-action, source:legendary, source:trait | Shapechanger, Misty Escape, Vampire Weaknesses |
 | Vampire Spawn | attack:incomplete, source:trait | Vampire Weaknesses |
 | Water Elemental | mechanic:recharge, source:extra-action, source:trait | Water Form, Freeze |
-| Will-o'-Wisp | source:extra-action, source:trait | Consume Life, Ephemeral, Variable Illumination |
+| Will-o'-Wisp | source:extra-action, source:trait | Consume Life, Ephemeral |
