@@ -33,6 +33,13 @@ _GRAPPLES = (
     (re.compile(r"\. If the target is Medium or smaller, it is grappled "
                 r"\(escape DC (?P<dc>\d+)\) and restrained until the grapple ends\."), True, "medium"),
 )
+_INLINE_CAPACITY = re.compile(
+    r"\. The target is grappled \(escape DC (?P<dc>\d+)\) if it is a "
+    r"(?P<size>Small|Medium|Large) or smaller creature and the "
+    r"(?P<owner>[a-z][a-z '\-]*) doesn't have (?P<count>two|ten) "
+    r"other creatures grappled\.",
+    re.IGNORECASE,
+)
 _COUNTS = {"two": 2, "ten": 10}
 
 
@@ -63,6 +70,29 @@ def source_completed_limited_grapple_2014(
                     damage.bonus, damage.type)):
             return attack
         tail = hit["tail"]
+        # Some creatures print the target-size and grapple-count limit in
+        # the same hit rider rather than a separate appendage sentence.
+        inline = _INLINE_CAPACITY.fullmatch(tail)
+        if inline is not None:
+            control = attack.control_effect
+            if (attack.on_hit_damage
+                    or set(control) - {
+                        "grapple_escape_dc", "max_target_size",
+                        "restrains_while_grappled",
+                    }
+                    or control.get("restrains_while_grappled")
+                    or int(inline["dc"]) != control.get("grapple_escape_dc")
+                    or control.get("max_target_size") not in (
+                        None, inline["size"].lower()
+                    )):
+                return attack
+            return attack.model_copy(update={
+                "source_complete": True,
+                "control_effect": {
+                    **control, "max_target_size": inline["size"].lower(),
+                    "max_active_grapples": _COUNTS[inline["count"].lower()],
+                },
+            })
         extra = _EXTRA.fullmatch(tail)
         if extra is not None:
             expected = [{
