@@ -12,7 +12,7 @@ Blocker categories overlap: a monster may require several fixes.
 |---|---:|
 | `source:trait` | 53 |
 | `mechanic:spellcasting` | 33 |
-| `source:extra-action` | 30 |
+| `source:extra-action` | 29 |
 | `attack:incomplete` | 15 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
@@ -72,7 +72,7 @@ the underlying ability is already implemented or trivial.
 | Glabrezu | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Gray Ooze | attack:incomplete, source:trait | Corrode Metal |
 | Green Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
-| Guardian Naga | mechanic:spellcasting, source:extra-action, source:trait | Spellcasting |
+| Guardian Naga | mechanic:spellcasting, source:trait | Spellcasting |
 | Gynosphinx | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Ice Devil | mechanic:recharge, source:extra-action | — |
 | Ice Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
