@@ -163,6 +163,10 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         bound.update(bound_zero_hp_trait_names_2014(monster))
         if _MAGIC_WEAPONS in monster.trait_names:
             bound.add(_MAGIC_WEAPONS)
+        if "Spellcasting" in monster.trait_names and monster.spellcasting:
+            from app.content.monster_prepared_spells_2014 import supports_prepared_spellcasting_2014
+            if supports_prepared_spellcasting_2014(monster):
+                bound.add("Spellcasting")
         if _INNATE_SPELLCASTING in monster.trait_names:
             from app.content.monster_innate_support_2014 import supports_innate_spellcasting_2014
             if supports_innate_spellcasting_2014(monster):

@@ -1,5 +1,17 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Acolyte — low-level Cleric shared spell family (PR #1183, exact-head CI pending)
+
+- **Pinned 2014 source:** complete six-spell Spellcasting clause: Light, Sacred Flame, Thaumaturgy, Bless, Cure Wounds and Sanctuary; Wisdom spell DC 12, spell attack +4, three first-level slots. Only the utility Light/Thaumaturgy are arena-neutral.
+- **Reusable wiring:** four combat spells are built from the existing shared Cleric and Sanctuary constructors; ordinary spell-slot resources, save resolution, healing, Action/Bonus Action economy, buffs and concentration remain universal. Full source paragraph and typed spell list are verified without monster-name dispatch.
+- **Evidence:** source proof scans all 327 cards and rejects altered spell text/data and hidden riders; Python compiler and deterministic 1v1/3v3 browser tests were added to CI. Generator-owned artifacts must sync automatically; do not hand-edit the roster or blocker report.
+- **Provisional admission:** candidate 267/327 to 268/327 **only after five exact-head workflows pass and PR merges**. Independently verified live webpage fights remain outstanding. Existing stale Acolyte #1092 is not a merge source. Production Netlify locked.
+
+## Shield Guardian — merged and source-admitted (#1182)
+
+- Exact-final-head five required checks passed and PR #1182 squash merged as `d8063d9825577a10c41a81d73d3d94073c133459`.
+- Source-complete Bound, Spell Storing and Shield reaction require an absent amulet wearer, so are strictly arena-neutral; Fist, Multiattack, Regeneration and defenses remain combat-active. Verified generated main admission 267/327 with 60 remaining blocked; actual manual webpage-fight certification is separate.
+
 ## Shield Guardian — amulet-wearer-only source clauses (fresh PR pending)
 
 - **Scope:** source-complete 2014 Bound, Spell Storing and Shield reaction require an external wearer of the guardian's control amulet. The standard Pit has no such wearer/amulet action surface; these printed clauses remain visible but are strictly proven arena-neutral. The creature's ordinary Fist, Multiattack, Regeneration and defenses remain combat-active through existing shared primitives.
