@@ -69,7 +69,7 @@ def test_actual_attack_hit_burns_once_and_end_turn_takes_typed_damage() -> None:
         assert "Touch" in events[0].description
         remove_effect_instance(defender, effect)
         events, _ = resolve_end_turn_recurring_damage(
-            3, 2, member, setup, FixedDiceProvider([]),
+            3, 2, member, setup, FixedDiceProvider([1]),
         )
         assert events == []
     except Exception:
@@ -84,7 +84,7 @@ def test_attack_miss_creates_no_recurring_effect() -> None:
         defender = build_combatant_state(build_demo_fighter())
         old_hp = defender.current_hp
         event = resolve_attack(
-            1, 1, actor, defender, attack, 20, FixedDiceProvider([1]),
+            1, 1, actor, defender, attack, 5, FixedDiceProvider([1]),
             affected_states=[actor, defender],
         )
         assert not event.hit and defender.current_hp == old_hp
