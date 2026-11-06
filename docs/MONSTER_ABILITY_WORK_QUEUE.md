@@ -1,5 +1,12 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Chuul Pincer — shared inline grapple capacity (PR pending exact-head CI)
+
+- **2014 source:** Pincer +6 melee at 10 ft., 2d6+4 Bludgeoning. On a hit, a Large-or-smaller creature is Grappled (escape DC 14) only while the attacker has fewer than two other creatures grappled. Both size and capacity come from the complete printed clause, not a creature-name handler.
+- **Wiring:** Existing universal `GrappleEffectDefinition` compiles the source-derived `max_target_size: large` and `max_active_grapples: 2` into Python/browser on-hit hit-control state. Ordinary damage, grapple release, cap exhaustion, fresh-fight reset and Huge-target rejection stay with the shared engine. Source cards stay immutable.
+- **Scope/status:** This clears only Chuul's Pincer `attack:incomplete` obligation if generated classification and exact-head CI agree. Its separate Tentacles conditional held-target save and conditional Multiattack remain blocked; do not declare Chuul fully playable yet. No equipment durability, new monster-specific resolver or production deployment.
+
+
 ## Will-o'-Wisp — generic zero-HP Bonus Action finisher + Invisible exit (PR #1177, certification pending)
 
 - **Printed source:** Consume Life is a Bonus Action, one **visible living target at 0 HP within 5 feet**, DC 10 Constitution save; failure causes terminal death, then if actual death occurred owner heals **3d6 HP**. No healing on success, prevented death, or invalid target. Target legality applies the same generic save range, visibility, saving throws, effects and instant-death prevention used elsewhere.
@@ -263,7 +270,7 @@ Checked against main `72fe95258db3793c5aba4d86ba5487217c03da51`, including close
 | Bearded Devil | `attack:incomplete`, `source:trait` | Steadfast | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
 | Behir | `mechanic:recharge`, `source:extra-action` | — | Bind the card's recharge trigger/dice and resource to a universal Action or save effect. |
 | Bulette | `source:extra-action` | — | **Updated Chris rule 2026-10-19:** Deadly Leap is **opener only** when the Bulette wins round-one initiative (strictly ahead of every enemy). It replaces the first Bite Action, with no modeled jump/movement prerequisite and no use after that opening. If initiative is lost/tied, or in all subsequent turns, use ordinary Bite melee. Area: 2×2; each affected other creature (including allies, excluding the Bulette itself) chooses STR/DEX DC16; 3d6+4 Bludgeoning + 3d6+4 Slashing; half each on success, Prone on failure, no push. Preserve printed source text; reusable opening-only area/save primitives, never name dispatch. PR #966 pending final tests/merge. |
-| Chuul | `attack:incomplete`, `multiattack:complex`, `source:extra-action` | — | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
+| Chuul | `multiattack:complex`, `source:extra-action` (Pincer `attack:incomplete` resolved on branch, pending CI) | — | Pincer now compiles its full source-owned +6/10-ft/2d6+4 hit, Large-or-smaller cap-two Grapple via existing Python/browser engine. Next wire Tentacles DC13 Constitution Poisoned+Paralyzed and conditional third Multiattack slot. |
 | Clay Golem | `mechanic:recharge`, `source:extra-action` | — | Bind the card's recharge trigger/dice and resource to a universal Action or save effect. |
 | Cloaker | `attack:incomplete`, `source:extra-action`, `source:trait` | Damage Transfer, Light Sensitivity | Validate/correct source attack's omitted damage or rider and compile it with existing attack effect primitives. |
 | Cloud Giant | `mechanic:spellcasting`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
