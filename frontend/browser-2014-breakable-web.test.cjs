@@ -39,6 +39,7 @@ try {
     assert.equal(web.controlEffect.conditionId, "restrained");
     assert.equal(web.controlEffect.escapeCheckDc, expected.dc);
     assert.equal(web.controlEffect.maxTargetSize || null, expected.size);
+    assert.equal(web.targetMaxSize || null, expected.size);
     assert.equal(web.controlEffect.breakableObject.hitPoints, 5);
 
     const source = { combatant_id: "source", side: "monsters", position_ft: 0,
@@ -47,6 +48,13 @@ try {
       state: State.buildState(structuredClone(hero)) };
     const setup = { heroes: [target], monsters: [source], ruleset: "2014" };
     State.beginTurn(source.state);
+    if (expected.size) {
+      const huge = { ...target, state: State.buildState({ ...structuredClone(hero), size: "huge" }) };
+      const hugeSetup = { heroes: [huge], monsters: [source], ruleset: "2014" };
+      assert.equal(window.IRON_PIT_BROWSER_FORMATION.targetAllowed(source, huge, web, hugeSetup), false);
+      assert.throws(() => Attack.resolveAttack(0, 1, source, huge, web, 25, { setup: hugeSetup }), /cannot target/);
+      assert.equal(source.state.resources.web, 1, "Illegal oversized targets spend no Web charge");
+    }
     window.IRON_PIT_DICE = dice(1);
     const missed = Attack.resolveAttack(1, 1, source, target, web, 25, { setup });
     assert.equal(missed.hit, false, "natural 1 must miss");
