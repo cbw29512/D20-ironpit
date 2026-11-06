@@ -69,6 +69,8 @@ try {
     window.IRON_PIT_DICE = dice(18);
     const result = Attack.resolveAttack(2, 1, attacker, victim, web, 25, { setup: battle });
     assert.equal(result.hit, true);
+    assert.match(result.description, /is Restrained\./);
+    assert.doesNotMatch(result.description, /Restrained while Grappled/);
     const object = victim.state.timed_effects.find(e => e.effect_id === "restrained");
     assert.ok(object, "successful ranged hit creates canonical Restrained");
     assert.equal(object.escape_check_dc, expected.dc);
