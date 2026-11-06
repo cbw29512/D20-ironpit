@@ -87,6 +87,7 @@ jobs:
         run: |
           python scripts/check_documentation_authority.py
           PYTHONPATH=. pytest -q scripts/test_check_documentation_authority.py
+          PYTHONPATH=. pytest -q scripts/test_browser_attack_action_slots.py
       - name: Validate Chain grapple Python contract
         run: |
           pytest -q backend/tests/test_2014_chain_devil_grapple_periodic.py
