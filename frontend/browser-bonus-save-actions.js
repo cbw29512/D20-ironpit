@@ -37,7 +37,7 @@
           }
           continue;
         }
-        const candidates = action.requiresTargetZeroHpAlive
+        const eligibleTargets = action.requiresTargetZeroHpAlive
           ? [...setup.heroes, ...setup.monsters]
             .filter((target) => target.combatant_id !== member.combatant_id
               && (action.targetScope === "all-other-creatures" || target.side !== member.side)
@@ -46,7 +46,7 @@
               || F().saveDistance(member, left, action.range) - F().saveDistance(member, right, action.range)
               || left.combatant_id.localeCompare(right.combatant_id))
           : F().targetOrder(member, setup);
-        for (const target of candidates) {
+        for (const target of eligibleTargets) {
           const distance = F().saveDistance(member, target, action.range);
           if (V().legalAction(action, target, distance, member.combatant_id, member)) {
             candidates.push({ action, placement: null, target, distance });
