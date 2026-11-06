@@ -30,7 +30,7 @@ def _encounter():
         )
         wisp.state.current_hp = 8
         victim = EncounterCombatant(
-            combatant_id="victim", side="heroes", position_ft=20,
+            combatant_id="victim", side="heroes", position_ft=5,
             state=build_combatant_state(build_commoner().model_copy(update={"ruleset": "2014", "kind": "character"})),
         )
         victim.state.current_hp = 0
@@ -42,7 +42,7 @@ def _encounter():
             monster_total_cr="2", ruleset="2014",
         )
         action = next(a for a in wisp.state.template.saving_throw_actions if a.id == "consume-life")
-        assert action.range_ft == 20
+        assert action.range_ft == 5
         invis = next(a for a in wisp.state.template.timed_self_buff_actions if a.id == "invisibility")
         return wisp, victim, setup, action, invis
     except Exception:
@@ -60,7 +60,7 @@ def test_failed_save_kills_and_heals_only_after_terminal_death():
         assert chosen is not None and chosen[0].id == "consume-life"
         assert chosen[2].combatant_id == victim.combatant_id
         event = resolve_save_action(
-            2, 1, actor, victim, action, 20,
+            2, 1, actor, victim, action, 5,
             FixedDiceProvider([1, 2, 3, 4]), affected_states=states, setup=setup,
         )
         assert event.feature_id == "consume-life" and event.save_succeeded is False
@@ -83,7 +83,7 @@ def test_successful_save_causes_no_death_or_healing_but_breaks_invisibility():
         states = [actor.state, victim.state]
         resolve_timed_self_buff(1, 1, actor, invis, spend_action_cost=False, affected_states=states)
         result = resolve_save_action(
-            2, 1, actor, victim, action, 20,
+            2, 1, actor, victim, action, 5,
             FixedDiceProvider([20]), affected_states=states, setup=setup,
         )
         assert result.save_succeeded
@@ -110,10 +110,10 @@ def test_dead_or_positive_hp_target_never_qualifies():
         assert choose_bonus_save_action(actor, setup) is None
         victim.state.is_dead = False
         victim.state.is_alive = True
-        assert legal_save_action(action, victim, 20, actor=actor, source_id=actor.combatant_id)
-        assert not legal_save_action(action, victim, 25, actor=actor, source_id=actor.combatant_id)
+        assert legal_save_action(action, victim, 5, actor=actor, source_id=actor.combatant_id)
+        assert not legal_save_action(action, victim, 10, actor=actor, source_id=actor.combatant_id)
         with pytest.raises(ValueError):
-            resolve_save_action(1, 1, actor, victim, action, 25, FixedDiceProvider([1]), setup=setup)
+            resolve_save_action(1, 1, actor, victim, action, 10, FixedDiceProvider([1]), setup=setup)
     except Exception:
         logger.exception("Zero-HP finisher target legality failed.")
         raise
