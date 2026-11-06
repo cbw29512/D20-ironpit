@@ -118,3 +118,31 @@ def test_unknown_rider_and_source_identity_changes_fail_closed() -> None:
     except Exception:
         logger.exception("Ranged save-only source fail-closed regression failed.")
         raise
+
+def test_missed_ranged_attack_does_not_trigger_save_or_poison_damage() -> None:
+    """An on-hit save must not run if the attack itself misses AC."""
+    try:
+        source = next(
+            card for card in load_monster_source_2014() if card.id == "guardian-naga"
+        )
+        template = compile_combatant(adapt_monster_mechanics_2014(source))
+        attack = next(
+            item for item in template.alternate_weapon_attacks
+            if item.weapon.name == "Spit Poison"
+        )
+        attacker = build_combatant_state(template)
+        defender = build_combatant_state(build_demo_fighter())
+        initial_hp = defender.current_hp
+        # A natural 1 misses. Only one die is provided deliberately:
+        # attempting a poison save or damage roll would exhaust it.
+        event = resolve_attack(
+            1, 1, attacker, defender, attack, 15,
+            FixedDiceProvider([1]), affected_states=[attacker, defender],
+        )
+        assert event.event_type == "attack"
+        assert event.hit is False
+        assert defender.current_hp == initial_hp
+        assert attacker.action_available is False
+    except Exception:
+        logger.exception("Missed attack incorrectly triggered poison-save damage.")
+        raise
