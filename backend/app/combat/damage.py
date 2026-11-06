@@ -160,7 +160,7 @@ def resolve_weapon_damage(
             _append_bonus_component(
                 components, dice, rider_damage, critical=critical,
             )
-        for modifier in bonus_damage_modifiers(attacker, target_event_id):
+        for modifier in bonus_damage_modifiers(attacker, target_event_id, attack):
             components.append(roll_damage_component(
                 dice,
                 modifier.source_name or modifier.source_effect_id,
