@@ -22,6 +22,7 @@ def apply_on_hit_recurring_damage(target, attack, *, source_id: str) -> str | No
             effect_id=spec.effect_id, source_id=source_id,
             source_effect_id=attack.id, source_name=attack.weapon.name,
             ends_if_source_dead=spec.ends_if_source_dead,
+            allowed_removal_action_ids=list(spec.removal_action_ids),
             expires_at_start_of_source_turn=False,
             end_of_turn_dice_count=spec.dice_count,
             end_of_turn_dice_size=spec.dice_size,

@@ -3,6 +3,7 @@
 
   const H = () => window.IRON_PIT_BROWSER_HEALING;
   const C = () => window.IRON_PIT_BROWSER_CONDITION_REMOVAL;
+  const D = () => window.IRON_PIT_BROWSER_DOUSE_BURNING;
   const X = () => window.IRON_PIT_BROWSER_EFFECT_REMOVAL;
   const K = () => window.IRON_PIT_BROWSER_CLERIC_CHANNEL;
   const P = () => window.IRON_PIT_BROWSER_PALADIN_2014;
@@ -46,6 +47,8 @@
     if (removal) {
       events.push(C().resolve(sequence++, round, member, removal.target, removal.action, removal.conditions, turnKey));
     }
+    const douseTarget = D()?.choose(member, setup);
+    if (douseTarget) events.push(D().resolve(sequence++, round, member, douseTarget));
     bonusBefore = member.state.bonus_action_available;
     healing = H()?.chooseAction(member, setup, turnKey);
     // Protect ally rescue: only a competing self-heal yields to an emergency form.
