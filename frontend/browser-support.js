@@ -3,6 +3,7 @@
 
   const H = () => window.IRON_PIT_BROWSER_HEALING;
   const C = () => window.IRON_PIT_BROWSER_CONDITION_REMOVAL;
+  const D = () => window.IRON_PIT_BROWSER_DOUSE_BURNING;
   const X = () => window.IRON_PIT_BROWSER_EFFECT_REMOVAL;
   const K = () => window.IRON_PIT_BROWSER_CLERIC_CHANNEL;
   const P = () => window.IRON_PIT_BROWSER_PALADIN_2014;
