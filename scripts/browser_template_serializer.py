@@ -217,6 +217,17 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             if effect.cannot_regain_hit_points:
                 save_row["cannotRegainHitPoints"] = True
             row["onHitConditionSave"] = save_row
+        if attack.on_hit_recurring_damage is not None:
+            recurring = attack.on_hit_recurring_damage
+            row["onHitRecurringDamage"] = {
+                "effectId": recurring.effect_id,
+                "diceCount": recurring.dice_count,
+                "diceSize": recurring.dice_size,
+                "damageType": recurring.damage_type.value,
+                "tickTiming": recurring.tick_timing,
+                "stacking": recurring.stacking,
+                "endsIfSourceDead": recurring.ends_if_source_dead,
+            }
         if attack.on_hit_ongoing_hp_loss:
             effect = attack.on_hit_ongoing_hp_loss
             row["onHitOngoingHpLoss"] = {

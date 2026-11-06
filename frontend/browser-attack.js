@@ -145,6 +145,12 @@
       if (combined && (sharedSave.roll == null || sharedSave.succeeded == null)) throw new Error("Composite condition requires one resolved shared damage save.");
       const conditionAttack = combined ? { ...attack, onHitConditionSave: combined } : attack;
       hitSave = living ? window.IRON_PIT_BROWSER_SAVES?.resolveOnHitConditionSave(actualTarget, conditionAttack, attacker.state.template, round, extra.setup, attacker, sharedSave) || null : null;
+      if (living && attack.onHitRecurringDamage) {
+        const recurring = window.IRON_PIT_BROWSER_ON_HIT_RECURRING_DAMAGE;
+        if (!recurring?.applyOnHit) throw new Error("On-hit recurring damage runtime not loaded.");
+        const effectId = recurring.applyOnHit(actualTarget, attacker, attack);
+        if (effectId && !applied.includes(effectId)) applied.push(effectId);
+      }
       if (living && attack.onHitOngoingHpLoss)
         hitSave = window.IRON_PIT_BROWSER_ON_HIT_CONDITION_SAVE.resolveOngoingHpLoss(actualTarget, attack, attacker.state.template, round, extra.setup, attacker) || hitSave;
       for (const id of [hitSave?.appliedCondition, ...(hitSave?.additionalConditions || [])]) if (id && !applied.includes(id)) applied.push(id);
