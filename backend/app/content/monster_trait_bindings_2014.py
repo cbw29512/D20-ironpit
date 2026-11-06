@@ -26,6 +26,7 @@ from app.content.monster_opening_initiative_2014 import (
     opening_initiative_damage_source_2014,
 )
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
+from app.content.monster_source_zero_hp_finisher_2014 import source_proven_zero_hp_finisher_2014
 from app.content.monster_terminal_effects_2014 import bound_terminal_effect_trait_names_2014
 from app.content.monster_zero_hp_prevention_2014 import bound_zero_hp_trait_names_2014
 from app.domain.bonus_attacks import BonusAttackGrant
@@ -146,6 +147,7 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         if "Evasion" in monster.trait_names and progression_features_2014(monster).evasion:
             bound.add("Evasion")
         bound.update(bound_passive_trait_names_2014(monster))
+        bound.update(action.name for action in source_proven_zero_hp_finisher_2014(monster))
         bound.update(rule.source_name for rule in source_turn_grappler_damage_2014(monster))
         if bounded_blindsight_2014(monster) is not None:
             bound.add("Blind Senses")
