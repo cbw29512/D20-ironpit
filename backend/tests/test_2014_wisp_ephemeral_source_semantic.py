@@ -72,9 +72,6 @@ def test_unheaded_continuations_and_missing_trait_cannot_bypass_proof():
         source = _wisp()
         with_rider = source.model_copy(update={
             "source_traits": source.source_traits.replace(
-                "<strong>Variable Illumination.</strong>",
-                "<strong>Variable Illumination.</strong>",
-            ).replace(
                 "anything. </p>",
                 "anything.</p><p>The creature has resistance to fire damage.</p>",
             ),
