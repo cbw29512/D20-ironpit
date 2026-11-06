@@ -7,6 +7,9 @@ from app.domain.swallow_actions import swallow_action_from_source
 
 from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014, source_conditional_attack_advantage_2014
 from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
+from app.content.monster_source_breakable_restraint_2014 import source_recharge_breakable_restraint_2014
+from app.domain.breakable_restraints import BreakableObjectSpec
+from app.domain.capability_effects import ConditionEffectDefinition
 from app.content.monster_opening_initiative_2014 import opening_initiative_damage_source_2014
 from app.content.monster_attack_source_corrections_2014 import corrected_attack_range_2014
 from app.content.monster_berserk_2014 import berserk_self_buffs_2014
@@ -112,23 +115,41 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
     charge_source = corrected_charge_profile_2014(monster, attack)
     normal_range_ft, long_range_ft = corrected_attack_range_2014(monster, attack)
     recurring_damage = source_end_turn_recurring_damage_2014(monster, attack)
+    # Generic no-damage ranged hit -> condition -> escape/breakable object.
+    # The bludgeoning carrier type below is never used for a zero-damage hit;
+    # the source still contains no damage type, dice, or damage output.
+    breakable = source_recharge_breakable_restraint_2014(monster, attack)
+    if breakable is not None:
+        normalized = attack.model_copy(update={"resource_id": None, "breakable_restraint": None})
+        effects = basic_attack_effects_2014(normalized, opening_initiative_damage_source_2014(monster))
+        effects.append(ConditionEffectDefinition(
+            condition="restrained", max_target_size=breakable.max_target_size,
+            escape_check_ability="strength", escape_check_dc=breakable.escape_dc,
+            breakable_object=BreakableObjectSpec(
+                armor_class=breakable.object_ac, hit_points=breakable.object_hp,
+                damage_vulnerabilities=list(breakable.damage_vulnerabilities),
+                damage_immunities=list(breakable.damage_immunities),
+            ),
+        ))
+    else:
+        effects = basic_attack_effects_2014(attack, opening_initiative_damage_source_2014(monster))
     kwargs = {
         "id": attack_id_2014(monster, attack.id),
         "weapon_id": attack_id_2014(monster, attack.id),
         "name": attack.name,
         "attack_kind": attack.kind,
         "attack_bonus": printed_attack.attack_bonus,
-        "resource_id": attack.id if attack.id in attack_ammunition_2014(monster) else None,
+        "resource_id": attack.id if (attack.id in attack_ammunition_2014(monster) or breakable is not None) else None,
         "attack_ability": attack.attack_ability,
         "sneak_attack_eligible": sneak_attack_eligible_2014(monster, attack),
         "conditional_attack_advantage": [
             *conditional_attack_advantage_2014(monster, attack),
             *source_conditional_attack_advantage_2014(attack),
         ],
-        "damage_type": str(printed_attack.damage_type).lower(),
+        "damage_type": "bludgeoning" if breakable is not None else str(printed_attack.damage_type).lower(),
         "animation": "projectile" if attack.kind == "ranged" else "slash",
         "reach_ft": attack.reach_ft,
-        "effects": basic_attack_effects_2014(attack, opening_initiative_damage_source_2014(monster)),
+        "effects": effects,
         "charge_profile": charge_profile_2014(charge_source, monster_id=monster.id),
         "forbid_target_grappled_by_self": (attack.forbid_target_grappled_by_self and not supports_grapple_periodic_2014(attack)),
         "grapple_target_policy": attack.grapple_target_policy,
