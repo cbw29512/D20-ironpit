@@ -46,7 +46,8 @@ const action = {
   animation: "radiant-buff",
 };
 const state = {
-  template: { name: "Test Caster", ruleset: "2014", timed_self_buff_actions: [action] },
+  template: { name: "Test Caster", ruleset: "2014", traits: [], brutal_critical_dice: 0, timed_self_buff_actions: [action] },
+  feature_last_turn_keys: {},
   action_available: true, bonus_action_available: true,
   current_hp: 50, is_alive: true, is_dead: false,
   active_modifiers: [], timed_effects: [], active_effect_ids: [],
