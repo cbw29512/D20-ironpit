@@ -5935,13 +5935,6 @@
       {
         "demand_count": 1,
         "monsters": [
-          "Priest"
-        ],
-        "printed_name": "Divine Eminence"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
           "Duergar"
         ],
         "printed_name": "Duergar Resilience"

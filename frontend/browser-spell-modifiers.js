@@ -21,6 +21,7 @@
       flat_bonus: effect.flatBonus || 0,
       multiplier: effect.multiplier ?? 1,
       required_attack_ability: effect.requiredAttackAbility || null,
+      required_weapon_attack_kind: effect.requiredWeaponAttackKind || null,
       minimum_value: effect.minimumValue || 0,
       dice_count: effect.diceCount || 0,
       dice_size: effect.diceSize || 0,

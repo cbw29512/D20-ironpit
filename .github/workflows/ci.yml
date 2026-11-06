@@ -673,6 +673,7 @@ jobs:
           node frontend/browser-debuff-counters.test.cjs
           node frontend/browser-pit-engagement-flight-teleport.test.cjs
           node frontend/browser-bonus-damage-modifiers.test.cjs
+          node frontend/browser-slot-funded-melee-bonus.test.cjs
           node frontend/browser-damage-type-choice.test.cjs
           node frontend/browser-attack-action-weapon-buffs.test.cjs
           node frontend/browser-action-healing.test.cjs

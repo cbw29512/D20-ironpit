@@ -76,6 +76,7 @@ from app.content.monster_legendary_resistance_2014 import (
 )
 from app.content.movement_modes import standard_arena_closing_speed_from_modes
 from app.content.monster_regeneration_2014 import regeneration_trait_2014
+from app.content.monster_slot_melee_weapon_bonus_2014 import slot_melee_weapon_bonus_actions_2014
 from app.content.monster_recharge_self_buffs_2014 import (
     recharge_self_buff_actions_2014,
     recharge_self_buff_grants_2014,
@@ -237,7 +238,8 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *corrosive_form_retaliation_2014(monster),
             *condition_auras_from_source(monster.source_traits, "2014"),
             *contextual_save_defenses_2014(monster)[0], *leadership_actions_2014(monster),
-            *recharge_self_buff_actions_2014(monster)],
+            *recharge_self_buff_actions_2014(monster),
+            *slot_melee_weapon_bonus_actions_2014(monster)],
         healing_actions=healing_actions_2014(monster),
         condition_removal_actions=list(core.condition_removal_actions),
         terminal_effect_tags=terminal_effect_tags_2014(monster),

@@ -213,8 +213,14 @@ def apply_d20_bonus_dice(
     })
 
 
-def bonus_damage_modifiers(state: CombatantState, target_id: str | None) -> list[CombatModifier]:
+def bonus_damage_modifiers(
+    state: CombatantState, target_id: str | None, attack: WeaponAttack | None = None,
+) -> list[CombatModifier]:
     return [
         item for item in state.active_modifiers
-        if item.kind is ModifierKind.BONUS_DAMAGE and (item.target_id is None or item.target_id == target_id)
+        if item.kind is ModifierKind.BONUS_DAMAGE
+        and (item.target_id is None or item.target_id == target_id)
+        and (item.required_weapon_attack_kind is None or (
+            attack is not None and attack.weapon.attack_kind.value == item.required_weapon_attack_kind
+        ))
     ]

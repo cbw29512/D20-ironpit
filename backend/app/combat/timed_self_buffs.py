@@ -44,9 +44,9 @@ def resolve_timed_self_buff(
             raise ValueError(f"{action.name} is already active.")
         if setup is not None:
             from app.combat.suppression_zone_geometry import verbal_casting_blocked
-            if action.resource_id and action.resource_id.startswith("spell-slot-") and verbal_casting_blocked(member, setup):
+            if action.resource_id and action.resource_id.startswith("spell-slot-") and not action.expend_slot_without_cast and verbal_casting_blocked(member, setup):
                 raise ValueError(f"{action.name} cannot be cast inside a Silence effect.")
-        if turn_key and action.resource_id and action.resource_id.startswith("spell-slot-"):
+        if turn_key and action.resource_id and action.resource_id.startswith("spell-slot-") and not action.expend_slot_without_cast:
             from app.combat.spellcasting import mark_slot_spell_cast
             mark_slot_spell_cast(member.state, turn_key)
 

@@ -43,7 +43,7 @@ def _timed_choice(member: EncounterCombatant, setup: EncounterSetup) -> TimedSel
     try:
         choices: list[TimedSelfBuffAction] = []
         for action in member.state.template.timed_self_buff_actions:
-            if action.activation_timing != "action":
+            if action.activation_timing != "action" or not action.opening_eligible:
                 continue
             resource = timed_self_buff_resource(member, action)
             if timed_self_buff_active(member, action):
