@@ -32,5 +32,21 @@
       throw error;
     }
   }
-  window.IRON_PIT_BROWSER_BREAKABLE_CONDITION_OBJECT = { damage };
+  function preferFreshLimitedControl(attacker, target, attack) {
+    try {
+      const control = attack?.controlEffect;
+      if (attack?.kind !== "ranged" || !attack.resourceId || attack.fixedDamage !== 0
+          || (attack.onHitDamage || []).length || attack.onHitSaveDamage
+          || attack.onHitConditionSave || (attack.conditionalDamage || []).length
+          || !control?.conditionId || !control.breakableObject) return false;
+      const immunity = window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
+      if (!immunity?.immune) throw new Error("Shared condition immunity runtime is unavailable.");
+      return !(target.state.active_effect_ids || []).includes(control.conditionId)
+        && !immunity.immune(target.state, control.conditionId, attacker.state.template);
+    } catch (error) {
+      console.error("Breakable-control attack policy failed.", { attack: attack?.id, error });
+      throw error;
+    }
+  }
+  window.IRON_PIT_BROWSER_BREAKABLE_CONDITION_OBJECT = { damage, preferFreshLimitedControl };
 })();
