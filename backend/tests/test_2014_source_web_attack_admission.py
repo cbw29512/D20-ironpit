@@ -111,6 +111,25 @@ def test_breakable_web_condition_uses_fresh_state_and_existing_condition_cleanup
         assert effect.breakable_object.current_hp == 1
         assert damage_breakable_condition_object(target, effect, 20, 1, "piercing") == (1, True)
         assert "restrained" not in target.active_effect_ids
+        # A separate hit can be escaped by spending a normal Action.
+        from app.combat.ability_check_escape import resolve_escape_check, should_escape_check
+        from app.combat.dice import FixedDiceProvider
+        from app.domain.encounters import EncounterCombatant
+        trapped = build_combatant_state(template)
+        assert apply_timed_condition(
+            trapped, "restrained", "attacker", source_effect_id=web.id,
+            applied_round=1, expires_at_start_of_source_turn=False,
+            escape_check_ability="strength", escape_check_dc=control.escape_check_dc,
+            breakable_object=control.breakable_object,
+        ) == "restrained"
+        actor = EncounterCombatant(
+            combatant_id="trapped", side="heroes", position_ft=5, state=trapped,
+        )
+        assert should_escape_check(actor.state)
+        escape = resolve_escape_check(1, 1, actor, FixedDiceProvider([20]))
+        assert escape.check_succeeded
+        assert not trapped.action_available
+        assert "restrained" not in trapped.active_effect_ids
         fresh = build_combatant_state(template)
         assert not fresh.timed_effects and "restrained" not in fresh.active_effect_ids
     except Exception:
