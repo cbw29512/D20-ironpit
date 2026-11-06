@@ -1,7 +1,7 @@
 {
   "counts": {
-    "blocked": 5,
-    "bound": 141,
+    "blocked": 4,
+    "bound": 142,
     "not_applicable": 181
   },
   "form_qualified_heading_family": {
@@ -143,36 +143,6 @@
   },
   "source_monsters": 327,
   "unresolved": [
-    {
-      "monster": "chuul",
-      "printed_multiattack": "The chuul makes two pincer attacks. If the chuul is grappling a creature, the chuul can also use its tentacles once.",
-      "reasons": [
-        "multiattack:complex"
-      ],
-      "source_binding": {
-        "slots": [
-          {
-            "action_ids": [
-              "pincer"
-            ]
-          },
-          {
-            "action_ids": [
-              "pincer"
-            ]
-          },
-          {
-            "action_ids": [
-              "tentacles"
-            ],
-            "optional": true,
-            "requirement": "source_has_grappled_target"
-          }
-        ]
-      },
-      "source_policy": null,
-      "source_slots": []
-    },
     {
       "monster": "gibbering-mouther",
       "printed_multiattack": "The gibbering mouther makes one bite attack and, if it can, uses its Blinding Spittle.",
