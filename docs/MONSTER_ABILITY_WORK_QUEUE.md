@@ -1,5 +1,12 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Will-o'-Wisp — generic zero-HP Bonus Action finisher + Invisible exit (staged)
+
+- **Printed source:** Consume Life is a Bonus Action, one **visible living target at 0 HP within 5 feet**, DC 10 Constitution save; failure causes terminal death, then if actual death occurred owner heals **3d6 HP**. No healing on success, prevented death, or invalid target. Target legality applies the same generic save range, visibility, saving throws, effects and instant-death prevention used elsewhere.
+- **Shared schema / Python / browser:** `requires_target_zero_hp_alive`, `instant_death_on_failed_save`, `heal_source_on_kill_dice_count/size` feed universal Bonus Action selection, saving-throw resolution, terminal death, conditional healing, and logs; no creature-name runtime branches. Printed Invisibility is an Action/Concentration self-buff ending on an attack, use of declared `consume-life`, or concentration loss. The printed light becomes Invisible with its owner. Its independent equipment-only Ephemeral rule uses exact source proof and the locked no-gear rule.
+- **Full 2014 roster proof:** full clauses from all 327 immutable source cards, mutation rejection and renamed-card equivalence; independent browser and Python live save/HP/concentration/turn-economy tests. Generator-owned artifacts must be synchronized by workflow, not manually edited. Do not count as finished or source-admitted until exact-head gates pass, the PR merges, and generated status is refreshed; actual webpage fights remain separately unverified.
+
+
 ## Will-o'-Wisp Ephemeral — 2014 equipment-only source proof (staged)
 
 - **Semantics:** printed Ephemeral only says the creature cannot wear/carry items, with no combat state effect in the fixed-loadout arena. No equipment inventory/durability mechanics are added and no other Will-o'-Wisp rule is suppressed.
@@ -344,7 +351,7 @@ Checked against main `72fe95258db3793c5aba4d86ba5487217c03da51`, including close
 | Wererat | `multiattack:complex`, `source:extra-action`, `source:trait` | Shapechanger | Compile printed conditional Multiattack selection/slots into existing action sequence grammar. |
 | Weretiger | `multiattack:complex`, `source:extra-action`, `source:trait` | Shapechanger, Pounce (Tiger or Hybrid Form Only) | Compile printed conditional Multiattack selection/slots into existing action sequence grammar. |
 | Werewolf | `source:extra-action`, `source:trait` | Shapechanger | Compile printed Action into universal attack/save/AoE/control/resource action; verify AI selection and turn timing. |
-| Will-o'-Wisp | `source:extra-action`, `source:trait` | Consume Life, Ephemeral | Full-clause Variable Illumination classified lighting-only under standard Pit rules, with mutation tests. Consume Life, Ephemeral and Invisibility action remain independently blocked; verify their combat effects separately. |
+| Will-o'-Wisp | `source:extra-action`, `source:trait` (expected cleared after certification) | Consume Life, Ephemeral | Consume Life shared living-zero-HP Bonus Action save/death/3d6 heal and Invisibility Action/Concentration/name-exit are code-bound on current active branch. Ephemeral strictly source-proven as equipment-only; Variable Illumination already lighting-only. Await generator sync, exact-head Python/browser CI and merge; no webpage-tested claim. |
 
 ### Shared blocker-family fix reference (applies across rows)
 
