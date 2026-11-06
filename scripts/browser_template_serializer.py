@@ -320,6 +320,12 @@ def _save(action: Any) -> dict[str, Any]:
         row["prohibitedEnvironmentContextId"] = action.prohibited_environment_context_id
     if action.failure_sets_zero_hp:
         row["failureSetsZeroHp"] = True
+    if action.requires_target_zero_hp_alive:
+        row["requiresTargetZeroHpAlive"] = True
+    if action.instant_death_on_failed_save:
+        row["instantDeathOnFailedSave"] = True
+        row["healSourceOnKillDiceCount"] = action.heal_source_on_kill_dice_count
+        row["healSourceOnKillDiceSize"] = action.heal_source_on_kill_dice_size
     if action.damage_only_on_success:
         row["damageOnlyOnSuccess"] = True
     if action.target_scope != "enemies":
