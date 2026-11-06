@@ -66,9 +66,9 @@ def test_source_inline_grapple_compiles_and_enforces_two_large_or_smaller():
         ) == ["grappled"]
         assert source_grapple_count(setup, "holder") == 2
         assert card.model_dump_json() == before
-        # Pincer alone is wired; Tentacles and Multiattack remain blocked.
-        assert "attack:incomplete" not in basic_blockers_2014(card)
-        assert "source:extra-action" in basic_blockers_2014(card)
+        # The independent Tentacles + conditional Multiattack family is now
+        # source-bound; no 2014 Chuul combat blocker may remain.
+        assert basic_blockers_2014(card) == ()
     except Exception:
         logger.exception("2014 inline limited-grapple Python integration failed")
         raise
