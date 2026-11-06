@@ -6,6 +6,7 @@ from app.combat.condition_lifecycle import resolve_source_condition_timing, reso
 from app.combat.death_saves import resolve_death_save
 from app.combat.death_trigger_dispatch import resolve_pending_death_triggers
 from app.combat.delayed_resource_refill import resolve_delayed_resource_refill_end_turn
+from app.combat.end_of_turn_recurring_damage import resolve_end_turn_recurring_damage
 from app.combat.dice import DiceProvider
 from app.combat.encounter_combat_turn import resolve_combat_turn
 from app.combat.encounter_events import build_encounter_result, build_finish_event, build_initiative_events
@@ -70,6 +71,10 @@ def _end_turn_lifecycle(sequence, round_number, member, setup, dice):
         sequence, round_number, member, "target_turn_end", dice, setup,
     )
     events.extend(lifecycle)
+    recurring, sequence = resolve_end_turn_recurring_damage(
+        sequence, round_number, member, setup, dice,
+    )
+    events.extend(recurring)
     exile_events, sequence = resolve_source_exile_returns(
         sequence, round_number, member, setup, dice,
     )
