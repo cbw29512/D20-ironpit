@@ -63,6 +63,7 @@ def slot_melee_weapon_bonus_actions_2014(
                     resource_id=slot.id,
                     resource_cost=1,
                     expend_slot_without_cast=True,
+                    opening_eligible=False,
                     duration_rounds=1,
                     expiry_timing="source_turn_end",
                     magical_effect=True,
