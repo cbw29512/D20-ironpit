@@ -112,7 +112,8 @@ def apply_hit_conditions(
                 restrains=control.restrains_while_grappled,
                 periodic_damage=control.grapple_periodic_damage,
             ))
-    if control is not None and control.condition_id is not None:
+    if (control is not None and control.condition_id is not None
+            and (control.max_target_size is None or size_at_most(defender.template.size, control.max_target_size))):
         timed = apply_timed_condition(
             defender,
             control.condition_id,
