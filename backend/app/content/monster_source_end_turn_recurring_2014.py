@@ -45,6 +45,7 @@ def source_end_turn_recurring_damage_2014(
         return OnHitRecurringDamage(
             effect_id="burning", dice_count=count, dice_size=sides,
             damage_type=match["type"].lower(),
+            removal_action_ids=["douse-fire"],
         )
     except Exception:
         logger.exception("2014 recurring hit-effect source proof failed for %s.", monster.id)
