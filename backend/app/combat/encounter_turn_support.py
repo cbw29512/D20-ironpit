@@ -121,6 +121,12 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
             action, target, conditions = removal_choice
             events.append(resolve_condition_removal(sequence, round_number, member, target, action, conditions, turn_key))
             sequence += 1
+        # Any source-authorized continuing fire can be extinguished by an
+        # ordinary Action. The source does not define a geometric range.
+        douse_target = choose_douse_target(member, setup)
+        if douse_target is not None:
+            events.append(resolve_douse_action(sequence, round_number, member, douse_target))
+            sequence += 1
         bonus_before = member.state.bonus_action_available
         healing_events, sequence = resolve_healing_support(
             sequence, round_number, member, setup, dice, turn_key,
