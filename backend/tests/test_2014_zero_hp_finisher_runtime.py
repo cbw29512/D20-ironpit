@@ -31,13 +31,16 @@ def _encounter():
         wisp.state.current_hp = 8
         victim = EncounterCombatant(
             combatant_id="victim", side="heroes", position_ft=5,
-            state=build_combatant_state(build_commoner()),
+            state=build_combatant_state(build_commoner().model_copy(update={"ruleset": "2014", "kind": "character"})),
         )
         victim.state.current_hp = 0
         victim.state.is_alive = True
         victim.state.is_dead = False
         victim.state.is_unconscious = True
-        setup = EncounterSetup(heroes=[victim], monsters=[wisp])
+        setup = EncounterSetup(
+            heroes=[victim], monsters=[wisp], hero_total_levels=1,
+            monster_total_cr="2", ruleset="2014",
+        )
         action = next(a for a in wisp.state.template.saving_throw_actions if a.id == "consume-life")
         invis = next(a for a in wisp.state.template.timed_self_buff_actions if a.id == "invisibility")
         return wisp, victim, setup, action, invis
