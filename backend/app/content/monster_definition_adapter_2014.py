@@ -140,6 +140,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "attack_kind": attack.kind,
         "attack_bonus": printed_attack.attack_bonus,
         "resource_id": attack.id if (attack.id in attack_ammunition_2014(monster) or breakable is not None) else None,
+        "target_max_size": breakable.max_target_size if breakable is not None else None,
         "attack_ability": attack.attack_ability,
         "sneak_attack_eligible": sneak_attack_eligible_2014(monster, attack),
         "conditional_attack_advantage": [
