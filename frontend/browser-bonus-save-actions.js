@@ -111,7 +111,13 @@
         id: "bonus-save-action",
         priority: 40,
         rulesets: ["2014", "2024"],
-        appliesTo: (_member, ctx) => ctx.bonusActionCheckpoint === "beforeEscape",
+        // The Action can make a zero-HP finisher newly eligible; never
+        // spend a post-Action Bonus Action from an incapacitated actor.
+        appliesTo: (member, ctx) => ctx.bonusActionCheckpoint === "beforeEscape"
+          || (ctx.bonusActionCheckpoint === "postAction"
+            && member.state.is_alive && !member.state.is_dead
+            && member.state.current_hp > 0
+            && !window.IRON_PIT_BROWSER_CONDITION_RULES?.incapacitated(member.state)),
         resolve: ({ sequence, round, member, setup }) => {
           const result = resolve(sequence, round, member, setup);
           return result ? { ...result, claimed: true } : null;
