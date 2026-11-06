@@ -5,6 +5,8 @@ from app.domain.modifiers import ModifierKind
 
 def validate_combat_modifier_payload(modifier) -> None:
     """Reject CombatModifier payloads that do not match their declared kind."""
+    if modifier.required_weapon_attack_kind is not None and modifier.kind is not ModifierKind.BONUS_DAMAGE:
+        raise ValueError("Weapon-kind eligibility is only allowed on bonus-damage modifiers.")
     die_kind = modifier.kind in {
         ModifierKind.ATTACK_ROLL_BONUS_DIE, ModifierKind.SAVING_THROW_BONUS_DIE,
         ModifierKind.BONUS_DAMAGE,
