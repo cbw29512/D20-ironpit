@@ -92,6 +92,23 @@ try {
     assert.ok(!victim.state.active_effect_ids.includes("restrained"));
     assert.ok(!victim.state.timed_effects.some(e => e.effect_id === "restrained"));
     assert.equal(card.resources.web, 1, "source card remains immutable");
+
+    // Real turn selector must actually choose the finite ranged restraint
+    // before a damaging Bite/Multiattack, not just expose a manual card action.
+    const autoAttacker = { ...attacker, state: State.buildState(structuredClone(card)) };
+    const autoTarget = { ...victim, state: State.buildState(structuredClone(hero)) };
+    const autoSetup = { heroes: [autoTarget], monsters: [autoAttacker], ruleset: "2014" };
+    assert.equal(window.IRON_PIT_BROWSER_FORMATION
+      .chooseLimitedBreakableControlAttack(autoAttacker, autoSetup)?.attack.name, "Web");
+    window.IRON_PIT_DICE = dice(18);
+    const automated = window.IRON_PIT_BROWSER_TURN.resolveTurn(99, 1, autoAttacker, autoSetup);
+    const autoWeb = automated.events.filter((event) => event.attack_name === "Web");
+    assert.equal(autoWeb.length, 1, id + " must fire Web on its actual combat turn");
+    assert.equal(autoWeb[0].hit, true);
+    assert.equal(autoAttacker.state.resources.web, 0);
+    assert.ok(autoTarget.state.active_effect_ids.includes("restrained"));
+    assert.equal(window.IRON_PIT_BROWSER_FORMATION
+      .chooseLimitedBreakableControlAttack(autoAttacker, autoSetup), null);
   }
   window.IRON_PIT_DICE = originalDice;
   console.log("2014 Giant Spider / Ettercap universal breakable ranged Web passed");
