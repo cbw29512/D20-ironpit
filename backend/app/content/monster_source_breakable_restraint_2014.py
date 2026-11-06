@@ -55,7 +55,7 @@ def source_recharge_breakable_restraint_2014(
             return None
         if attack.resource_id != attack.id or not attack.breakable_restraint:
             return None
-        if (attack.damage.dice_count != 0 or attack.damage.bonus != 0
+        if (attack.damage.average != 0 or attack.damage.dice_count != 0 or attack.damage.bonus != 0
                 or attack.damage.type is not None or attack.on_hit_damage
                 or attack.on_hit_save_effect or attack.control_effect):
             return None
