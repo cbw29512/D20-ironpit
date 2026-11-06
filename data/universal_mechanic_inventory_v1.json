@@ -5879,7 +5879,7 @@
       "source:extra-action": 29,
       "source:legendary": 9,
       "source:reaction": 2,
-      "source:trait": 53
+      "source:trait": 52
     },
     "unresolved_printed_abilities": [
       {
@@ -6001,13 +6001,6 @@
           "Roper"
         ],
         "printed_name": "Grasping Tendrils"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Magmin"
-        ],
-        "printed_name": "Ignited Illumination"
       },
       {
         "demand_count": 20,
