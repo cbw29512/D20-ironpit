@@ -16,7 +16,7 @@ function setup() {
     const hero = window.IRON_PIT_BROWSER_HEROES["karnok-stoneward-2014-l5"];
     assert.ok(hero, "Expected certified 2014 Fighter reference");
     const victim = {
-      combatant_id: "downed", side: "heroes", position_ft: 5,
+      combatant_id: "downed", side: "heroes", position_ft: 20,
       state: window.IRON_PIT_BROWSER_STATE.buildState(hero),
     };
     const scene = { heroes: [victim], monsters: [source] };
@@ -28,7 +28,7 @@ function setup() {
        life.requiresTargetSight, life.requiresTargetZeroHpAlive,
        life.instantDeathOnFailedSave, life.healSourceOnKillDiceCount,
        life.healSourceOnKillDiceSize],
-      ["bonus_action", "constitution", 10, 5, true, true, true, 3, 6],
+      ["bonus_action", "constitution", 10, 20, true, true, true, 3, 6],
     );
     assert.deepEqual(invis.endsOnOwnerActionIds, ["consume-life"]);
     assert.equal(invis.endsOnOwnerAttack, true);
@@ -71,7 +71,7 @@ try {
     assert.equal(selected?.action?.id, "consume-life");
     assert.equal(selected?.target?.combatant_id, victim.combatant_id);
     const result = window.IRON_PIT_BROWSER_SAVES.resolveAction(
-      2, 1, source, victim, life, 5, { setup: scene },
+      2, 1, source, victim, life, 20, { setup: scene },
     );
     assert.equal(result.save_succeeded, false);
     assert.equal(victim.state.is_dead, true);
@@ -90,7 +90,7 @@ try {
       affectedStates: [source.state, victim.state],
     });
     const result = window.IRON_PIT_BROWSER_SAVES.resolveAction(
-      2, 1, source, victim, life, 5, { setup: scene },
+      2, 1, source, victim, life, 20, { setup: scene },
     );
     assert.equal(result.save_succeeded, true);
     assert.equal(victim.state.is_dead, false);
@@ -110,7 +110,8 @@ try {
     assert.equal(window.IRON_PIT_BROWSER_BONUS_SAVE_ACTIONS.choose(source, scene), null);
     victim.state.is_dead = false;
     victim.state.is_alive = true;
-    assert.equal(window.IRON_PIT_BROWSER_SAVES.legalAction(life, victim, 10, source.combatant_id, source), false);
+    assert.equal(window.IRON_PIT_BROWSER_SAVES.legalAction(life, victim, 20, source.combatant_id, source), true);
+    assert.equal(window.IRON_PIT_BROWSER_SAVES.legalAction(life, victim, 25, source.combatant_id, source), false);
   }
   console.log("2014 Will-o'-Wisp Consume Life and Invisibility browser parity passed.");
 } catch (error) {
