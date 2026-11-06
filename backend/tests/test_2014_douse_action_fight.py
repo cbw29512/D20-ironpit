@@ -69,19 +69,19 @@ def test_self_douse_uses_action_and_prevents_turn_end_damage():
         raise
 
 
-def test_helper_douse_is_source_authorized_and_ordinary_action():
+def test_self_douse_is_wired_into_ordinary_turn_support():
     try:
         burned, helper, _, scene = _scene()
-        assert choose_douse_target(helper, scene) is burned
+        assert choose_douse_target(burned, scene) is burned
         more, sequence = resolve_support_actions(
-            1, 1, helper, scene, FixedDiceProvider([10]), "1:helper",
+            1, 1, burned, scene, FixedDiceProvider([10]), "1:burned",
         )
         assert sequence > 1
         assert any(event.feature_id == "douse-fire" for event in more)
         assert burned.state.timed_effects == []
-        assert not helper.state.action_available
+        assert not burned.state.action_available
     except Exception:
-        logger.exception("Helper-douse support integration failed")
+        logger.exception("Self-douse support integration failed")
         raise
 
 
@@ -91,14 +91,16 @@ def test_no_douse_permission_or_no_action_fails_closed():
         burned.state.timed_effects[0].allowed_removal_action_ids = []
         assert douseable_effects(burned) == []
         assert choose_douse_target(helper, scene) is None
-        with pytest.raises(ValueError, match="Target has no"):
+        with pytest.raises(ValueError, match="Helper dousing"):
             resolve_douse_action(1, 1, helper, burned)
         assert helper.state.action_available
         burned.state.timed_effects[0].allowed_removal_action_ids = ["douse-fire"]
         helper.state.action_available = False
-        assert choose_douse_target(helper, scene) is None
+        assert choose_douse_target(burned, scene) is burned
+        burned.state.action_available = False
+        assert choose_douse_target(burned, scene) is None
         with pytest.raises(ValueError, match="available Action"):
-            resolve_douse_action(1, 1, helper, burned)
+            resolve_douse_action(1, 1, burned, burned)
     except Exception:
         logger.exception("Douse source authorization/economy guard failed")
         raise
