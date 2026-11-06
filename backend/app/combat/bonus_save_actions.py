@@ -7,6 +7,7 @@ from app.combat.area_save_actions import resolve_area_save
 from app.combat.area_save_targeting import legal_area_save_placements
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.pit_policy import save_distance, target_order
+from app.combat.encounter_targeting import combatant_distance
 from app.combat.resource_conversion import restoration_conversion, resolve_resource_conversion
 from app.combat.resources import action_resource_available
 from app.combat.saving_throws import legal_save_action
@@ -50,7 +51,19 @@ def choose_bonus_save_action(
                 if placements:
                     return action, placements[0], None, 0
                 continue
-            for target in target_order(actor, setup):
+            # A living combatant at 0 HP is not in ordinary active-target order.
+            # Target these creatures only when source data declares a finisher.
+            if action.requires_target_zero_hp_alive:
+                others = [m for m in [*setup.heroes, *setup.monsters]
+                          if m.combatant_id != actor.combatant_id
+                          and (action.target_scope == "all-other-creatures" or m.side != actor.side)
+                          and m.state.is_alive and not m.state.is_dead
+                          and m.state.current_hp == 0]
+                targets = sorted(others, key=lambda m: (m.side == actor.side,
+                                  combatant_distance(actor, m), m.combatant_id))
+            else:
+                targets = target_order(actor, setup)
+            for target in targets:
                 distance = save_distance(actor, target, action.range_ft)
                 if legal_save_action(action, target, distance, source_id=actor.combatant_id, actor=actor):
                     return action, None, target, distance
