@@ -1,5 +1,12 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Will-o'-Wisp Ephemeral — 2014 equipment-only source proof (staged)
+
+- **Semantics:** printed Ephemeral only says the creature cannot wear/carry items, with no combat state effect in the fixed-loadout arena. No equipment inventory/durability mechanics are added and no other Will-o'-Wisp rule is suppressed.
+- **Source proof:** one exact complete-clause verifier, including unheaded continuations, runs over all 327 immutable 2014 cards. The sole matching card is Will-o'-Wisp; renamed identical source is accepted, while changed source or appended damage/conditions fail closed. `Consume Life`, attack-triggered `Invisibility`, and their printed action/trait obligations remain **unresolved**.
+- **Status:** staged source binding/test branch `feat/2014-equipment-only-trait-source-proof` is based on PR #1175's branch to avoid duplication. Do not claim certification or merge before parent #1175 merges, this branch is compared to new main, generator-owned files regenerated and all five exact-head workflows pass. No webpage battle or production Netlify publish.
+
+
 ## Equipment corrosion/destruction universally omitted — 2026-11-05 user decision
 
 - **Active family:** 2014 equipment-only effects, branch `feat/2014-equipment-corrosion-arena-neutral-family`. Full pinned 327-card source scan identifies exactly three relevant printed sources: Black Pudding, Gray Ooze and Rust Monster. No equipment wear, breakage, destruction, corrosion penalties, or material/durability inventory in Python or browser fights. Same product policy applies to 2024 after separate source proof.
