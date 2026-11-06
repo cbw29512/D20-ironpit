@@ -9,6 +9,7 @@ from app.combat.opening_burst import opening_burst_available
 from app.combat.owner_action_expiry import expire_on_owner_event
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throw_attempt import resolve_save_attempt
+from app.combat.save_instant_death_healing import resolve_save_finisher
 from app.combat.saving_throw_damage import resolve_save_damage
 from app.combat.saving_throw_effects import apply_save_effects
 from app.combat.saving_throw_event import build_save_event
@@ -121,7 +122,12 @@ def resolve_save_action(
             affected_states=affected_states,
             setup=setup,
         )
-        return build_save_event(
+        # Failure can cause genuine terminal death rather than setting 0 HP.
+        # Healing is rolled only if the death succeeds past prevention.
+        healing_roll, healed, killed = resolve_save_finisher(
+            actor, target, action, attempt.succeeded, dice, affected_states,
+        )
+        result = build_save_event(
             sequence,
             round_number,
             actor,
@@ -138,6 +144,16 @@ def resolve_save_action(
             concentration_before=concentration_before,
             save_disadvantage_sources=save_disadvantage_sources,
         )
+        if action.instant_death_on_failed_save:
+            result.healing_roll = healing_roll
+            if killed:
+                result.description += (
+                    f" {target.state.template.name} dies; {actor.state.template.name} "
+                    f"regains {healed} HP from {action.name}."
+                )
+            elif not attempt.succeeded:
+                result.description += " Instant death was prevented; no HP restored."
+        return result
     except Exception:
         logger.exception(
             "Failed to resolve save action %s from %s against %s.",
