@@ -20,11 +20,11 @@ logger = logging.getLogger(__name__)
 # The WHOLE trait must describe one slot-funded, end-of-turn, melee-only bonus.
 _SLOT_MELEE_BONUS = re.compile(
     r"As a bonus action, the (?P<subject>[^.]+?) can expend a spell slot to cause its "
-    r"melee weapon attacks to magically deal an extra (?P<average>\\d+) "
-    r"\\((?P<dice>\\d+)d6\\) (?P<type>\\w+) damage to a target on a hit\\. "
-    r"This benefit lasts until the end of the turn\\. If the (?P=subject) "
+    r"melee weapon attacks to magically deal an extra (?P<average>\d+) "
+    r"\((?P<dice>\d+)d6\) (?P<type>\w+) damage to a target on a hit\. "
+    r"This benefit lasts until the end of the turn\. If the (?P=subject) "
     r"expends a spell slot of 2nd level or higher, the extra damage increases "
-    r"by 1d6 for each level above 1st\\.",
+    r"by 1d6 for each level above 1st\.",
     flags=re.IGNORECASE,
 )
 
