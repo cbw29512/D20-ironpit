@@ -230,7 +230,7 @@
     if (topple.saveDc !== null) description += ` Topple save DC ${topple.saveDc}: ${actualTarget.state.template.name} ${topple.saveSucceeded ? "succeeds" : "fails"}.`;
     if (damageOutcome === "relentless_endurance") description += ` ${actualTarget.state.template.name} uses Relentless Endurance and remains at 1 HP.`;
     if (damageOutcome === "undead_fortitude") description += ` ${actualTarget.state.template.name} succeeds on Undead Fortitude and remains at 1 HP.`;
-    for (const condition of [...new Set(applied)]) description += ` ${actualTarget.state.template.name} is ${condition === "prone" ? "knocked Prone" : condition === "restrained" ? "Restrained while Grappled" : condition.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}.`;
+    for (const condition of [...new Set(applied)]) description += ` ${actualTarget.state.template.name} is ${condition === "prone" ? "knocked Prone" : condition === "restrained" ? (applied.includes("grappled") ? "Restrained while Grappled" : "Restrained") : condition.replaceAll("_", " ").replace(/\b\w/g, (c) => c.toUpperCase())}.`;
     if (ammunitionRemaining !== null) description += ` ${attack.name}: ${ammunitionRemaining} ammunition remaining.`;
     const ownerExpiryRequired = (attacker.state.timed_effects || []).some((effect) => effect.ends_on_owner_attack);
     const expiry = window.IRON_PIT_BROWSER_TIMED?.expireOnOwnerEvent;
