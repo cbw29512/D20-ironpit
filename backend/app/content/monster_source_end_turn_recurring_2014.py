@@ -9,6 +9,12 @@ from app.content.monster_source_sections_2014 import source_sections_2014
 from app.domain.recurring_damage import OnHitRecurringDamage
 
 logger = logging.getLogger(__name__)
+_BASE = re.compile(
+    r"^Melee Weapon Attack: \+(?P<bonus>\d+) to hit, reach (?P<reach>\d+) ft\., "
+    r"one target\. Hit: (?P<average>\d+) "
+    r"\((?P<count>\d+)d(?P<sides>\d+)(?: \+ (?P<flat>\d+))?\) "
+    r"(?P<type>\w+) damage\.$", flags=re.IGNORECASE,
+)
 
 # This is source grammar, not a name/monster-specific combat resolver.
 _IGNITION = re.compile(
