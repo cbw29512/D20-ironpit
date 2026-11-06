@@ -36,6 +36,12 @@ class SaveCapabilityDefinition(BaseModel):
     damage_components: list[SaveDamageComponent] = Field(default_factory=list)
     success_damage: Literal["none", "half"] = "none"
     failure_sets_zero_hp: bool = Field(default=False, exclude_if=lambda value: not value)
+    # Generic typed finisher: a living 0-HP creature saves or dies; healing
+    # occurs only if that death actually completes (prevention may apply).
+    requires_target_zero_hp_alive: bool = False
+    instant_death_on_failed_save: bool = False
+    heal_source_on_kill_dice_count: int = Field(default=0, ge=0, le=40)
+    heal_source_on_kill_dice_size: int = Field(default=6, ge=2, le=100)
     damage_only_on_success: bool = Field(default=False, exclude_if=lambda value: not value)
     requires_target_hearing: bool = Field(default=False, exclude_if=lambda value: not value)
     requires_target_to_see_source: bool = Field(default=False, exclude_if=lambda value: not value)
@@ -81,6 +87,13 @@ class SaveCapabilityDefinition(BaseModel):
                 raise ValueError("Success-only save damage requires typed damage dice.")
             if self.failure_sets_zero_hp and self.damage is not None and not self.damage_only_on_success:
                 raise ValueError("Zero-HP failure cannot coexist with ordinary failed-save damage.")
+            if self.instant_death_on_failed_save:
+                if not self.requires_target_zero_hp_alive or not self.heal_source_on_kill_dice_count:
+                    raise ValueError("Save-based finisher requires living zero-HP target and explicit on-kill healing dice.")
+                if self.damage is not None or self.damage_components or self.failure_sets_zero_hp:
+                    raise ValueError("Instant death on a failed save cannot also deal damage or set target to zero HP.")
+            elif self.requires_target_zero_hp_alive or self.heal_source_on_kill_dice_count:
+                raise ValueError("Zero-HP finisher fields require a failed-save instant-death effect.")
             target_filters = [
                 *self.required_target_creature_types,
                 *self.prohibited_target_source_effect_ids,
