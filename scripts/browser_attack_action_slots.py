@@ -6,6 +6,8 @@ logger = logging.getLogger(__name__)
 def attack_slot_row(slot):
     try:
         row = {"attackIds": slot.attack_ids, "saveActionIds": slot.save_action_ids}
+        if slot.requires_source_grapple:
+            row["requiresSourceGrapple"] = True
         if slot.previous_attack is not None:
             row["previousAttack"] = {"hit": slot.previous_attack.hit, "sameTarget": slot.previous_attack.same_target}
         return row

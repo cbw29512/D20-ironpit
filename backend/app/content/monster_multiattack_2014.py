@@ -5,7 +5,9 @@ import logging
 from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.content.monster_multiattack_variants_2014 import source_variants_2014
 from app.content.monster_attack_ammunition_2014 import attack_ammunition_2014, ammunition_multiattack_variants_2014
-from app.content.monster_save_capabilities_2014 import supports_save_action_2014
+from app.content.monster_save_capabilities_2014 import save_capabilities_2014
+from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
+from app.content.monster_grapple_followup_multiattack_2014 import source_proves_grapple_followup_multiattack_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_variable_heads_2014 import variable_head_profile_2014
 from app.domain.capability_attacks import CapabilityActionSlot, MultiattackCapabilityDefinition
@@ -18,9 +20,17 @@ def source_bound_slots_2014(monster: SourceMonster2014) -> list[CapabilityAction
     binding = monster.multiattack_binding
     if not isinstance(binding, dict) or not isinstance(binding.get("slots"), list):
         return None
-    attack_ids = {attack.id for attack in monster.attacks if attack.source_complete}
-    save_ids = {str(action["id"]) for action in monster.saving_throw_actions
-                if supports_save_action_2014(action)}
+    # Resolve full source-corrected attacks and saves, not just incomplete
+    # parser rows: the immutable printed card remains unchanged.
+    attack_ids = {
+        attack.id for attack in monster.attacks
+        if source_completed_mixed_attack_2014(monster, attack).source_complete
+    }
+    save_ids = {action.id for action in save_capabilities_2014(monster)}
+    if any(isinstance(raw, dict) and raw.get("requirement") == "source_has_grappled_target"
+           for raw in binding["slots"]):
+        if not source_proves_grapple_followup_multiattack_2014(monster, save_ids):
+            return None
     slots: list[CapabilityActionSlot] = []
     for raw in binding["slots"]:
         if not isinstance(raw, dict):

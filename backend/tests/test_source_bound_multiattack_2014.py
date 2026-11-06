@@ -18,6 +18,11 @@ def _monster():
             "id": "grapple-save", "name": "Grapple Save", "save_ability": "constitution",
             "dc": 13, "range_ft": 5,
         }],
+        source_actions=(
+            "<p><em><strong>Multiattack.</strong></em> The test creature makes "
+            "two claw attacks. If the test creature is grappling a creature, "
+            "the test creature can also use its grapple save once.</p>"
+        ),
         multiattack_binding={"slots": [
             {"action_ids": ["claw"]},
             {"action_ids": ["claw"]},
@@ -47,3 +52,20 @@ def test_source_bound_slots_reject_unresolved_or_unrecognized_conditions():
     monster.multiattack_binding["slots"][2]["action_ids"] = ["grapple-save"]
     monster.multiattack_binding["slots"][2]["requirement"] = "invented"
     assert source_bound_slots_2014(monster) is None
+
+
+def test_source_mutation_rejects_unverified_conditional_followup():
+    monster = _monster()
+    original = monster.model_dump_json()
+    assert source_bound_slots_2014(monster) is not None
+    for old, new in (
+        ("two claw attacks", "three claw attacks"),
+        ("also use its grapple save once", "also use its grapple save twice"),
+        ("grappling a creature", "seeing a creature"),
+    ):
+        changed = monster.model_copy(update={
+            "source_actions": monster.source_actions.replace(old, new),
+        })
+        assert source_bound_slots_2014(changed) is None
+        assert multiattack_blockers_2014(changed) == ["multiattack:complex"]
+    assert monster.model_dump_json() == original
