@@ -9,6 +9,7 @@ import html
 import re
 
 from app.content.monster_source_2014 import SourceAttack2014, SourceDamage2014, SourceMonster2014
+from app.content.monster_source_armor_corrosion_2014 import source_on_hit_armor_corrosion_2014
 from app.content.monster_healing_block_source_2014 import source_completed_healing_block_2014
 from app.content.monster_source_magic_cured_condition_2014 import source_completed_magic_cured_condition_2014
 from app.content.monster_source_persistent_effect_2014 import (
@@ -43,6 +44,11 @@ def source_completed_mixed_attack_2014(
     attack = source_completed_persistent_save_2014(monster, attack)
     attack = source_completed_start_turn_damage_condition_2014(monster, attack)
     attack = source_bound_staged_disease_2014(monster, attack)
+    # Classify a complete gear-only corrosion rider as arena-neutral.
+    # Preserve both already-sourced damage components (Bludgeoning + Acid).
+    # Any additional combat rider or changed printed damage fails closed.
+    if source_on_hit_armor_corrosion_2014(monster, attack) is not None:
+        return attack.model_copy(update={"source_complete": True})
     if attack.source_complete or attack.kind != "melee":
         return attack
     if attack.on_hit_save_effect or attack.control_effect or attack.ongoing_damage_effect:
