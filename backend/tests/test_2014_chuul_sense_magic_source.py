@@ -22,7 +22,7 @@ def _chuul():
         raise
 
 
-def test_sense_magic_source_proof_preserves_unchanged_card_and_other_blockers():
+def test_sense_magic_source_proof_preserves_unchanged_card_and_completed_combat():
     try:
         monster = _chuul()
         original = monster.model_dump_json()
@@ -32,8 +32,10 @@ def test_sense_magic_source_proof_preserves_unchanged_card_and_other_blockers():
         )["Sense Magic"].casefold()
         assert verified_arena_inert_trait_2014(monster, "Sense Magic")
         assert "Sense Magic" not in unsupported_traits_2014(monster)
-        # This informational classification must not certify unresolved attacks.
-        assert basic_blockers_2014(monster)
+        # All Chuul combat actions are independently source-bound now.
+        # This assertion must not substitute Sense Magic classification for
+        # attack/source validation; those are separately certified.
+        assert basic_blockers_2014(monster) == ()
         assert monster.model_dump_json() == original
     except Exception:
         logger.exception("Chuul Sense Magic source proof failed")
