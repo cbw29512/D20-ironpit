@@ -866,6 +866,8 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["hostileStartTurnConditionAura"] = action.hostile_start_turn_condition_aura.model_dump(mode="json")
     if action.concentration:
         row["concentration"] = True
+    if action.expend_slot_without_cast:
+        row["expendSlotWithoutCast"] = True
     if action.modifier_effects:
         row["modifierEffects"] = [_modifier_effect(effect) for effect in action.modifier_effects]
     if action.start_turn_emanation_damage is not None:
