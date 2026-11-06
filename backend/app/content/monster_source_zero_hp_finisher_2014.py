@@ -15,12 +15,12 @@ from app.domain.capability_save_definitions import SaveCapabilityDefinition
 logger = logging.getLogger(__name__)
 
 _FINISHER = re.compile(
-    r"^As a bonus action, the (?P<owner>[a-z][a-z'\\-]*) can target one "
-    r"creature it can see within (?P<range>\\d+) feet of it that has 0 hit "
-    r"points and is still alive\\. The target must succeed on a DC "
-    r"(?P<dc>\\d+) (?P<save>Constitution) saving throw against this magic "
-    r"or die\\. If the target dies, the (?P=owner) regains "
-    r"(?P<average>\\d+) \\((?P<count>\\d+)d(?P<size>\\d+)\\) hit points\\.$",
+    r"^As a bonus action, the (?P<owner>[a-z][a-z'\-]*) can target one "
+    r"creature it can see within (?P<range>\d+) feet of it that has 0 hit "
+    r"points and is still alive\. The target must succeed on a DC "
+    r"(?P<dc>\d+) (?P<save>Constitution) saving throw against this magic "
+    r"or die\. If the target dies, the (?P=owner) regains "
+    r"(?P<average>\d+) \((?P<count>\d+)d(?P<size>\d+)\) hit points\.$",
     re.IGNORECASE,
 )
 
