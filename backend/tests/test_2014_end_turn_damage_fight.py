@@ -12,7 +12,22 @@ from app.combat.state import build_combatant_state
 from app.combat.timed_condition_lifecycle import remove_effect_instance
 from app.content.demo import build_demo_fighter
 from app.domain.encounters import EncounterCombatant
-from test_2014_source_end_turn_recurring_damage import magmin_attack
+from app.content.capability_compiler import compile_combatant
+from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
+from app.content.monster_source_2014 import load_monster_source_2014
+
+
+def magmin_attack():
+    try:
+        card = next(m for m in load_monster_source_2014() if m.id == "magmin")
+        template = compile_combatant(adapt_monster_mechanics_2014(card))
+        return card, template, next(
+            attack for attack in [template.weapon_attack, *template.alternate_weapon_attacks]
+            if attack is not None and attack.weapon.name == "Touch"
+        )
+    except Exception:
+        logger.exception("Failed to compile Magmin's normal Touch weapon attack.")
+        raise
 
 logger = logging.getLogger(__name__)
 
