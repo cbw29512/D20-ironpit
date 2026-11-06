@@ -87,12 +87,14 @@ def test_generic_magmin_attack_compiles_and_exports_typed_tick() -> None:
         assert proof.tick_timing == "target_turn_end"
         assert proof.stacking == "nonstacking"
         assert not proof.ends_if_source_dead
+        assert proof.removal_action_ids == ["douse-fire"]
         row = template_row(template)
         attack_row = next(item for item in row["attacks"] if item["name"] == "Touch")
         assert attack_row["onHitRecurringDamage"] == {
             "effectId": "burning", "diceCount": 1, "diceSize": 6,
             "damageType": "fire", "tickTiming": "target_turn_end",
             "stacking": "nonstacking", "endsIfSourceDead": False,
+            "removalActionIds": ["douse-fire"],
         }
         assert card.source_actions == magmin_source().source_actions
     except Exception:
