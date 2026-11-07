@@ -441,7 +441,6 @@ Blocked monsters: **57**. These are grouped by printed ability name so the roste
 | Fire Aura | Balor | 1 |
 | Fire Form | Fire Elemental | 1 |
 | Freedom of Movement | Kraken | 1 |
-| Freeze | Water Elemental | 1 |
 | Gibbering | Gibbering Mouther | 1 |
 | Grappler | Mimic | 1 |
 | Grasping Tendrils | Roper | 1 |
