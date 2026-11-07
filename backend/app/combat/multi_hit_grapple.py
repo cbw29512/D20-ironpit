@@ -47,7 +47,9 @@ def apply_multi_hit_grapples(
                 if abs(attacker.position_ft - target.position_ft) > rule.range_ft:
                     continue
                 held = sum(
-                    any(source.source_id == attacker.combatant_id for source in member.state.grapple_sources)
+                    any(source.source_id == attacker.combatant_id
+                        and source.linked_effect_id == rule.effect_id
+                        for source in member.state.grapple_sources)
                     for member in members.values() if member.combatant_id != attacker.combatant_id
                 )
                 if held >= rule.max_active_grapples:
