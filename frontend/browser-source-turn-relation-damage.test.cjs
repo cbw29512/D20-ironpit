@@ -82,11 +82,15 @@ const conditional = Object.freeze({
   source_name: "Renamed Engulf", target_relation: "creatures_grappled_by_source",
   dice_count: 2, dice_size: 8, damage_type: "bludgeoning",
   damage_bonus: 4, save_ability: "constitution", save_dc: 14,
+  required_grapple_effect_id: "engulf",
 });
 holder.state.template.source_turn_relation_damages = [conditional];
 const heldSetup = { heroes: [held], monsters: [holder] };
 assert.equal(Source.resolve(1, 1, holder, heldSetup).events.length, 0);
 held.state.grapple_sources.push({ source_id: "holder", range_ft: 10, restrains: true });
+assert.equal(Source.resolve(2,1,holder,heldSetup).events.length,0,
+  "Ordinary held grapple may not tick Engulf damage.");
+held.state.grapple_sources[0].linked_effect_id="engulf";
 let saveSucceeded = true;
 window.IRON_PIT_BROWSER_SAVING_THROWS = {
   resolveSavingThrow: () => ({roll: {total: saveSucceeded ? 20 : 1}, succeeded: saveSucceeded}),
