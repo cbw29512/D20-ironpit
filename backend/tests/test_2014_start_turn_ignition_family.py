@@ -92,6 +92,7 @@ def test_full_source_proof_compiles_generic_attack_and_keeps_other_blockers():
         # Source is still *not* admitted: compound Fire Form and water exposure
         # remain independently unimplemented, as does unspecified helper dousing.
         assert "source:trait" in basic_blockers_2014(card)
+        assert "attack:incomplete" in basic_blockers_2014(card)  # helper-Douse reach unspecified
         assert card.model_dump_json() == original
     except Exception:
         logger.exception("2014 Fire Elemental Touch source and serializer parity failed.")
