@@ -20,6 +20,9 @@ class SourceTurnRelationDamage(BaseModel):
     damage_bonus: int = Field(default=0, exclude_if=lambda value: value == 0)
     save_ability: str | None = Field(default=None, exclude_if=lambda value: value is None)
     save_dc: int | None = Field(default=None, ge=1, le=40, exclude_if=lambda value: value is None)
+    required_grapple_condition_id: str | None = Field(
+        default=None, exclude_if=lambda value: value is None,
+    )
 
     @model_validator(mode="after")
     def require_complete_save(self) -> "SourceTurnRelationDamage":
