@@ -11,13 +11,23 @@ from app.domain.timed_self_buffs import TimedFriendlySaveAura, TimedSelfBuffActi
 logger = logging.getLogger(__name__)
 _ABILITIES = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
 _SELF = re.compile(
-    r"(?P<name>[^.\n]+)\. The [^.\n]+? has advantage on saving throws "
+    r"(?P<name>[^.\n]+)\. The [^.
+]+? has advantage on saving throws "
     r"against any effect that turns undead\.", re.IGNORECASE,
 )
 _FRIENDLY = re.compile(
-    r"(?P<name>[^.\n]+)\. The [^.\n]+? and any (?P<recipients>[^.\n]+?) within "
+    r"(?P<name>[^.\n]+)\. The [^.
+]+? and any (?P<recipients>[^.
+]+?) within "
     r"(?P<radius>\d+) feet of it have advantage on saving throws "
     r"against effects that turn undead\.", re.IGNORECASE,
+)
+# Duergar Resilience and equivalent family: advantage vs poison/spells/illusions + charmed/paralyzed resistance.
+_RESILIENCE = re.compile(
+    r"(?P<name>[^.\n]+)\. The [^.
+]+? has advantage on saving throws against "
+    r"poison, spells, and illusions, as well as to resist being charmed or paralyzed\.",
+    re.IGNORECASE,
 )
 
 
@@ -56,6 +66,30 @@ def contextual_save_defenses_from_source(
                     covers_arena=int(match.group("radius")) == 30,
                 ),
                 animation="buff",
+            ))
+        for match in _RESILIENCE.finditer(text):
+            name = match.group("name").strip()
+            sid = re.sub(r"[^a-z0-9]+", "-", name.casefold()).strip("-" )
+            # Multiple parameterized grants for the distinct printed categories.
+            grants.append(SavingThrowAdvantageGrant(
+                source_id=f"{sid}-poison", source_name=name, abilities=_ABILITIES,
+                required_effect_tags=["poison"],
+            ))
+            grants.append(SavingThrowAdvantageGrant(
+                source_id=f"{sid}-spell", source_name=name, abilities=_ABILITIES,
+                requires_spell_effect=True,
+            ))
+            grants.append(SavingThrowAdvantageGrant(
+                source_id=f"{sid}-illusion", source_name=name, abilities=_ABILITIES,
+                required_effect_tags=["illusion"],
+            ))
+            grants.append(SavingThrowAdvantageGrant(
+                source_id=f"{sid}-charmed", source_name=name, abilities=_ABILITIES,
+                required_effect_tags=["charmed"],
+            ))
+            grants.append(SavingThrowAdvantageGrant(
+                source_id=f"{sid}-paralyzed", source_name=name, abilities=_ABILITIES,
+                required_effect_tags=["paralyzed"],
             ))
         ids = [item.id for item in actions] + [item.source_id for item in grants]
         if len(set(ids)) != len(ids):
