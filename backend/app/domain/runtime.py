@@ -89,6 +89,7 @@ class CombatantState(BaseModel):
     active_buff_effect_ids: list[str] = Field(default_factory=list)
     opening_buff_id: str | None = None
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
+    grapple_owned_effect_ids: list[str] = Field(default_factory=list)
     swallowed: SwallowedState | None = None
     swallowed_target_ids: list[str] = Field(default_factory=list)
     timed_effects: list[TimedEffect] = Field(default_factory=list)
