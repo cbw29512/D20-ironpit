@@ -37,7 +37,7 @@
     if (restrained) state.active_effect_ids.push("restrained");
   }
 
-  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, sourceIsMagical = false, periodicDamage = null, linkedConditionIds = []) {
+  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, sourceIsMagical = false, periodicDamage = null, linkedConditionIds = [], movesWithSource = false) {
     if (I().immune(state, "grappled", null, { sourceIsMagical })) return [];
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
     const effectiveRestrains = restrains && !I().immune(state, "restrained", null, { sourceIsMagical });
@@ -46,6 +46,7 @@
       restrains: effectiveRestrains, source_is_magical: Boolean(sourceIsMagical),
       periodic_damage: periodicDamage,
       linked_condition_ids: [...linkedConditionIds],
+      moves_with_source: Boolean(movesWithSource),
     });
     sync(state);
     return [...new Set([
@@ -105,7 +106,7 @@
       target.state.grapple_sources = target.state.grapple_sources.filter((source) => {
         const grappler = members.get(source.source_id);
         if (!grappler || grappler.state.is_dead || !grappler.state.is_alive || Q().incapacitated(grappler.state)) return false;
-        return Math.abs(grappler.position_ft - target.position_ft) <= source.range_ft;
+        return source.moves_with_source || Math.abs(grappler.position_ft - target.position_ft) <= source.range_ft;
       });
       sync(target.state);
     }
