@@ -7,7 +7,8 @@
   function effects(target) {
     try {
       return (target.state.timed_effects || []).filter(effect =>
-        effect.end_of_turn_dice_count > 0 && (effect.allowed_removal_action_ids || []).includes(ID));
+        (effect.end_of_turn_dice_count > 0 || effect.start_of_turn_dice_count > 0)
+        && (effect.allowed_removal_action_ids || []).includes(ID));
     } catch (error) { console.error("Douse eligibility failed", error); throw error; }
   }
   function choose(actor, setup) {
