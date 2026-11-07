@@ -8,6 +8,7 @@ from app.domain.actions import AbilityName, ConditionName, ConditionTiming, Grap
 from app.domain.attachment_sources import OnHitAttachment
 from app.domain.combatants import DamageType
 from app.domain.hit_modifiers import HitModifierEffect
+from app.domain.breakable_restraints import BreakableObjectSpec
 from app.domain.size import CreatureSize
 from app.domain.zero_hp_effects import ZeroHpSaveDamageRider
 from app.domain.save_condition_effects import (
@@ -108,6 +109,9 @@ class ConditionEffectDefinition(BaseModel):
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
+    escape_check_ability: AbilityName | None = None
+    escape_check_dc: int | None = Field(default=None, ge=1, le=40)
+    breakable_object: BreakableObjectSpec | None = None
 
 
 class AttachmentEffectDefinition(OnHitAttachment):

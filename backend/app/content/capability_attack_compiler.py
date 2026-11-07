@@ -40,6 +40,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             weapon=weapon,
             resource_id=definition.resource_id,
             resource_cost=definition.resource_cost,
+            target_max_size=definition.target_max_size,
             attack_bonus=definition.attack_bonus,
             damage_bonus=damage.bonus if damage else 0,
             attack_ability=definition.attack_ability,

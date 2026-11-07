@@ -76,6 +76,7 @@
   function targetAllowed(member, target, attack, setup = null) {
     try {
       if (attack.unavailableReason != null || target.state.swallowed != null) return false;
+      if (attack.targetMaxSize && !S().sizeAtMost(target, attack.targetMaxSize)) return false;
       const restrictedFollowUps = attacks(member.state.template).map((item) => item.charge)
         .filter((charge) => charge?.followUpAttackId === attack.id && charge.followUpRequiredTargetCondition);
       if (restrictedFollowUps.length && !restrictedFollowUps.some((charge) =>
@@ -155,6 +156,27 @@
   function meleeCanLandNow(member, setup) {
     return chooseStandardAttack(member, setup)?.attack.kind === "melee";
   }
+  function chooseLimitedBreakableControlAttack(member, setup) {
+    try {
+      const profiles = attacks(member.state.template).filter((attack) =>
+        attack.kind === "ranged" && attack.resourceId && attack.fixedDamage === 0
+        && attack.controlEffect?.conditionId && attack.controlEffect.breakableObject);
+      if (!profiles.length) return null;
+      const predicate = window.IRON_PIT_BROWSER_BREAKABLE_CONDITION_OBJECT?.preferFreshLimitedControl;
+      if (!predicate) throw new Error("Declared breakable control requires its shared policy runtime.");
+      for (const target of targetOrder(member, setup)) {
+        const eligible = profiles.filter((attack) => predicate(member, target, attack)).map((attack) => attack.id);
+        if (eligible.length) {
+          const choice = chooseAttack(member, setup, eligible, "ranged", false, target.combatant_id);
+          if (choice) return choice;
+        }
+      }
+      return null;
+    } catch (error) {
+      console.error("Generic breakable-control attack choice failed.", { combatant: member.combatant_id, error });
+      throw error;
+    }
+  }
   function chooseStandardAttack(member, setup) {
     const ids = attacks(member.state.template).map((attack) => attack.id);
     return chooseAttack(member, setup, ids, "melee") || chooseAttack(member, setup, ids, "ranged");
@@ -185,5 +207,6 @@
     activeTargetPolicy, targetOrder, alliedFrontlineActive, targetAllowed, automaticHit,
     attackDistance, saveDistance, weaponMeanDamage, chooseAttack, chooseStandardAttack, meleeCanLandNow,
     flexibleSlotHasBoth, flexibleAttackMode, chooseSlotAttack, backlineHoldsPosition,
+    chooseLimitedBreakableControlAttack,
   };
 })();

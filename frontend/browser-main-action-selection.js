@@ -127,6 +127,11 @@
     const first = selectByCategoryOrder(profile.filter((category) => signature.has(category)), profileId, candidates);
     if (first) return first;
     const rest = candidates.filter((candidate) => candidate?.opportunityProfile === profileId && !signature.has(candidate.category));
+    // An unused finite on-hit control attack deals no printed HP damage.
+    // Its explicit source-driven condition takes precedence once, without
+    // redefining the ordinary melee/ranged damage rankings.
+    const breakableControl = rest.find((candidate) => candidate.payload?.controlPriority === true);
+    if (breakableControl) return breakableControl;
     const damageOf = (candidate) => Number(candidate.payload?.expectedDamage || 0);
     const melee = rest.filter((candidate) => candidate.payload?.delivery === "melee");
     const damage = rest.filter((candidate) => {

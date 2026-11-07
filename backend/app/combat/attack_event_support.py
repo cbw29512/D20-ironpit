@@ -161,7 +161,7 @@ def build_attack_description(
         labels = {
             "prone": "knocked Prone",
             "grappled": "Grappled",
-            "restrained": "Restrained while Grappled",
+            "restrained": "Restrained",
             "poisoned": "Poisoned",
             "blinded": "Blinded",
             "paralyzed": "Paralyzed",
@@ -172,6 +172,8 @@ def build_attack_description(
                 continue
             seen.add(condition)
             text = labels.get(condition) or condition.replace("_", " ").title()
+            if condition == "restrained" and "grappled" in applied_conditions:
+                text = "Restrained while Grappled"
             description += f" {actual_defender_name} is {text}."
         return description
     except Exception as exc:

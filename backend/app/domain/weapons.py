@@ -152,6 +152,7 @@ class WeaponAttack(BaseModel):
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=1000)
     unavailable_reason: str | None = None
+    target_max_size: CreatureSize | None = None
     attack_ability: AbilityName | None = None
     attack_ability_modifier: int | None = None
     fixed_damage: int | None = Field(default=None, ge=0)

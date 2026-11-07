@@ -13,7 +13,7 @@ from app.combat.concentration_repeat_saves import choose_concentration_repeat_sa
 from app.combat.encounter_targeting import living_opponents
 from app.combat.intimidating_presence_2014 import can_use_presence
 from app.combat.multi_target_save_actions import choose_multi_target_save_action
-from app.combat.pit_policy import choose_standard_attack, save_distance, target_order
+from app.combat.pit_policy import choose_limited_breakable_control_attack, choose_standard_attack, save_distance, target_order
 from app.combat.printed_damage import weapon_mean_damage, save_mean_damage as _save_mean_damage, save_action_impact
 from app.combat.resources import resource_available
 from app.combat.saving_throws import legal_save_action
@@ -64,6 +64,12 @@ def decide_post_move_offense(
     try:
         if not is_available(attacker.state, "action"):
             return OffensePick("dodge", 0.0)
+        # A finite, non-damaging breakable restraint has a tactical purpose.
+        # Prefer it once on an eligible unrestrained target, rather than
+        # permanently ignoring it because its printed damage is zero.
+        control = choose_limited_breakable_control_attack(attacker, setup)
+        if control is not None:
+            return OffensePick("standard-attack", weapon_mean_damage(control[1]), control)
         melee_now = melee_can_land_now(attacker, setup)
         picks: list[OffensePick] = []
         if melee_now and attack_action_melee_legal(attacker, setup):

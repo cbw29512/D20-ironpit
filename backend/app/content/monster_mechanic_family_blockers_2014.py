@@ -24,6 +24,7 @@ from app.content.monster_legendary_bindings_2014 import supports_legendary_actio
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_save_capabilities_2014 import unsupported_save_actions_2014
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_source_breakable_restraint_2014 import source_recharge_breakable_restraint_2014
 from app.content.monster_grapple_auto_hit_source_2014 import source_proves_grapple_auto_hit_2014
 from app.content.monster_zero_hp_prevention_2014 import supports_zero_hp_prevention_2014
 from app.content.monster_death_triggers_2014 import supports_death_triggers_2014
@@ -90,15 +91,18 @@ def attack_blockers_2014(monster: SourceMonster2014) -> list[str]:
         blockers: list[str] = []
         for source_attack in monster.attacks:
             attack = source_completed_mixed_attack_2014(monster, source_attack)
+            breakable = source_recharge_breakable_restraint_2014(monster, attack)
             if not attack.source_complete or not source_proves_ability_score_reduction_2014(monster, attack):
                 blockers.append("attack:incomplete")
-            if attack.damage.type not in _DAMAGE_TYPES:
+            # A zero-damage restraint has no printed damage type. Its hit is
+            # resolved normally; a dummy damage type is never printed on the card.
+            if attack.damage.type not in _DAMAGE_TYPES and breakable is None:
                 blockers.append("attack:damage-type")
             profile = corrected_charge_profile_2014(monster, attack)
             if attack.charge_profile is not None and not supports_charge_profile_2014(profile):
                 blockers.append("attack:complex")
                 continue
-            if not supports_basic_attack_effects_2014(attack) or (
+            if (not supports_basic_attack_effects_2014(attack) and breakable is None) or (
                 attack.grapple_target_policy == "auto_hit_own_grapple"
                 and not source_proves_grapple_auto_hit_2014(monster, attack)
             ):

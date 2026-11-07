@@ -10,6 +10,7 @@ from app.domain.models import CombatantState, CombatantTemplate, DebuffCounter, 
 from app.domain.movement import MovementModeGrant
 from app.domain.runtime import TimedTurnBehavior
 from app.domain.saving_throw_context import SavingThrowContext
+from app.domain.breakable_restraints import BreakableObjectSpec, BreakableObjectState
 logger = logging.getLogger(__name__)
 POISONED_EFFECT_ID = "poisoned"
 ARENA_POISON_RECOVERY_DC = 10
@@ -58,6 +59,7 @@ def apply_timed_condition(
     repeat_save_failures_to_lock: int | None = None,
     repeat_save_failure_condition_id: str | None = None,
     escape_check_ability: AbilityName | None = None, escape_check_dc: int | None = None,
+    breakable_object: BreakableObjectSpec | None = None,
     ground_contact: bool = False, ends_on_teleport: bool = False,
     source_effect_immunity_on_end: bool = False, control_limits=None,
     target_actor=None, setup=None,
@@ -122,6 +124,7 @@ def apply_timed_condition(
             repeat_save_failures_to_lock=repeat_save_failures_to_lock,
             repeat_save_failure_condition_id=repeat_save_failure_condition_id,
             escape_check_ability=escape_check_ability, escape_check_dc=escape_check_dc,
+            breakable_object=BreakableObjectState.from_spec(breakable_object) if breakable_object else None,
             ground_contact=ground_contact, ends_on_teleport=ends_on_teleport or ground_contact,
             source_effect_immunity_on_end=source_effect_immunity_on_end,
             control_limits=control_limits,

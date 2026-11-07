@@ -12,6 +12,7 @@ from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting
 from app.domain.environment_contexts import EnvironmentContextId
+from app.domain.breakable_restraints import BreakableObjectSpec
 
 from app.domain.action_types import (
     AbilityName, ActionCost, HealingTargetMode, ConditionRemovalTargetMode,
@@ -49,9 +50,16 @@ class HitControlEffect(BaseModel):
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
+    escape_check_ability: AbilityName | None = None
+    escape_check_dc: int | None = Field(default=None, ge=1, le=40)
+    breakable_object: BreakableObjectSpec | None = None
 
     @model_validator(mode="after")
     def validate_condition_lifecycle(self) -> "HitControlEffect":
+        if (self.escape_check_ability is None) != (self.escape_check_dc is None):
+            raise ValueError("Escape checks require ability and DC together.")
+        if self.breakable_object is not None and (self.condition_id != "restrained" or self.escape_check_dc is None):
+            raise ValueError("Breakable restraint needs a Restrained condition and Action escape check.")
         repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
         if any(item is not None for item in repeat_fields) and not all(item is not None for item in repeat_fields):
             raise ValueError("Repeat-save condition lifecycle requires ability, DC, and timing together.")

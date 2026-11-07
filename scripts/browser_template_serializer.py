@@ -55,6 +55,16 @@ def _control(effect: Any) -> dict[str, Any] | None:
             row["repeatSaveTiming"] = effect.repeat_save_timing
         if effect.allowed_removal_action_ids:
             row["allowedRemovalActionIds"] = list(effect.allowed_removal_action_ids)
+        if effect.escape_check_ability is not None:
+            row["escapeCheckAbility"] = effect.escape_check_ability
+            row["escapeCheckDc"] = effect.escape_check_dc
+        if effect.breakable_object is not None:
+            spec = effect.breakable_object
+            row["breakableObject"] = {
+                "armorClass": spec.armor_class, "hitPoints": spec.hit_points,
+                "damageVulnerabilities": [item.value for item in spec.damage_vulnerabilities],
+                "damageImmunities": [item.value for item in spec.damage_immunities],
+            }
     return row or None
 
 
@@ -93,6 +103,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row["resourceCost"] = attack.resource_cost
         if attack.unavailable_reason is not None:
             row["unavailableReason"] = attack.unavailable_reason
+        if attack.target_max_size is not None:
+            row["targetMaxSize"] = attack.target_max_size.value
         if attack.fixed_damage is not None:
             row["fixedDamage"] = attack.fixed_damage
         if attack.rage_eligible:

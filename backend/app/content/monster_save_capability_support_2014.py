@@ -5,6 +5,7 @@ import logging
 from app.content.monster_arena_action_policy_2014 import arena_unavailable_recharge_ids_2014
 from app.content.monster_recharge_self_buffs_2014 import recharge_self_buff_bindings_2014
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_source_breakable_restraint_2014 import source_recharge_breakable_restraint_2014
 from app.content.monster_source_recharge_line_damage_2014 import source_proven_recharge_line_damage_2014
 from app.content.monster_source_recharge_timed_controls_2014 import (
     source_proven_recharge_timed_controls_2014,
@@ -86,6 +87,10 @@ def supports_recharge_rules_2014(monster: SourceMonster2014) -> bool:
         supported_resources.update(
             item.resource_id for item in source_actions if item.resource_id
         )
+        for attack in monster.attacks:
+            if source_recharge_breakable_restraint_2014(monster, attack):
+                supported_ids.add(attack.id)
+                supported_resources.add(attack.resource_id)
         excluded_ids = arena_unavailable_recharge_ids_2014(monster)
         return all(
             action_id in supported_ids or action_id in supported_resources or action_id in excluded_ids
