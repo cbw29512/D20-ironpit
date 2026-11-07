@@ -570,6 +570,7 @@ jobs:
           node frontend/browser-weapon-corrosion.test.cjs
           node frontend/browser-swallow-state.test.cjs
           node frontend/browser-multi-hit-grapple.test.cjs
+          node frontend/browser-source-turn-relation-damage.test.cjs
           node frontend/browser-swallow-advanced.test.cjs
           node frontend/browser-bite-hit-swallow-save.test.cjs
           node frontend/browser-corrosion-roll-integration.test.cjs
