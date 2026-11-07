@@ -15,6 +15,12 @@ class SwallowedState(BaseModel):
     damage_dice_count: int = Field(ge=1)
     damage_dice_size: int = Field(ge=2)
     damage_type: str = Field(min_length=1)
+    damage_bonus: int = Field(default=0, ge=0)
+    start_turn_save_ability: str | None = None
+    start_turn_save_dc: int | None = Field(default=None, ge=1, le=40)
+    cannot_breathe: bool = False
+    moves_with_source: bool = False
+    exit_prone: bool = True
     exit_movement_ft: int = Field(ge=0)
     regurgitation_damage_threshold: int | None = Field(default=None, ge=1)
     regurgitation_save_ability: str | None = None
