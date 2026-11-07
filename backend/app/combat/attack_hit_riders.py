@@ -17,7 +17,7 @@ from app.combat.on_hit_maximum_hp_save import resolve_on_hit_maximum_hp_save
 from app.combat.post_hit_spell_riders import resolve_paid_post_hit_spell_riders
 from app.combat.sap import apply_weapon_sap
 from app.combat.slow import apply_weapon_slow
-from app.combat.swallow_hit_rider import apply_attack_hit_swallow
+from app.combat.swallow_hit_rider import apply_attack_hit_swallow, resolve_attack_hit_swallow_save
 from app.combat.tactical_master import apply_tactical_master_sap
 from app.combat.topple import resolve_topple_hit
 from app.combat.vex import apply_vex_mastery
@@ -81,7 +81,7 @@ def resolve_attack_hit_riders(
         or save_result.save_succeeded is None
     ):
         raise ValueError("Composite on-hit condition requires a resolved shared damage save.")
-    result.on_hit_save = resolve_on_hit_condition_save(
+    regular_hit_save = resolve_on_hit_condition_save(
         defender,
         condition_attack,
         dice,
@@ -93,6 +93,16 @@ def resolve_attack_hit_riders(
         target_id=actual_event_id,
         shared_save=(save_result.save_roll, save_result.save_succeeded) if composite is not None else None,
     )
+    swallowed_save = resolve_attack_hit_swallow_save(
+        attacker, defender, attack, dice,
+        attacker_id=attacker_event_id, defender_id=actual_event_id,
+    )
+    if swallowed_save.save_roll is not None and regular_hit_save.save_roll is not None:
+        raise ValueError("An attack cannot resolve two independent source-declared hit saves.")
+    result.on_hit_save = swallowed_save if swallowed_save.save_roll is not None else regular_hit_save
+    for condition in swallowed_save.additional_conditions:
+        if condition not in result.applied_conditions:
+            result.applied_conditions.append(condition)
     if attack.on_hit_ongoing_hp_loss is not None:
         result.on_hit_save = resolve_on_hit_ongoing_hp_loss(
             defender, attack, dice, source_id=attacker_event_id,
