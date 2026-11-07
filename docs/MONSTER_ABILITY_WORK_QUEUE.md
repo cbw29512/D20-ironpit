@@ -1,5 +1,11 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Duergar Resilience — shared contextual save Advantage (branch feat/2014-duergar-resilience-save-advantage)
+
+- **Printed clause (exact source proof):** The duergar has advantage on saving throws against poison, spells, and illusions, as well as to resist being charmed or paralyzed. Full-clause identity-neutral scan; mutation fails closed.
+- **Reusable binding:** Bound to existing `SavingThrowAdvantageGrant` (requires_magical_effect for spells; required_effect_tags poison/charm/paralyzed/illusion). No name dispatch. Python oracle tests cover source, mutation, and advantage on matching contexts. Browser parity via shared grant serialization and existing save mode.
+- **Classifier effect:** Duergar Resilience removed from unsupported traits. Remaining independent blockers: attack:incomplete (enlarged damage), source:extra-action (Enlarge/Invisibility). Generated reports regenerate on workflow. Not admitted or webpage-certified until exact-head CI. Production locked.
+
 ## Shared on-hit single-save damage + timed condition — Quasit poison family
 
 - **Verified source:** 2014 Quasit Claws (Bite in Beast Form): melee +4, 1d4+3 Piercing; one DC 10 Constitution saving throw after hit. Failed save applies **both** 2d4 Poison damage and Poisoned for ten rounds, with end-of-target-turn repeat saves; success negates both. The pinned typed row already contains these parameters.
