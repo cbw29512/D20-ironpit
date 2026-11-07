@@ -17,6 +17,7 @@ from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.light_attack_resolution import resolve_light_extra_attack
 from app.combat.opening_burst import opening_feature_id
+from app.combat.multi_hit_grapple import apply_multi_hit_grapples
 from app.combat.saving_throws import resolve_save_action
 from app.combat.stunning_strike_2014 import resolve_stunning_strike
 from app.combat.timed_attack_cap import turn_attack_allowed
@@ -168,6 +169,10 @@ def resolve_attack_action(
                 sequence, round_number, attacker, setup, dice, light_trigger, turn_key,
             )
             events.extend(more)
+        linked, sequence = apply_multi_hit_grapples(
+            sequence, round_number, attacker, setup, events,
+        )
+        events.extend(linked)
         return events, sequence
     except ValueError:
         raise
