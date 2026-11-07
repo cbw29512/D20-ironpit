@@ -10,6 +10,8 @@ from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_
 from app.content.monster_grapple_followup_multiattack_2014 import source_proves_grapple_followup_multiattack_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_variable_heads_2014 import variable_head_profile_2014
+from app.content.monster_engulf_source_2014 import source_engulf_profile_2014
+from app.domain.attack_action_definitions import MultiattackHitGrapple
 from app.domain.capability_attacks import CapabilityActionSlot, MultiattackCapabilityDefinition
 
 logger = logging.getLogger(__name__)
@@ -103,10 +105,21 @@ def multiattack_2014(monster: SourceMonster2014) -> MultiattackCapabilityDefinit
         if monster.multiattack_policy is not None:
             return MultiattackCapabilityDefinition(id=f"2014-{monster.id}-multiattack",
                                                    variants=source_variants_2014(monster))
+        engulf = source_engulf_profile_2014(monster)
+        post_hit = MultiattackHitGrapple(
+            source_name=engulf.source_name,
+            attack_id=attack_id_2014(monster, engulf.attack_id),
+            required_hits=engulf.required_hits,
+            max_target_size=engulf.max_target_size,
+            grapple_escape_dc=engulf.grapple_escape_dc,
+            grapple_range_ft=engulf.grapple_range_ft,
+            ownership_marker_id=engulf.ownership_marker_id,
+            linked_condition_ids=["blinded", "unable-to-breathe", engulf.ownership_marker_id],
+            max_active_targets=engulf.max_active_targets,
+        ) if engulf else None
         return MultiattackCapabilityDefinition(
             id=f"2014-{monster.id}-multiattack", name="Multiattack",
-            # Multiattack is its own Action; it cannot grant the Light extra attack.
-            is_attack_action=False,
+            is_attack_action=False, hit_grapple=post_hit,
             slots=[CapabilityActionSlot(attack_ids=[attack_id_2014(monster, item) for item in slot])
                    for slot in monster.multiattack_slots],
         )
