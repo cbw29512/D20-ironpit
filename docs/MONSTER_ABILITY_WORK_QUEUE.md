@@ -1,6 +1,15 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Fire Elemental Touch — shared start-of-target-turn ignition (PR #1186; final-head CI pending)
+## Purple Worm — Bite hit → failed Dexterity save → shared Swallowed (PR pending)
+
+- **Source:** +9 Bite/10-ft reach/3d8+9 Piercing, only Large-or-smaller target then DC19 Dexterity save; failure applies the same canonical Swallowed state as grapple-first creatures, with Blinded, Restrained, total external cover and 6d6 Acid at the worm's turn start. Regurgitation after 30 damage in a turn from an inside creature requires DC21 Constitution; death release is 20-ft exit and Prone.
+- **Universal extension:** immutable Swallow profile now declares optional printed on-hit save ability/DC, separate from pre-hit Grapple requirement. A strict source proof validates the complete on-hit trigger and existing typed source values without monster-name dispatch. Python/browser hit runtimes share their existing save/Swallow/damage/release primitives; Action economy does not add a separate Swallow action to Bite.
+- **Verification gates:** Python source, positive/negative save, size, monster rename, mutation and turn-release tests; synthetic browser hit/miss/save/acid/cleanup tests are part of required CI. Generated roster admission and full webpage fight certification must be measured, not presumed. Production publishing remains locked.
+
+## Fire Form — shared contact retaliation tranche (branch feat/2014-fire-form-contact-family)
+
+- **Partially bound, not admitted:** Fire Elemental's printed Fire Form includes 1d10 Fire damage to creatures that touch it or hit it in melee within 5 ft. This reuses the universal passive contact/retaliation primitive already used by Azer, Salamander, Remorhaz and Black Pudding. Source parameters are compiled as immutable passive capability; new fight state handles actual damage and typed defenses.
+- **Remain blocked:** Fire Form's enter-hostile-space ignition/start-of-turn damage, and Water Susceptibility's specified water exposure damage are still unbound. The card is not source-admitted or certified; do not mark these as neutral, remove them or claim complete Fire Elemental fights. Full-body source/mutation tests and shared Python hit test are included. This is a reusable semantic-family improvement, not a new monster-specific combat resolver## Fire Elemental Touch — shared start-of-target-turn ignition (PR #1186; final-head CI pending)
 
 - **Printed hit:** +6 melee Touch, 5-ft reach, 2d6+3 Fire on a successful hit, then Burning **1d10 Fire at the start of the affected creature's turns**, nonstacking, removable by spending an Action to Douse Fire. The owner dying does not extinguish the flame. Source text and typed attack data are checked together; renamed source has identical mechanics.
 - **Reusable combat:** `OnHitRecurringDamage` now supports `target_turn_start` in addition to `target_turn_end`, both feeding existing timed-effects, typed defenses, zero-HP lifecycle, logs, and ordinary self-Douse Action in Python/browser. It never invents a 5-ft helper-Douse range.

@@ -136,7 +136,16 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
             ),
         ))
     else:
-        runnable_attack = attack.model_copy(update={"ongoing_damage_effect": None}) if start_burn is not None else attack
+        source_swallow = source_grapple_swallow_2014(monster)
+        on_hit_swallow = (source_swallow is not None and source_swallow.attack_id == attack.id
+                          and source_swallow.on_hit_save_dc is not None)
+        # Both independent printed riders reuse their own universal runtimes.
+        omitted = {}
+        if start_burn is not None:
+            omitted["ongoing_damage_effect"] = None
+        if on_hit_swallow:
+            omitted["on_hit_save_effect"] = None
+        runnable_attack = attack.model_copy(update=omitted) if omitted else attack
         effects = basic_attack_effects_2014(runnable_attack, opening_initiative_damage_source_2014(monster))
     kwargs = {
         "id": attack_id_2014(monster, attack.id),
