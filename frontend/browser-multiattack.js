@@ -110,6 +110,12 @@
         const extra = R().resolve(sequence, round, member, setup, lightTrigger, turnKey);
         events.push(...extra.events); sequence = extra.sequence;
       }
+      if ((member.state.template.multiHitGrappleEffects || []).length) {
+        const runtime = window.IRON_PIT_BROWSER_MULTI_HIT_GRAPPLE;
+        if (!runtime?.resolve) throw new Error("Multi-hit grapple runtime not loaded.");
+        const linked = runtime.resolve(sequence, round, member, setup, events);
+        events.push(...linked.events); sequence = linked.sequence;
+      }
       return { events, sequence };
     } catch (error) {
       console.error("Browser Multiattack resolution failed", { id: member?.combatant_id, error });
