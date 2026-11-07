@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 _CONTACT = re.compile(
     r"A creature that touches the .+? or hits it with a melee attack "
     r"while within (?P<reach>\d+) feet of it takes "
-    r"\d+ \((?P<count>\d+)d(?P<size>\d+)\) (?P<type>fire|acid) damage\b",
+    r"(?P<average>\d+) \((?P<count>\d+)d(?P<size>\d+)\) (?P<type>fire|acid) damage\b",
     re.IGNORECASE | re.DOTALL,
 )
 
@@ -34,6 +34,8 @@ def _source_retaliation_2014(
         return []
     match = _CONTACT.search(section.group("body"))
     if match is None or match.group("type").lower() != damage_type.value:
+        return []
+    if int(match.group("average")) != (int(match.group("count")) * (int(match.group("size")) + 1)) // 2:
         return []
     return [TimedSelfBuffAction(
         id=label.lower().replace(" ", "-"), name=label, activation_timing="passive",
