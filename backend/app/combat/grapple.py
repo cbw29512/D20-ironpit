@@ -31,6 +31,9 @@ def _sync_effect_ids(state: CombatantState) -> None:
         state.active_effect_ids.append(RESTRAINED_EFFECT_ID)
     elif not restrained and RESTRAINED_EFFECT_ID in state.active_effect_ids:
         state.active_effect_ids.remove(RESTRAINED_EFFECT_ID)
+    if any(source.blinds for source in state.grapple_sources):
+        if "blinded" not in state.active_effect_ids:
+            state.active_effect_ids.append("blinded")
 
 
 def apply_grapple(
@@ -42,9 +45,13 @@ def apply_grapple(
     restrains: bool = False,
     source_is_magical: bool = False,
     periodic_damage=None,
+    blinds: bool = False,
+    prevents_breathing: bool = False,
 ) -> list[str]:
     if condition_is_immune(state, GRAPPLED_EFFECT_ID, source_is_magical=source_is_magical):
         return []
+    # Capture preexisting Blindness before adding this source-owned effect.
+    had_blind = "blinded" in state.active_effect_ids
     state.grapple_sources = [source for source in state.grapple_sources if source.source_id != source_id]
     restrains = restrains and not condition_is_immune(
         state,
@@ -58,14 +65,24 @@ def apply_grapple(
         restrains=restrains,
         source_is_magical=source_is_magical,
         periodic_damage=periodic_damage,
+        blinds=blinds and not condition_is_immune(state, "blinded", source_is_magical=source_is_magical),
+        prevents_breathing=prevents_breathing,
+        blinded_preexisting=had_blind,
     ))
     _sync_effect_ids(state)
     return [GRAPPLED_EFFECT_ID, RESTRAINED_EFFECT_ID] if restrains else [GRAPPLED_EFFECT_ID]
 
 
 def release_grapple(state: CombatantState, source_id: str) -> None:
+    removed = [source for source in state.grapple_sources if source.source_id == source_id]
     state.grapple_sources = [source for source in state.grapple_sources if source.source_id != source_id]
     _sync_effect_ids(state)
+    # Clear only a source-owned Blindness; preserve a preexisting or timed one.
+    if (any(source.blinds for source in removed)
+            and not any(source.blinds for source in state.grapple_sources)
+            and not any(source.blinded_preexisting for source in removed)
+            and not any(effect.effect_id == "blinded" for effect in state.timed_effects)):
+        state.active_effect_ids = [x for x in state.active_effect_ids if x != "blinded"]
 
 
 def resolve_movement_countered_grapples(state: CombatantState) -> list[tuple[str, str, int]]:
@@ -126,6 +143,8 @@ def cleanup_grapples(setup: EncounterSetup) -> None:
             if abs(grappler.position_ft - target.position_ft) > source.range_ft:
                 continue
             retained.append(source)
+        for removed in [source for source in target.state.grapple_sources if source not in retained]:
+            release_grapple(target.state, removed.source_id)
         target.state.grapple_sources = retained
         _sync_effect_ids(target.state)
 
