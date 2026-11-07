@@ -19,6 +19,22 @@ RESTRAINED_EFFECT_ID = "restrained"
 
 
 def _sync_effect_ids(state: CombatantState) -> None:
+    # Track only additional conditions owned by grapple sources, and never
+    # remove the same condition while an independent timed effect owns it.
+    previous = set(state.grapple_owned_effect_ids)
+    owned = {
+        item for source in state.grapple_sources
+        for item in source.linked_condition_ids
+    }
+    for item in previous - owned:
+        if not any(effect.effect_id == item for effect in state.timed_effects):
+            state.active_effect_ids = [x for x in state.active_effect_ids if x != item]
+    for item in owned:
+        if item == "blinded" and condition_is_immune(state, item):
+            continue
+        if item not in state.active_effect_ids:
+            state.active_effect_ids.append(item)
+    state.grapple_owned_effect_ids = sorted(owned)
     if state.grapple_sources:
         if GRAPPLED_EFFECT_ID not in state.active_effect_ids:
             state.active_effect_ids.append(GRAPPLED_EFFECT_ID)
@@ -42,6 +58,7 @@ def apply_grapple(
     restrains: bool = False,
     source_is_magical: bool = False,
     periodic_damage=None,
+    linked_condition_ids: tuple[str, ...] = (),
 ) -> list[str]:
     if condition_is_immune(state, GRAPPLED_EFFECT_ID, source_is_magical=source_is_magical):
         return []
@@ -58,9 +75,14 @@ def apply_grapple(
         restrains=restrains,
         source_is_magical=source_is_magical,
         periodic_damage=periodic_damage,
+        linked_condition_ids=list(linked_condition_ids),
     ))
     _sync_effect_ids(state)
-    return [GRAPPLED_EFFECT_ID, RESTRAINED_EFFECT_ID] if restrains else [GRAPPLED_EFFECT_ID]
+    return list(dict.fromkeys([
+        GRAPPLED_EFFECT_ID,
+        *([RESTRAINED_EFFECT_ID] if restrains else []),
+        *(item for item in linked_condition_ids if item in state.active_effect_ids),
+    ]))
 
 
 def release_grapple(state: CombatantState, source_id: str) -> None:
