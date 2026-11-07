@@ -132,7 +132,12 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
             ),
         ))
     else:
-        effects = basic_attack_effects_2014(attack, opening_initiative_damage_source_2014(monster))
+        source_swallow = source_grapple_swallow_2014(monster)
+        # A source-proven failed-save Swallow is resolved by the shared hit
+        # rider after normal damage, never as a duplicate generic condition.
+        on_hit_swallow = source_swallow is not None and source_swallow.attack_id == attack.id and source_swallow.on_hit_save_dc is not None
+        normalized = attack.model_copy(update={"on_hit_save_effect": None}) if on_hit_swallow else attack
+        effects = basic_attack_effects_2014(normalized, opening_initiative_damage_source_2014(monster))
     kwargs = {
         "id": attack_id_2014(monster, attack.id),
         "weapon_id": attack_id_2014(monster, attack.id),
