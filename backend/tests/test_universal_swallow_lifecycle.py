@@ -81,6 +81,44 @@ def test_owner_turn_acid_damage_and_source_death_release():
     assert release_invalid_swallowed(setup) == []
 
 
+def test_source_turn_damage_optional_save_and_flat_bonus():
+    """A renamed source uses the same save-gated damage without a special resolver."""
+    _, action, owner, target = _make("giant-frog")
+    conditional = action.model_copy(update={
+        "source_name": "Synthetic Engulf",
+        "damage_dice_count": 2, "damage_dice_size": 8,
+        "damage_bonus": 4,
+        "damage_type": "bludgeoning",
+        "turn_start_save_ability": "constitution",
+        "turn_start_save_dc": 14,
+    })
+    apply_grapple(target, "frog", 11, 5, restrains=True)
+    assert swallow_after_bite("frog", owner, "victim", target, conditional, bite_hit=True)
+    eater = EncounterCombatant(combatant_id="frog", side="monsters", position_ft=0, state=owner)
+    meal = EncounterCombatant(combatant_id="victim", side="heroes", position_ft=0, state=target)
+    setup = EncounterSetup(heroes=[meal], monsters=[eater], hero_total_levels=1, monster_total_cr="1/4")
+    starting_hp = target.current_hp
+    success, _ = source_turn_swallowed_damage(1, 1, eater, setup, FixedDiceProvider([20]))
+    assert success[0].save_succeeded is True
+    assert success[0].damage_components == []
+    assert target.current_hp == starting_hp
+    failed, _ = source_turn_swallowed_damage(2, 2, eater, setup, FixedDiceProvider([1, 8, 8]))
+    assert failed[0].save_succeeded is False
+    assert failed[0].feature_id == "Synthetic Engulf"
+    assert target.current_hp == max(0, starting_hp - 20)
+
+def test_source_turn_damage_save_requires_complete_pair():
+    from pydantic import ValidationError
+    from app.domain.swallow_actions import GrappleSwallowAction
+    import pytest
+    _, action, _, _ = _make("giant-frog")
+    data = action.model_dump()
+    data["turn_start_save_ability"] = "constitution"
+    with pytest.raises(ValidationError):
+        GrappleSwallowAction.model_validate(data)
+
+
+
 def test_swallowed_target_has_total_cover_from_external_attacks():
     from app.combat.attack_legality import attack_allowed_against
 

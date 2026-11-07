@@ -1470,7 +1470,11 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        if action.on_hit_save_dc is not None else {}),
                     "damageDiceCount": action.damage_dice_count,
                     "damageDiceSize": action.damage_dice_size,
+                    **({"damageBonus": action.damage_bonus} if action.damage_bonus else {}),
                     "damageType": action.damage_type,
+                    **({"turnStartSaveAbility": action.turn_start_save_ability,
+                        "turnStartSaveDc": action.turn_start_save_dc}
+                       if action.turn_start_save_dc is not None else {}),
                     "maxSwallowed": action.max_swallowed,
                     "exitMovementFt": action.exit_movement_ft,
                     **({

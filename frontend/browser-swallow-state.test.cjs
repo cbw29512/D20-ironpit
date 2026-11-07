@@ -35,7 +35,7 @@ assert.equal(swallow.swallowAfterBite("toad",toad,"medium",medium,{...action,max
 assert.equal(medium.swallowed.damage_dice_count,3);
 window.IRON_PIT_DICE={rollMany:(count,size)=>Array.from({length:count},()=>size)};
 window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES={resolveDamage:(_state,total,type)=>{
-  assert.equal(type,"acid"); return {applied:total};
+  assert.ok(["acid","bludgeoning"].includes(type)); return {applied:total};
 }};
 window.IRON_PIT_BROWSER_ATTACK={applyDamage:(state,total)=>{state.current_hp=Math.max(0,state.current_hp-total);}};
 const swallowedSetup={heroes:[{combatant_id:"medium",state:medium}],monsters:[{combatant_id:"toad",state:toad}]};
@@ -44,6 +44,25 @@ assert.equal(acid.sequence,4);
 assert.equal(acid.events[0].damage_components[0].notation,"3d6");
 assert.equal(acid.events[0].damage_components[0].applied_total,18);
 assert.equal(medium.current_hp,12);
+// Generic save-gated source-turn damage (synthetic Engulf-shaped declaration).
+medium.swallowed.source_name="Synthetic Engulf";
+medium.swallowed.damage_dice_count=2;
+medium.swallowed.damage_dice_size=8;
+medium.swallowed.damage_bonus=4;
+medium.swallowed.turn_start_save_ability="constitution";
+medium.swallowed.turn_start_save_dc=14;
+let saveSucceeded=true;
+window.IRON_PIT_BROWSER_SAVING_THROWS={resolveSavingThrow:()=>({roll:{total:saveSucceeded?20:1},succeeded:saveSucceeded})};
+const saved=swallow.sourceTurnDamage(4,3,swallowedSetup.monsters[0],swallowedSetup);
+assert.equal(saved.events[0].save_succeeded,true);
+assert.equal(saved.events[0].damage_components.length,0);
+assert.equal(medium.current_hp,12);
+saveSucceeded=false;
+const failed=swallow.sourceTurnDamage(5,4,swallowedSetup.monsters[0],swallowedSetup);
+assert.equal(failed.events[0].save_succeeded,false);
+assert.equal(failed.events[0].damage_components[0].modifier,4);
+assert.equal(failed.events[0].damage_components[0].total,20);
+assert.equal(medium.current_hp,0);
 medium.current_hp=0;
 assert.deepEqual(swallow.cleanup(swallowedSetup),[],"0 HP is not actual character death");
 assert.equal(medium.swallowed.source_id,"toad");

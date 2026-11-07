@@ -25,6 +25,9 @@
       source_id: ownerId, source_name: action.sourceName,
       damage_dice_count: action.damageDiceCount,
       damage_dice_size: action.damageDiceSize, damage_type: action.damageType,
+      damage_bonus: action.damageBonus || 0,
+      turn_start_save_ability: action.turnStartSaveAbility || null,
+      turn_start_save_dc: action.turnStartSaveDc ?? null,
       exit_movement_ft: action.exitMovementFt,
       regurgitation_damage_threshold: action.regurgitationDamageThreshold || null,
       regurgitation_save_ability: action.regurgitationSaveAbility || null,
@@ -91,24 +94,38 @@
         const record = target.state.swallowed;
         if (!record || record.source_id !== owner.combatant_id
           || !target.state.is_alive || target.state.is_dead) continue;
-        const rolls = D().rollMany(record.damage_dice_count, record.damage_dice_size);
-        const total = rolls.reduce((sum, roll) => sum + roll, 0);
+        let save = null;
+        if (record.turn_start_save_ability) {
+          if (!Number.isInteger(record.turn_start_save_dc))
+            throw new Error("Start-of-turn damage save is missing its DC.");
+          const saves = window.IRON_PIT_BROWSER_SAVING_THROWS;
+          if (!saves?.resolveSavingThrow) throw new Error("Universal saving throw runtime unavailable.");
+          save = saves.resolveSavingThrow(target.state, record.turn_start_save_ability,
+            record.turn_start_save_dc, {roundNumber: round, encounterRoller: target, setup});
+        }
+        const rolls = save?.succeeded ? [] : D().rollMany(record.damage_dice_count, record.damage_dice_size);
+        const total = save?.succeeded ? 0 : rolls.reduce((sum, roll) => sum + roll, record.damage_bonus || 0);
         const hpBefore = target.state.current_hp;
-        const resolved = DD().resolveDamage(target.state, total, record.damage_type);
-        A().applyDamage(target.state, resolved.applied, false, [record.damage_type], affected, setup, [{
+        const resolved = save?.succeeded ? {applied: 0}
+          : DD().resolveDamage(target.state, total, record.damage_type);
+        if (!save?.succeeded) A().applyDamage(target.state, resolved.applied, false, [record.damage_type], affected, setup, [{
           source: record.source_name, damage_type: record.damage_type,
           notation: `${record.damage_dice_count}d${record.damage_dice_size}`,
-          rolls, modifier: 0, total, applied_total: resolved.applied,
+          rolls, modifier: record.damage_bonus || 0, total, applied_total: resolved.applied,
         }], owner.combatant_id);
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
           actor_id: owner.combatant_id, actor_name: ownerState.template.name,
           target_id: target.combatant_id, target_name: target.state.template.name,
           feature_id: record.source_name, hp_before: hpBefore, hp_after: target.state.current_hp,
-          damage_components: [{
+          saving_throw_roll: save?.roll || null,
+          save_ability: save ? record.turn_start_save_ability : null,
+          save_dc: save ? record.turn_start_save_dc : null,
+          save_succeeded: save ? save.succeeded : null,
+          damage_components: save?.succeeded ? [] : [{
             source: record.source_name, damage_type: record.damage_type,
             notation: `${record.damage_dice_count}d${record.damage_dice_size}`,
-            rolls, modifier: 0, total, applied_total: resolved.applied,
+            rolls, modifier: record.damage_bonus || 0, total, applied_total: resolved.applied,
           }],
           animation: "feature",
           description: `${ownerState.template.name}: ${record.source_name} deals ${resolved.applied} ${record.damage_type} damage to swallowed ${target.state.template.name} at the source's turn start.`,
