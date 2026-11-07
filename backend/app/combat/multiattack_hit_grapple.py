@@ -32,7 +32,7 @@ def resolve_hit_grapple(
             if member.combatant_id != attacker.combatant_id
             and any(
                 held.source_id == attacker.combatant_id
-                and rule.source_name.casefold().replace(" ", "-") in held.linked_condition_ids
+                and rule.ownership_marker_id in held.linked_condition_ids
                 for held in member.state.grapple_sources
             )
         )
