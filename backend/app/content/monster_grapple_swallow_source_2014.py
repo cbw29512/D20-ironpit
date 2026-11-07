@@ -8,6 +8,7 @@ import re
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_sections_2014 import source_sections_2014
 from app.content.monster_threshold_swallow_source_2014 import threshold_swallow_source_2014
+from app.content.monster_sequence_engulf_source_2014 import source_sequence_containment_2014
 from app.domain.size import CreatureSize
 
 logger = logging.getLogger(__name__)
@@ -47,6 +48,14 @@ class GrappleSwallowSource2014:
     requires_existing_grapple: bool = True
     on_hit_save_ability: str | None = None
     on_hit_save_dc: int | None = None
+    required_sequence_hits: int = 0
+    sequence_grapple_dc: int | None = None
+    damage_bonus: int = 0
+    start_turn_save_ability: str | None = None
+    start_turn_save_dc: int | None = None
+    exit_prone: bool = True
+    cannot_breathe: bool = False
+    moves_with_source: bool = False
 
 
 def _simple_profile(monster: SourceMonster2014) -> GrappleSwallowSource2014 | None:
@@ -111,6 +120,21 @@ def source_grapple_swallow_2014(
         simple = _simple_profile(monster)
         if simple is not None:
             return simple
+        sequence = source_sequence_containment_2014(monster)
+        if sequence is not None:
+            return GrappleSwallowSource2014(
+                source_name=sequence.source_name, attack_id=sequence.attack_id,
+                delivery_mode="attack_sequence", max_target_size=sequence.max_target_size,
+                damage_dice_count=sequence.damage_dice_count,
+                damage_dice_size=sequence.damage_dice_size,
+                damage_bonus=sequence.damage_bonus, damage_type=sequence.damage_type,
+                max_swallowed=1, exit_movement_ft=0, exit_prone=False,
+                required_sequence_hits=sequence.required_sequence_hits,
+                sequence_grapple_dc=sequence.grapple_dc,
+                start_turn_save_ability=sequence.start_turn_save_ability,
+                start_turn_save_dc=sequence.start_turn_save_dc,
+                cannot_breathe=True, moves_with_source=True,
+            )
         threshold = threshold_swallow_source_2014(monster)
         if threshold is None:
             return None
