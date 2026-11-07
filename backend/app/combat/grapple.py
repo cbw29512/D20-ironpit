@@ -134,7 +134,8 @@ def cleanup_grapples(setup: EncounterSetup) -> None:
         # A dead target no longer occupies a held-grapple slot; unconscious
         # living targets remain held until the owner is Incapacitated or released.
         if target.state.is_dead or not target.state.is_alive:
-            target.state.grapple_sources = []
+            for source in list(target.state.grapple_sources):
+                release_grapple(target.state, source.source_id)
             _sync_effect_ids(target.state)
             continue
         retained: list[GrappleSource] = []
