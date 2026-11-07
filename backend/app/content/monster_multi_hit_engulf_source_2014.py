@@ -26,8 +26,8 @@ _ENGULF = re.compile(
     r"of each of the (?P=actor)'s turns or take (?P<avg>\d+) "
     r"\((?P<count>\d+)d(?P<die>\d+) \+ (?P<bonus>\d+)\) "
     r"(?P<type>bludgeoning|piercing|acid|fire|cold) damage\. "
-    r"If the (?P=actor) moves, the engulfed target moves with it\. "
-    r"The (?P=actor) can have only one creature engulfed at a time\.", re.I,
+    r"If the (?P<short>[\w-]+) moves, the engulfed target moves with it\. "
+    r"The (?P=short) can have only one creature engulfed at a time\.", re.I,
 )
 
 
@@ -43,7 +43,8 @@ def source_two_hit_engulf_2014(
             return None
         if (a["actor"].casefold() != b["actor"].casefold()
                 or a["size"].casefold() != b["size"].casefold()
-                or a["name"].casefold() != "engulf"):
+                or a["name"].casefold() != "engulf"
+                or b["short"].casefold() != b["actor"].casefold().split()[-1]):
             return None
         matching = [attack for attack in monster.attacks
                     if attack.name.casefold() == a["attack"].casefold()
