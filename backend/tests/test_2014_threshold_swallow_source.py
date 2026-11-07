@@ -75,7 +75,7 @@ def test_complete_327_card_scan_proves_only_supported_swallow_grammars() -> None
         }
         assert proven == {
             "behir", "giant-frog", "giant-toad",
-            "kraken", "purple-worm", "remorhaz", "tarrasque",
+            "kraken", "purple-worm", "remorhaz", "shambling-mound", "tarrasque",
         }
         for monster_id in proven:
             blockers = basic_blockers_2014(CORPUS[monster_id])
