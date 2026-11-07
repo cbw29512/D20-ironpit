@@ -1171,7 +1171,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["source_turn_relation_damages"] = [rule.model_dump(mode="json") for rule in template.source_turn_relation_damages]
         if template.multi_hit_grapple_effects:
             row["multiHitGrappleEffects"] = [
-                {"sourceName": rule.source_name, "attackId": rule.attack_id,
+                {"sourceName": rule.source_name, "effectId": rule.effect_id,
+                 "standaloneAction": rule.standalone_action, "attackId": rule.attack_id,
                  "hitsRequired": rule.hits_required,
                  "maxTargetSize": rule.max_target_size.value,
                  "escapeDc": rule.escape_dc, "rangeFt": rule.range_ft,
