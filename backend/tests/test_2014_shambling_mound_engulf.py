@@ -75,10 +75,14 @@ def test_source_drift_and_renaming_do_not_invent_behavior():
     renamed_rule = source_two_hit_engulf_2014(renamed)
     assert renamed_rule is not None
     assert renamed_rule[0].hits_required == profile[0].hits_required
+    # A changed printed DC is source data, not an engine change.
+    changed_dc = source.model_copy(update={
+        "source_actions": source.source_actions.replace("escape DC 14", "escape DC 15"),
+    })
+    assert source_two_hit_engulf_2014(changed_dc)[0].escape_dc == 15
     for before, after in (
         ("both attacks hit", "one attack hits"),
         ("unable to breathe", "able to breathe"),
-        ("escape DC 14", "escape DC 15"),
         ("2d8 + 4", "2d8 + 5"),
         ("only one creature engulfed", "two creatures engulfed"),
     ):
@@ -98,7 +102,7 @@ def test_two_hits_same_target_upgrade_source_grapple_and_release():
             sequence=seq, round_number=1, event_type="attack",
             actor_id="owner", actor_name="Renamed Holder",
             target_id=target_id, attack_id=attack_id, hit=landed,
-            description="Source-neutral Slam attack.",
+            description="Source-neutral Slam attack.", animation="attack",
         )
 
     for attacks in ([hit(1)], [hit(1), hit(2, landed=False)]):
