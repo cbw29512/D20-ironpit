@@ -81,7 +81,7 @@ def test_owner_turn_acid_damage_and_source_death_release():
     assert release_invalid_swallowed(setup) == []
 
 
-def test_source_turn_damage_optional_save_and_flat_bonus():
+def test_source_turn_damage_optional_save_and_flat_bonus(monkeypatch):
     """A renamed source uses the same save-gated damage without a special resolver."""
     _, action, owner, target = _make("giant-frog")
     conditional = action.model_copy(update={
@@ -97,14 +97,26 @@ def test_source_turn_damage_optional_save_and_flat_bonus():
     eater = EncounterCombatant(combatant_id="frog", side="monsters", position_ft=0, state=owner)
     meal = EncounterCombatant(combatant_id="victim", side="heroes", position_ft=0, state=target)
     setup = EncounterSetup(heroes=[meal], monsters=[eater], hero_total_levels=1, monster_total_cr="1/4")
+    # Verify prevention skips the actual damage dispatcher, not just HP subtraction.
+    import app.combat.swallow_lifecycle as lifecycle
+    original_apply = lifecycle.apply_damage
+    applications = []
+
+    def counted_apply(*args, **kwargs):
+        applications.append((args, kwargs))
+        return original_apply(*args, **kwargs)
+
+    monkeypatch.setattr(lifecycle, "apply_damage", counted_apply)
     starting_hp = target.current_hp
     success, _ = source_turn_swallowed_damage(1, 1, eater, setup, FixedDiceProvider([20]))
     assert success[0].save_succeeded is True
     assert success[0].damage_components == []
     assert target.current_hp == starting_hp
+    assert applications == []
     failed, _ = source_turn_swallowed_damage(2, 2, eater, setup, FixedDiceProvider([1, 8, 8]))
     assert failed[0].save_succeeded is False
     assert failed[0].feature_id == "Synthetic Engulf"
+    assert len(applications) == 1
     assert target.current_hp == max(0, starting_hp - 20)
 
 def test_source_turn_damage_save_requires_complete_pair():
