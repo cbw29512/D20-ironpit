@@ -63,3 +63,33 @@ def corrosive_form_retaliation_2014(monster: SourceMonster2014) -> list[TimedSel
     except Exception:
         logger.exception("Failed 2014 Corrosive Form binding for %s.", monster.name)
         raise
+
+
+
+def fire_form_contact_retaliation_2014(monster: SourceMonster2014) -> list[TimedSelfBuffAction]:
+    """Reuse the same contact/melee retaliation for a compound Fire Form trait.
+
+    This binds ONLY the printed contact clause. Space-entry ignition and water
+    interactions are separate obligations and keep the monster blocked.
+    """
+    try:
+        from app.content.monster_source_sections_2014 import source_sections_2014
+
+        body = source_sections_2014(monster.source_traits, include_continuations=True).get("Fire Form")
+        if body is None:
+            return []
+        # Fail closed when the other independent clauses are altered: this is
+        # a partial binding, not certification of the entire compound trait.
+        required = (
+            "can move through a space as narrow as 1 inch wide without squeezing",
+            "can enter a hostile creature's space and stop there",
+            "first time it enters a creature's space on a turn",
+            "catches fire",
+            "at the start of each of its turns",
+        )
+        if not all(text in body for text in required):
+            return []
+        return _source_retaliation_2014(monster, "Fire Form", DamageType.FIRE)
+    except Exception:
+        logger.exception("Failed generic 2014 Fire Form contact-damage binding.")
+        raise
