@@ -27,6 +27,8 @@ from app.content.monster_included_weapon_traits_2014 import weapon_damage_source
 from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_innate_conditions_2014 import innate_condition_ids_2014
 from app.content.monster_grappler_damage_2014 import source_turn_grappler_damage_2014
+from app.content.monster_engulf_source_2014 import source_engulf_profile_2014
+from app.domain.source_turn_relation_damage import SourceTurnRelationDamage
 from app.content.monster_contextual_save_defenses import contextual_save_defenses_2014
 from app.content.monster_definition_adapter_support_2014 import (
     ability_values_2014,
@@ -236,6 +238,15 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         ]
     if feature_update:
         features = features.model_copy(update=feature_update)
+    engulf = source_engulf_profile_2014(monster)
+    engulf_ticks = [SourceTurnRelationDamage(
+        source_name=engulf.source_name,
+        target_relation="creatures_grappled_by_source",
+        dice_count=engulf.damage_dice_count, dice_size=engulf.damage_dice_size,
+        damage_bonus=engulf.damage_bonus, damage_type=engulf.damage_type,
+        save_ability=engulf.save_ability, save_dc=engulf.save_dc,
+        required_grapple_condition_id=engulf.ownership_marker_id,
+    )] if engulf else []
     defenses = template_defense_fields_2014(monster)
     defenses["condition_immunities"] = list(core.condition_immunities)
     return CombatantDefinition(
@@ -313,7 +324,9 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         innate_condition_ids=list(core.innate_condition_ids),
         source_allows_hostile_overlap=bool({'Air Form', 'Water Form'} & set(monster.trait_names)),
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
-        source_turn_relation_damages=source_turn_grappler_damage_2014(monster),
+        source_turn_relation_damages=[
+            *source_turn_grappler_damage_2014(monster), *engulf_ticks,
+        ],
         source_legendary_action_names=list(monster.legendary_action_names),
         attack_damage_reduction_reaction=source_rock_catching_reaction_2014(monster),
         turn_start_save_condition_reaction=source_unnerving_mask_reaction_2014(monster),
