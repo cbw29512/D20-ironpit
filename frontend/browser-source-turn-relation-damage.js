@@ -30,7 +30,8 @@
             grapple.source_id === ownerId
             && (!rule.required_grapple_condition_id
               || (grapple.linked_condition_ids || []).includes(rule.required_grapple_condition_id))
-            && Math.abs(target.position_ft - member.position_ft) <= grapple.range_ft);
+            && (grapple.moves_with_source
+              || Math.abs(target.position_ft - member.position_ft) <= grapple.range_ft));
           if (!active) continue;
           let save = null;
           if (rule.save_ability != null) {
