@@ -7,7 +7,7 @@
     try {
       if (!window.IRON_PIT_ACTION_ECONOMY?.available(member.state, "action")) return null;
       for (const action of member.state.template.swallowActions || []) {
-        if ((action.deliveryMode || "action_attack") !== "action_attack") continue;
+        if (!["action_attack", "attack_sequence"].includes(action.deliveryMode || "action_attack")) continue;
         if (action.maxSwallowed != null
           && (member.state.swallowed_target_ids || []).length >= action.maxSwallowed) continue;
         const attack = (member.state.template.attacks || []).find(item => item.id === action.attackId);
@@ -47,6 +47,27 @@
       const chosen = choose(member, setup);
       if (!chosen || chosen.target.combatant_id !== targetId || chosen.action.attackId !== attackId) {
         throw new Error("Swallow candidate is no longer legal.");
+      }
+      if (chosen.action.deliveryMode === "attack_sequence") {
+        // A source-declared held-target Action spends no additional attack roll.
+        const swallow = window.IRON_PIT_BROWSER_SWALLOW;
+        const economy = window.IRON_PIT_ACTION_ECONOMY;
+        if (!swallow?.swallowAfterBite || !economy?.spend)
+          throw new Error("Held-target containment requires universal state and Action economy.");
+        economy.spend(member.state, "action");
+        if (!swallow.swallowAfterBite(
+          member.combatant_id, member.state, targetId,
+          chosen.target.state, chosen.action, true,
+        )) throw new Error("A legal held-target containment Action failed.");
+        return { events: [{
+          sequence, round_number: round, event_type: "feature",
+          actor_id: member.combatant_id, actor_name: member.state.template.name,
+          target_id: targetId, target_name: chosen.target.state.template.name,
+          feature_id: chosen.action.sourceName, animation: "feature",
+          applied_condition_ids: ["blinded", "restrained"],
+          description: `${member.state.template.name} uses ${chosen.action.sourceName} on `
+            + `Grappled ${chosen.target.state.template.name}: Blinded and Restrained.`,
+        }], sequence: sequence + 1 };
       }
       const bite = { ...chosen.attack, controlEffect: null, grappleTargetPolicy: "normal" };
       const event = window.IRON_PIT_BROWSER_ATTACK.resolveAttack(
