@@ -8,6 +8,7 @@ from app.content.monster_attack_ammunition_2014 import attack_ammunition_2014, a
 from app.content.monster_save_capabilities_2014 import save_capabilities_2014
 from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
 from app.content.monster_grapple_followup_multiattack_2014 import source_proves_grapple_followup_multiattack_2014
+from app.content.monster_multi_hit_engulf_source_2014 import source_two_hit_engulf_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_variable_heads_2014 import variable_head_profile_2014
 from app.domain.capability_attacks import CapabilityActionSlot, MultiattackCapabilityDefinition
@@ -93,6 +94,17 @@ def multiattack_2014(monster: SourceMonster2014) -> MultiattackCapabilityDefinit
             return MultiattackCapabilityDefinition(
                 id=f"2014-{monster.id}-multiattack", slots=bound_slots,
                 is_attack_action=False,
+            )
+        # This exact printed grammar has no parser slots, but does have a
+        # source-proven two-attack sequence. Bind the universal slot executor.
+        multi_hit = source_two_hit_engulf_2014(monster)
+        if multi_hit is not None:
+            rule = multi_hit[0]
+            return MultiattackCapabilityDefinition(
+                id=f"2014-{monster.id}-multiattack",
+                name="Multiattack", is_attack_action=False,
+                slots=[CapabilityActionSlot(attack_ids=[rule.attack_id])
+                       for _ in range(rule.hits_required)],
             )
         if not monster.multiattack_slots:
             return None
