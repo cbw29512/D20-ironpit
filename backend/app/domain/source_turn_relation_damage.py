@@ -18,6 +18,7 @@ class SourceTurnRelationDamage(BaseModel):
     dice_size: int = Field(ge=2, le=100)
     damage_type: DamageType
     damage_bonus: int = Field(default=0, exclude_if=lambda value: value == 0)
+    required_grapple_effect_id: str | None = Field(default=None, exclude_if=lambda value: value is None)
     save_ability: str | None = Field(default=None, exclude_if=lambda value: value is None)
     save_dc: int | None = Field(default=None, ge=1, le=40, exclude_if=lambda value: value is None)
 
