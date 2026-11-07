@@ -26,7 +26,8 @@ def apply_attack_sequence_containment(
     primitive and immediately transitioned into the existing contained state.
     """
     try:
-        if not (target.state.is_alive and not target.state.is_dead
+        if not (attacker.state.is_alive and not attacker.state.is_dead
+                and target.state.is_alive and not target.state.is_dead
                 and target.state.current_hp > 0 and target.state.swallowed is None):
             return None
         for rule in attacker.state.template.swallow_actions:
