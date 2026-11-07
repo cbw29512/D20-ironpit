@@ -15,6 +15,8 @@ if str(BACKEND) not in sys.path:
 
 from app.content.demo import build_demo_fighter
 from app.content.monster_grapple_swallow_source_2014 import source_grapple_swallow_2014
+from app.content.monster_multi_hit_engulf_source_2014 import source_two_hit_engulf_2014
+from engulf_binding_report_2014 import report_linked_grapple
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_sections_2014 import source_sections_2014
 from app.domain.swallow_actions import swallow_action_from_source
@@ -110,6 +112,11 @@ def build_report() -> dict[str, object]:
                     "regurgitationAllSwallowed": profile.regurgitation_all_swallowed,
                 })
             browser_wired = len(serialized) == 1 and serialized[0] == expected
+        else:
+            linked = source_two_hit_engulf_2014(monster)
+            if linked is not None:
+                parameters, browser_wired = report_linked_grapple(monster, linked)
+                python_wired = True
         if not (python_wired and browser_wired):
             exceptions.append({"card_id": monster.id, "reason": _incompatibility(monster)})
         rows.append({
