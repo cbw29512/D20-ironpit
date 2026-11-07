@@ -35,7 +35,7 @@ def _incompatibility(monster) -> str:
     if data.get("attack_id") is None or data.get("start_turn_save_dc") is not None:
         return "engulf_start_turn_save_profile_not_supported"
     if data.get("requires_existing_grapple") is False:
-        return "failed_save_on_bite_profile_not_supported"
+        return "failed_save_on_bite_profile_unproven"
     if data.get("regurgitation_damage_threshold") is not None:
         return "damage_threshold_regurgitation_profile_not_supported"
     return "source_profile_not_supported"
@@ -64,7 +64,10 @@ def build_report() -> dict[str, object]:
                 "damage_type": profile.damage_type,
                 "max_swallowed": profile.max_swallowed,
                 "exit_movement_ft": profile.exit_movement_ft,
-                "requires_existing_grapple": True,
+                "requires_existing_grapple": profile.requires_existing_grapple,
+                **({"on_hit_save_ability": profile.on_hit_save_ability,
+                    "on_hit_save_dc": profile.on_hit_save_dc}
+                   if profile.on_hit_save_dc is not None else {}),
             }
             if profile.regurgitation_damage_threshold is not None:
                 parameters.update({
@@ -83,7 +86,10 @@ def build_report() -> dict[str, object]:
             expected = {
                 "sourceName": profile.source_name,
                 "attackId": f"2014-{monster.id}-{profile.attack_id}",
-                "requiresExistingGrapple": True,
+                "requiresExistingGrapple": profile.requires_existing_grapple,
+                **({"onHitSaveAbility": profile.on_hit_save_ability,
+                    "onHitSaveDc": profile.on_hit_save_dc}
+                   if profile.on_hit_save_dc is not None else {}),
                 "maxTargetSize": profile.max_target_size.value,
                 "damageDiceCount": profile.damage_dice_count,
                 "damageDiceSize": profile.damage_dice_size,
