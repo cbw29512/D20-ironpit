@@ -154,7 +154,55 @@
       throw error;
     }
   }
+  function sequenceHit(sequence, round, member, target, attack, events) {
+    // All eligibility comes from the card, never the ability/creature name.
+    try {
+      if (!member.state.is_alive || member.state.is_dead
+        || !target.state.is_alive || target.state.is_dead
+        || target.state.current_hp <= 0 || target.state.swallowed) return null;
+      for (const rule of member.state.template.swallowActions || []) {
+        if (rule.deliveryMode !== "attack_sequence" || rule.attackId !== attack.id) continue;
+        const size = SIZES.indexOf(target.state.template.size);
+        const limit = SIZES.indexOf(rule.maxTargetSize);
+        if (size < 0 || limit < 0) throw new Error("Containment requires certified sizes.");
+        if (size > limit) continue;
+        if (!Number.isInteger(rule.requiredSequenceHits) || rule.requiredSequenceHits < 2
+          || !Number.isInteger(rule.sequenceGrappleDc))
+          throw new Error("Containment requires an exact hit count and Grapple DC.");
+        const hits = events.filter((event) =>
+          event.event_type === "attack" && event.hit === true
+          && event.actor_id === member.combatant_id && event.target_id === target.combatant_id
+          && event.attack_id === rule.attackId).length;
+        if (hits !== rule.requiredSequenceHits) continue;
+        if (rule.maxSwallowed != null
+          && member.state.swallowed_target_ids.length >= rule.maxSwallowed) continue;
+        const grappled = GRAPPLE().apply(
+          target.state, member.combatant_id, rule.sequenceGrappleDc, attack.reach || 5,
+        );
+        if (!grappled.includes("grappled")) continue;
+        if (!swallowAfterBite(
+          member.combatant_id, member.state, target.combatant_id,
+          target.state, rule, true,
+        )) throw new Error("A valid two-hit containment sequence failed.");
+        return {
+          sequence, round_number: round, event_type: "feature",
+          actor_id: member.combatant_id, actor_name: member.state.template.name,
+          target_id: target.combatant_id, target_name: target.state.template.name,
+          feature_id: rule.sourceName, animation: "feature",
+          applied_condition_ids: ["blinded", "restrained"],
+          description: `${member.state.template.name}: ${rule.requiredSequenceHits} ${attack.name} hits `
+            + `grapple ${target.state.template.name} (escape DC ${rule.sequenceGrappleDc}), `
+            + `then ${rule.sourceName} contains the target: Blinded and Restrained.`
+            + (rule.cannotBreathe ? " Unable to breathe." : ""),
+        };
+      }
+      return null;
+    } catch (error) {
+      console.error("Generic same-target multi-hit containment failed.", {error});
+      throw error;
+    }
+  }
   window.IRON_PIT_BROWSER_SWALLOW = {
-    swallowAfterBite, release, cleanup, sourceTurnDamage,
+    swallowAfterBite, release, cleanup, sourceTurnDamage, sequenceHit,
   };
 })();
