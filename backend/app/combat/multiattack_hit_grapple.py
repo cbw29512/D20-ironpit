@@ -53,6 +53,7 @@ def resolve_hit_grapple(
                 target.state, attacker.combatant_id,
                 rule.grapple_escape_dc, rule.grapple_range_ft, restrains=True,
                 linked_condition_ids=tuple(rule.linked_condition_ids),
+                moves_with_source=rule.moves_with_source,
             )
             if "grappled" not in applied:
                 continue
