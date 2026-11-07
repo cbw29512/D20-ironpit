@@ -101,6 +101,7 @@ jobs:
           pytest -q backend/tests/test_2014_fire_form_contact_family.py
           pytest -q backend/tests/test_2014_start_turn_ignition_family.py
           pytest -q backend/tests/test_2014_chuul_tentacles_source.py backend/tests/test_2014_chuul_tentacles_fight.py
+          pytest -q backend/tests/test_2014_shambling_mound_engulf.py
           pytest -q backend/tests/test_2014_grapple_owner_save_source.py backend/tests/test_grapple_owned_save_targeting.py
           pytest -q backend/tests/test_2014_source_etherealness_inert.py
           PYTHONPATH=.:backend pytest -q backend/tests/test_2014_imp_invisibility.py
@@ -567,6 +568,7 @@ jobs:
           node frontend/browser-attack-damage-reduction.test.cjs
           node frontend/browser-weapon-corrosion.test.cjs
           node frontend/browser-swallow-state.test.cjs
+          node frontend/browser-multi-hit-grapple.test.cjs
           node frontend/browser-swallow-advanced.test.cjs
           node frontend/browser-bite-hit-swallow-save.test.cjs
           node frontend/browser-corrosion-roll-integration.test.cjs
