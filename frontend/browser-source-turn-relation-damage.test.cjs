@@ -10,7 +10,7 @@ const load = (name) => vm.runInThisContext(
 window.IRON_PIT_DICE = {
   rolls: [],
   rollMany(count, size) {
-    assert.equal(size, 10);
+    assert.ok([8, 10].includes(size));
     return Array.from({ length: count }, () => this.rolls.shift());
   },
 };
@@ -74,4 +74,46 @@ devil.state.is_dead = true;
 assert.equal(Source.resolve(6, 4, devil, combat).events.length, 0);
 const newDevil = make("devil", "monsters", 0);
 assert.deepEqual(newDevil.state.grapple_sources, []);
+
+// Generic owner-held relation with source-turn save, damage bonus, and release.
+const holder = make("holder", "monsters", 0);
+const held = make("held", "heroes", 5);
+const conditional = Object.freeze({
+  source_name: "Renamed Engulf", target_relation: "creatures_grappled_by_source",
+  dice_count: 2, dice_size: 8, damage_type: "bludgeoning",
+  damage_bonus: 4, save_ability: "constitution", save_dc: 14,
+});
+holder.state.template.source_turn_relation_damages = [conditional];
+const heldSetup = { heroes: [held], monsters: [holder] };
+assert.equal(Source.resolve(1, 1, holder, heldSetup).events.length, 0);
+held.state.grapple_sources.push({ source_id: "holder", range_ft: 10, restrains: true });
+let saveSucceeded = true;
+window.IRON_PIT_BROWSER_SAVING_THROWS = {
+  resolveSavingThrow: () => ({roll: {total: saveSucceeded ? 20 : 1}, succeeded: saveSucceeded}),
+};
+const originalApply = window.IRON_PIT_BROWSER_ATTACK.applyDamage;
+let appliedCalls = 0;
+window.IRON_PIT_BROWSER_ATTACK.applyDamage = (...args) => {
+  appliedCalls += 1;
+  return originalApply(...args);
+};
+const saved = Source.resolve(2, 1, holder, heldSetup);
+assert.equal(saved.events[0].save_succeeded, true);
+assert.deepEqual(saved.events[0].damage_components, []);
+assert.equal(held.state.current_hp, 30);
+assert.equal(appliedCalls, 0);
+saveSucceeded = false;
+window.IRON_PIT_DICE.rolls = [8, 8];
+const failed = Source.resolve(3, 2, holder, heldSetup);
+assert.equal(failed.events[0].save_succeeded, false);
+assert.equal(failed.events[0].damage_components[0].total, 20);
+assert.equal(failed.events[0].damage_components[0].modifier, 4);
+assert.equal(failed.events[0].feature_id, "Renamed Engulf");
+assert.equal(held.state.current_hp, 10);
+assert.equal(appliedCalls, 1);
+held.state.grapple_sources = [];
+assert.equal(Source.resolve(4, 3, holder, heldSetup).events.length, 0);
+holder.state.template.source_turn_relation_damages = [{...conditional, save_dc: null}];
+assert.throws(() => Source.resolve(5, 3, holder, heldSetup), /needs ability and DC/);
+
 console.log("2014 source-turn grapple-target typed damage browser regressions passed.");
