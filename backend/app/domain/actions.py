@@ -34,6 +34,9 @@ class GrappleSource(BaseModel):
     restrains: bool = False
     source_is_magical: bool = False
     periodic_damage: GrapplePeriodicDamage | None = None
+    linked_condition_ids: list[str] = Field(
+        default_factory=list, exclude_if=lambda value: not value,
+    )
 
 
 class HitControlEffect(BaseModel):
