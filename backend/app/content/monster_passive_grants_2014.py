@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import re
 
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_ally_immunity_2014 import visible_ally_immunity_grants_2014
@@ -20,9 +21,14 @@ _BRAVE = "Brave"
 _GNOME_CUNNING = "Gnome Cunning"
 _FEY_ANCESTRY = "Fey Ancestry"
 _AGGRESSIVE = "Aggressive"
+_DUERGAR_RESILIENCE = "Duergar Resilience"
 _TWO_HEAD_TRAITS = frozenset({"Two-Headed", "Two Heads"})
 _TWO_HEAD_SAVE_TAGS = (
     "blinded", "charm", "charmed", "deafened", "frightened", "stunned", "unconscious",
+)
+_DUERGAR_CLAUSE = re.compile(
+    r"Duergar Resilience\.?\s*The duergar has advantage on saving throws against poison, spells, and illusions, as well as to resist being charmed or paralyzed\.?",
+    re.IGNORECASE,
 )
 
 
@@ -52,6 +58,17 @@ def _condition_save_advantage(source_id: str, source_name: str, tags: tuple[str,
         raise
 
 
+def _source_proves_duergar_resilience(monster: SourceMonster2014) -> bool:
+    """Exact printed clause match; any mutation fails closed."""
+    try:
+        text = re.sub(r"<[^>]+>", " ", monster.source_traits or "")
+        text = re.sub(r"\s+", " ", text).strip()
+        return bool(_DUERGAR_CLAUSE.search(text))
+    except Exception:
+        logger.exception("Failed to prove Duergar Resilience source for %s.", monster.name)
+        return False
+
+
 def saving_throw_advantage_grants_2014(monster: SourceMonster2014) -> list[SavingThrowAdvantageGrant]:
     """Map printed 2014 traits onto the shared saving-throw Advantage grant."""
     try:
@@ -75,6 +92,18 @@ def saving_throw_advantage_grants_2014(monster: SourceMonster2014) -> list[Savin
             ))
         if _FEY_ANCESTRY in monster.trait_names:
             grants.extend(_condition_save_advantage("fey-ancestry", _FEY_ANCESTRY, ("charm",)))
+        if _source_proves_duergar_resilience(monster):
+            grants.append(SavingThrowAdvantageGrant(
+                source_id="duergar-resilience-spells",
+                source_name=_DUERGAR_RESILIENCE,
+                abilities=list(_ALL_SAVE_ABILITIES),
+                requires_spell_effect=True,
+            ))
+            grants.extend(_condition_save_advantage(
+                "duergar-resilience",
+                _DUERGAR_RESILIENCE,
+                ("poison", "illusion", "charmed", "paralyzed"),
+            ))
         for trait_name in monster.trait_names:
             if trait_name not in _TWO_HEAD_TRAITS:
                 continue
@@ -127,6 +156,8 @@ def bound_passive_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]
             bound.add(_FEY_ANCESTRY)
         if _AGGRESSIVE in monster.trait_names:
             bound.add(_AGGRESSIVE)
+        if _source_proves_duergar_resilience(monster):
+            bound.add(_DUERGAR_RESILIENCE)
         bound.update(name for name in monster.trait_names if name in _TWO_HEAD_TRAITS)
         return frozenset(bound)
     except Exception:
