@@ -62,8 +62,15 @@ class MultiattackHitGrapple(BaseModel):
     max_target_size: CreatureSize
     grapple_escape_dc: StrictInt = Field(ge=1, le=40)
     grapple_range_ft: StrictInt = Field(ge=0, le=120)
+    ownership_marker_id: str = Field(min_length=1)
     linked_condition_ids: list[str] = Field(default_factory=list)
     max_active_targets: StrictInt = Field(default=1, ge=1, le=8)
+
+    @model_validator(mode="after")
+    def require_marker(self):
+        if self.ownership_marker_id not in self.linked_condition_ids:
+            raise ValueError("Multiattack grapple ownership marker must be linked.")
+        return self
 
 
 class AttackActionDefinition(BaseModel):
