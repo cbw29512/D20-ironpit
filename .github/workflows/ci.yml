@@ -98,6 +98,7 @@ jobs:
           pytest -q backend/tests/test_2014_source_tier1_cleric_admission.py
           pytest -q backend/tests/test_2014_source_web_attack_admission.py
           pytest -q backend/tests/test_2014_bite_hit_swallow_save.py
+          pytest -q backend/tests/test_2014_sequence_containment_source.py backend/tests/test_2014_sequence_containment_fight.py
           pytest -q backend/tests/test_2014_fire_form_contact_family.py
           pytest -q backend/tests/test_2014_start_turn_ignition_family.py
           pytest -q backend/tests/test_2014_chuul_tentacles_source.py backend/tests/test_2014_chuul_tentacles_fight.py
@@ -569,6 +570,7 @@ jobs:
           node frontend/browser-swallow-state.test.cjs
           node frontend/browser-swallow-advanced.test.cjs
           node frontend/browser-bite-hit-swallow-save.test.cjs
+          node frontend/browser-sequence-containment.test.cjs
           node frontend/browser-corrosion-roll-integration.test.cjs
           node frontend/browser-armor-corrosion.test.cjs
           node frontend/browser-attack-damage-redirect.test.cjs
