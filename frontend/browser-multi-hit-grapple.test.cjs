@@ -4,6 +4,7 @@ global.window=globalThis;
 const load=(name)=>vm.runInThisContext(fs.readFileSync(path.join(__dirname,name),"utf8"),{filename:name});
 load("browser-grapple.js");
 load("browser-multi-hit-grapple.js");
+load("browser-grapple-upgrade-action.js");
 const runtime=window.IRON_PIT_BROWSER_MULTI_HIT_GRAPPLE;
 window.IRON_PIT_BROWSER_STATE={distance:(a,b)=>Math.abs(a.position_ft-b.position_ft)};
 window.IRON_PIT_BROWSER_CONDITION_IMMUNITY={immune:()=>false};
@@ -50,4 +51,22 @@ for (const page of ["../index.html","index.html"]) {
   assert.ok(fs.readFileSync(path.join(__dirname,page),"utf8").includes(
     'src="browser-multi-hit-grapple.js"'));
 }
-console.log("Generic same-target Multiattack -> linked grapple browser regression passed.");
+// Separate Engulf Action: requires a preexisting source-owned grapple.
+window.IRON_PIT_ACTION_ECONOMY={
+  available:(state,cost)=>cost==="action" && state.action_available,
+  spend:(state,cost)=>{assert.equal(cost,"action");state.action_available=false;},
+};
+owner.state.action_available=true;
+target.state.active_effect_ids=[];
+target.state.grapple_sources=[];
+assert.equal(window.IRON_PIT_BROWSER_GRAPPLE_UPGRADE_ACTION.choose(owner,setup),null);
+window.IRON_PIT_BROWSER_GRAPPLE.apply(target.state,"holder",14,5);
+const upgrade=window.IRON_PIT_BROWSER_GRAPPLE_UPGRADE_ACTION.choose(owner,setup);
+assert.equal(upgrade.target,target);
+const activated=window.IRON_PIT_BROWSER_GRAPPLE_UPGRADE_ACTION.resolve(
+  1,1,owner,setup,"hero","engulf");
+assert.equal(activated.events[0].feature_id,"Renamed Engulf");
+assert.equal(target.state.grapple_sources[0].linked_effect_id,"engulf");
+assert.equal(owner.state.action_available,false);
+assert.equal(window.IRON_PIT_BROWSER_GRAPPLE_UPGRADE_ACTION.choose(owner,setup),null);
+console.log("Generic same-target Multiattack and separate linked-grapple Action pass.");
