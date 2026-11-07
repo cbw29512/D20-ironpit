@@ -94,6 +94,10 @@ def attack_blockers_2014(monster: SourceMonster2014) -> list[str]:
             attack = source_completed_mixed_attack_2014(monster, source_attack)
             breakable = source_recharge_breakable_restraint_2014(monster, attack)
             start_burn = source_start_turn_recurring_damage_2014(monster, attack)
+            swallow = source_grapple_swallow_2014(monster)
+            on_hit_swallow = bool(swallow is not None and swallow.attack_id == attack.id
+                                  and swallow.delivery_mode == "attack_hit"
+                                  and swallow.on_hit_save_dc is not None)
             # The ongoing Fire tick is runnable, but its printed helper Douse
             # Action has no source-defined reach. Until a generic helper-target
             # policy is approved/proven, keep this attack source-incomplete.
@@ -109,7 +113,7 @@ def attack_blockers_2014(monster: SourceMonster2014) -> list[str]:
             if attack.charge_profile is not None and not supports_charge_profile_2014(profile):
                 blockers.append("attack:complex")
                 continue
-            if (not supports_basic_attack_effects_2014(attack) and breakable is None and start_burn is None) or (
+            if (not supports_basic_attack_effects_2014(attack) and breakable is None and start_burn is None and not on_hit_swallow) or (
                 attack.grapple_target_policy == "auto_hit_own_grapple"
                 and not source_proves_grapple_auto_hit_2014(monster, attack)
             ):

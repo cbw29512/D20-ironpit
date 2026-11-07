@@ -1465,6 +1465,9 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        if action.delivery_mode != "action_attack" else {}),
                     "maxTargetSize": action.max_target_size.value,
                     "requiresExistingGrapple": action.requires_existing_grapple,
+                    **({"onHitSaveAbility": action.on_hit_save_ability,
+                        "onHitSaveDc": action.on_hit_save_dc}
+                       if action.on_hit_save_dc is not None else {}),
                     "damageDiceCount": action.damage_dice_count,
                     "damageDiceSize": action.damage_dice_size,
                     "damageType": action.damage_type,

@@ -3,11 +3,34 @@
 
   function applyHit(ctx) {
     try {
-      if (!ctx.preHitGrappledByAttacker) return null;
       const rule = (ctx.member.state.template.swallowActions || []).find((item) =>
         item.deliveryMode === "attack_hit" && item.attackId === ctx.attack.id
       );
       if (!rule) return null;
+      if (rule.requiresExistingGrapple !== false && !ctx.preHitGrappledByAttacker) return null;
+      if (rule.requiresExistingGrapple === false) {
+        const sizes = ["tiny", "small", "medium", "large", "huge", "gargantuan"];
+        const targetSize = sizes.indexOf(ctx.target.state.template.size);
+        const limit = sizes.indexOf(rule.maxTargetSize);
+        if (targetSize < 0 || limit < 0) throw new Error("On-hit Swallow requires known size bounds.");
+        if (targetSize > limit || ctx.target.state.is_dead || !ctx.target.state.is_alive
+          || ctx.target.state.current_hp <= 0 || ctx.target.state.swallowed) return null;
+        if (!rule.onHitSaveAbility || !Number.isInteger(rule.onHitSaveDc))
+          throw new Error("Non-grapple attack-hit Swallow requires its printed saving throw.");
+        const saves = window.IRON_PIT_BROWSER_SAVING_THROWS;
+        if (!saves?.resolveSavingThrow) throw new Error("Swallow requires universal saving throw resolver.");
+        if (ctx.attackOutcome.hitSave?.saveRoll)
+          throw new Error("Attack cannot apply two unrelated on-hit saving throws.");
+        const save = saves.resolveSavingThrow(
+          ctx.target.state, rule.onHitSaveAbility, rule.onHitSaveDc,
+          { roundNumber: ctx.round, encounterRoller: ctx.target, setup: ctx.setup },
+        );
+        ctx.attackOutcome.hitSave = {
+          saveRoll: save.roll, saveAbility: rule.onHitSaveAbility,
+          saveDc: rule.onHitSaveDc, saveSucceeded: save.succeeded,
+        };
+        if (save.succeeded) return null;
+      }
 
       const swallow = window.IRON_PIT_BROWSER_SWALLOW;
       const outcome = window.IRON_PIT_BROWSER_ATTACK_OUTCOME;
@@ -52,9 +75,9 @@
         priority: 45,
         rulesets: ["2014", "2024"],
         appliesTo: (member, ctx) =>
-          Boolean(ctx.preHitGrappledByAttacker)
-          && (member.state.template.swallowActions || []).some((item) =>
+          (member.state.template.swallowActions || []).some((item) =>
             item.deliveryMode === "attack_hit" && item.attackId === ctx.attack.id
+            && (item.requiresExistingGrapple === false || Boolean(ctx.preHitGrappledByAttacker))
           ),
         resolve: applyHit,
       });

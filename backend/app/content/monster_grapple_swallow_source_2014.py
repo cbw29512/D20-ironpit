@@ -44,6 +44,9 @@ class GrappleSwallowSource2014:
     regurgitation_save_dc: int | None = None
     regurgitation_range_ft: int | None = None
     regurgitation_all_swallowed: bool = False
+    requires_existing_grapple: bool = True
+    on_hit_save_ability: str | None = None
+    on_hit_save_dc: int | None = None
 
 
 def _simple_profile(monster: SourceMonster2014) -> GrappleSwallowSource2014 | None:
@@ -126,6 +129,9 @@ def source_grapple_swallow_2014(
             regurgitation_save_dc=threshold.save_dc,
             regurgitation_range_ft=threshold.range_ft,
             regurgitation_all_swallowed=threshold.all_swallowed,
+            requires_existing_grapple=threshold.requires_existing_grapple,
+            on_hit_save_ability=threshold.on_hit_save_ability,
+            on_hit_save_dc=threshold.on_hit_save_dc,
         )
     except Exception:
         logger.exception("Failed to compile 2014 Swallow source for %s.", monster.id)
