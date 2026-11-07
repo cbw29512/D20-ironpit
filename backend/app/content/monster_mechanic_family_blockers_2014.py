@@ -25,6 +25,7 @@ from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_save_capabilities_2014 import unsupported_save_actions_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_breakable_restraint_2014 import source_recharge_breakable_restraint_2014
+from app.content.monster_source_start_turn_recurring_2014 import source_start_turn_recurring_damage_2014
 from app.content.monster_grapple_auto_hit_source_2014 import source_proves_grapple_auto_hit_2014
 from app.content.monster_zero_hp_prevention_2014 import supports_zero_hp_prevention_2014
 from app.content.monster_death_triggers_2014 import supports_death_triggers_2014
@@ -92,11 +93,16 @@ def attack_blockers_2014(monster: SourceMonster2014) -> list[str]:
         for source_attack in monster.attacks:
             attack = source_completed_mixed_attack_2014(monster, source_attack)
             breakable = source_recharge_breakable_restraint_2014(monster, attack)
+            start_burn = source_start_turn_recurring_damage_2014(monster, attack)
             swallow = source_grapple_swallow_2014(monster)
-            on_hit_swallow = bool(swallow is not None
-                                  and swallow.attack_id == attack.id
+            on_hit_swallow = bool(swallow is not None and swallow.attack_id == attack.id
                                   and swallow.delivery_mode == "attack_hit"
                                   and swallow.on_hit_save_dc is not None)
+            # The ongoing Fire tick is runnable, but its printed helper Douse
+            # Action has no source-defined reach. Until a generic helper-target
+            # policy is approved/proven, keep this attack source-incomplete.
+            if start_burn is not None and "douse-fire" in start_burn.removal_action_ids:
+                blockers.append("attack:incomplete")
             if not attack.source_complete or not source_proves_ability_score_reduction_2014(monster, attack):
                 blockers.append("attack:incomplete")
             # A zero-damage restraint has no printed damage type. Its hit is
@@ -107,7 +113,7 @@ def attack_blockers_2014(monster: SourceMonster2014) -> list[str]:
             if attack.charge_profile is not None and not supports_charge_profile_2014(profile):
                 blockers.append("attack:complex")
                 continue
-            if (not supports_basic_attack_effects_2014(attack) and breakable is None and not on_hit_swallow) or (
+            if (not supports_basic_attack_effects_2014(attack) and breakable is None and start_burn is None and not on_hit_swallow) or (
                 attack.grapple_target_policy == "auto_hit_own_grapple"
                 and not source_proves_grapple_auto_hit_2014(monster, attack)
             ):

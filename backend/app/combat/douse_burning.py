@@ -21,7 +21,7 @@ def douseable_effects(target: EncounterCombatant):
     try:
         return [
             effect for effect in target.state.timed_effects
-            if effect.end_of_turn_dice_count > 0
+            if (effect.end_of_turn_dice_count > 0 or effect.start_of_turn_dice_count > 0)
             and DOUSE_ACTION_ID in effect.allowed_removal_action_ids
         ]
     except Exception:

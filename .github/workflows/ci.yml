@@ -99,6 +99,7 @@ jobs:
           pytest -q backend/tests/test_2014_source_web_attack_admission.py
           pytest -q backend/tests/test_2014_bite_hit_swallow_save.py
           pytest -q backend/tests/test_2014_fire_form_contact_family.py
+          pytest -q backend/tests/test_2014_start_turn_ignition_family.py
           pytest -q backend/tests/test_2014_chuul_tentacles_source.py backend/tests/test_2014_chuul_tentacles_fight.py
           pytest -q backend/tests/test_2014_grapple_owner_save_source.py backend/tests/test_grapple_owned_save_targeting.py
           pytest -q backend/tests/test_2014_source_etherealness_inert.py
@@ -730,6 +731,7 @@ jobs:
           node frontend/browser-post-hit-spell-riders.test.cjs
           node frontend/browser-start-of-turn-timed-burn.test.cjs
           node frontend/browser-end-turn-recurring-damage.test.cjs
+          node frontend/browser-start-turn-recurring-damage.test.cjs
           node frontend/browser-douse-burning.test.cjs
           node frontend/browser-friendly-recovery-auras.test.cjs
           node frontend/browser-persistent-spell-attacks.test.cjs

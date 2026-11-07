@@ -95,6 +95,7 @@ from app.domain.capability_attacks import AttackCapabilityDefinition
 from app.domain.capability_effects import DiceSpec
 from app.content.monster_multiattack_variants_2014 import attack_unavailable_reason_2014
 from app.content.monster_source_end_turn_recurring_2014 import source_end_turn_recurring_damage_2014
+from app.content.monster_source_start_turn_recurring_2014 import source_start_turn_recurring_damage_2014
 from app.domain.character_builds import AbilityScores
 from app.domain.reactions import ParryReaction
 from app.domain.size import CreatureSize
@@ -114,7 +115,10 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
     })
     charge_source = corrected_charge_profile_2014(monster, attack)
     normal_range_ft, long_range_ft = corrected_attack_range_2014(monster, attack)
-    recurring_damage = source_end_turn_recurring_damage_2014(monster, attack)
+    # A proven ongoing hit is compiled through the same universal timed effect,
+    # without using the parser-only raw source shape as an engine rider.
+    start_burn = source_start_turn_recurring_damage_2014(monster, attack)
+    recurring_damage = source_end_turn_recurring_damage_2014(monster, attack) or start_burn
     # Generic no-damage ranged hit -> condition -> escape/breakable object.
     # The bludgeoning carrier type below is never used for a zero-damage hit;
     # the source still contains no damage type, dice, or damage output.
@@ -133,11 +137,16 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         ))
     else:
         source_swallow = source_grapple_swallow_2014(monster)
-        # A source-proven failed-save Swallow is resolved by the shared hit
-        # rider after normal damage, never as a duplicate generic condition.
-        on_hit_swallow = source_swallow is not None and source_swallow.attack_id == attack.id and source_swallow.on_hit_save_dc is not None
-        normalized = attack.model_copy(update={"on_hit_save_effect": None}) if on_hit_swallow else attack
-        effects = basic_attack_effects_2014(normalized, opening_initiative_damage_source_2014(monster))
+        on_hit_swallow = (source_swallow is not None and source_swallow.attack_id == attack.id
+                          and source_swallow.on_hit_save_dc is not None)
+        # Both independent printed riders reuse their own universal runtimes.
+        omitted = {}
+        if start_burn is not None:
+            omitted["ongoing_damage_effect"] = None
+        if on_hit_swallow:
+            omitted["on_hit_save_effect"] = None
+        runnable_attack = attack.model_copy(update=omitted) if omitted else attack
+        effects = basic_attack_effects_2014(runnable_attack, opening_initiative_damage_source_2014(monster))
     kwargs = {
         "id": attack_id_2014(monster, attack.id),
         "weapon_id": attack_id_2014(monster, attack.id),

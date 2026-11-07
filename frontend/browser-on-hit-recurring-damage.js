@@ -6,7 +6,7 @@
     try {
       const spec = attack.onHitRecurringDamage;
       if (!spec || target.state.is_dead || !target.state.is_alive) return null;
-      if (spec.tickTiming !== "target_turn_end" || spec.stacking !== "nonstacking"
+      if (!["target_turn_start", "target_turn_end"].includes(spec.tickTiming) || spec.stacking !== "nonstacking"
         || !spec.effectId || !Number.isInteger(spec.diceCount) || spec.diceCount <= 0
         || !Number.isInteger(spec.diceSize) || spec.diceSize < 2 || !spec.damageType) {
         throw new Error("Incomplete source-declared recurring hit damage.");
@@ -22,9 +22,12 @@
         ends_if_source_dead: Boolean(spec.endsIfSourceDead),
         allowed_removal_action_ids: [...(spec.removalActionIds || [])],
         expires_at_start_of_source_turn: false,
-        end_of_turn_dice_count: spec.diceCount,
+        end_of_turn_dice_count: spec.tickTiming === "target_turn_end" ? spec.diceCount : 0,
         end_of_turn_dice_size: spec.diceSize,
-        end_of_turn_damage_type: spec.damageType,
+        end_of_turn_damage_type: spec.tickTiming === "target_turn_end" ? spec.damageType : null,
+        start_of_turn_dice_count: spec.tickTiming === "target_turn_start" ? spec.diceCount : 0,
+        start_of_turn_dice_size: spec.diceSize,
+        start_of_turn_damage_type: spec.tickTiming === "target_turn_start" ? spec.damageType : null,
       });
       state.active_effect_ids ||= [];
       if (!state.active_effect_ids.includes(spec.effectId)) {
