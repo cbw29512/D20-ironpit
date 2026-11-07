@@ -8,6 +8,7 @@ from app.combat.attack_action_choices import attack_choice, save_choice, followu
 from app.combat.attack_action_sequences import select_sequence, expanded_sequence_slots
 from app.combat.attack_action_event_target import event_target
 from app.combat.attack_action_rules import validate_attack_action_slots
+from app.combat.attack_sequence_containment import apply_attack_sequence_containment
 from app.combat.attack_action_weapon_buffs import resolve_attack_action_weapon_buff
 from app.combat.cleave import resolve_cleave_extra_attack
 from app.combat.condition_rules import is_incapacitated
@@ -110,6 +111,12 @@ def resolve_attack_action(
                 sequence += 1
                 if event.hit:
                     actual_target = event_target(event, setup) or target
+                    contained = apply_attack_sequence_containment(
+                        sequence, round_number, attacker, actual_target, attack, events,
+                    )
+                    if contained is not None:
+                        events.append(contained)
+                        sequence += 1
                     stun = resolve_stunning_strike(
                         sequence,
                         round_number,
