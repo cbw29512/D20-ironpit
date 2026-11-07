@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, model_validator
 from app.domain.weapons_base import WeaponAttackKind
+from app.domain.size import CreatureSize
 logger = logging.getLogger(__name__)
 
 
@@ -52,6 +53,19 @@ class AttackActionVariant(BaseModel):
     slots: list[AttackActionSlot] = Field(min_length=1, max_length=8)
 
 
+class MultiattackHitGrapple(BaseModel):
+    """A source-parameterized consecutive action's hits, scoped to one target."""
+
+    source_name: str = Field(min_length=1)
+    attack_id: str = Field(min_length=1)
+    required_hits: StrictInt = Field(ge=2, le=8)
+    max_target_size: CreatureSize
+    grapple_escape_dc: StrictInt = Field(ge=1, le=40)
+    grapple_range_ft: StrictInt = Field(ge=0, le=120)
+    linked_condition_ids: list[str] = Field(default_factory=list)
+    max_active_targets: StrictInt = Field(default=1, ge=1, le=8)
+
+
 class AttackActionDefinition(BaseModel):
     id: str
     name: str
@@ -59,6 +73,7 @@ class AttackActionDefinition(BaseModel):
     variants: list[AttackActionVariant] = Field(default_factory=list, max_length=16)
     is_attack_action: bool = False
     repeat_count_from_variable_heads: bool = False
+    hit_grapple: MultiattackHitGrapple | None = None
 
     @model_validator(mode="after")
     def validate_sequences(self) -> "AttackActionDefinition":
