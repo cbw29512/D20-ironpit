@@ -26,6 +26,9 @@ class ThresholdSwallowProof2014:
     save_dc: int
     range_ft: int
     all_swallowed: bool
+    requires_existing_grapple: bool = True
+    on_hit_save_ability: str | None = None
+    on_hit_save_dc: int | None = None
 
 
 def _semantic_text(monster: SourceMonster2014) -> str:
@@ -48,7 +51,13 @@ def threshold_swallow_source_2014(
         text = _semantic_text(monster)
         if not text:
             return None
-        actor = monster.name.split()[-1].lower()
+        # The grammatical owner belongs to the immutable printed source, not
+        # the monster ID/name. Rename an otherwise identical card without
+        # changing combat semantics or source proof.
+        owner = re.search(r"at the start of each of the ([a-z -]+)\'s turns", text, re.I)
+        if owner is None:
+            return None
+        actor = owner.group(1).lower()
         actor_re = re.escape(actor)
         size_match = re.search(r"a (Small|Medium|Large) or smaller", text, re.I)
         periodic = re.search(
@@ -90,11 +99,42 @@ def threshold_swallow_source_2014(
         )
         max_swallowed = 1 if one_creature_cap else None
 
+        on_hit_save_ability = None
+        on_hit_save_dc = None
+        requires_grapple = True
+        if isinstance(data, dict) and data.get("requires_existing_grapple") is False:
+            # This is an ordinary Bite hit + target saving throw, NOT a
+            # fabricated grapple. Prove the printed trigger and exact typed
+            # card save before reusing the universal Swallow state machine.
+            bite_text = source_sections_2014(
+                monster.source_actions, include_continuations=True,
+            ).get(attack.name, "")
+            hit_save = re.search(
+                rf"If the target is a (?P<size>Small|Medium|Large) or smaller creature, "
+                rf"it must succeed on a DC (?P<dc>\d+) (?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) "
+                rf"saving throw or be swallowed by the {actor_re}\\.",
+                bite_text, re.I,
+            )
+            typed = attack.on_hit_save_effect
+            if (hit_save is None or size_match is None or
+                    hit_save.group("size").lower() != size.value or
+                    not isinstance(typed, dict) or set(typed) != {
+                        "save_ability", "dc", "max_target_size", "swallow_on_failure",
+                    } or typed != {
+                        "save_ability": hit_save.group("ability").lower(),
+                        "dc": int(hit_save.group("dc")),
+                        "max_target_size": size.value,
+                        "swallow_on_failure": True,
+                    } or standalone):
+                return None
+            requires_grapple = False
+            on_hit_save_ability = hit_save.group("ability").lower()
+            on_hit_save_dc = int(hit_save.group("dc"))
         if isinstance(data, dict):
             expected = {
                 "attack_id": attack.id,
                 "max_target_size": size.value,
-                "requires_existing_grapple": True,
+                "requires_existing_grapple": requires_grapple,
                 "damage_dice_count": count,
                 "damage_dice_size": sides,
                 "damage_bonus": 0,
@@ -118,6 +158,9 @@ def threshold_swallow_source_2014(
             max_swallowed, int(death["exit"]), int(threshold["threshold"]),
             int(threshold["dc"]), int(threshold["range"]),
             threshold["scope"].casefold().startswith("all "),
+            requires_existing_grapple=requires_grapple,
+            on_hit_save_ability=on_hit_save_ability,
+            on_hit_save_dc=on_hit_save_dc,
         )
     except Exception:
         logger.exception("Failed threshold Swallow source proof for %s.", monster.id)
