@@ -9,6 +9,7 @@ from app.content.monster_save_capabilities_2014 import save_capabilities_2014
 from app.content.monster_mixed_damage_2014 import source_completed_mixed_attack_2014
 from app.content.monster_grapple_followup_multiattack_2014 import source_proves_grapple_followup_multiattack_2014
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_sequence_engulf_source_2014 import source_sequence_containment_2014
 from app.content.monster_variable_heads_2014 import variable_head_profile_2014
 from app.domain.capability_attacks import CapabilityActionSlot, MultiattackCapabilityDefinition
 
@@ -56,6 +57,10 @@ def source_bound_slots_2014(monster: SourceMonster2014) -> list[CapabilityAction
 def multiattack_blockers_2014(monster: SourceMonster2014) -> list[str]:
     """Accept only source-declared slots whose every alternative already exists."""
     try:
+        # A printed same-target two-hit sequence has two genuine attacks even
+        # when the legacy source catalog omitted its structured slots.
+        if source_sequence_containment_2014(monster) is not None:
+            return []
         # Source-coupled mode choices must never become independently mixed slots.
         if attack_ammunition_2014(monster):
             return [] if ammunition_multiattack_variants_2014(monster) else ["multiattack:complex"]
@@ -80,6 +85,14 @@ def multiattack_2014(monster: SourceMonster2014) -> MultiattackCapabilityDefinit
         blockers = multiattack_blockers_2014(monster)
         if blockers:
             raise ValueError(f"Unsupported Multiattack for {monster.id}: {blockers}")
+        sequence = source_sequence_containment_2014(monster)
+        if sequence is not None:
+            slot = CapabilityActionSlot(attack_ids=[attack_id_2014(monster, sequence.attack_id)])
+            return MultiattackCapabilityDefinition(
+                id=f"2014-{monster.id}-multiattack", name="Multiattack",
+                is_attack_action=False,
+                slots=[slot.model_copy(deep=True) for _ in range(sequence.required_sequence_hits)],
+            )
         bound_slots = source_bound_slots_2014(monster)
         if bound_slots:
             profile = variable_head_profile_2014(monster)
