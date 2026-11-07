@@ -37,6 +37,7 @@ class GrappleSource(BaseModel):
     linked_condition_ids: list[str] = Field(
         default_factory=list, exclude_if=lambda value: not value,
     )
+    moves_with_source: bool = Field(default=False, exclude_if=lambda value: not value)
 
 
 class HitControlEffect(BaseModel):
