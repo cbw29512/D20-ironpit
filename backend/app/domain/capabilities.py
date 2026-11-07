@@ -45,6 +45,7 @@ from app.domain.zero_hp_effects import DamageThresholdZeroHpReplacement
 from app.domain.unarmed import UnarmedStrikeDamage
 from app.domain.variable_heads import VariableHeadProfile
 from app.domain.swallow_actions import GrappleSwallowAction
+from app.domain.multi_hit_grapple import MultiHitGrappleEffect
 from app.domain.weapons import DamageType
 
 
@@ -103,6 +104,7 @@ class CombatantDefinition(BaseModel):
     source_allows_hostile_overlap: bool = Field(default=False, exclude_if=lambda value: not value)
     source_trait_names: list[str] = Field(default_factory=list)
     source_turn_relation_damages: list[SourceTurnRelationDamage] = Field(default_factory=list)
+    multi_hit_grapple_effects: list[MultiHitGrappleEffect] = Field(default_factory=list)
     innate_condition_ids: list[ConditionName] = Field(default_factory=list)
     source_reaction_names: list[str] = Field(default_factory=list)
     source_bonus_action_names: list[str] = Field(default_factory=list)
