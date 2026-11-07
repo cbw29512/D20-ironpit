@@ -23,10 +23,10 @@ _ENGULF = re.compile(
     r"or smaller creature grappled by it\. The engulfed target is "
     r"blinded, restrained, and unable to breathe, and it must succeed "
     r"on a DC (?P<save>\d+) Constitution saving throw at the start "
-    r"of each of the (?P=actor)'s turns or take (?P<avg>\d+) "
+    r"of each of the (?P<short>[\w-]+)'s turns or take (?P<avg>\d+) "
     r"\((?P<count>\d+)d(?P<die>\d+) \+ (?P<bonus>\d+)\) "
     r"(?P<type>bludgeoning|piercing|acid|fire|cold) damage\. "
-    r"If the (?P<short>[\w-]+) moves, the engulfed target moves with it\. "
+    r"If the (?P=short) moves, the engulfed target moves with it\. "
     r"The (?P=short) can have only one creature engulfed at a time\.", re.I,
 )
 
