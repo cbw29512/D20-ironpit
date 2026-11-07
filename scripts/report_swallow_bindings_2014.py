@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import sys
 from pathlib import Path
 
@@ -17,41 +16,19 @@ from app.content.demo import build_demo_fighter
 from app.content.monster_grapple_swallow_source_2014 import source_grapple_swallow_2014
 from app.content.monster_multi_hit_engulf_source_2014 import source_two_hit_engulf_2014
 from engulf_binding_report_2014 import report_linked_grapple
+from swallow_report_source_utils_2014 import source_text, is_relevant, incompatibility
 from app.content.monster_source_2014 import load_monster_source_2014
-from app.content.monster_source_sections_2014 import source_sections_2014
 from app.domain.swallow_actions import swallow_action_from_source
 from browser_template_serializer import template_row
 OUTPUT = ROOT / "docs/generated/SWALLOW_BINDINGS_2014.json"
-_SEMANTIC = re.compile(r"\b(?:swallow(?:s|ed)?|engulf(?:s|ed)?)\b", re.I)
-
-def _source_text(monster) -> str:
-    sections = source_sections_2014(monster.source_actions, include_continuations=True)
-    selected = [text for heading, text in sections.items()
-                if _SEMANTIC.search(heading) or _SEMANTIC.search(text)]
-    return " ".join(" ".join(text.split()) for text in selected)
-
-def _incompatibility(monster) -> str:
-    if not monster.swallow_actions:
-        return "missing_structured_source_parameters"
-    data = monster.swallow_actions[0]
-    if data.get("attack_id") is None or data.get("start_turn_save_dc") is not None:
-        return "engulf_start_turn_save_profile_not_supported"
-    if data.get("requires_existing_grapple") is False:
-        return "failed_save_on_bite_profile_unproven"
-    if data.get("regurgitation_damage_threshold") is not None:
-        return "damage_threshold_regurgitation_profile_not_supported"
-    return "source_profile_not_supported"
 
 def build_report() -> dict[str, object]:
     monsters = load_monster_source_2014()
     rows: list[dict[str, object]] = []
     exceptions: list[dict[str, str]] = []
     for monster in monsters:
-        printed = _source_text(monster)
-        if not monster.swallow_actions and not (
-            _SEMANTIC.search(printed) and "blinded" in printed.casefold()
-            and "restrained" in printed.casefold()
-        ):
+        printed = source_text(monster)
+        if not monster.swallow_actions and not is_relevant(printed):
             continue
         profile = source_grapple_swallow_2014(monster)
         python_wired = profile is not None
@@ -118,7 +95,7 @@ def build_report() -> dict[str, object]:
                 parameters, browser_wired = report_linked_grapple(monster, linked)
                 python_wired = True
         if not (python_wired and browser_wired):
-            exceptions.append({"card_id": monster.id, "reason": _incompatibility(monster)})
+            exceptions.append({"card_id": monster.id, "reason": incompatibility(monster)})
         rows.append({
             "card_id": monster.id,
             "card_name": monster.name,
