@@ -59,6 +59,7 @@ def apply_grapple(
     source_is_magical: bool = False,
     periodic_damage=None,
     linked_condition_ids: tuple[str, ...] = (),
+    moves_with_source: bool = False,
 ) -> list[str]:
     if condition_is_immune(state, GRAPPLED_EFFECT_ID, source_is_magical=source_is_magical):
         return []
@@ -76,6 +77,7 @@ def apply_grapple(
         source_is_magical=source_is_magical,
         periodic_damage=periodic_damage,
         linked_condition_ids=list(linked_condition_ids),
+        moves_with_source=moves_with_source,
     ))
     _sync_effect_ids(state)
     return list(dict.fromkeys([
@@ -145,7 +147,8 @@ def cleanup_grapples(setup: EncounterSetup) -> None:
             grappler = members.get(source.source_id)
             if grappler is None or grappler.state.is_dead or not grappler.state.is_alive or is_incapacitated(grappler.state):
                 continue
-            if abs(grappler.position_ft - target.position_ft) > source.range_ft:
+            if (not source.moves_with_source
+                    and abs(grappler.position_ft - target.position_ft) > source.range_ft):
                 continue
             retained.append(source)
         target.state.grapple_sources = retained
