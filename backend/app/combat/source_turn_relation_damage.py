@@ -47,7 +47,8 @@ def resolve_source_turn_relation_damage(
                     grapple.source_id == held_owner
                     and (rule.required_grapple_condition_id is None
                          or rule.required_grapple_condition_id in grapple.linked_condition_ids)
-                    and abs(target.position_ft - member.position_ft) <= grapple.range_ft
+                    and (grapple.moves_with_source
+                         or abs(target.position_ft - member.position_ft) <= grapple.range_ft)
                     for grapple in held_state.grapple_sources
                 )
                 if not active:
