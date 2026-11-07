@@ -13,7 +13,7 @@ Blocker categories overlap: a monster may require several fixes.
 | `source:trait` | 48 |
 | `mechanic:spellcasting` | 32 |
 | `source:extra-action` | 27 |
-| `attack:incomplete` | 13 |
+| `attack:incomplete` | 14 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
 | `mechanic:recharge` | 4 |
@@ -29,13 +29,12 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**3** monsters have exactly one remaining blocker category.
+**2** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
 | `arena:neutral` | Frog | 1 |
 | `attack:incomplete` | Magmin | 1 |
-| `source:trait` | Fire Elemental | 1 |
 
 ## Every blocked monster
 
@@ -60,7 +59,7 @@ the underlying ability is already implemented or trivial.
 | Duergar | attack:incomplete, source:extra-action, source:trait | Duergar Resilience |
 | Dust Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Efreeti | mechanic:spellcasting, source:trait | Innate Spellcasting |
-| Fire Elemental | source:trait | Fire Form, Water Susceptibility |
+| Fire Elemental | attack:incomplete, source:trait | Fire Form, Water Susceptibility |
 | Flameskull | mechanic:spellcasting, source:trait | Spellcasting |
 | Frog | arena:neutral | — |
 | Gelatinous Cube | source:extra-action, source:trait | Ooze Cube, Transparent |

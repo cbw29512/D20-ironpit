@@ -5868,7 +5868,7 @@
     "blocker_categories": {
       "arena:neutral": 1,
       "attack:complex": 1,
-      "attack:incomplete": 13,
+      "attack:incomplete": 14,
       "attack:none": 1,
       "mechanic:legendary": 9,
       "mechanic:recharge": 4,
