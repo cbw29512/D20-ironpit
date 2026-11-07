@@ -68,6 +68,15 @@ def build_report() -> dict[str, object]:
                 **({"on_hit_save_ability": profile.on_hit_save_ability,
                     "on_hit_save_dc": profile.on_hit_save_dc}
                    if profile.on_hit_save_dc is not None else {}),
+                **({"required_sequence_hits": profile.required_sequence_hits,
+                    "sequence_grapple_dc": profile.sequence_grapple_dc,
+                    "start_turn_save_ability": profile.start_turn_save_ability,
+                    "start_turn_save_dc": profile.start_turn_save_dc,
+                    "damage_bonus": profile.damage_bonus,
+                    "cannot_breathe": profile.cannot_breathe,
+                    "moves_with_source": profile.moves_with_source,
+                    "exit_prone": profile.exit_prone}
+                   if profile.delivery_mode == "attack_sequence" else {}),
             }
             if profile.regurgitation_damage_threshold is not None:
                 parameters.update({
@@ -90,6 +99,15 @@ def build_report() -> dict[str, object]:
                 **({"onHitSaveAbility": profile.on_hit_save_ability,
                     "onHitSaveDc": profile.on_hit_save_dc}
                    if profile.on_hit_save_dc is not None else {}),
+                **({"requiredSequenceHits": profile.required_sequence_hits,
+                    "sequenceGrappleDc": profile.sequence_grapple_dc,
+                    "startTurnSaveAbility": profile.start_turn_save_ability,
+                    "startTurnSaveDc": profile.start_turn_save_dc,
+                    "damageBonus": profile.damage_bonus,
+                    "exitProne": profile.exit_prone,
+                    "cannotBreathe": profile.cannot_breathe,
+                    "movesWithSource": profile.moves_with_source}
+                   if profile.delivery_mode == "attack_sequence" else {}),
                 "maxTargetSize": profile.max_target_size.value,
                 "damageDiceCount": profile.damage_dice_count,
                 "damageDiceSize": profile.damage_dice_size,
