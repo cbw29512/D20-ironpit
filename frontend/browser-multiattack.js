@@ -40,6 +40,7 @@
       if (attackBuff) { events.push(attackBuff); sequence += 1; }
       let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
       let lightTrigger = null, previousAttack = null;
+      const successfulHits = [];
       const turnKey = `${round}:${member.combatant_id}`;
 
       let attacksRemaining = slots.length;
@@ -78,6 +79,7 @@
           events.push(event); previousAttack = event;
           if (event.hit) {
             const actualTarget = eventTarget(event, choice.target, setup);
+            successfulHits.push({attackId: choice.attack.id, targetId: actualTarget.combatant_id});
             if (MK()?.resolveStunning) {
               const stun = MK().resolveStunning(sequence, round, member, actualTarget, choice.attack);
               if (stun) { events.push(stun); sequence += 1; }
@@ -105,6 +107,13 @@
         }
       }
 
+      const postHit = window.IRON_PIT_BROWSER_MULTIATTACK_HIT_GRAPPLE;
+      if (definition.hitGrapple && !postHit?.resolve)
+        throw new Error("Source Multiattack hit-grapple runtime is not loaded.");
+      if (postHit?.resolve) {
+        const triggered = postHit.resolve(sequence, round, member, setup, successfulHits);
+        events.push(...triggered.events); sequence = triggered.sequence;
+      }
       if (definition.isAttackAction && lightTrigger && !member.state.turn_terminated
         && !member.state.is_dead && !Q()?.incapacitated?.(member.state)) {
         const extra = R().resolve(sequence, round, member, setup, lightTrigger, turnKey);
