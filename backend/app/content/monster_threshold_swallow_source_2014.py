@@ -106,6 +106,17 @@ def threshold_swallow_source_2014(
         on_hit_save_ability = None
         on_hit_save_dc = None
         requires_grapple = True
+        # Fail closed when typed card facts deny the printed hit-save
+        # transition. A mutated prior-Grapple flag is not permission to skip
+        # this saving throw and auto-swallow the target.
+        printed_save = bool(re.search(
+            r"must succeed on a DC \d+ (?:Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) saving throw or be swallowed",
+            text, re.I,
+        ))
+        typed_save = isinstance(attack.on_hit_save_effect, dict) and attack.on_hit_save_effect.get("swallow_on_failure") is True
+        declared_without_grapple = isinstance(data, dict) and data.get("requires_existing_grapple") is False
+        if printed_save != typed_save or printed_save != declared_without_grapple:
+            return None
         if isinstance(data, dict) and data.get("requires_existing_grapple") is False:
             # This is an ordinary Bite hit + target saving throw, NOT a
             # fabricated grapple. Prove the printed trigger and exact typed
