@@ -136,11 +136,23 @@
       "source_text": "The remorhaz makes one bite attack against a Medium or smaller creature it is grappling. If the attack hits, that creature takes the bite's damage and is swallowed, and the grapple ends. While swallowed, the creature is blinded and restrained, it has total cover against attacks and other effects outside the remorhaz, and it takes 21 (6d6) acid damage at the start of each of the remorhaz's turns. If the remorhaz takes 30 damage or more on a single turn from a creature inside it, the remorhaz must succeed on a DC 15 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, which fall prone in a space within 10 feet of the remorhaz. If the remorhaz dies, a swallowed creature is no longer restrained by it and can escape from the corpse using 15 feet of movement, exiting prone."
     },
     {
-      "browser_wired": false,
+      "browser_wired": true,
       "card_id": "shambling-mound",
       "card_name": "Shambling Mound",
-      "parameters": null,
-      "python_wired": false,
+      "parameters": {
+        "attack_id": "2014-shambling-mound-slam",
+        "damage_dice": "2d8+4",
+        "damage_type": "bludgeoning",
+        "delivery_mode": "two_hits_or_held_action",
+        "grapple_escape_dc": 14,
+        "hits_required": 2,
+        "max_engulfed": 1,
+        "max_target_size": "medium",
+        "owner_turn_save_ability": "constitution",
+        "owner_turn_save_dc": 14,
+        "total_external_cover": false
+      },
+      "python_wired": true,
       "source_text": "The shambling mound makes two slam attacks. If both attacks hit a Medium or smaller target, the target is grappled (escape DC 14), and the shambling mound uses its Engulf on it. The shambling mound engulfs a Medium or smaller creature grappled by it. The engulfed target is blinded, restrained, and unable to breathe, and it must succeed on a DC 14 Constitution saving throw at the start of each of the mound's turns or take 13 (2d8 + 4) bludgeoning damage. If the mound moves, the engulfed target moves with it. The mound can have only one creature engulfed at a time."
     },
     {
@@ -166,16 +178,11 @@
       "source_text": "The tarrasque can use its Frightful Presence. It then makes five attacks: one with its bite, two with its claws, one with its horns, and one with its tail. It can use its Swallow instead of its bite. The tarrasque makes one bite attack against a Large or smaller creature it is grappling. If the attack hits, the target takes the bite's damage, the target is swallowed, and the grapple ends. While swallowed, the creature is blinded and restrained, it has total cover against attacks and other effects outside the tarrasque, and it takes 56 (16d6) acid damage at the start of each of the tarrasque's turns. If the tarrasque takes 60 damage or more on a single turn from a creature inside it, the tarrasque must succeed on a DC 20 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, which fall prone in a space within 10 feet of the tarrasque. If the tarrasque dies, a swallowed creature is no longer restrained by it and can escape from the corpse by using 30 feet of movement, exiting prone."
     }
   ],
-  "exceptions": [
-    {
-      "card_id": "shambling-mound",
-      "reason": "engulf_start_turn_save_profile_not_supported"
-    }
-  ],
-  "remaining_card_count": 1,
+  "exceptions": [],
+  "remaining_card_count": 0,
   "source_cards_scanned": 327,
-  "status": "partial",
-  "wired_browser_card_count": 7,
+  "status": "complete",
+  "wired_browser_card_count": 8,
   "wired_cards": [
     "behir",
     "giant-frog",
@@ -183,7 +190,8 @@
     "kraken",
     "purple-worm",
     "remorhaz",
+    "shambling-mound",
     "tarrasque"
   ],
-  "wired_python_card_count": 7
+  "wired_python_card_count": 8
 }
