@@ -82,11 +82,14 @@ def source_turn_swallowed_damage(
             )
             applied, adjusted = apply_damage_defenses(target.state, [component])
         before = target.state.current_hp
-        apply_damage(
-            target.state, applied, damage_types={damage_type}, dice=dice,
-            affected_states=affected, setup=setup, damage_components=adjusted,
-            source_id=owner.combatant_id,
-        )
+        # A successful save prevents the damage event entirely, not merely HP loss.
+        # This matches the browser resolver and avoids invoking zero-damage riders.
+        if not save_succeeded:
+            apply_damage(
+                target.state, applied, damage_types={damage_type}, dice=dice,
+                affected_states=affected, setup=setup, damage_components=adjusted,
+                source_id=owner.combatant_id,
+            )
         events.append(BattleEvent(
             sequence=sequence, round_number=round_number, event_type="feature",
             actor_id=owner.combatant_id, actor_name=owner.state.template.name,
