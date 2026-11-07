@@ -30,7 +30,6 @@ from app.content.monster_grapple_auto_hit_source_2014 import source_proves_grapp
 from app.content.monster_zero_hp_prevention_2014 import supports_zero_hp_prevention_2014
 from app.content.monster_death_triggers_2014 import supports_death_triggers_2014
 from app.content.monster_grapple_swallow_source_2014 import source_grapple_swallow_2014
-from app.content.monster_engulf_source_2014 import source_engulf_profile_2014
 
 logger = logging.getLogger(__name__)
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
@@ -63,10 +62,9 @@ def mechanic_family_blockers_2014(
         families = {
             "defense": remaining_unsupported_defense_text_2014(monster),
             "save-action": unsupported_save_actions_2014(monster),
-            "swallow": monster.swallow_actions if (
-                source_grapple_swallow_2014(monster) is None
-                and source_engulf_profile_2014(monster) is None
-            ) else None,
+            # Engulf's no-breath suffocation lifecycle requires separate
+            # certification; source-bound damage alone cannot clear this.
+            "swallow": monster.swallow_actions if source_grapple_swallow_2014(monster) is None else None,
             "death-trigger": monster.death_trigger_actions if not supports_death_triggers_2014(monster) else None,
             "healing": monster.healing_actions if not healing_supported else None,
             "limited-use": unbound_limited,
