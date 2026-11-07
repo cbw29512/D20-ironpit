@@ -1,9 +1,15 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Fire Form — shared contact retaliation tranche (branch feat/2014-fire-form-contact-family)
+## Fire Elemental Touch — shared start-of-target-turn ignition (PR #1186; final-head CI pending)
+
+- **Printed hit:** +6 melee Touch, 5-ft reach, 2d6+3 Fire on a successful hit, then Burning **1d10 Fire at the start of the affected creature's turns**, nonstacking, removable by spending an Action to Douse Fire. The owner dying does not extinguish the flame. Source text and typed attack data are checked together; renamed source has identical mechanics.
+- **Reusable combat:** `OnHitRecurringDamage` now supports `target_turn_start` in addition to `target_turn_end`, both feeding existing timed-effects, typed defenses, zero-HP lifecycle, logs, and ordinary self-Douse Action in Python/browser. It never invents a 5-ft helper-Douse range.
+- **Source blocker result:** automated branch reports **270/327 source-admitted, 57 blocked**; Fire Elemental no longer has `attack:complex`, but **retains `attack:incomplete`** because the printed helper Douse Action has no source-defined range, plus `source:trait` (Fire Form's space-entry ignition and Water Susceptibility). This is *one attack family wired*, not a fully combat-ready or webpage-certified monster. The artifact-sync workflow has now regenerated the classifier and both reports, preserving **`attack:incomplete` + `source:trait`**; CI must run again on this exact synchronized head before merge. Independent webpage fights and production publishing remain outstanding/locked.
+
+## Fire Form — shared contact retaliation tranche (PR #1185, merged)
 
 - **Partially bound, not admitted:** Fire Elemental's printed Fire Form includes 1d10 Fire damage to creatures that touch it or hit it in melee within 5 ft. This reuses the universal passive contact/retaliation primitive already used by Azer, Salamander, Remorhaz and Black Pudding. Source parameters are compiled as immutable passive capability; new fight state handles actual damage and typed defenses.
-- **Remain blocked:** Fire Form's enter-hostile-space ignition/start-of-turn damage, and Water Susceptibility's specified water exposure damage are still unbound. The card is not source-admitted or certified; do not mark these as neutral, remove them or claim complete Fire Elemental fights. Full-body source/mutation tests and shared Python hit test are included. This is a reusable semantic-family improvement, not a new monster-specific combat resolver.
+- **Remain blocked:** Fire Form's enter-hostile-space ignition/start-of-turn damage, and Water Susceptibility's specified water exposure damage are still unbound. The card is not source-admitted or certified; do not mark these as neutral, remove them or claim complete Fire Elemental fights. Full-body source/mutation tests and shared Python hit test are included. This is a reusable semantic-family improvement, not a new monster-specific combat resolver. PR #1185 passed all five checks and was squash-merged as `1883c4c36eeac1b7a6e7857fd2e798a8815acde2`.
 
 ## Ettercap + Giant Spider — shared ranged breakable Web (PR #1184, merged to main)
 

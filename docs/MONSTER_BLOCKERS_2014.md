@@ -13,14 +13,14 @@ Blocker categories overlap: a monster may require several fixes.
 | `source:trait` | 48 |
 | `mechanic:spellcasting` | 32 |
 | `source:extra-action` | 27 |
-| `attack:incomplete` | 13 |
+| `attack:incomplete` | 14 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
 | `mechanic:recharge` | 4 |
 | `multiattack:complex` | 3 |
-| `attack:complex` | 2 |
 | `mechanic:swallow` | 2 |
 | `arena:neutral` | 1 |
+| `attack:complex` | 1 |
 | `attack:none` | 1 |
 | `source:reaction` | 1 |
 
@@ -59,7 +59,7 @@ the underlying ability is already implemented or trivial.
 | Duergar | attack:incomplete, source:extra-action, source:trait | Duergar Resilience |
 | Dust Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Efreeti | mechanic:spellcasting, source:trait | Innate Spellcasting |
-| Fire Elemental | attack:complex, source:trait | Fire Form, Water Susceptibility |
+| Fire Elemental | attack:incomplete, source:trait | Fire Form, Water Susceptibility |
 | Flameskull | mechanic:spellcasting, source:trait | Spellcasting |
 | Frog | arena:neutral | — |
 | Gelatinous Cube | source:extra-action, source:trait | Ooze Cube, Transparent |
