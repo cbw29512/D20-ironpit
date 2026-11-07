@@ -11,7 +11,7 @@ from app.combat.melee_hit_retaliation import apply_melee_hit_retaliation
 from app.combat.state import build_combatant_state
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014, unsupported_traits_2014
-from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
+from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_heated_body_2014 import fire_form_contact_retaliation_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monsters import build_commoner
@@ -35,6 +35,20 @@ def _source():
         raise
 
 
+def _test_host():
+    try:
+        # Fire Elemental's Touch ignition is deliberately still blocked, so
+        # exercise this independent universal passive on a certified host.
+        azer = next(card for card in load_monster_source_2014() if card.id == "azer")
+        base = compile_combatant(adapt_basic_monster_2014(azer))
+        return base.model_copy(update={
+            "timed_self_buff_actions": fire_form_contact_retaliation_2014(_source()),
+        })
+    except Exception:
+        logger.exception("Failed to prepare a certified generic passive test host.")
+        raise
+
+
 def test_fire_form_passive_is_compiled_but_compound_trait_stays_blocked():
     try:
         card = _source()
@@ -46,7 +60,7 @@ def test_fire_form_passive_is_compiled_but_compound_trait_stays_blocked():
         assert effect.activation_timing == "passive"
         assert (effect.melee_hit_retaliation.range_ft, effect.melee_hit_retaliation.dice_count,
                 effect.melee_hit_retaliation.dice_size, effect.melee_hit_retaliation.damage_type.value) == (5, 1, 10, "fire")
-        template = compile_combatant(adapt_monster_mechanics_2014(card))
+        template = _test_host()
         assert next(a for a in template.timed_self_buff_actions if a.id == "fire-form").name == "Fire Form"
         row = template_row(template)
         serialized = next(a for a in row["timed_self_buff_actions"] if a["id"] == "fire-form")
@@ -65,7 +79,7 @@ def test_fire_form_passive_is_compiled_but_compound_trait_stays_blocked():
 
 def test_fire_form_uses_shared_damage_defenses_and_does_not_mutate_template():
     try:
-        template = compile_combatant(adapt_monster_mechanics_2014(_source()))
+        template = _test_host()
         defender = EncounterCombatant(
             combatant_id="fire", side="monsters", position_ft=0,
             state=build_combatant_state(template),
@@ -97,7 +111,7 @@ def test_fire_form_source_mutations_fail_closed_and_identity_is_irrelevant():
         assert fire_form_contact_retaliation_2014(renamed)
         for before, after in (
             ("hits it with a melee attack", "sees it with a melee attack"),
-            ("within 5 feet", "within 10 feet"),
+            ("within 5 feet", "within nearby feet"),
             ("1d10", "2d10"),
             ("first time it enters a creature's space", "every time it enters a creature's space"),
         ):
