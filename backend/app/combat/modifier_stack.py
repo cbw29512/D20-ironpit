@@ -8,7 +8,7 @@ from app.combat.debuff_counters import debuff_is_countered
 from app.combat.dice import DiceProvider
 from app.combat.exhaustion import d20_modifier, speed_after_exhaustion
 from app.combat.timed_control_bonuses import timed_armor_class_bonus
-from app.combat.timed_effect_speed import timed_speed_multiplier
+from app.combat.timed_effect_speed import timed_speed_multiplier, timed_speed_penalty_ft
 from app.combat.modifier_flat_bonuses import (
     attack_roll_flat_bonus,
     saving_throw_flat_bonus,
@@ -147,7 +147,7 @@ def effective_speed(state: CombatantState) -> int:
             )
         )
     )
-    base = max(0, state.template.speed_ft + speed_delta)
+    base = max(0, state.template.speed_ft + speed_delta - timed_speed_penalty_ft(state))
     multiplier = 1.0
     for item in state.active_modifiers:
         if item.kind is ModifierKind.SPEED_MULTIPLIER:
