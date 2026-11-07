@@ -51,7 +51,9 @@ def source_two_hit_engulf_2014(
         if len(matching) != 1:
             return None
         attack = matching[0]
-        if monster.multiattack_slots != [[attack.id], [attack.id]]:
+        # Legacy parser did not emit slots for the conditional printed sequence.
+        # No other parsed slot pattern may contradict the source grammar.
+        if monster.multiattack_slots not in ([], [[attack.id], [attack.id]]):
             return None
         if (len(monster.swallow_actions) != 1
                 or not isinstance(monster.swallow_actions[0], dict)):
@@ -64,14 +66,23 @@ def source_two_hit_engulf_2014(
         if int(b["save"]) < 1 or dc < 1:
             return None
         expected = {
-            "attack_id": attack.id, "max_target_size": size.value,
+            "max_target_size": size.value,
             "damage_dice_count": count, "damage_dice_size": sides,
             "damage_bonus": bonus, "damage_type": b["type"].lower(),
             "max_swallowed": 1, "requires_existing_grapple": True,
         }
         if any(raw.get(key) != value for key, value in expected.items() if key in raw):
             return None
-        if raw.get("id") not in (None, "engulf"):
+        if raw.get("id") not in (None, "engulf") or raw.get("attack_id") not in (None, attack.id):
+            return None
+        required = {
+            "start_turn_save_dc": int(b["save"]),
+            "start_turn_save_ability": "constitution",
+            "source_death_release": "immediate",
+            "exit_movement_ft": 0,
+            "exit_prone": False,
+        }
+        if any(raw.get(key) != value for key, value in required.items()):
             return None
         return (
             MultiHitGrappleEffect(
