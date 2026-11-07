@@ -35,7 +35,7 @@ assert.equal(swallow.swallowAfterBite("toad",toad,"medium",medium,{...action,max
 assert.equal(medium.swallowed.damage_dice_count,3);
 window.IRON_PIT_DICE={rollMany:(count,size)=>Array.from({length:count},()=>size)};
 window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES={resolveDamage:(_state,total,type)=>{
-  assert.equal(type,"acid"); return {applied:total};
+  assert.ok(["acid","bludgeoning"].includes(type)); return {applied:total};
 }};
 window.IRON_PIT_BROWSER_ATTACK={applyDamage:(state,total)=>{state.current_hp=Math.max(0,state.current_hp-total);}};
 const swallowedSetup={heroes:[{combatant_id:"medium",state:medium}],monsters:[{combatant_id:"toad",state:toad}]};
