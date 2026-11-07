@@ -38,7 +38,8 @@
           const applied = grapple.apply(
             target.state, member.combatant_id, rule.escapeDc, rule.rangeFt,
             rule.restrains, false, null,
-            {blinds: rule.blinds, preventsBreathing: rule.preventsBreathing},
+            {blinds: rule.blinds, preventsBreathing: rule.preventsBreathing,
+             effectId: rule.effectId},
           );
           if (!applied.length) continue;
           const conditions = [...applied];
