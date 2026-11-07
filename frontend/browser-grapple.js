@@ -15,6 +15,18 @@
   };
 
   function sync(state) {
+    const owned = new Set((state.grapple_sources || []).flatMap(source => source.linked_condition_ids || []));
+    const previous = new Set(state.grapple_owned_effect_ids || []);
+    for (const item of previous) {
+      if (!owned.has(item) && !(state.timed_effects || []).some(effect => effect.effect_id === item)) {
+        state.active_effect_ids = state.active_effect_ids.filter(x => x !== item);
+      }
+    }
+    for (const item of owned) {
+      if (item === "blinded" && I().immune(state, item)) continue;
+      if (!state.active_effect_ids.includes(item)) state.active_effect_ids.push(item);
+    }
+    state.grapple_owned_effect_ids = [...owned];
     const grappled = state.grapple_sources.length > 0;
     const restrained = Boolean(state.swallowed) || state.grapple_sources.some((source) => source.restrains);
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "grappled" && id !== "restrained");
@@ -25,7 +37,7 @@
     if (restrained) state.active_effect_ids.push("restrained");
   }
 
-  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, sourceIsMagical = false, periodicDamage = null) {
+  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, sourceIsMagical = false, periodicDamage = null, linkedConditionIds = []) {
     if (I().immune(state, "grappled", null, { sourceIsMagical })) return [];
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
     const effectiveRestrains = restrains && !I().immune(state, "restrained", null, { sourceIsMagical });
@@ -33,9 +45,13 @@
       source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt,
       restrains: effectiveRestrains, source_is_magical: Boolean(sourceIsMagical),
       periodic_damage: periodicDamage,
+      linked_condition_ids: [...linkedConditionIds],
     });
     sync(state);
-    return effectiveRestrains ? ["grappled", "restrained"] : ["grappled"];
+    return [...new Set([
+      "grappled", ...(effectiveRestrains ? ["restrained"] : []),
+      ...linkedConditionIds.filter(id => state.active_effect_ids.includes(id)),
+    ])];
   }
 
   function release(state, sourceId) {
