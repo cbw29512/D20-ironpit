@@ -16,7 +16,13 @@ from app.content.monster_heated_body_2014 import fire_form_contact_retaliation_2
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monsters import build_commoner
 from app.domain.encounters import EncounterCombatant
-from scripts.browser_template_serializer import template_row
+import sys
+from pathlib import Path
+
+_scripts = Path(__file__).resolve().parents[2] / "scripts"
+if str(_scripts) not in sys.path:
+    sys.path.insert(0, str(_scripts))
+from browser_template_serializer import template_row
 
 logger = logging.getLogger(__name__)
 
