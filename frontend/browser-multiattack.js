@@ -78,6 +78,10 @@
           events.push(event); previousAttack = event;
           if (event.hit) {
             const actualTarget = eventTarget(event, choice.target, setup);
+            const containment = window.IRON_PIT_BROWSER_SWALLOW?.sequenceHit?.(
+              sequence, round, member, actualTarget, choice.attack, events,
+            ) || null;
+            if (containment) { events.push(containment); sequence += 1; }
             if (MK()?.resolveStunning) {
               const stun = MK().resolveStunning(sequence, round, member, actualTarget, choice.attack);
               if (stun) { events.push(stun); sequence += 1; }
