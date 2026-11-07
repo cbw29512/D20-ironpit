@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 class MultiHitGrappleEffect(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
     source_name: str = Field(min_length=1)
+    effect_id: str = Field(min_length=1)
+    standalone_action: bool = False
     attack_id: str = Field(min_length=1)
     hits_required: int = Field(ge=2, le=8)
     max_target_size: CreatureSize
