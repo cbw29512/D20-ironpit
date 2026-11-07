@@ -1465,6 +1465,15 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        if action.delivery_mode != "action_attack" else {}),
                     "maxTargetSize": action.max_target_size.value,
                     "requiresExistingGrapple": action.requires_existing_grapple,
+                    **({"requiredSequenceHits": action.required_sequence_hits,
+                        "sequenceGrappleDc": action.sequence_grapple_dc,
+                        "startTurnSaveAbility": action.start_turn_save_ability,
+                        "startTurnSaveDc": action.start_turn_save_dc,
+                        "damageBonus": action.damage_bonus,
+                        "exitProne": action.exit_prone,
+                        "cannotBreathe": action.cannot_breathe,
+                        "movesWithSource": action.moves_with_source}
+                       if action.delivery_mode == "attack_sequence" else {}),
                     **({"onHitSaveAbility": action.on_hit_save_ability,
                         "onHitSaveDc": action.on_hit_save_dc}
                        if action.on_hit_save_dc is not None else {}),
