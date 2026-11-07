@@ -1,7 +1,12 @@
 """Resolve source-owned swallowed acid damage at the *owner's* turn start."""
 from __future__ import annotations
 
+import logging
+from app.combat.saving_throw_rolls import resolve_saving_throw
+from app.domain.saving_throw_context import SavingThrowContext
 from app.combat.damage import roll_damage_component
+
+logger = logging.getLogger(__name__)
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.zero_hp import apply_damage
 from app.combat.swallow_state import release_swallowed
@@ -24,7 +29,7 @@ def release_invalid_swallowed(setup: EncounterSetup) -> list[str]:
             release_swallowed(
                 owner.state, target.combatant_id, target.state,
                 owner_id=owner.combatant_id,
-                exiting_prone=target.state.is_alive and not target.state.is_dead,
+                exiting_prone=record.exit_prone and target.state.is_alive and not target.state.is_dead,
             )
         else:
             target.state.swallowed = None
@@ -55,11 +60,34 @@ def source_turn_swallowed_damage(
     ]
     for target in targets:
         record = target.state.swallowed
+        save_roll = None
+        if record.start_turn_save_dc is not None:
+            if not record.start_turn_save_ability:
+                raise ValueError("Conditional containment requires a source-declared save ability.")
+            save_roll, saved = resolve_saving_throw(
+                target.state, record.start_turn_save_ability,
+                record.start_turn_save_dc, dice, SavingThrowContext(),
+                round_number=round_number, encounter_roller=target, setup=setup,
+            )
+            if saved:
+                events.append(BattleEvent(
+                    sequence=sequence, round_number=round_number, event_type="feature",
+                    actor_id=owner.combatant_id, actor_name=owner.state.template.name,
+                    target_id=target.combatant_id, target_name=target.state.template.name,
+                    feature_id=record.source_name, animation="feature",
+                    saving_throw_roll=save_roll, save_ability=record.start_turn_save_ability,
+                    save_dc=record.start_turn_save_dc, save_succeeded=True,
+                    description=(f"{target.state.template.name} succeeds on the "
+                                 f"{record.source_name} save at {owner.state.template.name}'s "
+                                 "turn start; no damage."),
+                ))
+                sequence += 1
+                continue
         damage_type = DamageType(record.damage_type)
         component = roll_damage_component(
             dice, record.source_name,
             record.damage_dice_count, record.damage_dice_size,
-            0, damage_type, False,
+            record.damage_bonus, damage_type, False,
         )
         applied, adjusted = apply_damage_defenses(target.state, [component])
         before = target.state.current_hp
@@ -75,6 +103,10 @@ def source_turn_swallowed_damage(
             feature_id=record.source_name, damage_components=adjusted,
             hp_before=before, hp_after=target.state.current_hp,
             is_dead=target.state.is_dead, animation="feature",
+            saving_throw_roll=save_roll,
+            save_ability=record.start_turn_save_ability,
+            save_dc=record.start_turn_save_dc,
+            save_succeeded=False if record.start_turn_save_dc is not None else None,
             description=(
                 f"{owner.state.template.name}: {record.source_name} deals "
                 f"{applied} {damage_type.value} damage to swallowed "
