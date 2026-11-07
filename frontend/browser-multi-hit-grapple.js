@@ -33,7 +33,8 @@
           if (window.IRON_PIT_BROWSER_STATE.distance(member, target) > rule.rangeFt) continue;
           const held = members.filter(item => item !== member &&
             (item.state.grapple_sources || []).some(source =>
-              source.source_id === member.combatant_id)).length;
+              source.source_id === member.combatant_id
+              && source.linked_effect_id === rule.effectId)).length;
           if (held >= rule.maxActiveGrapples) continue;
           const applied = grapple.apply(
             target.state, member.combatant_id, rule.escapeDc, rule.rangeFt,
