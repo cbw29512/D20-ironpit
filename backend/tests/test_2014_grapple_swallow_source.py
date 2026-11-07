@@ -75,15 +75,17 @@ def test_inconsistent_structured_damage_or_size_fails_closed(corpus):
 
 def test_different_swallow_grammars_remain_separately_blocked(corpus):
     # Bite-hit + failed-save Swallow is now source-proven in the shared family.
-    # Engulf still has a distinct two-hit and start-of-owner-turn save profile.
+    # Source-proven two-hit containment now uses the same canonical state.
     proven = source_grapple_swallow_2014(corpus["purple-worm"])
     assert proven is not None
     assert proven.delivery_mode == "attack_hit"
     assert proven.on_hit_save_ability == "dexterity"
     assert proven.on_hit_save_dc == 19
     assert "mechanic:swallow" not in basic_blockers_2014(corpus["purple-worm"])
-    assert source_grapple_swallow_2014(corpus["shambling-mound"]) is None
-    assert "mechanic:swallow" in basic_blockers_2014(corpus["shambling-mound"])
+    engulf = source_grapple_swallow_2014(corpus["shambling-mound"])
+    assert engulf is not None and engulf.delivery_mode == "attack_sequence"
+    assert engulf.start_turn_save_dc == 14 and engulf.damage_bonus == 4
+    assert "mechanic:swallow" not in basic_blockers_2014(corpus["shambling-mound"])
 
 
 
