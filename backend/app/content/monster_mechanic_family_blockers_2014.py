@@ -94,6 +94,11 @@ def attack_blockers_2014(monster: SourceMonster2014) -> list[str]:
             attack = source_completed_mixed_attack_2014(monster, source_attack)
             breakable = source_recharge_breakable_restraint_2014(monster, attack)
             start_burn = source_start_turn_recurring_damage_2014(monster, attack)
+            # The ongoing Fire tick is runnable, but its printed helper Douse
+            # Action has no source-defined reach. Until a generic helper-target
+            # policy is approved/proven, keep this attack source-incomplete.
+            if start_burn is not None and "douse-fire" in start_burn.removal_action_ids:
+                blockers.append("attack:incomplete")
             if not attack.source_complete or not source_proves_ability_score_reduction_2014(monster, attack):
                 blockers.append("attack:incomplete")
             # A zero-damage restraint has no printed damage type. Its hit is
