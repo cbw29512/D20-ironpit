@@ -56,6 +56,7 @@ def apply_multi_hit_grapples(
                     state, attacker.combatant_id, rule.escape_dc, rule.range_ft,
                     restrains=rule.restrains, blinds=rule.blinds,
                     prevents_breathing=rule.prevents_breathing,
+                    linked_effect_id=rule.effect_id,
                 )
                 if not applied:
                     continue
