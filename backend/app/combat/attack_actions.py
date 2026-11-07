@@ -67,6 +67,7 @@ def resolve_attack_action(
         turn_key = f"{round_number}:{attacker.combatant_id}"
 
         previous_attack = None
+        hit_history: list[BattleEvent] = []
         attacks_remaining = len(slots)
         slot_index = 0
         while attacks_remaining > 0:
@@ -108,7 +109,14 @@ def resolve_attack_action(
                 )
                 events.append(event)
                 previous_attack = event
+                hit_history.append(event)
                 sequence += 1
+                # Resolve the printed immediate hit threshold before reactions,
+                # rather than deferring Engulf until the Action finishes.
+                linked, sequence = apply_multi_hit_grapples(
+                    sequence, round_number, attacker, setup, hit_history,
+                )
+                events.extend(linked)
                 if event.hit:
                     actual_target = event_target(event, setup) or target
                     stun = resolve_stunning_strike(
@@ -169,10 +177,6 @@ def resolve_attack_action(
                 sequence, round_number, attacker, setup, dice, light_trigger, turn_key,
             )
             events.extend(more)
-        linked, sequence = apply_multi_hit_grapples(
-            sequence, round_number, attacker, setup, events,
-        )
-        events.extend(linked)
         return events, sequence
     except ValueError:
         raise
