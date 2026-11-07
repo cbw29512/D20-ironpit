@@ -27,6 +27,7 @@ from app.content.monster_source_limited_audible_conditions_2014 import (
 )
 from app.content.monster_visual_disguise_2014 import visual_disguise_action_2014
 from app.content.monster_grapple_swallow_source_2014 import source_grapple_swallow_2014
+from app.content.monster_engulf_source_2014 import source_engulf_profile_2014
 
 logger = logging.getLogger(__name__)
 
@@ -80,6 +81,9 @@ def source_supported_extra_action_labels_2014(monster: SourceMonster2014) -> set
         disguise = visual_disguise_action_2014(monster)
         if disguise is not None:
             allowed.add(_label(disguise.name))
+        engulf = source_engulf_profile_2014(monster)
+        if engulf is not None:
+            allowed.add(_label(engulf.source_name))
         swallow = source_grapple_swallow_2014(monster)
         if swallow is not None:
             allowed.add(_label(swallow.source_name))
