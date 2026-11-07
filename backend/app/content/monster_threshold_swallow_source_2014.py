@@ -99,6 +99,10 @@ def threshold_swallow_source_2014(
         )
         max_swallowed = 1 if one_creature_cap else None
 
+        standalone = any(
+            name.split(" (", 1)[0].casefold() == "swallow"
+            for name in monster.action_names
+        )
         on_hit_save_ability = None
         on_hit_save_dc = None
         requires_grapple = True
@@ -112,7 +116,7 @@ def threshold_swallow_source_2014(
             hit_save = re.search(
                 rf"If the target is a (?P<size>Small|Medium|Large) or smaller creature, "
                 rf"it must succeed on a DC (?P<dc>\d+) (?P<ability>Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma) "
-                rf"saving throw or be swallowed by the {actor_re}\\.",
+                rf"saving throw or be swallowed by the {actor_re}\.",
                 bite_text, re.I,
             )
             typed = attack.on_hit_save_effect
@@ -148,10 +152,6 @@ def threshold_swallow_source_2014(
             }
             if any(data.get(key) != value for key, value in expected.items()):
                 return None
-        standalone = any(
-            name.split(" (", 1)[0].casefold() == "swallow"
-            for name in monster.action_names
-        )
         return ThresholdSwallowProof2014(
             attack.id, "action_attack" if standalone else "attack_hit",
             size, count, sides, periodic["type"].lower(),
