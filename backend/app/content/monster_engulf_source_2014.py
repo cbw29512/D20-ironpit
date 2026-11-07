@@ -81,7 +81,7 @@ def source_engulf_profile_2014(monster) -> EngulfProfile2014 | None:
         if monster.multiattack_slots != [[attack.id], [attack.id]]:
             return None
         dice = int(engulf["count"]), int(engulf["sides"]), int(engulf["bonus"])
-        if dice != (2, 8, 4) and any(x <= 0 for x in dice):
+        if dice[0] <= 0 or dice[1] < 2 or dice[2] < 0:
             return None
         if int(engulf["average"]) != dice[0] * (dice[1] + 1) // 2 + dice[2]:
             return None
