@@ -35,6 +35,7 @@
         const applied = grapple.apply(
           target.state, attacker.combatant_id, rule.grappleEscapeDc,
           rule.grappleRangeFt, true, false, null, rule.linkedConditionIds,
+          Boolean(rule.movesWithSource),
         );
         if (!applied.includes("grappled")) continue;
         return { events: [{
