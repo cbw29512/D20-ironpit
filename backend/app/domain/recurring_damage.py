@@ -15,7 +15,7 @@ class OnHitRecurringDamage(BaseModel):
     dice_count: int = Field(ge=1, le=40)
     dice_size: int = Field(ge=2, le=100)
     damage_type: DamageType
-    tick_timing: Literal["target_turn_end"] = "target_turn_end"
+    tick_timing: Literal["target_turn_start", "target_turn_end"] = "target_turn_end"
     stacking: Literal["nonstacking"] = "nonstacking"
     ends_if_source_dead: bool = False
     removal_action_ids: list[str] = Field(default_factory=list)
