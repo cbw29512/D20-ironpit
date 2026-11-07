@@ -37,6 +37,7 @@ class GrappleSource(BaseModel):
     blinds: bool = False
     prevents_breathing: bool = False
     blinded_preexisting: bool = False
+    linked_effect_id: str | None = None
 
 
 class HitControlEffect(BaseModel):
