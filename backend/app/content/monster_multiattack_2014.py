@@ -116,6 +116,7 @@ def multiattack_2014(monster: SourceMonster2014) -> MultiattackCapabilityDefinit
             ownership_marker_id=engulf.ownership_marker_id,
             linked_condition_ids=["blinded", "unable-to-breathe", engulf.ownership_marker_id],
             max_active_targets=engulf.max_active_targets,
+            moves_with_source=True,
         ) if engulf else None
         return MultiattackCapabilityDefinition(
             id=f"2014-{monster.id}-multiattack", name="Multiattack",
