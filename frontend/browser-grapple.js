@@ -96,7 +96,9 @@
     const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
     for (const target of members.values()) {
       if (target.state.is_dead || !target.state.is_alive) {
-        target.state.grapple_sources = [];
+        for (const source of [...target.state.grapple_sources]) {
+          release(target.state, source.source_id);
+        }
         sync(target.state);
         continue;
       }
