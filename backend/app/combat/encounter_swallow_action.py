@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.action_economy import is_available
+from app.combat.action_economy import is_available, spend
 from app.combat.attacks import resolve_attack
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.swallow_state import swallow_after_bite
@@ -24,6 +24,37 @@ def resolve_swallow_action(
             return None
         members = [*setup.heroes, *setup.monsters]
         for rule in attacker.state.template.swallow_actions:
+            if rule.delivery_mode == "attack_sequence":
+                # The printed containment Action can also target a creature
+                # already Grappled by this actor. It makes no extra Bite roll.
+                candidates = [
+                    target for target in members
+                    if target.side != attacker.side and target.state.is_alive
+                    and not target.state.is_dead and target.state.current_hp > 0
+                    and target.state.swallowed is None
+                    and size_at_most(target.state.template.size, rule.max_target_size)
+                    and any(g.source_id == attacker.combatant_id
+                            for g in target.state.grapple_sources)
+                ]
+                if not candidates:
+                    continue
+                target = min(candidates, key=lambda c: (combatant_distance(attacker, c), c.combatant_id))
+                spend(attacker.state, "action")
+                if not swallow_after_bite(
+                    attacker.combatant_id, attacker.state, target.combatant_id,
+                    target.state, rule, bite_hit=True,
+                ):
+                    raise RuntimeError("A legal containment Action failed to apply.")
+                return [BattleEvent(
+                    sequence=sequence, round_number=round_number, event_type="feature",
+                    actor_id=attacker.combatant_id, actor_name=attacker.state.template.name,
+                    target_id=target.combatant_id, target_name=target.state.template.name,
+                    feature_id=rule.source_name, animation="feature",
+                    applied_condition_ids=["blinded", "restrained"],
+                    description=(f"{attacker.state.template.name} uses {rule.source_name} "
+                                 f"on Grappled {target.state.template.name}: "
+                                 "Blinded and Restrained."),
+                )], sequence + 1
             if rule.delivery_mode != "action_attack":
                 continue
             if rule.max_swallowed is not None and len(attacker.state.swallowed_target_ids) >= rule.max_swallowed:
