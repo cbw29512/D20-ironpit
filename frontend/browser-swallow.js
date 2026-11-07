@@ -25,6 +25,12 @@
       source_id: ownerId, source_name: action.sourceName,
       damage_dice_count: action.damageDiceCount,
       damage_dice_size: action.damageDiceSize, damage_type: action.damageType,
+      damage_bonus: action.damageBonus || 0,
+      start_turn_save_ability: action.startTurnSaveAbility || null,
+      start_turn_save_dc: action.startTurnSaveDc || null,
+      exit_prone: action.exitProne !== false,
+      cannot_breathe: Boolean(action.cannotBreathe),
+      moves_with_source: Boolean(action.movesWithSource),
       exit_movement_ft: action.exitMovementFt,
       regurgitation_damage_threshold: action.regurgitationDamageThreshold || null,
       regurgitation_save_ability: action.regurgitationSaveAbility || null,
@@ -65,7 +71,8 @@
           && victim.state.is_alive && !victim.state.is_dead) continue;
         if (!owner) throw new Error("Swallowed victim references an unknown encounter owner.");
         if (release(owner.combatant_id, owner.state, victim.combatant_id, victim.state,
-          victim.state.is_alive && !victim.state.is_dead && victim.state.current_hp > 0)) {
+          victim.state.swallowed.exit_prone !== false
+          && victim.state.is_alive && !victim.state.is_dead && victim.state.current_hp > 0)) {
           released.push(victim.combatant_id);
         }
       }
@@ -91,20 +98,46 @@
         const record = target.state.swallowed;
         if (!record || record.source_id !== owner.combatant_id
           || !target.state.is_alive || target.state.is_dead) continue;
+        let save = null;
+        if (record.start_turn_save_dc != null) {
+          const runtime = window.IRON_PIT_BROWSER_SAVING_THROWS;
+          if (!runtime?.resolveSavingThrow || !record.start_turn_save_ability)
+            throw new Error("Conditional containment requires source-owned saving throw runtime.");
+          save = runtime.resolveSavingThrow(
+            target.state, record.start_turn_save_ability, record.start_turn_save_dc,
+            { roundNumber: round, encounterRoller: target, setup },
+          );
+          if (save.succeeded) {
+            events.push({
+              sequence: sequence++, round_number: round, event_type: "feature",
+              actor_id: owner.combatant_id, actor_name: ownerState.template.name,
+              target_id: target.combatant_id, target_name: target.state.template.name,
+              feature_id: record.source_name, animation: "feature",
+              saving_throw_roll: save.roll, save_ability: record.start_turn_save_ability,
+              save_dc: record.start_turn_save_dc, save_succeeded: true,
+              description: `${target.state.template.name} succeeds on the ${record.source_name} save at ${ownerState.template.name}\'s turn start; no damage.`,
+            });
+            continue;
+          }
+        }
         const rolls = D().rollMany(record.damage_dice_count, record.damage_dice_size);
-        const total = rolls.reduce((sum, roll) => sum + roll, 0);
+        const total = rolls.reduce((sum, roll) => sum + roll, record.damage_bonus || 0);
         const hpBefore = target.state.current_hp;
         const resolved = DD().resolveDamage(target.state, total, record.damage_type);
         A().applyDamage(target.state, resolved.applied, false, [record.damage_type], affected, setup, [{
           source: record.source_name, damage_type: record.damage_type,
-          notation: `${record.damage_dice_count}d${record.damage_dice_size}`,
-          rolls, modifier: 0, total, applied_total: resolved.applied,
+          notation: `${record.damage_dice_count}d${record.damage_dice_size}${record.damage_bonus ? `+${record.damage_bonus}` : ""}`,
+          rolls, modifier: record.damage_bonus || 0, total, applied_total: resolved.applied,
         }], owner.combatant_id);
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
           actor_id: owner.combatant_id, actor_name: ownerState.template.name,
           target_id: target.combatant_id, target_name: target.state.template.name,
           feature_id: record.source_name, hp_before: hpBefore, hp_after: target.state.current_hp,
+          saving_throw_roll: save?.roll || null,
+          save_ability: record.start_turn_save_ability || null,
+          save_dc: record.start_turn_save_dc || null,
+          save_succeeded: save ? false : null,
           damage_components: [{
             source: record.source_name, damage_type: record.damage_type,
             notation: `${record.damage_dice_count}d${record.damage_dice_size}`,
