@@ -25,6 +25,7 @@ def apply_damage_taken_timed_effects(
             limits = compiled_control_limits(
                 attack_roll_disadvantage=rule.attack_roll_disadvantage,
                 ability_check_disadvantage=rule.ability_check_disadvantage,
+                speed_penalty_ft=rule.speed_penalty_ft,
             )
             result = apply_timed_condition(
                 state,

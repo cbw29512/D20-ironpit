@@ -20,3 +20,18 @@ def timed_speed_multiplier(state: CombatantState) -> float:
     except Exception:
         logger.exception("Failed to resolve timed-effect speed multiplier for %s.", state.template.name)
         raise
+
+
+def timed_speed_penalty_ft(state: CombatantState) -> int:
+    """Sum of active timed-effect absolute speed penalties in feet."""
+    try:
+        penalty = 0
+        for effect in state.timed_effects:
+            limits = effect.control_limits
+            if limits is None:
+                continue
+            penalty += limits.speed_penalty_ft
+        return penalty
+    except Exception:
+        logger.exception("Failed to resolve timed-effect speed penalty for %s.", state.template.name)
+        raise
