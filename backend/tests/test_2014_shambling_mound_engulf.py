@@ -58,7 +58,7 @@ def test_source_proof_and_browser_template_are_consistent():
     assert (damage.save_ability, damage.save_dc, damage.damage_bonus) == ("constitution", 14, 4)
     assert (damage.dice_count, damage.dice_size, damage.damage_type.value) == (2, 8, "bludgeoning")
     assert "mechanic:swallow" not in basic_blockers_2014(source)
-    assert "source:extra-action" in basic_blockers_2014(source)
+    assert basic_blockers_2014(source) == ()
     monster = compile_combatant(adapt_monster_mechanics_2014(source))
     browser = template_row(monster)
     assert browser["multiHitGrappleEffects"][0]["hitsRequired"] == 2
