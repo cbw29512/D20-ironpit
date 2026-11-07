@@ -15,6 +15,8 @@ class GrappleSwallowAction(BaseModel):
     delivery_mode: Literal["action_attack", "attack_hit"] = "action_attack"
     max_target_size: CreatureSize
     requires_existing_grapple: bool = True
+    on_hit_save_ability: str | None = None
+    on_hit_save_dc: int | None = Field(default=None, ge=1, le=40)
     damage_dice_count: int = Field(ge=1)
     damage_dice_size: int = Field(ge=2)
     damage_type: str = Field(min_length=1)
@@ -36,6 +38,9 @@ def swallow_action_from_source(source) -> GrappleSwallowAction | None:
         source_name=source.source_name,
         attack_id=source.attack_id,
         delivery_mode=source.delivery_mode,
+        requires_existing_grapple=source.requires_existing_grapple,
+        on_hit_save_ability=source.on_hit_save_ability,
+        on_hit_save_dc=source.on_hit_save_dc,
         max_target_size=source.max_target_size,
         damage_dice_count=source.damage_dice_count,
         damage_dice_size=source.damage_dice_size,
