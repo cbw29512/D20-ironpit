@@ -1449,6 +1449,18 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             ]}
             if template.attack_action.repeat_count_from_variable_heads:
                 row["attack_action"]["repeatCountFromVariableHeads"] = True
+            if template.attack_action.hit_grapple is not None:
+                hit = template.attack_action.hit_grapple
+                row["attack_action"]["hitGrapple"] = {
+                    "sourceName": hit.source_name, "attackId": hit.attack_id,
+                    "requiredHits": hit.required_hits,
+                    "maxTargetSize": hit.max_target_size.value,
+                    "grappleEscapeDc": hit.grapple_escape_dc,
+                    "grappleRangeFt": hit.grapple_range_ft,
+                    "ownershipMarkerId": hit.ownership_marker_id,
+                    "linkedConditionIds": list(hit.linked_condition_ids),
+                    "maxActiveTargets": hit.max_active_targets,
+                }
         if template.attack_action and template.attack_action.variants:
             row["attack_action"]["variants"] = [
                 {"id": variant.id, "attackKind": _value(variant.attack_kind) if variant.attack_kind else None,
