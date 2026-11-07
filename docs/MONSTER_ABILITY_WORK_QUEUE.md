@@ -4,7 +4,7 @@
 
 - **Printed hit:** +6 melee Touch, 5-ft reach, 2d6+3 Fire on a successful hit, then Burning **1d10 Fire at the start of the affected creature's turns**, nonstacking, removable by spending an Action to Douse Fire. The owner dying does not extinguish the flame. Source text and typed attack data are checked together; renamed source has identical mechanics.
 - **Reusable combat:** `OnHitRecurringDamage` now supports `target_turn_start` in addition to `target_turn_end`, both feeding existing timed-effects, typed defenses, zero-HP lifecycle, logs, and ordinary self-Douse Action in Python/browser. It never invents a 5-ft helper-Douse range.
-- **Source blocker result:** automated branch reports **270/327 source-admitted, 57 blocked**; Fire Elemental no longer has `attack:complex`, but still has `source:trait` (Fire Form's space-entry ignition and Water Susceptibility). This is *one attack family wired*, not a fully combat-ready or webpage-certified monster. Generator-owned artifacts were synchronized; exact-head five workflow pass and merge are required.
+- **Source blocker result:** automated branch reports **270/327 source-admitted, 57 blocked**; Fire Elemental no longer has `attack:complex`, but **retains `attack:incomplete`** because the printed helper Douse Action has no source-defined range, plus `source:trait` (Fire Form's space-entry ignition and Water Susceptibility). This is *one attack family wired*, not a fully combat-ready or webpage-certified monster. Generator-owned artifacts were synchronized; exact-head five workflow pass and merge are required.
 
 ## Fire Form — shared contact retaliation tranche (PR #1185, merged)
 
