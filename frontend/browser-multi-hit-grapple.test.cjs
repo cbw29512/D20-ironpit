@@ -11,7 +11,7 @@ window.IRON_PIT_BROWSER_CONDITION_IMMUNITY={immune:()=>false};
 const owner={combatant_id:"holder",side:"monsters",position_ft:0,state:{
   is_alive:true,is_dead:false,current_hp:60,grapple_sources:[],
   template:{name:"Renamed Holder",size:"large",multiHitGrappleEffects:[{
-    sourceName:"Renamed Engulf",attackId:"slam",hitsRequired:2,maxTargetSize:"medium",
+    sourceName:"Renamed Engulf",effectId:"engulf",standaloneAction:true,attackId:"slam",hitsRequired:2,maxTargetSize:"medium",
     escapeDc:14,rangeFt:5,maxActiveGrapples:1,restrains:true,blinds:true,preventsBreathing:true
   }]}
 }};
