@@ -39,6 +39,7 @@
       blinds: Boolean(linked.blinds) && !I().immune(state, "blinded", null, {sourceIsMagical}),
       prevents_breathing: Boolean(linked.preventsBreathing),
       blinded_preexisting: blindedPreexisting,
+      linked_effect_id: linked.effectId || null,
     });
     sync(state);
     return effectiveRestrains ? ["grappled", "restrained"] : ["grappled"];
