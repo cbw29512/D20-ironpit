@@ -1,5 +1,11 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Purple Worm — Bite hit → failed Dexterity save → shared Swallowed (PR pending)
+
+- **Source:** +9 Bite/10-ft reach/3d8+9 Piercing, only Large-or-smaller target then DC19 Dexterity save; failure applies the same canonical Swallowed state as grapple-first creatures, with Blinded, Restrained, total external cover and 6d6 Acid at the worm's turn start. Regurgitation after 30 damage in a turn from an inside creature requires DC21 Constitution; death release is 20-ft exit and Prone.
+- **Universal extension:** immutable Swallow profile now declares optional printed on-hit save ability/DC, separate from pre-hit Grapple requirement. A strict source proof validates the complete on-hit trigger and existing typed source values without monster-name dispatch. Python/browser hit runtimes share their existing save/Swallow/damage/release primitives; Action economy does not add a separate Swallow action to Bite.
+- **Verification gates:** Python source, positive/negative save, size, monster rename, mutation and turn-release tests; synthetic browser hit/miss/save/acid/cleanup tests are part of required CI. Generated roster admission and full webpage fight certification must be measured, not presumed. Production publishing remains locked.
+
 ## Fire Form — shared contact retaliation tranche (branch feat/2014-fire-form-contact-family)
 
 - **Partially bound, not admitted:** Fire Elemental's printed Fire Form includes 1d10 Fire damage to creatures that touch it or hit it in melee within 5 ft. This reuses the universal passive contact/retaliation primitive already used by Azer, Salamander, Remorhaz and Black Pudding. Source parameters are compiled as immutable passive capability; new fight state handles actual damage and typed defenses.
