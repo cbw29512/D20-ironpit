@@ -23,6 +23,9 @@ class GrappleSwallowAction(BaseModel):
     damage_dice_count: int = Field(ge=1)
     damage_dice_size: int = Field(ge=2)
     damage_type: str = Field(min_length=1)
+    damage_bonus: int = 0
+    turn_start_save_ability: str | None = None
+    turn_start_save_dc: int | None = Field(default=None, ge=1, le=40)
     max_swallowed: int | None = Field(default=None, ge=1)
     exit_movement_ft: int = Field(ge=0)
     regurgitation_damage_threshold: int | None = Field(default=None, ge=1)
@@ -36,6 +39,8 @@ class GrappleSwallowAction(BaseModel):
     @model_validator(mode="after")
     def validate_initial_hit_save(self) -> "GrappleSwallowAction":
         try:
+            if (self.turn_start_save_ability is None) != (self.turn_start_save_dc is None):
+                raise ValueError("Turn-start damage saving throw needs both ability and DC.")
             if (self.on_hit_save_ability is None) != (self.on_hit_save_dc is None):
                 raise ValueError("Swallow initial on-hit saving throw needs ability and DC.")
             if self.on_hit_save_dc is not None and (self.delivery_mode != "attack_hit" or self.requires_existing_grapple):
@@ -62,6 +67,9 @@ def swallow_action_from_source(source) -> GrappleSwallowAction | None:
         damage_dice_count=source.damage_dice_count,
         damage_dice_size=source.damage_dice_size,
         damage_type=source.damage_type,
+        damage_bonus=getattr(source, "damage_bonus", 0),
+        turn_start_save_ability=getattr(source, "turn_start_save_ability", None),
+        turn_start_save_dc=getattr(source, "turn_start_save_dc", None),
         max_swallowed=source.max_swallowed,
         exit_movement_ft=source.exit_movement_ft,
         regurgitation_damage_threshold=source.regurgitation_damage_threshold,
