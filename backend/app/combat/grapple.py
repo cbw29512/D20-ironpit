@@ -47,6 +47,7 @@ def apply_grapple(
     periodic_damage=None,
     blinds: bool = False,
     prevents_breathing: bool = False,
+    linked_effect_id: str | None = None,
 ) -> list[str]:
     if condition_is_immune(state, GRAPPLED_EFFECT_ID, source_is_magical=source_is_magical):
         return []
@@ -68,6 +69,7 @@ def apply_grapple(
         blinds=blinds and not condition_is_immune(state, "blinded", source_is_magical=source_is_magical),
         prevents_breathing=prevents_breathing,
         blinded_preexisting=had_blind,
+        linked_effect_id=linked_effect_id,
     ))
     _sync_effect_ids(state)
     return [GRAPPLED_EFFECT_ID, RESTRAINED_EFFECT_ID] if restrains else [GRAPPLED_EFFECT_ID]
