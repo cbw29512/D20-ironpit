@@ -23,24 +23,37 @@
       state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "dodge");
     }
     if (restrained) state.active_effect_ids.push("restrained");
+    if (state.grapple_sources.some(source => source.blinds)
+      && !state.active_effect_ids.includes("blinded")) state.active_effect_ids.push("blinded");
   }
 
-  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, sourceIsMagical = false, periodicDamage = null) {
+  function apply(state, sourceId, escapeDc, rangeFt, restrains = false, sourceIsMagical = false, periodicDamage = null, linked = {}) {
     if (I().immune(state, "grappled", null, { sourceIsMagical })) return [];
+    const blindedPreexisting = (state.active_effect_ids || []).includes("blinded");
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
     const effectiveRestrains = restrains && !I().immune(state, "restrained", null, { sourceIsMagical });
     state.grapple_sources.push({
       source_id: sourceId, escape_dc: escapeDc, range_ft: rangeFt,
       restrains: effectiveRestrains, source_is_magical: Boolean(sourceIsMagical),
       periodic_damage: periodicDamage,
+      blinds: Boolean(linked.blinds) && !I().immune(state, "blinded", null, {sourceIsMagical}),
+      prevents_breathing: Boolean(linked.preventsBreathing),
+      blinded_preexisting: blindedPreexisting,
     });
     sync(state);
     return effectiveRestrains ? ["grappled", "restrained"] : ["grappled"];
   }
 
   function release(state, sourceId) {
+    const removed = state.grapple_sources.filter(source => source.source_id === sourceId);
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
     sync(state);
+    if (removed.some(source => source.blinds)
+      && !removed.some(source => source.blinded_preexisting)
+      && !state.grapple_sources.some(source => source.blinds)
+      && !(state.timed_effects || []).some(effect => effect.effect_id === "blinded")) {
+      state.active_effect_ids = state.active_effect_ids.filter(id => id !== "blinded");
+    }
   }
 
   function resolveMovementCounters(state) {
@@ -86,11 +99,12 @@
         sync(target.state);
         continue;
       }
-      target.state.grapple_sources = target.state.grapple_sources.filter((source) => {
+      const stale = target.state.grapple_sources.filter((source) => {
         const grappler = members.get(source.source_id);
-        if (!grappler || grappler.state.is_dead || !grappler.state.is_alive || Q().incapacitated(grappler.state)) return false;
-        return Math.abs(grappler.position_ft - target.position_ft) <= source.range_ft;
+        if (!grappler || grappler.state.is_dead || !grappler.state.is_alive || Q().incapacitated(grappler.state)) return true;
+        return Math.abs(grappler.position_ft - target.position_ft) > source.range_ft;
       });
+      for (const source of stale) release(target.state, source.source_id);
       sync(target.state);
     }
   }
