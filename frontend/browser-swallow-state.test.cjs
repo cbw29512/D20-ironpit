@@ -63,7 +63,6 @@ assert.equal(failed.events[0].save_succeeded,false);
 assert.equal(failed.events[0].damage_components[0].modifier,4);
 assert.equal(failed.events[0].damage_components[0].total,20);
 assert.equal(medium.current_hp,0);
-assert.equal(medium.current_hp,12);
 medium.current_hp=0;
 assert.deepEqual(swallow.cleanup(swallowedSetup),[],"0 HP is not actual character death");
 assert.equal(medium.swallowed.source_id,"toad");
