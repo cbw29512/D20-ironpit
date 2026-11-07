@@ -86,7 +86,8 @@ def source_two_hit_engulf_2014(
             return None
         return (
             MultiHitGrappleEffect(
-                source_name="Engulf", attack_id=f"2014-{monster.id}-{attack.id}",
+                source_name="Engulf", effect_id=raw["id"], standalone_action=True,
+                attack_id=f"2014-{monster.id}-{attack.id}",
                 hits_required=2, max_target_size=size, escape_dc=dc,
                 range_ft=attack.reach_ft, max_active_grapples=1,
             ),
@@ -94,6 +95,7 @@ def source_two_hit_engulf_2014(
                 source_name="Engulf", target_relation="creatures_grappled_by_source",
                 dice_count=count, dice_size=sides, damage_bonus=bonus,
                 damage_type=b["type"].lower(), save_ability="constitution",
+                required_grapple_effect_id=raw["id"],
                 save_dc=int(b["save"]),
             ),
         )
