@@ -3,7 +3,10 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+import logging
+
+logger = logging.getLogger(__name__)
 
 from app.domain.size import CreatureSize
 
@@ -29,6 +32,20 @@ class GrappleSwallowAction(BaseModel):
     regurgitation_all_swallowed: bool = False
     blinds_and_restrains: bool = True
     grants_total_external_cover: bool = True
+
+    @model_validator(mode="after")
+    def validate_initial_hit_save(self) -> "GrappleSwallowAction":
+        try:
+            if (self.on_hit_save_ability is None) != (self.on_hit_save_dc is None):
+                raise ValueError("Swallow initial on-hit saving throw needs ability and DC.")
+            if self.on_hit_save_dc is not None and (self.delivery_mode != "attack_hit" or self.requires_existing_grapple):
+                raise ValueError("Initial hit-save Swallow must be an attack hit without a prior grapple.")
+            if not self.requires_existing_grapple and self.on_hit_save_dc is None:
+                raise ValueError("Non-grapple Swallow must declare a printed initial saving throw.")
+            return self
+        except Exception:
+            logger.exception("Invalid generic Swallow hit/save contract.")
+            raise
 
 
 def swallow_action_from_source(source) -> GrappleSwallowAction | None:
