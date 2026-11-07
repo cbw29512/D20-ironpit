@@ -20,7 +20,13 @@ from app.content.monster_source_start_turn_recurring_2014 import (
     source_start_turn_recurring_damage_2014,
 )
 from app.domain.encounters import EncounterCombatant, EncounterSetup
-from scripts.browser_template_serializer import template_row
+import sys
+from pathlib import Path
+
+_scripts = Path(__file__).resolve().parents[2] / "scripts"
+if str(_scripts) not in sys.path:
+    sys.path.insert(0, str(_scripts))
+from browser_template_serializer import template_row
 
 logger = logging.getLogger(__name__)
 
