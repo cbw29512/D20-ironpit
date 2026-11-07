@@ -65,6 +65,7 @@ class MultiattackHitGrapple(BaseModel):
     ownership_marker_id: str = Field(min_length=1)
     linked_condition_ids: list[str] = Field(default_factory=list)
     max_active_targets: StrictInt = Field(default=1, ge=1, le=8)
+    moves_with_source: bool = False
 
     @model_validator(mode="after")
     def require_marker(self):
