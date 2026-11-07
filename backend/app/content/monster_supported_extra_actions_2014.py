@@ -27,6 +27,7 @@ from app.content.monster_source_limited_audible_conditions_2014 import (
 )
 from app.content.monster_visual_disguise_2014 import visual_disguise_action_2014
 from app.content.monster_grapple_swallow_source_2014 import source_grapple_swallow_2014
+from app.content.monster_sequence_engulf_source_2014 import source_sequence_containment_2014
 
 logger = logging.getLogger(__name__)
 
@@ -82,6 +83,8 @@ def source_supported_extra_action_labels_2014(monster: SourceMonster2014) -> set
             allowed.add(_label(disguise.name))
         swallow = source_grapple_swallow_2014(monster)
         if swallow is not None:
+            # The sequence profile supports both its automatic after-hit
+            # transition and the legal held-target Action in the shared lane.
             allowed.add(_label(swallow.source_name))
         return allowed
     except Exception:
