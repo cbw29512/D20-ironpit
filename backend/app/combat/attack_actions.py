@@ -16,6 +16,7 @@ from app.combat.deferred_save_effect_attack_slot import resolve_deferred_effect_
 from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.light_attack_resolution import resolve_light_extra_attack
+from app.combat.multiattack_hit_grapple import resolve_hit_grapple
 from app.combat.opening_burst import opening_feature_id
 from app.combat.saving_throws import resolve_save_action
 from app.combat.stunning_strike_2014 import resolve_stunning_strike
@@ -63,6 +64,7 @@ def resolve_attack_action(
         opening_feature = opening_feature_id(round_number, attacker, setup)
         affected_states = [member.state for member in [*setup.heroes, *setup.monsters]]
         light_trigger: WeaponAttack | None = None
+        successful_hits: list[tuple[str, str]] = []
         turn_key = f"{round_number}:{attacker.combatant_id}"
 
         previous_attack = None
@@ -110,6 +112,7 @@ def resolve_attack_action(
                 sequence += 1
                 if event.hit:
                     actual_target = event_target(event, setup) or target
+                    successful_hits.append((attack.id, actual_target.combatant_id))
                     stun = resolve_stunning_strike(
                         sequence,
                         round_number,
@@ -159,6 +162,12 @@ def resolve_attack_action(
                 if attacker.state.is_dead or is_incapacitated(attacker.state):
                     break
 
+        # Source-defined after-sequence triggers use hits that actually resolved
+        # in this action; misses and hits on other targets do not count.
+        hit_events, sequence = resolve_hit_grapple(
+            sequence, round_number, attacker, setup, successful_hits,
+        )
+        events.extend(hit_events)
         if (
             definition.is_attack_action and light_trigger is not None
             and not attacker.state.turn_terminated and not attacker.state.is_dead
