@@ -1460,6 +1460,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                     "ownershipMarkerId": hit.ownership_marker_id,
                     "linkedConditionIds": list(hit.linked_condition_ids),
                     "maxActiveTargets": hit.max_active_targets,
+                    "movesWithSource": hit.moves_with_source,
                 }
         if template.attack_action and template.attack_action.variants:
             row["attack_action"]["variants"] = [
