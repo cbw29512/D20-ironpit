@@ -5876,7 +5876,7 @@
       "source:extra-action": 25,
       "source:legendary": 9,
       "source:reaction": 1,
-      "source:trait": 45
+      "source:trait": 44
     },
     "unresolved_printed_abilities": [
       {
@@ -5900,13 +5900,6 @@
           "Rug of Smothering"
         ],
         "printed_name": "Damage Transfer"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Duergar"
-        ],
-        "printed_name": "Duergar Resilience"
       },
       {
         "demand_count": 1,
