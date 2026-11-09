@@ -91,6 +91,7 @@ def test_full_source_mutations_fail_closed_and_rename_does_not_affect_resolution
             "source_actions": card.source_actions.replace(old, new),
         })
         assert source_proven_shared_space_held_saves_2014(changed) == []
+        assert "source:extra-action" in basic_blockers_2014(changed)
     # The helper range remains source-owned. A valid alternate printed range
     # compiles into the same universal resolver without changing action legality.
     ranged_helper = card.model_copy(update={
@@ -117,6 +118,7 @@ def test_full_source_mutations_fail_closed_and_rename_does_not_affect_resolution
     })
     (renamed_action,) = source_proven_shared_space_held_saves_2014(renamed)
     assert (renamed_action.id, renamed_action.name) == ("torrent", "Torrent")
+    assert not basic_blockers_2014(renamed), "Printed action name must not drive runtime admission."
     assert renamed_action.damage.model_dump() == (
         source_proven_shared_space_held_saves_2014(card)[0].damage.model_dump()
     )
