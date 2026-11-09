@@ -83,7 +83,13 @@ def apply_save_effects(
                 action.range_ft,
                 restrains=action.restrains_while_grappled,
                 source_is_magical=action.magical_effect,
-                prevents_breathing=action.grapple_prevents_breathing,
+                prevents_breathing=(
+                    action.grapple_prevents_breathing
+                    and not (
+                        action.grapple_breathing_exempt_medium == "water"
+                        and target.state.template.can_breathe_water
+                    )
+                ),
             )
         pushed_ft = 0
         if (
