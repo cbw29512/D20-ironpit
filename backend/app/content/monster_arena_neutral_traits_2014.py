@@ -121,8 +121,6 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             "Speak with Beasts and Plants": ("communicate", "beasts", "plants"),
             "Tree Stride": ("tree", "movement"),
             "Ethereal Sight": ("ethereal plane",),
-            "Telepathic Bond": ("telepathically",),
-            "Limited Telepathy": ("telepathically",),
         }
         if trait_name in additional_inert_clauses:
             heading = f"<strong>{trait_name}.</strong>"
