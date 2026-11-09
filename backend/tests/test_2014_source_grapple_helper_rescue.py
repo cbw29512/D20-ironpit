@@ -48,7 +48,7 @@ def _setup():
     )
     apply_grapple(
         held.state, owner.combatant_id, 14, 0,
-        restrains=True, prevents_breathing=True,
+        restrains=True, prevents_breathing=True, linked_effect_id="whelm",
     )
     return helper, held, owner, setup
 
