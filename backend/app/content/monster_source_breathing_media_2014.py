@@ -27,7 +27,7 @@ _PROVEN = {
 def source_can_breathe_water_2014(monster: SourceMonster2014) -> bool:
     """Prove a source-owned medium independently of a monster's identity."""
     try:
-        sections = source_sections_2014(monster.source_traits)
+        sections = source_sections_2014(monster.source_traits, include_continuations=True)
         for heading, pattern in _PROVEN.items():
             if heading not in monster.trait_names:
                 continue
