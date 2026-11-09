@@ -9,7 +9,7 @@
         if (!sizes.sizeAtMost(target, action.grappleMaxTargetSize)) return false;
       }
       if (action.grappleMaxActiveGrapples == null) return true;
-      if (!setup) throw new Error("Capacity-limited save Grapple requires setup.");
+      if (!setup) throw new Error("Capacity-limited save Grapple requires encounter setup.");
       const cost = (member) => (
         ["large", "huge", "gargantuan"].includes(member.state.template.size)
           ? (action.grappleLargeTargetSlotCost || 1) : 1
