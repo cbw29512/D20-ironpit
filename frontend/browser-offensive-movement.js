@@ -48,6 +48,8 @@
             goal,
             member.state.movement_remaining_ft,
             setup.persistent_barriers || [],
+            false,
+            Boolean(member.state.template.source_allows_hostile_overlap),
           );
           if (!plan.path.length) continue;
           const row = {
@@ -89,6 +91,7 @@
           const plan = G().planToward(
             setup.map_definition, member, target, members, option.range,
             member.state.movement_remaining_ft, setup.persistent_barriers || [],
+            false, Boolean(member.state.template.source_allows_hostile_overlap),
           );
           if (plan.goal_reachable && plan.path.length && plan.final_distance_ft <= option.range) return true;
         }

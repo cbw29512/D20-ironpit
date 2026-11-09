@@ -24,6 +24,7 @@ from app.content.monster_healing_2014 import healing_actions_2014, healing_resou
 from app.content.monster_heated_body_2014 import heated_body_retaliation_2014, corrosive_form_retaliation_2014, fire_form_contact_retaliation_2014
 from app.content.monster_grapple_periodic_2014 import supports_grapple_periodic_2014, source_grapple_periodic_proof_2014
 from app.content.monster_damage_taken_effects_2014 import damage_taken_timed_effects_2014
+from app.content.monster_hostile_overlap_source_2014 import source_allows_hostile_overlap_2014
 from app.content.monster_included_weapon_traits_2014 import weapon_damage_source_qualifiers_2014
 from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_innate_conditions_2014 import innate_condition_ids_2014
@@ -312,7 +313,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         saving_throw_bonuses=dict(core.saving_throw_bonuses),
         skill_bonuses={key.lower(): int(value) for key, value in monster.skills.items()},
         innate_condition_ids=list(core.innate_condition_ids),
-        source_allows_hostile_overlap=bool({'Air Form', 'Water Form'} & set(monster.trait_names)),
+        source_allows_hostile_overlap=source_allows_hostile_overlap_2014(monster),
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
         source_turn_relation_damages=[
             *source_turn_grappler_damage_2014(monster),

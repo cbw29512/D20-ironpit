@@ -38,7 +38,9 @@
         }
         if (spent + stepCost > movementBudgetFt) break;
         spent += stepCost;
-        if (api.occupantsAt(mover, destination, members).length === 0) {
+        const occupants = api.occupantsAt(mover, destination, members);
+        if (!occupants.length || (sourceAllowsHostileOverlap
+            && occupants.every((item) => item.side !== mover.side))) {
           lastLegalIndex = index;
           lastLegalCost = spent;
         }

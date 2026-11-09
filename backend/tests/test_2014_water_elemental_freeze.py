@@ -30,8 +30,9 @@ def test_water_elemental_freeze_binds_exact_source_parameters() -> None:
     source = _source_water_elemental()
     assert "Freeze" in source.trait_names
     assert "Freeze" not in unsupported_traits_2014(source)
-    # Water Form remains unbound until its family lands; Freeze is cleared.
-    assert "Water Form" in unsupported_traits_2014(source)
+    # The complete Water Form source now binds to the shared overlap flag.
+    assert "Water Form" not in unsupported_traits_2014(source)
+    assert _template().source_allows_hostile_overlap is True
 
     template = _template()
     freeze_rules = [rule for rule in template.damage_taken_timed_effects if rule.source_name == "Freeze"]

@@ -76,7 +76,10 @@
           targetPosition,
           target.state.template.size,
         );
-        const finalLegal = helpers.occupantsAt(mover, current, members).length === 0;
+        const occupants = helpers.occupantsAt(mover, current, members);
+        // The immutable card permits ending in hostile spaces, never allies.
+        const finalLegal = !occupants.length || (sourceAllowsHostileOverlap
+          && occupants.every((item) => item.side !== mover.side));
         const score = [Math.max(0, distance - desiredDistanceFt), distance, node.cost, node.x, node.y];
         if (finalLegal && api.scoreLess(score, bestScore)) {
           bestKey = currentKey;

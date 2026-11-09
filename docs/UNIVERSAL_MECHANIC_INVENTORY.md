@@ -434,7 +434,6 @@ Blocked monsters: **55**. These are grouped by printed ability name so the roste
 |---|---|---:|
 | Aberrant Ground | Gibbering Mouther | 1 |
 | Adhesive (Object Form Only) | Mimic | 1 |
-| Air Form | Air Elemental | 1 |
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
 | Duergar Resilience | Duergar | 1 |
 | False Appearance (Object Form Only) | Mimic | 1 |
@@ -454,14 +453,13 @@ Blocked monsters: **55**. These are grouped by printed ability name so the roste
 | Spellcasting | Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 12 |
 | Transparent | Gelatinous Cube | 1 |
 | Vampire Weaknesses | Vampire, Vampire Spawn | 2 |
-| Water Form | Water Elemental | 1 |
 | Water Susceptibility | Fire Elemental | 1 |
 
 ## Monster blocker categories
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 47 |
+| `source:trait` | 45 |
 | `mechanic:spellcasting` | 32 |
 | `source:extra-action` | 26 |
 | `attack:incomplete` | 14 |

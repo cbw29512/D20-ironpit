@@ -45,7 +45,11 @@ def _affordable_legal_prefix(
             if spent + step_cost > movement_budget_ft:
                 break
             spent += step_cost
-            if not overlapping_occupants(mover, destination, members):
+            occupants = overlapping_occupants(mover, destination, members)
+            if not occupants or (
+                source_allows_hostile_overlap
+                and all(item.side != mover.side for item in occupants)
+            ):
                 last_legal_index = index
                 last_legal_cost = spent
             origin = destination

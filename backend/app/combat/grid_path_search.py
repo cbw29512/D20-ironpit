@@ -103,7 +103,13 @@ def search_path_toward(
             distance = footprint_distance_ft(
                 current, mover.state.template.size, target_position, target.state.template.size,
             )
-            final_legal = not overlapping_occupants(mover, current, members)
+            occupants = overlapping_occupants(mover, current, members)
+            # A source-owned form may STOP in a hostile square, never in an
+            # ally's square. Merely passing through remains a separate rule.
+            final_legal = not occupants or (
+                source_allows_hostile_overlap
+                and all(item.side != mover.side for item in occupants)
+            )
             score = (max(0, distance - desired_distance_ft), distance, cost, x, y)
             if final_legal and score < best_score:
                 best, best_score = key, score
