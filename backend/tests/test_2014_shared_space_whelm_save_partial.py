@@ -37,6 +37,7 @@ def test_full_roster_has_exactly_one_source_verified_action():
     assert (action.damage.count, action.damage.size, action.damage.bonus) == (2, 8, 4)
     assert action.damage_type.value == "bludgeoning"
     assert action.success_damage == "none"  # Printed save success does not take damage.
+    assert action.successful_save_exits_source_space
     assert action.area.shape == "shared-space"
     assert action.area.origin == "self"
     assert action.target_scope == "all-other-creatures"
@@ -57,6 +58,7 @@ def test_compiler_recharge_and_browser_carry_source_parameters_but_stay_blocked(
     template = compile_combatant(adapt_monster_mechanics_2014(card))
     (save,) = [a for a in template.saving_throw_actions if a.id == "whelm"]
     assert save.dc == 15 and save.damage_bonus == 4
+    assert save.successful_save_exits_source_space
     assert save.grapple_max_active_grapples == 2
     assert save.grapple_max_target_size == CreatureSize.LARGE
     assert save.grapple_prevents_breathing
@@ -65,6 +67,7 @@ def test_compiler_recharge_and_browser_carry_source_parameters_but_stay_blocked(
     browser = template_row(template)
     (payload,) = [a for a in browser["saving_throw_actions"] if a["id"] == "whelm"]
     assert payload["damageBonus"] == 4
+    assert payload["successfulSaveExitsSourceSpace"] is True
     assert payload["grappleMaxActiveGrapples"] == 2
     assert payload["grappleMaxTargetSize"] == "large"
     assert payload["grappleLargeTargetSlotCost"] == 2
