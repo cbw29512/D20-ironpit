@@ -465,7 +465,7 @@ Blocked monsters: **55**. These are grouped by printed ability name so the roste
 | `attack:incomplete` | 14 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
-| `mechanic:recharge` | 4 |
+| `mechanic:recharge` | 3 |
 | `multiattack:complex` | 3 |
 | `arena:neutral` | 1 |
 | `attack:none` | 1 |

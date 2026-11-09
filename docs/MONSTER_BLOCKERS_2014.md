@@ -16,7 +16,7 @@ Blocker categories overlap: a monster may require several fixes.
 | `attack:incomplete` | 14 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
-| `mechanic:recharge` | 4 |
+| `mechanic:recharge` | 3 |
 | `multiattack:complex` | 3 |
 | `arena:neutral` | 1 |
 | `attack:none` | 1 |
@@ -27,13 +27,13 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**3** monsters have exactly one remaining blocker category.
+**4** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
+| `source:extra-action` | Succubus/Incubus, Water Elemental | 2 |
 | `arena:neutral` | Frog | 1 |
 | `attack:incomplete` | Magmin | 1 |
-| `source:extra-action` | Succubus/Incubus | 1 |
 
 ## Every blocked monster
 
@@ -93,4 +93,4 @@ the underlying ability is already implemented or trivial.
 | Tarrasque | mechanic:legendary, source:legendary, source:trait | Reflective Carapace |
 | Vampire | attack:incomplete, mechanic:legendary, source:extra-action, source:legendary, source:trait | Shapechanger, Misty Escape, Vampire Weaknesses |
 | Vampire Spawn | attack:incomplete, source:trait | Vampire Weaknesses |
-| Water Elemental | mechanic:recharge, source:extra-action | — |
+| Water Elemental | source:extra-action | — |
