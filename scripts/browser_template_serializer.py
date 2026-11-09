@@ -1106,7 +1106,6 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             "ability_scores": template.ability_scores.model_dump() if template.ability_scores else None,
             "armor_class": template.armor_class, "max_hp": template.max_hp,
             "speed_ft": template.speed_ft, "movement_modes": template.movement_modes.model_dump(),
-            "source_allows_hostile_overlap": template.source_allows_hostile_overlap,
             "initiative_bonus": template.initiative_bonus,
         "blindsight_ft": template.blindsight_ft, "truesight_ft": template.truesight_ft,
             "saving_throw_bonuses": template.saving_throw_bonuses, "skill_bonuses": template.skill_bonuses,
@@ -1199,6 +1198,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["environment_context_reactions"] = [
                 item.model_dump(mode="json") for item in template.environment_context_reactions
             ]
+        # Preserve established immutable browser fixtures for ordinary forms:
+        # only source-enabled hostile-space passage needs an explicit flag.
+        if template.source_allows_hostile_overlap:
+            row["source_allows_hostile_overlap"] = True
         if template.kind == "monster":
             row["creature_type"] = template.creature_type
             row["source_trait_names"] = list(template.source_trait_names)
