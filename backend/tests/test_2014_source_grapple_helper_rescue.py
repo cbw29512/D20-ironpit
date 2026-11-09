@@ -107,6 +107,9 @@ def test_rescue_success_consumes_helper_action_releases_held_ally_and_logs_sourc
     assert choice is not None
     source, victim, rule = choice
     assert source == owner and victim == held
+    mismatched_rule = rule.model_copy(update={"source_action_id": "other-source-action"})
+    from app.combat.grapple_helper_rescue import eligible
+    assert not eligible(helper, held, owner, mismatched_rule)
     event = resolve_grapple_helper_rescue(
         1, 1, helper, held, owner, rule, FixedDiceProvider([20]), setup,
     )
