@@ -62,7 +62,8 @@ def test_full_roster_strict_source_and_browser_export():
     assert rule in template.source_turn_relation_damages
     browser = template_row(template)
     assert rule.model_dump(mode="json") in browser["source_turn_relation_damages"]
-    assert "mechanic:recharge" in basic_blockers_2014(source)
+    # Recharge is now correctly bound; the complete Whelm Action is not.
+    assert "mechanic:recharge" not in basic_blockers_2014(source)
     assert "source:extra-action" in basic_blockers_2014(source)
     assert source.model_dump_json() == unchanged
 
