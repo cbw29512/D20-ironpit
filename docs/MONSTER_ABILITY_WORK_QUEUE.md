@@ -1,10 +1,11 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Active 2014 Grapple breathing consequence — suffocation lifecycle (not implemented)
+## Active 2014 Grapple breathing consequence — suffocation lifecycle (PR #1207 in certification)
 
-- **Exact remaining gap:** A source-owned Grapple can already declare `prevents_breathing`; PR #1205 also differentiates targets proven to breathe water. Python/browser still lack the 2014 held-breath/suffocation timing and its continuous zero-HP/recovery semantics. Do not interpret the breathing flag as complete suffocation behavior.
-- **Next cross-roster family:** verify the 2014 breathing/suffocation rule and every applicable source, then implement the smallest generic fight-state countdown/lifecycle with Python/browser parity, source-dependent release/reset, no monster-name dispatch and permanent tests. Preserve 2014 and 2024 rule separation; do not invent a timer or source values.
-- **Authoritative current result:** generated `docs/MONSTER_BLOCKERS_2014.md` on main after #1205 still reports **272/327 source-admitted, 55 blocked**. Water Elemental remains `source:extra-action`; no real webpage fight certification or production publish is implied.
+- **Implementation committed, not yet merged:** PR #1207 adds immutable 2014 breathing facts, per-fight Constitution-derived hold/suffocation countdowns, release/reset, zero-HP recovery restrictions, and shared Python/browser lifecycle tests. The implementation is universal, not Water Elemental-specific, and rejects unproven 2024 semantics.
+- **Exact-head validation gate:** the first full Python suite passed 3,990 tests but found one outdated source-derived Multiattack browser fixture after the new template fields. The workflow now regenerates that fixture from the canonical compiler and source data, instead of weakening its parity test. Required checks must pass on the final regenerated branch head before merge.
+- **Admission accounting:** `main` still reports **272/327 source-admitted, 55 blocked**, including Water Elemental. The PR branch generated report proposes **273/327, 54 blocked** after suffocation; do not promote those numbers to merged or webpage-tested status until exact-head CI and merge are verified.
+- **After merge:** reconcile this entry against exact merge SHA, remove suffocation from pending work, and immediately advance to the next unblocked universal monster family. The separate webpage-fight certification and Netlify production lock remain unchanged.
 
 ## Water-breathing medium exception — completed and merged PR #1205
 
