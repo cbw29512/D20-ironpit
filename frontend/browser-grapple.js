@@ -54,6 +54,12 @@
     const removed = state.grapple_sources.filter(source => source.source_id === sourceId);
     state.grapple_sources = state.grapple_sources.filter((source) => source.source_id !== sourceId);
     sync(state);
+    if (!state.grapple_sources.some((source) => source.prevents_breathing)) {
+      // Reset while resolving the release, before any later healing Action.
+      state.breath_hold_rounds_remaining = null;
+      state.breath_survival_rounds_remaining = null;
+      state.suffocating_at_zero = false;
+    }
     if (removed.some(source => source.blinds)
       && !removed.some(source => source.blinded_preexisting)
       && !state.grapple_sources.some(source => source.blinds)
