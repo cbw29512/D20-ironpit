@@ -16,8 +16,8 @@ Blocker categories overlap: a monster may require several fixes.
 | `attack:incomplete` | 14 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
-| `mechanic:recharge` | 3 |
 | `multiattack:complex` | 3 |
+| `mechanic:recharge` | 2 |
 | `arena:neutral` | 1 |
 | `attack:none` | 1 |
 | `source:reaction` | 1 |
@@ -27,11 +27,11 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**4** monsters have exactly one remaining blocker category.
+**5** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
-| `source:extra-action` | Succubus/Incubus, Water Elemental | 2 |
+| `source:extra-action` | Air Elemental, Succubus/Incubus, Water Elemental | 3 |
 | `arena:neutral` | Frog | 1 |
 | `attack:incomplete` | Magmin | 1 |
 
@@ -40,7 +40,7 @@ the underlying ability is already implemented or trivial.
 | Monster | Remaining blockers | Unbound traits |
 |---|---|---|
 | Aboleth | mechanic:legendary, source:extra-action, source:legendary | — |
-| Air Elemental | mechanic:recharge, source:extra-action | — |
+| Air Elemental | source:extra-action | — |
 | Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Spellcasting |
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
 | Balor | attack:incomplete, source:trait | Fire Aura |
