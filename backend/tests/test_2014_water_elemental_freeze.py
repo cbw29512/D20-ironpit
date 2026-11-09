@@ -11,7 +11,7 @@ from scripts.browser_template_serializer import template_row
 from app.combat.state import build_combatant_state
 from app.combat.zero_hp import apply_damage
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014, unsupported_traits_2014
-from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.capability_compiler import compile_combatant
 from app.domain.weapons import DamageType
@@ -23,7 +23,7 @@ def _source_water_elemental():
 
 def _template():
     source = _source_water_elemental()
-    return compile_combatant(adapt_basic_monster_2014(source))
+    return compile_combatant(adapt_monster_mechanics_2014(source))
 
 
 def test_water_elemental_freeze_binds_exact_source_parameters() -> None:
