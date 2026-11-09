@@ -75,6 +75,26 @@
       },
     });
     register({
+      id: "linked-grapple-upgrade", category: C().SWALLOW, rulesets: BOTH,
+      discover: ({member, setup}) => {
+        if (!(member.state.template.multiHitGrappleEffects || []).length) return null;
+        const runtime = window.IRON_PIT_BROWSER_GRAPPLE_UPGRADE_ACTION;
+        if (!runtime?.choose) throw new Error("Linked grapple Action runtime missing.");
+        const selected = runtime.choose(member, setup);
+        return selected ? {payload: {
+          targetId: selected.target.combatant_id,
+          effectId: selected.action.effectId,
+          delivery: "control", controlPriority: true, expectedDamage: 0,
+        }} : null;
+      },
+      resolve: ({sequence, round, member, setup}, candidate) => {
+        const runtime = window.IRON_PIT_BROWSER_GRAPPLE_UPGRADE_ACTION;
+        if (!runtime?.resolve) throw new Error("Linked grapple Action resolver missing.");
+        return runtime.resolve(sequence, round, member, setup,
+          candidate.payload.targetId, candidate.payload.effectId);
+      },
+    });
+    register({
       id: "spell-offense", category: C().SPELL_OFFENSE, rulesets: BOTH,
       discover: ({ member, setup, turnKey, opportunityProfile }) => {
         if (opportunityProfile === "normalPreMove"

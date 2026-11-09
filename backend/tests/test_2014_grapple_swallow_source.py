@@ -83,7 +83,8 @@ def test_different_swallow_grammars_remain_separately_blocked(corpus):
     assert proven.on_hit_save_dc == 19
     assert "mechanic:swallow" not in basic_blockers_2014(corpus["purple-worm"])
     assert source_grapple_swallow_2014(corpus["shambling-mound"]) is None
-    assert "mechanic:swallow" in basic_blockers_2014(corpus["shambling-mound"])
+    # Engulf is now modeled through a distinct source-bound grapple profile.
+    assert "mechanic:swallow" not in basic_blockers_2014(corpus["shambling-mound"])
 
 
 

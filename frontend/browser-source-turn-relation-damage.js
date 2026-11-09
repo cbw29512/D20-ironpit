@@ -28,6 +28,8 @@
             ? target.combatant_id : member.combatant_id;
           const active = (held.grapple_sources || []).some((grapple) =>
             grapple.source_id === ownerId
+            && (rule.required_grapple_effect_id == null
+              || grapple.linked_effect_id === rule.required_grapple_effect_id)
             && Math.abs(target.position_ft - member.position_ft) <= grapple.range_ft);
           if (!active) continue;
           let save = null;

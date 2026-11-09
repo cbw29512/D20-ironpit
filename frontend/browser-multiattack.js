@@ -40,6 +40,7 @@
       if (attackBuff) { events.push(attackBuff); sequence += 1; }
       let openingFeature = C()?.openingFeature?.(round, member, setup) || null;
       let lightTrigger = null, previousAttack = null;
+      const hitHistory = [];
       const turnKey = `${round}:${member.combatant_id}`;
 
       let attacksRemaining = slots.length;
@@ -76,6 +77,13 @@
             continue;
           }
           events.push(event); previousAttack = event;
+          hitHistory.push(event);
+          if ((member.state.template.multiHitGrappleEffects || []).length) {
+            const runtime = window.IRON_PIT_BROWSER_MULTI_HIT_GRAPPLE;
+            if (!runtime?.resolve) throw new Error("Multi-hit grapple runtime not loaded.");
+            const linked = runtime.resolve(sequence, round, member, setup, hitHistory);
+            events.push(...linked.events); sequence = linked.sequence;
+          }
           if (event.hit) {
             const actualTarget = eventTarget(event, choice.target, setup);
             if (MK()?.resolveStunning) {

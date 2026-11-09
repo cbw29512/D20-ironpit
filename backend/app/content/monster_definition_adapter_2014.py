@@ -3,6 +3,7 @@ from app.content.monster_visual_turn_start_2014 import visual_turn_start_rule_20
 from app.content.monster_visual_disguise_2014 import visual_disguise_action_2014
 from app.content.monster_variable_heads_2014 import variable_head_profile_2014
 from app.content.monster_grapple_swallow_source_2014 import source_grapple_swallow_2014
+from app.content.monster_multi_hit_engulf_source_2014 import source_two_hit_engulf_2014
 from app.domain.swallow_actions import swallow_action_from_source
 
 from app.content.monster_basic_attack_effects_2014 import basic_attack_effects_2014, source_conditional_attack_advantage_2014
@@ -313,7 +314,13 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         innate_condition_ids=list(core.innate_condition_ids),
         source_allows_hostile_overlap=bool({'Air Form', 'Water Form'} & set(monster.trait_names)),
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
-        source_turn_relation_damages=source_turn_grappler_damage_2014(monster),
+        source_turn_relation_damages=[
+            *source_turn_grappler_damage_2014(monster),
+            *([source_two_hit_engulf_2014(monster)[1]] if source_two_hit_engulf_2014(monster) else []),
+        ],
+        multi_hit_grapple_effects=[
+            source_two_hit_engulf_2014(monster)[0]
+        ] if source_two_hit_engulf_2014(monster) else [],
         source_legendary_action_names=list(monster.legendary_action_names),
         attack_damage_reduction_reaction=source_rock_catching_reaction_2014(monster),
         turn_start_save_condition_reaction=source_unnerving_mask_reaction_2014(monster),

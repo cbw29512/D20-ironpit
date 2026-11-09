@@ -34,6 +34,10 @@ class GrappleSource(BaseModel):
     restrains: bool = False
     source_is_magical: bool = False
     periodic_damage: GrapplePeriodicDamage | None = None
+    blinds: bool = False
+    prevents_breathing: bool = False
+    blinded_preexisting: bool = False
+    linked_effect_id: str | None = None
 
 
 class HitControlEffect(BaseModel):

@@ -20,6 +20,7 @@ from app.combat.persistent_save_zone_cast import cast_save_zone
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.encounter_swallow_action import resolve_swallow_action
+from app.combat.encounter_grapple_upgrade_action import resolve_grapple_upgrade_action
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +35,11 @@ def resolve_post_move_action(events, sequence, round_number, attacker, target, s
         swallowed = resolve_swallow_action(sequence, round_number, attacker, setup, dice)
         if swallowed is not None:
             more, sequence = swallowed
+            events.extend(more)
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
+        upgraded = resolve_grapple_upgrade_action(sequence, round_number, attacker, setup)
+        if upgraded is not None:
+            more, sequence = upgraded
             events.extend(more)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         pick = decide_post_move_offense(attacker, setup, turn_key)

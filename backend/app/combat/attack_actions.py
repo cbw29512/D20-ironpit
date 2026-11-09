@@ -17,6 +17,7 @@ from app.combat.dice import DiceProvider
 from app.combat.encounter_attacks import resolve_encounter_attack
 from app.combat.light_attack_resolution import resolve_light_extra_attack
 from app.combat.opening_burst import opening_feature_id
+from app.combat.multi_hit_grapple import apply_multi_hit_grapples
 from app.combat.saving_throws import resolve_save_action
 from app.combat.stunning_strike_2014 import resolve_stunning_strike
 from app.combat.timed_attack_cap import turn_attack_allowed
@@ -66,6 +67,7 @@ def resolve_attack_action(
         turn_key = f"{round_number}:{attacker.combatant_id}"
 
         previous_attack = None
+        hit_history: list[BattleEvent] = []
         attacks_remaining = len(slots)
         slot_index = 0
         while attacks_remaining > 0:
@@ -107,7 +109,14 @@ def resolve_attack_action(
                 )
                 events.append(event)
                 previous_attack = event
+                hit_history.append(event)
                 sequence += 1
+                # Resolve the printed immediate hit threshold before reactions,
+                # rather than deferring Engulf until the Action finishes.
+                linked, sequence = apply_multi_hit_grapples(
+                    sequence, round_number, attacker, setup, hit_history,
+                )
+                events.extend(linked)
                 if event.hit:
                     actual_target = event_target(event, setup) or target
                     stun = resolve_stunning_strike(

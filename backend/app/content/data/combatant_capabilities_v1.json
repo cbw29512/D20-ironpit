@@ -183,6 +183,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
@@ -372,6 +373,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
@@ -577,6 +579,7 @@
       "Pack Tactics"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -768,6 +771,7 @@
       "Sunlight Sensitivity"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -1007,6 +1011,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [
       "Redirect Attack"
@@ -1203,6 +1208,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -1360,6 +1366,7 @@
       "Training"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -1546,6 +1553,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -1705,6 +1713,7 @@
       "Pack Tactics"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -1860,6 +1869,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -2032,6 +2042,7 @@
       "Pack Tactics"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -2187,6 +2198,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -2344,6 +2356,7 @@
       "Spider Climb"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -2516,6 +2529,7 @@
       "Pack Tactics"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -2680,6 +2694,7 @@
       "Pack Tactics"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -2858,6 +2873,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -3077,6 +3093,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -3236,6 +3253,7 @@
       "Pack Tactics"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -3391,6 +3409,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -3548,6 +3567,7 @@
       "Agile"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -3703,6 +3723,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -3858,6 +3879,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -4015,6 +4037,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -4175,6 +4198,7 @@
       "Bloodied Fury"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -4332,6 +4356,7 @@
     ],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -4492,6 +4517,7 @@
       "Bloodied Fury"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -4677,6 +4703,7 @@
     ],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -4864,6 +4891,7 @@
     ],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -5021,6 +5049,7 @@
     ],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -5215,6 +5244,7 @@
     ],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -5368,6 +5398,7 @@
     ],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -5596,6 +5627,7 @@
       "Amphibious"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -5930,6 +5962,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -6122,6 +6155,7 @@
       "Flyby"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -6273,6 +6307,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -6428,6 +6463,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -6581,6 +6617,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -6734,6 +6771,7 @@
       "Jumper"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -6887,6 +6925,7 @@
       "Amphibious"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -7041,6 +7080,7 @@
       "Standing Leap"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -7192,6 +7232,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -7345,6 +7386,7 @@
       "Spider Climb"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -7498,6 +7540,7 @@
       "Flyby"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -7651,6 +7694,7 @@
       "Agile"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -7804,6 +7848,7 @@
       "Mimicry"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -7955,6 +8000,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -8110,6 +8156,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -8265,6 +8312,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
@@ -8424,6 +8472,7 @@
       "Hold Breath"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -8602,6 +8651,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -8759,6 +8809,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -8916,6 +8967,7 @@
       "Flyby"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -9071,6 +9123,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -9231,6 +9284,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
@@ -9392,6 +9446,7 @@
       "Pack Tactics"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -9545,6 +9600,7 @@
       "Illumination"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -9704,6 +9760,7 @@
     ],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -9861,6 +9918,7 @@
       "Flyby"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -10024,6 +10082,7 @@
       "Pack Tactics"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -10179,6 +10238,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -10339,6 +10399,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -10496,6 +10557,7 @@
       "Beast of Burden"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -10653,6 +10715,7 @@
     ],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -10810,6 +10873,7 @@
     ],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -11023,6 +11087,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -11201,6 +11266,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -11381,6 +11447,7 @@
       "Running Leap"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
@@ -11593,6 +11660,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -11782,6 +11850,7 @@
       "Pack Tactics"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -11950,6 +12019,7 @@
       "Hold Breath"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -12118,6 +12188,7 @@
       "Amphibious"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -12315,6 +12386,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -12552,6 +12624,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -12770,6 +12843,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -12960,6 +13034,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -13126,6 +13201,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -13295,6 +13371,7 @@
       "Pack Tactics"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -13525,6 +13602,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -13697,6 +13775,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -13870,6 +13949,7 @@
       "Flyby"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -14045,6 +14125,7 @@
       "Spider Climb"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -14225,6 +14306,7 @@
       "Amphibious"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -14408,6 +14490,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -14599,6 +14682,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -14772,6 +14856,7 @@
     ],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -14998,6 +15083,7 @@
       "Hold Breath"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -15219,6 +15305,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -15440,6 +15527,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -15618,6 +15706,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -15784,6 +15873,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -16013,6 +16103,7 @@
       "Siege Monster"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -16178,6 +16269,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -16351,6 +16443,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -16517,6 +16610,7 @@
       "Flyby"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -16697,6 +16791,7 @@
       "Flyby"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -16871,6 +16966,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -17111,6 +17207,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -17291,6 +17388,7 @@
       "Hold Breath"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -17514,6 +17612,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -17671,6 +17770,7 @@
       "Hold Breath"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -17828,6 +17928,7 @@
       "Hellish Restoration"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -18055,6 +18156,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -18214,6 +18316,7 @@
       "Undead Fortitude"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -18387,6 +18490,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -18551,6 +18655,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -18736,6 +18841,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -18910,6 +19016,7 @@
       "Web Walker"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -19121,6 +19228,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
@@ -19311,6 +19419,7 @@
       "Regeneration"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
@@ -19557,6 +19666,7 @@
       "Pack Tactics"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -19725,6 +19835,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -19903,6 +20014,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -20131,6 +20243,7 @@
       "Treasure Sense"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
@@ -20298,6 +20411,7 @@
       "Undead Fortitude"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -20487,6 +20601,7 @@
       "Water Breathing"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -20648,6 +20763,7 @@
       "Water Breathing"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -20805,6 +20921,7 @@
       "Water Breathing"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -20965,6 +21082,7 @@
       "Water Breathing"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -21151,6 +21269,7 @@
       "Shark Telepathy"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [
@@ -21333,6 +21452,7 @@
       "Water Breathing"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -21578,6 +21698,7 @@
       "Pack Tactics"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -21825,6 +21946,7 @@
       "Amphibious"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -22070,6 +22192,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -22316,6 +22439,7 @@
       "Amphibious"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -22562,6 +22686,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -22808,6 +22933,7 @@
       "Ice Walk"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -23062,6 +23188,7 @@
       "Amphibious"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -23314,6 +23441,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -23567,6 +23695,7 @@
       "Amphibious"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -23820,6 +23949,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -24073,6 +24203,7 @@
       "Ice Walk"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -24254,6 +24385,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -24426,6 +24558,7 @@
       "Swarm"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -24611,6 +24744,7 @@
       "Swarm"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -24800,6 +24934,7 @@
       "Swarm"
     ],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [],
     "source_bonus_action_names": [],
@@ -25030,6 +25165,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [
       "Parry"
@@ -25272,6 +25408,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [
       "Parry"
@@ -25434,6 +25571,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [
       "Parry"
@@ -25650,6 +25788,7 @@
     "combat_traits": [],
     "source_trait_names": [],
     "source_turn_relation_damages": [],
+    "multi_hit_grapple_effects": [],
     "innate_condition_ids": [],
     "source_reaction_names": [
       "Parry"
