@@ -1218,6 +1218,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["source_allows_hostile_overlap"] = True
         if template.can_breathe_water:
             row["can_breathe_water"] = True
+        if not template.needs_air:
+            row["needs_air"] = False
+        if template.breath_hold_rounds is not None:
+            row["breath_hold_rounds"] = template.breath_hold_rounds
         if template.kind == "monster":
             row["creature_type"] = template.creature_type
             row["source_trait_names"] = list(template.source_trait_names)

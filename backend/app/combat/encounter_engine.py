@@ -4,6 +4,8 @@ import logging
 from app.combat.concentration import end_concentration_if_expired
 from app.combat.condition_lifecycle import resolve_source_condition_timing, resolve_target_condition_timing
 from app.combat.death_saves import resolve_death_save
+from app.combat.breathing import resolve_breathing_start_turn
+from app.combat.grapple import cleanup_grapples
 from app.combat.death_trigger_dispatch import resolve_pending_death_triggers
 from app.combat.delayed_resource_refill import resolve_delayed_resource_refill_end_turn
 from app.combat.end_of_turn_recurring_damage import resolve_end_turn_recurring_damage
@@ -158,6 +160,14 @@ def run_encounter(selection: EncounterSelection, dice: DiceProvider) -> Encounte
                 release_invalid_swallowed(setup)
                 member = by_id[combatant_id]
                 cleanup_disabled_source_effects(setup)
+                # Grapple ownership can end between victim turns (death, rescue,
+                # range); expire it before charging an extra airless round.
+                if any(source.prevents_breathing for source in member.state.grapple_sources):
+                    cleanup_grapples(setup)
+                breathing, sequence = resolve_breathing_start_turn(
+                    sequence, round_number, member, setup,
+                )
+                events.extend(breathing)
                 expire_source_turn_start_modifiers(affected_states, member.combatant_id)
                 refresh_reactions_for_new_turn(affected_states, member.state)
                 refresh_start_of_turn(member.state)

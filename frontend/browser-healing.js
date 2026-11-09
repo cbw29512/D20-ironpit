@@ -21,6 +21,7 @@
   }
 
   function restore(state, amount) {
+    if (window.IRON_PIT_BROWSER_BREATHING?.blocksRecovery(state)) return 0;
     if (state.is_dead || amount <= 0 || P().swarm(state)
       || (state.timed_effects || []).some((effect) => effect.cannot_regain_hit_points)) return 0;
     const before = state.current_hp;

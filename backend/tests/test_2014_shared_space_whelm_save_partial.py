@@ -1,4 +1,4 @@
-"""2014 Whelm source components bind without falsely admitting incomplete Action."""
+"""2014 Whelm is admitted only after every printed rider has a shared resolver."""
 from __future__ import annotations
 
 from app.content.capability_compiler import compile_combatant
@@ -52,7 +52,7 @@ def test_full_roster_has_exactly_one_source_verified_action():
     assert action.resource_id == "whelm"
 
 
-def test_compiler_recharge_and_browser_carry_source_parameters_but_stay_blocked():
+def test_compiler_recharge_and_browser_carry_completed_source_parameters():
     card = _cards()["water-elemental"]
     original = card.model_dump_json()
     template = compile_combatant(adapt_monster_mechanics_2014(card))
@@ -71,7 +71,7 @@ def test_compiler_recharge_and_browser_carry_source_parameters_but_stay_blocked(
     assert payload["grappleMaxActiveGrapples"] == 2
     assert payload["grappleMaxTargetSize"] == "large"
     assert payload["grappleLargeTargetSlotCost"] == 2
-    assert "source:extra-action" in basic_blockers_2014(card)
+    assert not basic_blockers_2014(card), "Every source rider must be bound before admission."
     assert "mechanic:recharge" not in basic_blockers_2014(card)
     assert card.model_dump_json() == original
 
@@ -91,9 +91,9 @@ def test_full_source_mutations_fail_closed_and_rename_does_not_affect_resolution
             "source_actions": card.source_actions.replace(old, new),
         })
         assert source_proven_shared_space_held_saves_2014(changed) == []
-    # The helper's distance is an independently parameterized, still-unbound
-    # rider. Changing a valid printed number must not invalidate the already
-    # supported save/recharge component, nor falsely admit the monster.
+        assert "source:extra-action" in basic_blockers_2014(changed)
+    # The helper range remains source-owned. A valid alternate printed range
+    # compiles into the same universal resolver without changing action legality.
     ranged_helper = card.model_copy(update={
         "source_actions": card.source_actions.replace(
             "A creature within 5 feet", "A creature within 10 feet",
@@ -102,7 +102,7 @@ def test_full_source_mutations_fail_closed_and_rename_does_not_affect_resolution
     (baseline,) = source_proven_shared_space_held_saves_2014(card)
     (same_save,) = source_proven_shared_space_held_saves_2014(ranged_helper)
     assert same_save.model_dump() == baseline.model_dump()
-    assert "source:extra-action" in basic_blockers_2014(ranged_helper)
+    assert not basic_blockers_2014(ranged_helper)
 
     renamed = card.model_copy(update={
         "id": "generic-fluid-source",
@@ -118,6 +118,7 @@ def test_full_source_mutations_fail_closed_and_rename_does_not_affect_resolution
     })
     (renamed_action,) = source_proven_shared_space_held_saves_2014(renamed)
     assert (renamed_action.id, renamed_action.name) == ("torrent", "Torrent")
+    assert not basic_blockers_2014(renamed), "Printed action name must not drive runtime admission."
     assert renamed_action.damage.model_dump() == (
         source_proven_shared_space_held_saves_2014(card)[0].damage.model_dump()
     )

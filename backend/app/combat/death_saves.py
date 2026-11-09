@@ -42,10 +42,16 @@ def resolve_death_save(
         successes_before = state.death_save_successes
         failures_before = state.death_save_failures
         result = "failure"
+        from app.combat.breathing import suffocation_blocks_recovery
+        blocked_by_suffocation = suffocation_blocks_recovery(state)
 
         if natural >= recovery_minimum:
-            restore_hit_points(state, 1)
-            result = f"{natural} triggers death-save recovery; regains 1 HP"
+            if blocked_by_suffocation:
+                state.death_save_successes = min(2, state.death_save_successes + 1)
+                result = f"{natural} cannot recover HP while suffocating"
+            else:
+                restore_hit_points(state, 1)
+                result = f"{natural} triggers death-save recovery; regains 1 HP"
         elif natural == 1:
             state.death_save_failures = min(3, state.death_save_failures + 2)
             result = "natural 1; two failures"
@@ -59,10 +65,14 @@ def resolve_death_save(
             _mark_dead(state)
             result = "third failure; dies"
         elif state.death_save_successes >= 3:
-            state.is_stable = True
-            state.is_unconscious = True
-            reset_death_saves(state)
-            result = "third success; becomes Stable"
+            if blocked_by_suffocation:
+                state.death_save_successes = 2
+                result = "cannot become Stable while suffocating"
+            else:
+                state.is_stable = True
+                state.is_unconscious = True
+                reset_death_saves(state)
+                result = "third success; becomes Stable"
 
         return BattleEvent(
             sequence=sequence, round_number=round_number, event_type="death_save",

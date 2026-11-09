@@ -104,6 +104,8 @@ class CombatantDefinition(BaseModel):
     combat_traits: list[CombatTrait] = Field(default_factory=list)
     source_allows_hostile_overlap: bool = Field(default=False, exclude_if=lambda value: not value)
     can_breathe_water: bool = Field(default=False, exclude_if=lambda value: not value)
+    needs_air: bool = Field(default=True, exclude_if=lambda value: value)
+    breath_hold_rounds: int | None = Field(default=None, ge=1)
     source_trait_names: list[str] = Field(default_factory=list)
     source_turn_relation_damages: list[SourceTurnRelationDamage] = Field(default_factory=list)
     grapple_rescue_rules: list[GrappleRescueRule] = Field(default_factory=list)

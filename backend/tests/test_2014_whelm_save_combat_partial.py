@@ -1,7 +1,6 @@
 """Integration coverage for source-bound Whelm using generic save/Grapple state.
 
-The monster is deliberately not admitted until its complete printed Action
-(including breathing, successful exit and rescue) is implemented.
+The complete printed Action now reuses shared breathing, exit and rescue.
 """
 from __future__ import annotations
 

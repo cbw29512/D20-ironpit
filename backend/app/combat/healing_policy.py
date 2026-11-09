@@ -62,6 +62,11 @@ def target_allowed(
         return False
     if action.stabilize_at_zero and (target.state.current_hp != 0 or target.state.is_stable):
         return False
+    from app.combat.breathing import suffocation_blocks_recovery
+    if suffocation_blocks_recovery(target.state) and (
+        action.stabilize_at_zero or not action.grants_temporary_hp
+    ):
+        return False
     if (
         not action.stabilize_at_zero
         and target.state.current_hp >= effective_max_hp(target.state)

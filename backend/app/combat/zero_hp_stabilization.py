@@ -15,6 +15,9 @@ def stabilize_at_zero(state: CombatantState, *, intercept_zero_hp: bool = False)
     try:
         if state.is_dead and not intercept_zero_hp:
             return "dead"
+        from app.combat.breathing import suffocation_blocks_recovery
+        if suffocation_blocks_recovery(state):
+            return "unchanged"
         state.current_hp = 0
         state.is_alive = True
         state.is_dead = False

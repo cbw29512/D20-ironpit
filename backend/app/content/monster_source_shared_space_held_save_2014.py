@@ -1,9 +1,8 @@
 """Source-verified shared-square failed-save Grapple/Recharge binding (2014).
 
 A complete source proof is required before exposing the already-supported
-save, damage, Grapple-capacity and Recharge components. The source Action is
-still BLOCKED: success exit, breathing exception and helper rescue are not
-yet completely bound. Do not add this to the source extra-action allowlist.
+save, damage, Grapple-capacity and Recharge components. Admission requires all source Action riders, including the 2014 suffocation
+lifecycle, to be bound and independently source-proven.
 """
 from __future__ import annotations
 
@@ -39,7 +38,7 @@ _INITIAL = re.compile(
 def source_proven_shared_space_held_saves_2014(
     monster: SourceMonster2014,
 ) -> list[SaveCapabilityDefinition]:
-    """Bind supported components only; keep incomplete source Action blocked."""
+    """Bind complete source-proven save parameters using shared mechanics."""
     try:
         verified_labels = {
             rule.source_name.casefold()
