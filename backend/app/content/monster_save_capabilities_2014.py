@@ -16,6 +16,7 @@ from app.content.monster_source_opening_area_saves_2014 import source_proven_ope
 from app.content.monster_source_recharge_line_damage_2014 import source_proven_recharge_line_damage_2014
 from app.content.monster_source_recharge_timed_controls_2014 import source_proven_recharge_timed_controls_2014
 from app.content.monster_source_shared_space_held_save_2014 import source_proven_shared_space_held_saves_2014
+from app.content.monster_source_shared_space_impact_save_2014 import source_proven_shared_space_impact_saves_2014
 from app.content.monster_source_grapple_owner_save_2014 import source_proven_grapple_owner_saves_2014
 from app.content.monster_source_grappled_poison_2014 import source_proven_grappled_poison_saves_2014
 from app.content.monster_source_limited_audible_conditions_2014 import (
@@ -98,6 +99,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
             *source_proven_recharge_line_damage_2014(monster),
             *source_proven_recharge_timed_controls_2014(monster),
             *source_proven_shared_space_held_saves_2014(monster),
+            *source_proven_shared_space_impact_saves_2014(monster),
         ]:
             if source_action.id not in existing_ids:
                 result.append(source_action)
