@@ -14,6 +14,7 @@ from app.content.demo import build_demo_fighter
 from app.domain.capability_save_definitions import SaveCapabilityDefinition
 from app.domain.encounters import EncounterCombatant
 from scripts.browser_template_serializer import _save
+from app.content.capability_from_template import _save as reverse_save
 
 
 def _source():
@@ -60,6 +61,7 @@ def test_success_logging_and_legacy_non_success():
     compiled = _compile_save(card)
     assert compiled.successful_save_exits_source_space
     assert _save(compiled)["successfulSaveExitsSourceSpace"] is True
+    assert reverse_save(compiled)["successful_save_exits_source_space"] is True
     assert "pushed out of Source's space" in _event(True).description
     assert "position unchanged by arena rule" in _event(True).description
     assert "pushed out" not in _event(False).description
