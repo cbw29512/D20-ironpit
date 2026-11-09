@@ -1,11 +1,17 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Active 2014 Grapple breathing consequence — suffocation lifecycle (PR #1207 in certification)
+## 2014 universal Grapple suffocation — completed and merged PR #1207
 
-- **Implementation committed, not yet merged:** PR #1207 adds immutable 2014 breathing facts, per-fight Constitution-derived hold/suffocation countdowns, release/reset, zero-HP recovery restrictions, and shared Python/browser lifecycle tests. The implementation is universal, not Water Elemental-specific, and rejects unproven 2024 semantics.
-- **Exact-head validation gate:** the first full Python suite passed 3,990 tests but found one outdated source-derived Multiattack browser fixture after the new template fields. The workflow now regenerates that fixture from the canonical compiler and source data, instead of weakening its parity test. Required checks must pass on the final regenerated branch head before merge.
-- **Admission accounting:** `main` still reports **272/327 source-admitted, 55 blocked**, including Water Elemental. The PR branch generated report proposes **273/327, 54 blocked** after suffocation; do not promote those numbers to merged or webpage-tested status until exact-head CI and merge are verified.
-- **After merge:** reconcile this entry against exact merge SHA, remove suffocation from pending work, and immediately advance to the next unblocked universal monster family. The separate webpage-fight certification and Netlify production lock remain unchanged.
+- **Verified and merged:** PR #1207 passed every required exact-head certification lane, including full Python, browser and combat-certification workflows; merged to `main` as `20864c4e6f476a3ce214581a985b79a3854ffc36`.
+- **Universal mechanics:** Source-owned breath-holding, Constitution countdown, linked Grapple release/reset and suffocation-at-zero recovery restrictions use the existing fight state, Python/browser lifecycle and source-name battle logs. The Multiattack fixture synchronization was repaired and its exact-head certification completed.
+- **Cross off the completed blocker:** Generated `main` source classifier now reports **273/327 source-admitted, 54 blocked**; Water Elemental's final suffocation source obligation is no longer pending. Real webpage battle certification remains a separate outstanding requirement; production Netlify remains locked.
+
+## Active 2014 passive saving-throw grants — Duergar Resilience (PR #1208)
+
+- **Source-proven card binding submitted:** The complete 2014 Duergar Resilience clause compiles to five *existing* generic saving-throw Advantage grants: spells, Poison, Illusion, Charm and Paralyzed. No new engine resolver, timed buff, resource or monster-identity dispatch is introduced; 2014 printed poison damage resistance stays a separate card defense.
+- **Regression evidence:** Whole 327-card source audit, changed-clause fail-closed check, renamed synthetic combatant, Python Advantage/negative-context cases and browser universal-save parity are committed. Regenerated branch inventory removes Duergar Resilience as an unbound trait. Await exact-final-head CI before claiming this as merged.
+- **Keep other Duergar blockers:** The branch report still flags `attack:incomplete` and `source:extra-action` (Enlarge/Invisibility). The admitted roster remains **273/327, 54 blocked** even after this passive trait binds.
+- **Completion bookkeeping:** On exact-head green and merge of #1208, remove Duergar Resilience from the active source-trait queue, then advance to the next shared Action family.
 
 ## Water-breathing medium exception — completed and merged PR #1205
 
