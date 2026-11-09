@@ -6,7 +6,7 @@
 - **Merged and certified automatically:** PR #1194 squash merge `dc4a4d2face6d1be96e4725505bc30083d75b126` passed all five required exact-head workflows. PRs #1189, #1190, #1192 and #1193 are also merged foundations.
 - **Current main-generated classification:** **272/327 source-admitted, 55 blocked**. Shambling Mound is no longer blocked; real webpage fight certification remains unverified and production publishing remains locked.
 
-## Communication-only trait family — PR #1168 (rebased, awaiting exact-head CI)
+## Communication-only trait family — PR #1168 (generated on merged main; final CI pending)
 
 - **Scope:** the complete printed 2014 Telepathic Bond and Limited Telepathy clauses on Succubus/Incubus, Homunculus, Otyugh and Pseudodragon; no combat targeting or outcome is introduced.
 - **Implementation:** source-owned clause verification replaces single-token acceptance, with negative source-mutation tests. No monster-name dispatch, new attack, or combat resolver. Source classification only; original cards are unchanged.
