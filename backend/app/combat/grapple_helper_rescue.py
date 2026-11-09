@@ -40,7 +40,11 @@ def eligible(
             and helper.state.template.ability_scores is not None
             and combatant_distance(helper, owner) <= rule.helper_range_ft
             and rule in owner.state.template.grapple_rescue_rules
-            and any(g.source_id == owner.combatant_id for g in target.state.grapple_sources)
+            and any(
+                g.source_id == owner.combatant_id
+                and g.linked_effect_id == rule.source_action_id
+                for g in target.state.grapple_sources
+            )
         )
     except Exception:
         logger.exception("Failed source-linked Grapple rescue eligibility.")
