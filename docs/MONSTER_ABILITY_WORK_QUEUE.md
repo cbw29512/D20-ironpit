@@ -1,10 +1,17 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Active 2014 source family — Whelm held-target turn damage (PR #1199)
+## Active universal shared-space successful-save outcome — PR #1200
+
+- **Data schema:** optional `successful_save_exits_source_space` is only legal on a self-origin `AreaTargeting(shape="shared-space")` save. Default false is omitted from published card data.
+- **Universal result:** Python and browser existing save-event builders log that a successful target is pushed out of the source space, but keep its position unchanged under locked arena rules. No fabricated numeric distance and no monster-specific runtime dispatch.
+- **Evidence:** synthetic save card with renamed effect, source compilation, browser export, success/failure event logs, unchanged fight positions, malformed-area rejection. Five required exact-head checks, review and generator sync required.
+- **Still blocked:** complete 2014 Whelm save/recharge/capacity binding, water-breathing exception, helper rescue action and actual webpage fight.
+
+## Whelm held-target turn damage — merged, PR #1199
 
 - **Schema and engine:** source-approved `SourceTurnRelationDamage` declares 2d8+4 Bludgeoning at the source's turn start against current victims with `creatures_grappled_by_source`. Existing Python/browser universal relation damage owns dice, typed resistances, release and logging; card/source labels supply the name.
 - **Source audit:** the full printed Whelm source grammar, including save, size/capacity, breathing and third-party rescue, is checked before extracting this specific turn damage. Unrecognized riders fail closed and renamed Whelm compiles without changing runtime dispatch. Compiled browser data contains the rule.
-- **Tests:** all 327 source cards inspected, exact Water Elemental-only result, source mutations, rename, browser export, and held-versus-released owner-turn damage. This PR intentionally does not assert a source-admitted Water Elemental.
+- **Merged evidence:** all 327 source cards inspected, exact Water Elemental-only result, source mutations, rename, browser export, held-versus-released damage; all five required exact-head workflows and Bugbot passed. PR #1199 squash merged as `4bcf122d9bc2551a3af73240ae10b9496750f296`. Water Elemental is still blocked.
 - **Remaining:** the Whelm save Action, Recharge 4–6, failed-save grapple, water-breathing exception and helper rescue action still need complete end-to-end binding, plus webpage fights.
 
 ## Universal save Grapple capacity — merged, PR #1198

@@ -66,6 +66,10 @@ class SaveCapabilityDefinition(BaseModel):
     source_effect_immunity_keys_on_success: list[str] = Field(default_factory=list)
     source_effect_immunity_keys_blocking: list[str] = Field(default_factory=list)
     failed_save_push_ft: int = Field(default=0, ge=0)
+    # Arena-locked forced movement: log leaving the source's occupied square.
+    successful_save_exits_source_space: bool = Field(
+        default=False, exclude_if=lambda value: not value,
+    )
     animation: str = "save-effect"
 
     @model_validator(mode="after")
@@ -107,6 +111,11 @@ class SaveCapabilityDefinition(BaseModel):
             ]
             if any(not item.strip() for item in immunity_keys):
                 raise ValueError("Save immunity keys must be nonblank.")
+            if self.successful_save_exits_source_space and (
+                self.area is None or self.area.shape != "shared-space"
+                or self.area.origin != "self"
+            ):
+                raise ValueError("Successful shared-space exit needs a self shared-space area.")
             if self.grapple and self.grapple.max_target_size and self.target_max_size:
                 if self.grapple.max_target_size != self.target_max_size:
                     raise ValueError("Save target size and grapple target size cannot disagree.")

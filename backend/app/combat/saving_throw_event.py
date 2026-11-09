@@ -80,6 +80,11 @@ def build_save_event(
             description += (
                 f" {target.state.template.name} is Restrained while Grappled."
             )
+        if attempt.succeeded and action.successful_save_exits_source_space:
+            description += (
+                f" {target.state.template.name} is pushed out of "
+                f"{actor.state.template.name}'s space (position unchanged by arena rule)."
+            )
         if effects.pushed_ft:
             description += (
                 f" {target.state.template.name} is pushed {effects.pushed_ft} feet away."

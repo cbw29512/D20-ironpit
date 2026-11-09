@@ -191,6 +191,9 @@ class SavingThrowAction(BaseModel):
     source_effect_immunity_keys_on_success: list[str] = Field(default_factory=list)
     source_effect_immunity_keys_blocking: list[str] = Field(default_factory=list)
     failed_save_push_ft: int = Field(default=0, ge=0)
+    successful_save_exits_source_space: bool = Field(
+        default=False, exclude_if=lambda value: not value,
+    )
     area_healing_rider: AreaHealingRider | None = None
     required_target_creature_types: list[str] = Field(default_factory=list)
     prohibited_target_source_effect_ids: list[str] = Field(default_factory=list)
