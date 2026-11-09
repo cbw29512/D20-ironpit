@@ -6,6 +6,7 @@
 - **Shared engine:** Python/browser route search, affordable stopping prefix, browser combatant export, tactical movement and turn movement honor stopping inside an enemy's space, never an ally's. Normal movement costs apply.
 - **Evidence:** source/rename regressions, unrelated synthetic form tests, hostile-versus-ally stopping parity tests, and focused Python/browser CI added. Exact-head full workflows and artifact synchronization remain merge requirements.
 - **Outstanding:** Water Elemental Whelm and Air Elemental Whirlwind Recharge still need complete mechanics. This tranche does not by itself admit or webpage-certify either creature. Production remains locked.
+- **Verified generated branch report:** source:trait blockers are reduced from 47 to 45 while 272/327 remain source-admitted and 55 remain independently blocked. Both formerly unbound Form traits are absent from the branch report; generated assets are owned by CI, not edited by hand. The branch emitted its source-enabled browser flag only when True to preserve unrelated deterministic fixtures.
 
 ## Water Elemental Freeze — merged, PR #1188
 
