@@ -176,6 +176,9 @@ def _save(action) -> dict[str, object]:
             grapple["large_target_slot_cost"] = action.grapple_large_target_slot_cost
         if action.grapple_prevents_breathing:
             grapple["prevents_breathing"] = True
+        # Retain source-owned physiology semantics through template round trips.
+        if action.grapple_breathing_exempt_medium is not None:
+            grapple["breathing_exempt_medium"] = action.grapple_breathing_exempt_medium
         result["grapple"] = grapple
     if action.failed_save_timed_effect is not None:
         result["failed_save_timed_effect"] = action.failed_save_timed_effect.model_dump(mode="json")
