@@ -84,4 +84,19 @@ cleanup(separatelyRestrained,"grappled");
 assert.deepEqual(separatelyRestrained.state.grapple_sources,[]);
 assert.deepEqual(separatelyRestrained.state.active_effect_ids,["restrained"]);
 assert.equal(separatelyRestrained.state.timed_effects.length,1);
+// Source-neutral printed Whelm rider: an aquatic creature remains Grappled and
+// Restrained but can still breathe; a non-water breather cannot.
+window.IRON_PIT_BROWSER_GRAPPLE.release(medium.state, owner.combatant_id);
+window.IRON_PIT_BROWSER_GRAPPLE.release(second.state, owner.combatant_id);
+action.grappleBreathingExemptMedium = "water";
+const aquatic = member("amphibious", "heroes", "medium");
+aquatic.state.template.can_breathe_water = true;
+setup.heroes.push(aquatic);
+assert.deepEqual(apply(aquatic).appliedConditions, ["grappled", "restrained"]);
+assert.equal(aquatic.state.grapple_sources[0].prevents_breathing, false);
+window.IRON_PIT_BROWSER_GRAPPLE.release(aquatic.state, owner.combatant_id);
+const landDweller = member("land", "heroes", "medium");
+setup.heroes.push(landDweller);
+assert.deepEqual(apply(landDweller).appliedConditions, ["grappled", "restrained"]);
+assert.equal(landDweller.state.grapple_sources[0].prevents_breathing, true);
 console.log("Universal save Grapple capacity and breathing parity passed.");
