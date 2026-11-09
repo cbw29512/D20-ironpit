@@ -11,11 +11,11 @@ logger = logging.getLogger(__name__)
 
 _HOLD_BREATH = re.compile(
     r"The [A-Za-z][A-Za-z '-]* can hold (?:its|his|her|their) breath for "
-    r"(?P<amount>\\d+) (?P<unit>minute|minutes|hour|hours)\\.",
+    r"(?P<amount>\d+) (?P<unit>minute|minutes|hour|hours)\.",
     re.IGNORECASE,
 )
 _NO_AIR = re.compile(
-    r"\\b(?:doesn't|does not) (?:require air|need air|need to breathe)\\b",
+    r"\b(?:doesn't|does not) (?:require air|need air|need to breathe)\b",
     re.IGNORECASE,
 )
 
