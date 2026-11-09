@@ -90,6 +90,7 @@ def apply_save_effects(
                         and target.state.template.can_breathe_water
                     )
                 ),
+                linked_effect_id=action.id,
             )
         pushed_ft = 0
         if (
