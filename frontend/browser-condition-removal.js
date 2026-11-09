@@ -17,7 +17,15 @@
       }
       target.state.active_effect_ids = target.state.active_effect_ids.filter((item) => item !== id);
       if ((target.state.template.innate_condition_ids || []).includes(id)) target.state.active_effect_ids.push(id);
-      if (id === "grappled") target.state.grapple_sources = [];
+      if (id === "grappled") {
+        // The generic Grapple lifecycle also removes source-owned Restrained
+        // and Blindness, without dropping independent timed effects.
+        const G = window.IRON_PIT_BROWSER_GRAPPLE;
+        if (!G?.release) throw new Error("Grapple release runtime is required.");
+        for (const grapple of [...target.state.grapple_sources]) {
+          G.release(target.state, grapple.source_id);
+        }
+      }
     } catch (error) {
       console.error("Failed to end condition", { target: target.combatant_id, id, error });
       throw error;
