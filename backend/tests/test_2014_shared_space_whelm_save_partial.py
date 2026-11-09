@@ -80,13 +80,27 @@ def test_full_source_mutations_fail_closed_and_rename_does_not_affect_resolution
         ("unless it can breathe water", "unless it can breathe air"),
         ("one Large creature or up to two Medium", "two Large creatures or up to two Medium"),
         ("escape DC 14", "escape DC 15"),
-        ("A creature within 5 feet", "A creature within 10 feet"),
+        # An unknown rescue restriction is not part of the printed grammar.
+        ("A creature within 5 feet", "A creature within 5 feet that is blinded"),
     ):
         assert old in card.source_actions
         changed = card.model_copy(update={
             "source_actions": card.source_actions.replace(old, new),
         })
         assert source_proven_shared_space_held_saves_2014(changed) == []
+    # The helper's distance is an independently parameterized, still-unbound
+    # rider. Changing a valid printed number must not invalidate the already
+    # supported save/recharge component, nor falsely admit the monster.
+    ranged_helper = card.model_copy(update={
+        "source_actions": card.source_actions.replace(
+            "A creature within 5 feet", "A creature within 10 feet",
+        ),
+    })
+    (baseline,) = source_proven_shared_space_held_saves_2014(card)
+    (same_save,) = source_proven_shared_space_held_saves_2014(ranged_helper)
+    assert same_save.model_dump() == baseline.model_dump()
+    assert "source:extra-action" in basic_blockers_2014(ranged_helper)
+
     renamed = card.model_copy(update={
         "id": "generic-fluid-source",
         "name": "Generic Fluid Source",
