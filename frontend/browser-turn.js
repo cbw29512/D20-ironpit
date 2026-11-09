@@ -33,7 +33,12 @@
     const recoveryMinimum = state.template.death_save_recovery_minimum || 20;
     const successesBefore = state.death_save_successes, failuresBefore = state.death_save_failures;
     let result = "failure";
-    if (natural >= recoveryMinimum) { state.current_hp = 1; state.is_alive = true; state.is_unconscious = false; state.is_stable = false; state.death_save_successes = 0; state.death_save_failures = 0; result = `${natural} triggers death-save recovery; regains 1 HP`; }
+    const blockedBySuffocation = Boolean(window.IRON_PIT_BROWSER_BREATHING?.blocksRecovery(state));
+    if (natural >= recoveryMinimum && blockedBySuffocation) {
+      state.death_save_successes = Math.min(2, state.death_save_successes + 1);
+      result = `${natural} cannot recover HP while suffocating`;
+    }
+    else if (natural >= recoveryMinimum) { state.current_hp = 1; state.is_alive = true; state.is_unconscious = false; state.is_stable = false; state.death_save_successes = 0; state.death_save_failures = 0; result = `${natural} triggers death-save recovery; regains 1 HP`; }
     else if (natural === 1) { state.death_save_failures = Math.min(3, state.death_save_failures + 2); result = "natural 1; two failures"; }
     else if (natural >= 10) { state.death_save_successes = Math.min(3, state.death_save_successes + 1); result = "success"; }
     else state.death_save_failures = Math.min(3, state.death_save_failures + 1);
