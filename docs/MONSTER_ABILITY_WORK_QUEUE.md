@@ -1,5 +1,12 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Universal Grapple-owned condition removal — PR #1203
+
+- **Scope:** source-neutral Grapple lifecycle bug, not a new monster admission. Ordinary condition-removal Actions previously cleared `grapple_sources` directly, potentially leaving source-owned Restrained/Blinded attached to a released victim.
+- **Implementation:** delegate Grappled condition removal through the canonical Python/browser `release_grapple` primitive; preserve independent timed/innate Restrained and multiple source-owned Grapples. No printed ability names are runtime predicates.
+- **Evidence required:** synthetic Python and browser parity, cross-roster generator stability, exact-head workflows and review. Keep the PR unmerged if a required lane is not successful.
+- **Previous family:** #1202 fully certified and merged as `cc4ea87d` (2014 Whelm successful-save exit; Whirlwind shared-square save, Prone and Recharge). Generated main status 272/327 source-admitted, 55 blocked, Recharge-blocked 2.
+
 ## Active 2014 shared-square save/Recharge family — PR #1202
 
 - **327-card audit:** two printed Recharge Actions affect creatures occupying the same square: Whelm and Whirlwind. Both use the shared `shared-space` target finder, universal save, damage and Recharge engines; no monster-name runtime dispatch.

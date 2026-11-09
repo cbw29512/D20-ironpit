@@ -8,6 +8,8 @@ on:
     branches: [main]
     paths:
       - "backend/app/content/**"
+      - "backend/app/combat/grapple.py"
+      - "backend/app/combat/condition_removal.py"
       - "scripts/report_paired_monster_progress.py"
       - ".github/workflows/paired-edition-report.yml"
 
