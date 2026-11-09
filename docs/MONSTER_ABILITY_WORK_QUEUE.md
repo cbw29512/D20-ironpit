@@ -1,18 +1,20 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Active universal shared-space successful-save outcome — PR #1200
+## Active 2014 shared-square save/Recharge family — PR #1202
 
-- **Data schema:** optional `successful_save_exits_source_space` is only legal on a self-origin `AreaTargeting(shape="shared-space")` save. Default false is omitted from published card data.
-- **Universal result:** Python and browser existing save-event builders log that a successful target is pushed out of the source space, but keep its position unchanged under locked arena rules. No fabricated numeric distance and no monster-specific runtime dispatch.
-- **Evidence:** synthetic save card with renamed effect, source compilation, browser export, success/failure event logs, unchanged fight positions, malformed-area rejection. Five required exact-head checks, review and generator sync required.
-- **Still blocked:** complete 2014 Whelm save/recharge/capacity binding, water-breathing exception, helper rescue action and actual webpage fight.
+- **327-card audit:** two printed Recharge Actions affect creatures occupying the same square: Whelm and Whirlwind. Both use the shared `shared-space` target finder, universal save, damage and Recharge engines; no monster-name runtime dispatch.
+- **Merged Water Elemental components:** #1199 held-turn 2d8+4 Bludgeoning (`4bcf122d`), #1201 source-owned save/Grapple/Restrained/capacity/Recharge (`c76f2b8a`), and #1200 successful-save exit event (`2c8800ab`). Whelm still needs the source-defined helper DC14 Strength rescue and water-breathing exception. No source admission or webpage fight.
+- **Active Air Elemental PR #1202:** 2014 printed Whirlwind compiles shared-square DC13 Strength save, 3d8+2 Bludgeoning, half damage on successful save, standard Prone on failure, and Recharge 4–6. Cross-roster source mutations, browser and Python parity, and final-head CI are required.
+- **Air's unresolved universal gap:** random outward fling from a *coincident* square, wall/object impact, and secondary-creature collision save/damage. Do not substitute a 5-foot emanation or straight push, or silently ignore collision text. Stale incorrect #1076 is closed.
+- **Current draft metrics:** #1202 generated report has 272/327 source-admitted and 55 blocked; Recharge-blocked monsters 3 → 2. These are branch metrics until exact-head checks and merge.
+- **Next after #1202:** finish a coherent missing shared mechanic family and clear only the corresponding verified source obligations; preserve the current single queue.
 
 ## Whelm held-target turn damage — merged, PR #1199
 
 - **Schema and engine:** source-approved `SourceTurnRelationDamage` declares 2d8+4 Bludgeoning at the source's turn start against current victims with `creatures_grappled_by_source`. Existing Python/browser universal relation damage owns dice, typed resistances, release and logging; card/source labels supply the name.
 - **Source audit:** the full printed Whelm source grammar, including save, size/capacity, breathing and third-party rescue, is checked before extracting this specific turn damage. Unrecognized riders fail closed and renamed Whelm compiles without changing runtime dispatch. Compiled browser data contains the rule.
 - **Merged evidence:** all 327 source cards inspected, exact Water Elemental-only result, source mutations, rename, browser export, held-versus-released damage; all five required exact-head workflows and Bugbot passed. PR #1199 squash merged as `4bcf122d9bc2551a3af73240ae10b9496750f296`. Water Elemental is still blocked.
-- **Remaining:** the Whelm save Action, Recharge 4–6, failed-save grapple, water-breathing exception and helper rescue action still need complete end-to-end binding, plus webpage fights.
+- **Remaining:** Whelm's source-approved helper DC14 Strength rescue and water-breathing distinction are not fully implemented. Source save/Recharge/Grapple/Restrained and successful-save exit event are merged in #1201/#1200. It remains blocked pending those riders and actual webpage fights.
 
 ## Universal save Grapple capacity — merged, PR #1198
 
