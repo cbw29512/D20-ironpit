@@ -40,6 +40,7 @@
         mover.state.movement_remaining_ft,
         setup.persistent_barriers || [],
         allowLeaveMelee,
+        Boolean(mover.state.template.source_allows_hostile_overlap),
       );
       if (!plan.path.length) return { events: [], sequence, movement: null };
       const events = [], reactors = mover.side === "heroes" ? setup.monsters : setup.heroes;
@@ -54,6 +55,8 @@
           members,
           beforePosition,
           setup.persistent_barriers || [],
+          null,
+          Boolean(mover.state.template.source_allows_hostile_overlap),
         );
         if (stepCost == null || stepCost > mover.state.movement_remaining_ft) break;
         if (options.compelled) {

@@ -1,12 +1,19 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Active family — damage-triggered speed penalty, Water Elemental Freeze (PR #1188)
+## Active family — universal hostile-space stopping (Air Form / Water Form, PR #1195)
+
+- **Source proof:** the 2014 roster is scanned; only a complete printed Air Form / Water Form paragraph can grant the existing source-owned `source_allows_hostile_overlap` flag. Mutated or extended text fails closed. The printed label is never a combat-dispatch key.
+- **Shared engine:** Python/browser route search, affordable stopping prefix, browser combatant export, tactical movement and turn movement honor stopping inside an enemy's space, never an ally's. Normal movement costs apply.
+- **Evidence:** source/rename regressions, unrelated synthetic form tests, hostile-versus-ally stopping parity tests, and focused Python/browser CI added. Exact-head full workflows and artifact synchronization remain merge requirements.
+- **Outstanding:** Water Elemental Whelm and Air Elemental Whirlwind Recharge still need complete mechanics. This tranche does not by itself admit or webpage-certify either creature. Production remains locked.
+
+## Water Elemental Freeze — merged, PR #1188
 
 - **Universal schema:** `DamageTakenTimedEffect` declares typed triggering damage, effect ID, source label, exact absolute `speed_penalty_ft` and target-turn duration. Shared Python/browser turn state and speed resolution apply it without monster/ability-name dispatch; synthetic unrelated card tests demonstrate 7-ft parameter reuse.
 - **2014 source proof:** Water Elemental's printed Freeze triggers only on Cold damage; its speed drops 20 ft until the end of its next actual turn. Source paragraph isolation, source-mutation rejection, Python/browser expiry and nonstacking regressions are included.
 - **Critical browser parity fix:** the prior draft omitted `speedPenaltyFt` in the generated browser combatant template. PR #1188 now serializes the value and tests the actual Python-to-browser export; browser speed penalty is no longer a fake fixture-only pass.
-- **Remaining independent blockers:** Water Elemental still requires Water Form and Whelm (Recharge 4–6) to be implemented/source-certified. Freeze alone does not admit the monster or certify a webpage fight.
-- **Gate:** branch regenerated artifacts and exact-head CI required before merge. Do not hand-edit generated blocker or inventory reports; production publishing remains locked.
+- **Remaining independent blockers:** Water Form is part of PR #1195's shared movement family, while Whelm (Recharge 4–6) still needs integration. Freeze alone does not admit the monster or certify a webpage fight.
+- **Merged:** PR #1188 squash-merged as `727918d1f09bf876d10dabb696c5990ed45ef80e` with five exact-head successful workflows and Bugbot review. Generator-owned reports remain automatically maintained; webpage fights and production release are separate gates.
 
 ## Shambling Mound Engulf — merged and source-admitted, PR #1194
 
