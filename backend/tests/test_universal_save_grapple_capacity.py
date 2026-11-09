@@ -36,6 +36,7 @@ def _action():
             escape_dc=14, max_target_size=CreatureSize.LARGE,
             restrains=True, max_active_grapples=2,
             large_target_slot_cost=2, prevents_breathing=True,
+            size_only_applies_to_grapple=True,
         ),
     ))
 
