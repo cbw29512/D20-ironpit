@@ -39,6 +39,7 @@ from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.source_turn_relation_damage import SourceTurnRelationDamage
+from app.domain.grapple_rescue import GrappleRescueRule
 from app.domain.triggered_extra_attacks import TriggeredExtraAttackStack
 from app.domain.traits import CombatTrait
 from app.domain.zero_hp_effects import DamageThresholdZeroHpReplacement
@@ -104,6 +105,7 @@ class CombatantDefinition(BaseModel):
     source_allows_hostile_overlap: bool = Field(default=False, exclude_if=lambda value: not value)
     source_trait_names: list[str] = Field(default_factory=list)
     source_turn_relation_damages: list[SourceTurnRelationDamage] = Field(default_factory=list)
+    grapple_rescue_rules: list[GrappleRescueRule] = Field(default_factory=list)
     multi_hit_grapple_effects: list[MultiHitGrappleEffect] = Field(default_factory=list)
     innate_condition_ids: list[ConditionName] = Field(default_factory=list)
     source_reaction_names: list[str] = Field(default_factory=list)

@@ -12,6 +12,7 @@ from app.combat.post_action_bonus_save import resolve_post_action_bonus_save
 from app.combat.condition_counter_policy import choose_condition_counter_spell
 from app.combat.cleric_channel_support import resolve_channel_support
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
+from app.combat.grapple_helper_rescue import choose_grapple_helper_rescue, resolve_grapple_helper_rescue
 from app.combat.douse_burning import choose_douse_target, resolve_douse_action
 from app.combat.effect_removal import choose_effect_removal_action, resolve_effect_removal
 from app.combat.d20_bonus_dice import resolve_d20_bonus_die_grant
@@ -120,6 +121,15 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
         if removal_choice is not None:
             action, target, conditions = removal_choice
             events.append(resolve_condition_removal(sequence, round_number, member, target, action, conditions, turn_key))
+            sequence += 1
+        # Anyone able to take an Action may rescue a held ally under the
+        # grappling source's printed helper DC and distance (not helper's card).
+        rescue = choose_grapple_helper_rescue(member, setup)
+        if rescue is not None:
+            owner, trapped, rule = rescue
+            events.append(resolve_grapple_helper_rescue(
+                sequence, round_number, member, trapped, owner, rule, dice, setup,
+            ))
             sequence += 1
         # Any source-authorized continuing fire can be extinguished by an
         # ordinary Action. The source does not define a geometric range.
