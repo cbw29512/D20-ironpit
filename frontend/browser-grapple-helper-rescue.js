@@ -23,7 +23,8 @@
         && S().distance(helper, owner) <= rule.helper_range_ft
         && (owner.state.template.grapple_rescue_rules || []).includes(rule)
         && (target.state.grapple_sources || []).some(
-          (g) => g.source_id === owner.combatant_id);
+          (g) => g.source_id === owner.combatant_id
+            && g.linked_effect_id === rule.source_action_id);
     } catch (error) {
       console.error("Source-linked helper rescue eligibility failed.", error);
       throw error;
