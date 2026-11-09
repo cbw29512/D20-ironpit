@@ -93,4 +93,4 @@ the underlying ability is already implemented or trivial.
 | Tarrasque | mechanic:legendary, source:legendary, source:trait | Reflective Carapace |
 | Vampire | attack:incomplete, mechanic:legendary, source:extra-action, source:legendary, source:trait | Shapechanger, Misty Escape, Vampire Weaknesses |
 | Vampire Spawn | attack:incomplete, source:trait | Vampire Weaknesses |
-| Water Elemental | mechanic:recharge, source:extra-action, source:trait | Water Form, Freeze |
+| Water Elemental | mechanic:recharge, source:extra-action, source:trait | Water Form |

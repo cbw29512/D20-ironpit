@@ -5946,13 +5946,6 @@
       {
         "demand_count": 1,
         "monsters": [
-          "Water Elemental"
-        ],
-        "printed_name": "Freeze"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
           "Gibbering Mouther"
         ],
         "printed_name": "Gibbering"
