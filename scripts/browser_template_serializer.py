@@ -1179,6 +1179,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["death_trigger_actions"] = [_save(item) for item in template.death_trigger_actions]
         if template.innate_condition_ids:
             row["innate_condition_ids"] = list(template.innate_condition_ids)
+        if template.grapple_rescue_rules:
+            row["grapple_rescue_rules"] = [rule.model_dump(mode="json") for rule in template.grapple_rescue_rules]
         if template.source_turn_relation_damages:
             row["source_turn_relation_damages"] = [rule.model_dump(mode="json") for rule in template.source_turn_relation_damages]
         if template.multi_hit_grapple_effects:
