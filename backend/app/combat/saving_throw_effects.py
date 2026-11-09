@@ -84,6 +84,7 @@ def apply_save_effects(
                 restrains=action.restrains_while_grappled,
                 source_is_magical=action.magical_effect,
                 prevents_breathing=action.grapple_prevents_breathing,
+                linked_effect_id=action.id,
             )
         pushed_ft = 0
         if (
