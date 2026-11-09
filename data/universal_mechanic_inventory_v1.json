@@ -5876,7 +5876,7 @@
       "source:extra-action": 26,
       "source:legendary": 9,
       "source:reaction": 1,
-      "source:trait": 48
+      "source:trait": 47
     },
     "unresolved_printed_abilities": [
       {
@@ -6056,13 +6056,6 @@
           "Spirit Naga"
         ],
         "printed_name": "Spellcasting"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Succubus/Incubus"
-        ],
-        "printed_name": "Telepathic Bond"
       },
       {
         "demand_count": 1,

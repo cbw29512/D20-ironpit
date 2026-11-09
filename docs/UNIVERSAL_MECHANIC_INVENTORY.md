@@ -453,7 +453,6 @@ Blocked monsters: **55**. These are grouped by printed ability name so the roste
 | Reflective Carapace | Tarrasque | 1 |
 | Shapechanger | Vampire | 1 |
 | Spellcasting | Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 12 |
-| Telepathic Bond | Succubus/Incubus | 1 |
 | Transparent | Gelatinous Cube | 1 |
 | Vampire Weaknesses | Vampire, Vampire Spawn | 2 |
 | Water Form | Water Elemental | 1 |
@@ -463,7 +462,7 @@ Blocked monsters: **55**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 48 |
+| `source:trait` | 47 |
 | `mechanic:spellcasting` | 32 |
 | `source:extra-action` | 26 |
 | `attack:incomplete` | 14 |
