@@ -85,34 +85,6 @@ cleanup(separatelyRestrained,"grappled");
 assert.deepEqual(separatelyRestrained.state.grapple_sources,[]);
 assert.deepEqual(separatelyRestrained.state.active_effect_ids,["restrained"]);
 assert.equal(separatelyRestrained.state.timed_effects.length,1);
-// Condition removal and Grapple must share one source-owned release path.
-load("browser-condition-removal.js");
-const cleanup = window.IRON_PIT_BROWSER_CONDITION_REMOVAL.removeCondition;
-const restrainedVictim = member("removed-restrained","heroes","medium");
-window.IRON_PIT_BROWSER_GRAPPLE.apply(
-  restrainedVictim.state, "source-grapple", 14, 0, true, false, null,
-  {blinds:true,preventsBreathing:true},
-);
-assert.deepEqual(
-  [...restrainedVictim.state.active_effect_ids].sort(),
-  ["blinded","grappled","restrained"],
-);
-cleanup(restrainedVictim,"grappled");
-assert.deepEqual(restrainedVictim.state.grapple_sources,[]);
-assert.deepEqual(restrainedVictim.state.active_effect_ids,[]);
-// A separate timed Restrained effect survives release of the Grapple.
-const separatelyRestrained = member("separately-restrained","heroes","medium");
-separatelyRestrained.state.timed_effects.push({
-  effect_id:"restrained", source_id:"different-effect", source_effect_id:"other",
-});
-separatelyRestrained.state.active_effect_ids.push("restrained");
-window.IRON_PIT_BROWSER_GRAPPLE.apply(
-  separatelyRestrained.state, "source-grapple", 14, 0, true,
-);
-cleanup(separatelyRestrained,"grappled");
-assert.deepEqual(separatelyRestrained.state.grapple_sources,[]);
-assert.deepEqual(separatelyRestrained.state.active_effect_ids,["restrained"]);
-assert.equal(separatelyRestrained.state.timed_effects.length,1);
 // Source-neutral printed Whelm rider: an aquatic creature remains Grappled and
 // Restrained but can still breathe; a non-water breather cannot.
 window.IRON_PIT_BROWSER_GRAPPLE.release(medium.state, owner.combatant_id);
