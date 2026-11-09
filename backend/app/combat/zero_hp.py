@@ -83,6 +83,9 @@ def restore_hit_points(state: CombatantState, amount: int) -> int:
         return 0
     if any(effect.cannot_regain_hit_points for effect in state.timed_effects):
         return 0
+    from app.combat.breathing import suffocation_blocks_recovery
+    if suffocation_blocks_recovery(state):
+        return 0
     before = state.current_hp
     state.current_hp = min(effective_max_hp(state), before + amount)
     healed = state.current_hp - before
