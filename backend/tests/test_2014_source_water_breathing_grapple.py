@@ -7,6 +7,7 @@ from pydantic import ValidationError
 from app.combat.saving_throw_effects import apply_save_effects
 from app.combat.state import build_combatant_state
 from app.content.capability_compiler import compile_combatant
+from app.content.capability_from_template import definition_from_template
 from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_breathing_media_2014 import source_can_breathe_water_2014
@@ -53,6 +54,15 @@ def test_changed_trait_rider_is_not_silently_accepted_or_fabricated():
         )
     })
     assert not source_can_breathe_water_2014(changed)
+    # An unheaded continuation is still part of the printed Amphibious trait.
+    # The source parser must not silently ignore an unknown gameplay rider.
+    continued_source = frog.source_traits.replace(
+        "can breathe air and water.",
+        "can breathe air and water.</p><p>Unheaded rider grants bonus damage.",
+    )
+    assert continued_source != frog.source_traits
+    continued = frog.model_copy(update={"source_traits": continued_source})
+    assert not source_can_breathe_water_2014(continued)
     renamed = frog.model_copy(update={"name": "Synthetic Amphibian", "id": "synthetic-123"})
     assert source_can_breathe_water_2014(renamed)
     fake = cards["magmin"].model_copy(update={
@@ -68,6 +78,20 @@ def test_changed_trait_rider_is_not_silently_accepted_or_fabricated():
         )
     })
     assert not source_can_breathe_water_2014(changed_water_only)
+
+
+def test_whelm_breathing_medium_survives_template_to_definition_round_trip():
+    cards = _sources()
+    template = _template(cards["water-elemental"])
+    definition = definition_from_template(template)
+    source_save = next(action for action in definition.save_actions if action.id == "whelm")
+    assert source_save.grapple is not None
+    assert source_save.grapple.prevents_breathing
+    assert source_save.grapple.breathing_exempt_medium == "water"
+    round_trip = compile_combatant(definition)
+    rebuilt_save = next(action for action in round_trip.saving_throw_actions if action.id == "whelm")
+    assert rebuilt_save.grapple_prevents_breathing
+    assert rebuilt_save.grapple_breathing_exempt_medium == "water"
 
 
 def test_exception_requires_breath_prevention_in_generic_grapple_definition():
