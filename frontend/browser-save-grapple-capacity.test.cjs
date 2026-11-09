@@ -39,6 +39,7 @@ const apply=(victim)=>window.IRON_PIT_BROWSER_SAVE_ACTION_EFFECTS.apply(
 assert.deepEqual(apply(huge).appliedConditions,[]);
 assert.deepEqual(apply(large).appliedConditions,["grappled","restrained"]);
 assert.equal(large.state.grapple_sources[0].prevents_breathing,true);
+assert.equal(large.state.grapple_sources[0].linked_effect_id,"generic-flood");
 assert.deepEqual(apply(medium).appliedConditions,[]);
 window.IRON_PIT_BROWSER_GRAPPLE.release(large.state,owner.combatant_id);
 assert.deepEqual(apply(medium).appliedConditions,["grappled","restrained"]);
