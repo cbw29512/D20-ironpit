@@ -10,7 +10,8 @@ from app.content.monster_source_sections_2014 import source_sections_2014
 logger = logging.getLogger(__name__)
 
 _HOLD_BREATH = re.compile(
-    r"The [A-Za-z][A-Za-z '-]* can hold (?:its|his|her|their) breath for "
+    r"(?:While out of water, )?the [A-Za-z][A-Za-z '-]* "
+    r"can hold (?:its|his|her|their) breath for "
     r"(?P<amount>\d+) (?P<unit>minute|minutes|hour|hours)\.",
     re.IGNORECASE,
 )
