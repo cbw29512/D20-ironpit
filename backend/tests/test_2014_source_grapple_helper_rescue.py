@@ -31,6 +31,7 @@ def _setup():
     # The 2024 demo fighter intentionally lacks authoritative ability scores.
     # Use a certified 2014 pregen for a real source-correct Strength check.
     hero = build_encounter_setup(EncounterSelection(
+        ruleset="2014",
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-commoner"],
     )).heroes[0].state.template
     assert hero.ruleset == "2014" and hero.ability_scores is not None
