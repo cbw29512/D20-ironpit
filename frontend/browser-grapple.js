@@ -16,7 +16,12 @@
 
   function sync(state) {
     const grappled = state.grapple_sources.length > 0;
-    const restrained = Boolean(state.swallowed) || state.grapple_sources.some((source) => source.restrains);
+    // Do not erase an unrelated timed/innate Restrained condition when a
+    // Grapple ends; all three sources share one canonical condition id.
+    const restrained = Boolean(state.swallowed)
+      || state.grapple_sources.some((source) => source.restrains)
+      || (state.timed_effects || []).some((effect) => effect.effect_id === "restrained")
+      || (state.template?.innate_condition_ids || []).includes("restrained");
     state.active_effect_ids = state.active_effect_ids.filter((id) => id !== "grappled" && id !== "restrained");
     if (grappled) {
       state.active_effect_ids.push("grappled");
