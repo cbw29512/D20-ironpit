@@ -65,10 +65,14 @@ def resolve_death_save(
             _mark_dead(state)
             result = "third failure; dies"
         elif state.death_save_successes >= 3:
-            state.is_stable = True
-            state.is_unconscious = True
-            reset_death_saves(state)
-            result = "third success; becomes Stable"
+            if blocked_by_suffocation:
+                state.death_save_successes = 2
+                result = "cannot become Stable while suffocating"
+            else:
+                state.is_stable = True
+                state.is_unconscious = True
+                reset_death_saves(state)
+                result = "third success; becomes Stable"
 
         return BattleEvent(
             sequence=sequence, round_number=round_number, event_type="death_save",
