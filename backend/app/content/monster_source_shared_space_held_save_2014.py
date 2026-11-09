@@ -74,6 +74,9 @@ def source_proven_shared_space_held_saves_2014(
                 damage=DiceSpec(count=count, size=sides, bonus=bonus),
                 damage_type=match["damage_type"].casefold(),
                 success_damage="none",
+                # Full printed source proof includes the successful-save exit.
+                # The generic event logger honors Pit's no-relocation policy.
+                successful_save_exits_source_space=True,
                 grapple=GrappleEffectDefinition(
                     escape_dc=int(match["escape_dc"]),
                     max_target_size=CreatureSize.LARGE,
