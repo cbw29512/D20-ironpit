@@ -59,6 +59,15 @@ def test_changed_trait_rider_is_not_silently_accepted_or_fabricated():
         "trait_names": [*cards["magmin"].trait_names, "Amphibious"]
     })
     assert not source_can_breathe_water_2014(fake)
+    # Holding breath is not the same biological trait as breathing water.
+    assert not source_can_breathe_water_2014(cards["crocodile"])
+    marine = cards["giant-octopus"]
+    changed_water_only = marine.model_copy(update={
+        "source_traits": marine.source_traits.replace(
+            "can breathe only underwater.", "can breathe only underwater and ignores poison."
+        )
+    })
+    assert not source_can_breathe_water_2014(changed_water_only)
 
 
 def test_exception_requires_breath_prevention_in_generic_grapple_definition():
