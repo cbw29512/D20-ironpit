@@ -1,21 +1,24 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Universal Grapple-owned condition removal — PR #1203
+## Active 2014 source-linked helper Grapple rescue — PR #1204
 
-- **Scope:** source-neutral Grapple lifecycle bug, not a new monster admission. Ordinary condition-removal Actions previously cleared `grapple_sources` directly, potentially leaving source-owned Restrained/Blinded attached to a released victim.
-- **Implementation:** delegate Grappled condition removal through the canonical Python/browser `release_grapple` primitive; preserve independent timed/innate Restrained and multiple source-owned Grapples. No printed ability names are runtime predicates.
-- **Evidence required:** synthetic Python and browser parity, cross-roster generator stability, exact-head workflows and review. Keep the PR unmerged if a required lane is not successful.
-- **Previous family:** #1202 fully certified and merged as `cc4ea87d` (2014 Whelm successful-save exit; Whirlwind shared-square save, Prone and Recharge). Generated main status 272/327 source-admitted, 55 blocked, Recharge-blocked 2.
+- **Printed source:** Whelm's 2014 source gives any creature within 5 feet of the elemental an Action to pull out a held creature or object on a DC 14 Strength check. Source-wide proof scans all 327 source cards, matches the complete Whelm paragraph and fails closed on unknown rider text.
+- **Universal card/state:** the source owner's immutable `GrappleRescueRule` carries the printed Action name/id, Strength DC and range. The existing failed-save Grapple now retains its **source action ID** in fight state, so rescue cannot accidentally release a different grapple effect from the same creature.
+- **Universal combat behavior:** Python and browser support phases pick a held ally, check proximity to the grappler, spend the helper's Action, roll a real ability check, and invoke the existing source-aware Grapple release on success. Failure retains the hold. An object target has no targetable Pit object surface.
+- **Verification:** cross-roster full source scan, source mutations/renaming, export, direct and on-turn Python/browser successes, failures, range and wrong-source-effect rejection; five exact-head workflows and review before merge.
+- **Still blocked:** Water Elemental's water-breathing exception is not yet bound, so Whelm is not source-admitted or webpage fight-certified. No fabricated suffocation timer or automatic clearance.
 
-## Active 2014 shared-square save/Recharge family — PR #1202
+## Universal Grapple-owned condition removal — merged PR #1203
 
-- **327-card audit:** two printed Recharge Actions affect creatures occupying the same square: Whelm and Whirlwind. Both use the shared `shared-space` target finder, universal save, damage and Recharge engines; no monster-name runtime dispatch.
-- **Merged Water Elemental components:** #1199 held-turn 2d8+4 Bludgeoning (`4bcf122d`), #1201 source-owned save/Grapple/Restrained/capacity/Recharge (`c76f2b8a`), and #1200 successful-save exit event (`2c8800ab`). Whelm still needs the source-defined helper DC14 Strength rescue and water-breathing exception. No source admission or webpage fight.
-- **Active Air Elemental PR #1202:** 2014 printed Whirlwind compiles shared-square DC13 Strength save, 3d8+2 Bludgeoning, half damage on successful save, standard Prone on failure, and Recharge 4–6. Cross-roster source mutations, browser and Python parity, and final-head CI are required.
-- **Active same-family Whelm hookup (#1202):** source-verified successful-save exit is now declared on the immutable Whelm card so the already-merged generic Python/browser log actually fires for Water Elemental; real-card source/export/combat tests added. This source binding still requires exact-head CI and does not resolve the water-breathing or third-party rescue blockers.
-- **Air's unresolved universal gap:** random outward fling from a *coincident* square, wall/object impact, and secondary-creature collision save/damage. Do not substitute a 5-foot emanation or straight push, or silently ignore collision text. Stale incorrect #1076 is closed.
-- **Current draft metrics:** #1202 generated report has 272/327 source-admitted and 55 blocked; Recharge-blocked monsters 3 → 2. These are branch metrics until exact-head checks and merge.
-- **Next after #1202:** finish a coherent missing shared mechanic family and clear only the corresponding verified source obligations; preserve the current single queue.
+- **Merged:** `57041598f08ade7b8564c465025baf5adc707f13`, after all five required exact-head workflows passed.
+- **Shared behavior:** ordinary condition-removal Actions release the owning source Grapple through one Python/browser engine lifecycle. Source-owned Grappled/Restrained/Blinded is removed when applicable; independent timed/innate Restrained, Swallowed and other Grapple owners remain. Python and browser regressions passed.
+- **Monster admission:** no newly source-admitted monster; this is a shared combat correctness repair.
+
+## Shared-square Whelm/Whirlwind save and Recharge — merged PR #1202
+
+- **Merged:** `cc4ea87da21befc7aa2cbcb81064f83a112e3c09` after all five exact-head checks. Whelm's successful-save exit log is now bound on its printed card, and Air Elemental's Whirlwind uses the generic self shared-space Strength save, 3d8+2 Bludgeoning, half on success, Prone on failure, Recharge 4–6.
+- **Pending:** Water Elemental helper rescue (#1204) plus water-breathing exception. Air Elemental random fling/wall impact/secondary-creature collision remains an unbound source Action rider. No fake 5-foot emanation or straight-line push.
+- **Verified main baseline before #1204:** 272/327 source-admitted, 55 blocked, and only 2 Recharge-blocked creatures (Ghost and Ice Devil). Automated suite and real webpage fight certification remain separate from source admission.
 
 ## Whelm held-target turn damage — merged, PR #1199
 

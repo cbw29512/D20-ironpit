@@ -69,6 +69,7 @@ def test_printed_water_save_reuses_generic_size_and_capacity_state():
     )
     assert large_result.applied_conditions == ["grappled", "restrained"]
     assert large.state.grapple_sources[0].prevents_breathing
+    assert large.state.grapple_sources[0].linked_effect_id == "whelm"
 
     # One Large uses the full two-slot capacity; a valid save may still
     # deal printed damage, but it cannot apply a third Grapple.
