@@ -4,6 +4,8 @@ import logging
 from app.combat.concentration import end_concentration_if_expired
 from app.combat.condition_lifecycle import resolve_source_condition_timing, resolve_target_condition_timing
 from app.combat.death_saves import resolve_death_save
+from app.combat.breathing import resolve_breathing_start_turn
+from app.combat.grapple import cleanup_grapples
 from app.combat.death_trigger_dispatch import resolve_pending_death_triggers
 from app.combat.delayed_resource_refill import resolve_delayed_resource_refill_end_turn
 from app.combat.end_of_turn_recurring_damage import resolve_end_turn_recurring_damage
