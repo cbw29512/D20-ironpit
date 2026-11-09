@@ -69,6 +69,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         source_effect_immunity_keys_on_success=list(definition.source_effect_immunity_keys_on_success),
         source_effect_immunity_keys_blocking=list(definition.source_effect_immunity_keys_blocking),
         failed_save_push_ft=definition.failed_save_push_ft,
+        successful_save_exits_source_space=definition.successful_save_exits_source_space,
         animation=definition.animation,
     )
 

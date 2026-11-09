@@ -392,6 +392,8 @@ def _save(action: Any) -> dict[str, Any]:
         row["sourceEffectImmunityKeysBlocking"] = list(action.source_effect_immunity_keys_blocking)
     if action.failed_save_push_ft:
         row["failedSavePushFt"] = action.failed_save_push_ft
+    if action.successful_save_exits_source_space:
+        row["successfulSaveExitsSourceSpace"] = True
     if action.grapple_escape_dc is not None:
         row["grappleEscapeDc"] = action.grapple_escape_dc
     if action.restrains_while_grappled:

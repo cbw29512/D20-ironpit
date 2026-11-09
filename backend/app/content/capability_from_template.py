@@ -181,6 +181,8 @@ def _save(action) -> dict[str, object]:
         result["failed_save_timed_effect"] = action.failed_save_timed_effect.model_dump(mode="json")
     if action.source_effect_immunity_on_success:
         result["source_effect_immunity_on_success"] = True
+    if action.successful_save_exits_source_space:
+        result["successful_save_exits_source_space"] = True
     return result
 
 

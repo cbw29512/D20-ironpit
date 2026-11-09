@@ -45,6 +45,9 @@
         description +=
           ` ${target.state.template.name} is Restrained while Grappled.`;
       }
+      if (save.succeeded && action.successfulSaveExitsSourceSpace) {
+        description += ` ${target.state.template.name} is pushed out of ${actor.state.template.name}'s space (position unchanged by arena rule).`;
+      }
       if (effects.pushedFt) {
         description +=
           ` ${target.state.template.name} is pushed ${effects.pushedFt} feet away.`;
