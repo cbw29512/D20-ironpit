@@ -4,6 +4,7 @@
   const H = () => window.IRON_PIT_BROWSER_HEALING;
   const C = () => window.IRON_PIT_BROWSER_CONDITION_REMOVAL;
   const D = () => window.IRON_PIT_BROWSER_DOUSE_BURNING;
+  const G = () => window.IRON_PIT_BROWSER_GRAPPLE_HELPER_RESCUE;
   const X = () => window.IRON_PIT_BROWSER_EFFECT_REMOVAL;
   const K = () => window.IRON_PIT_BROWSER_CLERIC_CHANNEL;
   const P = () => window.IRON_PIT_BROWSER_PALADIN_2014;
@@ -47,6 +48,10 @@
     if (removal) {
       events.push(C().resolve(sequence++, round, member, removal.target, removal.action, removal.conditions, turnKey));
     }
+    const rescue = G()?.choose(member, setup);
+    if (rescue) events.push(G().resolve(
+      sequence++, round, member, rescue.target, rescue.owner, rescue.rule, setup,
+    ));
     const douseTarget = D()?.choose(member, setup);
     if (douseTarget) events.push(D().resolve(sequence++, round, member, douseTarget));
     bonusBefore = member.state.bonus_action_available;
