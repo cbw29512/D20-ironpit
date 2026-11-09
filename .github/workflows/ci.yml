@@ -226,6 +226,9 @@ jobs:
         run: |
           PYTHONPATH=backend:scripts python scripts/grick_sequence_parity_fixture.py > frontend/test-fixtures/grick-sequence.json
           PYTHONPATH=backend:scripts python scripts/fungus_sequence_parity_fixture.py > frontend/test-fixtures/fungus-sequence.json
+      - name: Validate 2014 shared-space impact source and combat regressions
+        working-directory: backend
+        run: PYTHONPATH=.:.. pytest -q tests/test_2014_shared_space_impact_save_partial.py tests/test_2014_shared_space_impact_save_combat.py tests/test_2014_shared_space_whelm_save_partial.py tests/test_2014_whelm_save_combat_partial.py
       - name: Certify Python rules reference
         working-directory: backend
         run: timeout 20m pytest -vv --durations=25
@@ -582,6 +585,7 @@ jobs:
           node frontend/browser-2014-water-elemental-freeze.test.cjs
           node frontend/browser-hostile-space-form.test.cjs
           node frontend/browser-shared-space-area.test.cjs
+          node frontend/browser-shared-space-impact-save.test.cjs
           node frontend/browser-success-shared-space-exit.test.cjs
           node frontend/browser-save-grapple-capacity.test.cjs
           node frontend/browser-swallow-advanced.test.cjs

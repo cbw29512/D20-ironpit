@@ -6,6 +6,8 @@ The monster is deliberately not admitted until its complete printed Action
 from __future__ import annotations
 
 from app.combat.grapple import release_grapple
+from app.combat.dice import FixedDiceProvider
+from app.combat.saving_throws import resolve_save_action
 from app.combat.saving_throw_effects import apply_save_effects
 from app.combat.state import build_combatant_state
 from app.content.capability_compiler import compile_combatant
@@ -89,3 +91,23 @@ def test_success_does_not_apply_grapple_and_leaves_state_unchanged():
     assert result.applied_conditions == []
     assert medium.state.grapple_sources == []
     assert (owner.position_ft, medium.position_ft) == prior
+
+
+def test_real_source_success_logs_whelm_exit_with_no_relocation():
+    source, (victim,), setup, action = _encounter(CreatureSize.MEDIUM)
+    assert action.successful_save_exits_source_space
+    before_positions = (source.position_ft, victim.position_ft)
+    before_hp = victim.state.current_hp
+    event = resolve_save_action(
+        1, 1, source, victim, action, 0,
+        FixedDiceProvider([20]),
+        spend_action=False, check_resource=False, spend_resource=False,
+        setup=setup,
+    )
+    assert event.save_succeeded
+    assert event.hp_after == before_hp
+    assert event.applied_condition_ids == []
+    assert "pushed out of" in event.description
+    assert "position unchanged by arena rule" in event.description
+    assert "Whelm" in event.description
+    assert (source.position_ft, victim.position_ft) == before_positions
