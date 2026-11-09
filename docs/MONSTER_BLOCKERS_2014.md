@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 47 |
+| `source:trait` | 45 |
 | `mechanic:spellcasting` | 32 |
 | `source:extra-action` | 26 |
 | `attack:incomplete` | 14 |
@@ -40,7 +40,7 @@ the underlying ability is already implemented or trivial.
 | Monster | Remaining blockers | Unbound traits |
 |---|---|---|
 | Aboleth | mechanic:legendary, source:extra-action, source:legendary | — |
-| Air Elemental | mechanic:recharge, source:extra-action, source:trait | Air Form |
+| Air Elemental | mechanic:recharge, source:extra-action | — |
 | Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Spellcasting |
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
 | Balor | attack:incomplete, source:trait | Fire Aura |
@@ -93,4 +93,4 @@ the underlying ability is already implemented or trivial.
 | Tarrasque | mechanic:legendary, source:legendary, source:trait | Reflective Carapace |
 | Vampire | attack:incomplete, mechanic:legendary, source:extra-action, source:legendary, source:trait | Shapechanger, Misty Escape, Vampire Weaknesses |
 | Vampire Spawn | attack:incomplete, source:trait | Vampire Weaknesses |
-| Water Elemental | mechanic:recharge, source:extra-action, source:trait | Water Form |
+| Water Elemental | mechanic:recharge, source:extra-action | — |
