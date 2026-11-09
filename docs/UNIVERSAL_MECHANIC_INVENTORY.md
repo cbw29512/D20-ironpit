@@ -435,7 +435,6 @@ Blocked monsters: **54**. These are grouped by printed ability name so the roste
 | Aberrant Ground | Gibbering Mouther | 1 |
 | Adhesive (Object Form Only) | Mimic | 1 |
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
-| Duergar Resilience | Duergar | 1 |
 | False Appearance (Object Form Only) | Mimic | 1 |
 | Fire Aura | Balor | 1 |
 | Fire Form | Fire Elemental | 1 |
@@ -459,7 +458,7 @@ Blocked monsters: **54**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 45 |
+| `source:trait` | 44 |
 | `mechanic:spellcasting` | 32 |
 | `source:extra-action` | 25 |
 | `attack:incomplete` | 14 |

@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 45 |
+| `source:trait` | 44 |
 | `mechanic:spellcasting` | 32 |
 | `source:extra-action` | 25 |
 | `attack:incomplete` | 14 |
@@ -55,7 +55,7 @@ the underlying ability is already implemented or trivial.
 | Drow | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Druid | mechanic:spellcasting, source:trait | Spellcasting |
 | Dryad | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
-| Duergar | attack:incomplete, source:extra-action, source:trait | Duergar Resilience |
+| Duergar | attack:incomplete, source:extra-action | — |
 | Dust Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Efreeti | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Fire Elemental | attack:incomplete, source:trait | Fire Form, Water Susceptibility |
