@@ -85,6 +85,7 @@ def source_proven_shared_space_held_saves_2014(
                     max_active_grapples=2,
                     large_target_slot_cost=2,
                     prevents_breathing=True,
+                    breathing_exempt_medium="water",
                 ),
                 resource_id=header.action_id,
                 resource_cost=1,
