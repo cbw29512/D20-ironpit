@@ -13,6 +13,7 @@ from app.combat.condition_removal_policy import (
 )
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.combat.restoration_riders import apply_restoration_riders
+from app.combat.grapple import release_grapple
 from app.combat.timed_condition_lifecycle import remove_effect_group, remove_effect_instance
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent, ConditionRemovalAction
@@ -37,7 +38,10 @@ def remove_condition(target: EncounterCombatant, condition_id: str) -> None:
         if condition_id in target.state.template.innate_condition_ids:
             target.state.active_effect_ids.append(condition_id)
         if condition_id == "grappled":
-            target.state.grapple_sources = []
+            # Reuse Grapple's source-aware lifecycle: a raw list reset leaves
+            # Grapple-owned Restrained (and Blindness) stuck on the target.
+            for grapple in list(target.state.grapple_sources):
+                release_grapple(target.state, grapple.source_id)
     except Exception:
         logger.exception("Failed to end condition %s on %s.", condition_id, target.combatant_id)
         raise
