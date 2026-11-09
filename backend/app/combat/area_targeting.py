@@ -69,6 +69,9 @@ def _directions(origins: tuple[Point, ...], enemies: list[EncounterCombatant]) -
 
 def _hits(area: AreaTargeting, origins: tuple[Point, ...], origin: Point, direction: Direction | None, target: EncounterCombatant) -> bool:
     points = _points(target)
+    # Exact cell overlap: no adjacency/radius and no monster-name dispatch.
+    if area.shape == "shared-space":
+        return bool(set(origins).intersection(points))
     if area.shape == "radius": return any(radius_contains(origin, point, area.radius_ft or 0) for point in points)
     if area.shape == "emanation": return any(emanation_contains(origins, point, area.radius_ft or 0) for point in points)
     if area.shape == "square": return any(square_contains(origin, point, area.length_ft or 0) for point in points)
@@ -104,7 +107,7 @@ def legal_area_placements(actor: EncounterCombatant, setup: EncounterSetup, area
         origins = _point_origins(actor, setup, range_ft, actor_position) if area.origin == "point" else actor_points
         direction_origins = origins if area.origin == "point" else actor_points
         aim_members = enemies if enemies else friends
-        directions = (None,) if area.shape in {"radius", "emanation", "square"} else _directions(direction_origins, aim_members)
+        directions = (None,) if area.shape in {"radius", "emanation", "square", "shared-space"} else _directions(direction_origins, aim_members)
         placements: dict[tuple[tuple[str, ...], tuple[str, ...], bool], AreaPlacement] = {}
         for origin in origins:
             if (
@@ -113,7 +116,7 @@ def legal_area_placements(actor: EncounterCombatant, setup: EncounterSetup, area
             ):
                 continue
             for direction in directions:
-                effect_sources = actor_points if area.shape == "emanation" else (origin,)
+                effect_sources = actor_points if area.shape in {"emanation", "shared-space"} else (origin,)
                 target_ids = tuple(
                     enemy.combatant_id
                     for enemy in enemies

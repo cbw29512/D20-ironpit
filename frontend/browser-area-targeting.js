@@ -76,6 +76,9 @@
     const radius = dimension(area, "radiusFt", "radius_ft");
     const length = dimension(area, "lengthFt", "length_ft");
     const width = dimension(area, "widthFt", "width_ft");
+    if (area.shape === "shared-space") return targetPoints.some(
+      (point) => origins.some((other) => other[0] === point[0] && other[1] === point[1]),
+    );
     if (area.shape === "radius") return targetPoints.some((point) => A().radiusContains(origin, point, radius));
     if (area.shape === "emanation") return targetPoints.some((point) => A().emanationContains(origins, point, radius));
     if (area.shape === "square") return targetPoints.some((point) => A().squareContains(origin, point, length));
@@ -99,11 +102,11 @@
       const origins = area.origin === "point" ? pointOrigins(actor, setup, rangeFt) : actorOrigins;
       const directionOrigins = area.origin === "point" ? origins : actorOrigins;
       const aimMembers = enemies.length ? enemies : friends;
-      const areaDirections = ["radius", "emanation", "square"].includes(area.shape) ? [null] : directions(directionOrigins, aimMembers);
+      const areaDirections = ["radius", "emanation", "square", "shared-space"].includes(area.shape) ? [null] : directions(directionOrigins, aimMembers);
       for (const origin of origins) {
         if (area.origin === "point" && !clearBetweenPoints(actorOrigins, [origin], setup)) continue;
         for (const direction of areaDirections) {
-          const effectSources = area.shape === "emanation" ? actorOrigins : [origin];
+          const effectSources = ["emanation", "shared-space"].includes(area.shape) ? actorOrigins : [origin];
           const targetIds = enemies.filter((enemy) =>
             hits(area, actorOrigins, origin, direction, enemy)
             && clearBetweenPoints(effectSources, points(enemy), setup)).map((enemy) => enemy.combatant_id);

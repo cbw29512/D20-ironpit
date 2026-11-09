@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-AreaShape = Literal["radius", "cone", "line", "cube", "emanation", "square"]
+AreaShape = Literal["radius", "cone", "line", "cube", "emanation", "square", "shared-space"]
 AreaOrigin = Literal["point", "self"]
 
 
@@ -22,7 +22,12 @@ class AreaTargeting(BaseModel):
             values = (self.radius_ft, self.length_ft, self.width_ft)
             if any(value is not None and value % 5 for value in values):
                 raise ValueError("Area dimensions must use 5-foot increments.")
-            if self.shape in {"radius", "emanation"}:
+            # "shared-space" models exact occupied-grid-cell intersection,
+            # not an invented 5-ft emanation. It needs no dimensions.
+            if self.shape == "shared-space":
+                if self.origin != "self" or any(value is not None for value in values):
+                    raise ValueError("Shared-space area requires self origin and no dimensions.")
+            elif self.shape in {"radius", "emanation"}:
                 if self.radius_ft is None or self.length_ft is not None or self.width_ft is not None:
                     raise ValueError(f"{self.shape} requires radius_ft only.")
             elif self.shape in {"cone", "cube", "square"}:
