@@ -166,6 +166,11 @@ class SavingThrowAction(BaseModel):
     damage_components: list[SaveDamageComponent] = Field(default_factory=list)
     grapple_escape_dc: int | None = Field(default=None, ge=1, le=40)
     restrains_while_grappled: bool = False
+    # Grapple eligibility is NOT the same as eligibility to take save damage.
+    grapple_max_target_size: CreatureSize | None = None
+    grapple_max_active_grapples: int | None = Field(default=None, ge=1, le=20)
+    grapple_large_target_slot_cost: int = Field(default=1, ge=1, le=20)
+    grapple_prevents_breathing: bool = False
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     requires_no_active_grapple: bool = False
@@ -196,6 +201,15 @@ class SavingThrowAction(BaseModel):
 
     @model_validator(mode="after")
     def validate_asymmetric_save_outcomes(self) -> "SavingThrowAction":
+        if self.grapple_escape_dc is None and (
+            self.grapple_max_target_size is not None
+            or self.grapple_max_active_grapples is not None
+            or self.grapple_large_target_slot_cost != 1
+            or self.grapple_prevents_breathing
+        ):
+            raise ValueError("Save grapple parameters require a grapple escape DC.")
+        if self.grapple_large_target_slot_cost > 1 and self.grapple_max_active_grapples is None:
+            raise ValueError("Weighted save grapple requires a source-owned capacity.")
         if self.save_ability_choices and (len(self.save_ability_choices) < 2 or len(set(self.save_ability_choices)) != len(self.save_ability_choices) or self.save_ability not in self.save_ability_choices):
             raise ValueError("Target-chosen save abilities must be distinct and include the primary ability.")
         if self.damage_only_on_success and self.success_damage != "none":

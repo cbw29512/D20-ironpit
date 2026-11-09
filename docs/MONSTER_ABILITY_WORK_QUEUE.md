@@ -1,5 +1,13 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Next universal combat primitive — failed-save Grapple with source-owned capacity (PR pending)
+
+- **Schema:** a source save action may declare an independent Grapple target-size limit, a Grapple capacity in slots, a Large target's slot cost and a breathing restriction. Damage/save eligibility is separate from grapple eligibility.
+- **Python/browser composition:** the normal saving throw and damage resolve first. Only a failed save with an eligible target and sufficient free source-owned slots applies Grappled and optional Restrained/prevents-breathing. One Large can consume two slots, or two Medium-or-smaller consume one each. A full pool, oversized target, or repeat against an already-held target never invents/replaces a grapple.
+- **Source coverage:** 327 pinned 2014 cards reviewed: Whelm and Whirlwind are the only two rechargeable exact-cooccupant save Actions; swarm attacks have separate same-space attack targeting. The new capacity primitive is generic for other source cards and pregens.
+- **Remaining Whelm obligations:** bind the full printed Action and Recharge 4–6; 2d8+4 Bludgeoning on DC 15 Strength failure, no damage on success; occupied-square targeting (PR #1196), DC 14 escape, owner-turn 2d8+4 to held targets, helper DC 14 Strength rescue Action at 5 ft., source-specific water-breathing exception, and forced movement logged without relocation. None is silently cleared or merged based on a partial action.
+- **Gate:** all five required exact-head CI workflows, source mutation/rename tests and genuine webpage fights still needed before Water Elemental becomes finished. No generated report is manually changed.
+
 ## Active family — universal hostile-space stopping (Air Form / Water Form, PR #1195)
 
 - **Source proof:** the 2014 roster is scanned; only a complete printed Air Form / Water Form paragraph can grant the existing source-owned `source_allows_hostile_overlap` flag. Mutated or extended text fails closed. The printed label is never a combat-dispatch key.

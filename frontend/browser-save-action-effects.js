@@ -1,6 +1,39 @@
 (() => {
   "use strict";
 
+  function saveGrappleAllowed(actor, target, action, setup) {
+    try {
+      const sizes = window.IRON_PIT_BROWSER_STATE;
+      if (action.grappleMaxTargetSize) {
+        if (!sizes?.sizeAtMost) throw new Error("Universal size gate is unavailable.");
+        if (!sizes.sizeAtMost(target, action.grappleMaxTargetSize)) return false;
+      }
+      if (action.grappleMaxActiveGrapples == null) return true;
+      if (!setup) throw new Error("Capacity-limited save Grapple requires setup.");
+      const cost = (member) => (
+        ["large", "huge", "gargantuan"].includes(member.state.template.size)
+          ? (action.grappleLargeTargetSlotCost || 1) : 1
+      );
+      let occupied = 0;
+      for (const member of [...setup.heroes, ...setup.monsters]) {
+        if (member.combatant_id === actor.combatant_id
+          || !member.state.is_alive || member.state.is_dead) continue;
+        const held = (member.state.grapple_sources || []).some(
+          (source) => source.source_id === actor.combatant_id,
+        );
+        if (!held) continue;
+        if (member.combatant_id === target.combatant_id) return false;
+        occupied += cost(member);
+      }
+      return occupied + cost(target) <= action.grappleMaxActiveGrapples;
+    } catch (error) {
+      console.error("Failed source-owned save Grapple capacity gate", {
+        actor: actor?.combatant_id, target: target?.combatant_id, error,
+      });
+      throw error;
+    }
+  }
+
   function apply(actor, target, action, save, round, options = {}) {
     try {
       const rider = window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS;
@@ -51,7 +84,8 @@
         else if (applied) appliedConditions.push(applied);
       }
       if (!save.succeeded && target.state.is_alive && !target.state.is_dead
-        && action.grappleEscapeDc) {
+        && action.grappleEscapeDc
+        && saveGrappleAllowed(actor, target, action, options.setup || null)) {
         const grapple = window.IRON_PIT_BROWSER_GRAPPLE;
         if (!grapple?.apply) {
           throw new Error("Save grapple runtime is unavailable.");
@@ -63,6 +97,8 @@
           action.range,
           Boolean(action.restrainsWhileGrappled),
           Boolean(action.magicalEffect),
+          null,
+          { preventsBreathing: Boolean(action.grapplePreventsBreathing) },
         );
       }
       let pushedFt = 0;
