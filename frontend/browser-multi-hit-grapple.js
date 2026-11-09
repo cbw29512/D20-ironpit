@@ -35,16 +35,22 @@
             (item.state.grapple_sources || []).some(source =>
               source.source_id === member.combatant_id
               && source.linked_effect_id === rule.effectId)).length;
-          if (held >= rule.maxActiveGrapples) continue;
+          // Capacity limits the linked Engulf effect, not the ordinary
+          // Grappled condition caused by the required successful hits.
+          if ((target.state.grapple_sources || []).some(source =>
+              source.source_id === member.combatant_id
+              && source.linked_effect_id === rule.effectId)) continue;
+          const atCapacity = held >= rule.maxActiveGrapples;
           const applied = grapple.apply(
             target.state, member.combatant_id, rule.escapeDc, rule.rangeFt,
-            rule.restrains, false, null,
-            {blinds: rule.blinds, preventsBreathing: rule.preventsBreathing,
-             effectId: rule.effectId},
+            !atCapacity && rule.restrains, false, null,
+            {blinds: !atCapacity && rule.blinds,
+             preventsBreathing: !atCapacity && rule.preventsBreathing,
+             effectId: atCapacity ? null : rule.effectId},
           );
           if (!applied.length) continue;
           const conditions = [...applied];
-          if (rule.blinds && target.state.active_effect_ids.includes("blinded")) {
+          if (!atCapacity && rule.blinds && target.state.active_effect_ids.includes("blinded")) {
             conditions.push("blinded");
           }
           events.push({
@@ -56,9 +62,10 @@
             description: member.state.template.name + ": " + rule.sourceName
               + " after " + rule.hitsRequired + " hits on " + target.state.template.name
               + "; Grappled (escape DC " + rule.escapeDc + ")"
-              + (rule.blinds ? ", Blinded" : "")
-              + (rule.restrains ? ", Restrained" : "")
-              + (rule.preventsBreathing ? ", unable to breathe" : "") + ".",
+              + (atCapacity ? "; " + rule.sourceName + " capacity reached"
+                : (rule.blinds ? ", Blinded" : "")
+                  + (rule.restrains ? ", Restrained" : "")
+                  + (rule.preventsBreathing ? ", unable to breathe" : "")) + ".",
           });
         }
       }

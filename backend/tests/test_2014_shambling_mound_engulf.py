@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from app.combat.dice import FixedDiceProvider
 from app.combat.grapple import release_grapple, resolve_escape_grapple
+from app.combat.encounter_grapple_upgrade_action import resolve_grapple_upgrade_action
 from app.combat.multi_hit_grapple import apply_multi_hit_grapples
 from app.combat.source_turn_relation_damage import resolve_source_turn_relation_damage
 from app.combat.state import build_combatant_state
@@ -133,3 +134,58 @@ def test_two_hits_same_target_upgrade_source_grapple_and_release():
     assert resolve_source_turn_relation_damage(
         6, 4, owner, setup, FixedDiceProvider([1]),
     ) == ([], 6)
+
+
+def test_second_double_hit_grapples_at_engulf_capacity_then_upgrades_after_release():
+    """Capacity limits linked Engulf, not the ordinary source-owned Grappled state."""
+    owner, first, setup = _fight()
+    second = EncounterCombatant(
+        combatant_id="second", side="heroes", position_ft=5,
+        state=build_combatant_state(
+            build_demo_fighter().model_copy(update={"size": CreatureSize.MEDIUM, "max_hp": 90})
+        ),
+    )
+    setup.heroes.append(second)
+    attack_id = owner.state.template.multi_hit_grapple_effects[0].attack_id
+
+    def double_hit(target_id: str) -> list[BattleEvent]:
+        return [BattleEvent(
+            sequence=index, round_number=1, event_type="attack",
+            actor_id="owner", actor_name=owner.state.template.name,
+            target_id=target_id, attack_id=attack_id, hit=True,
+            description="Source-neutral landed Slam.", animation="attack",
+        ) for index in (1, 2)]
+
+    linked, _ = apply_multi_hit_grapples(3, 1, owner, setup, double_hit("target"))
+    assert len(linked) == 1
+    assert first.state.grapple_sources[0].linked_effect_id == "engulf"
+
+    fallback, _ = apply_multi_hit_grapples(4, 1, owner, setup, double_hit("second"))
+    assert len(fallback) == 1
+    assert fallback[0].applied_condition_ids == ["grappled"]
+    assert "capacity reached" in fallback[0].description
+    held = second.state.grapple_sources[0]
+    assert held.source_id == "owner" and held.escape_dc == 14
+    assert held.linked_effect_id is None
+    assert held.restrains is False and held.blinds is False
+    assert held.prevents_breathing is False
+    assert "restrained" not in second.state.active_effect_ids
+    assert "blinded" not in second.state.active_effect_ids
+
+    # Hitting the already engulfed target cannot erase its linked state.
+    again, _ = apply_multi_hit_grapples(5, 1, owner, setup, double_hit("target"))
+    assert again == []
+    assert first.state.grapple_sources[0].linked_effect_id == "engulf"
+
+    # Ordinary Grappled must never receive Engulf-only turn damage.
+    saved, _ = resolve_source_turn_relation_damage(
+        6, 2, owner, setup, FixedDiceProvider([20]),
+    )
+    assert len(saved) == 1 and saved[0].target_id == "target"
+
+    release_grapple(first.state, "owner")
+    upgraded = resolve_grapple_upgrade_action(7, 2, owner, setup)
+    assert upgraded is not None and upgraded[0][0].target_id == "second"
+    assert second.state.grapple_sources[0].linked_effect_id == "engulf"
+    assert "blinded" in second.state.active_effect_ids
+    assert "restrained" in second.state.active_effect_ids

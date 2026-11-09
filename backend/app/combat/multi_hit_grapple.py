@@ -52,18 +52,25 @@ def apply_multi_hit_grapples(
                         for source in member.state.grapple_sources)
                     for member in members.values() if member.combatant_id != attacker.combatant_id
                 )
-                if held >= rule.max_active_grapples:
+                # The printed linked-effect capacity limits Engulf, not the
+                # ordinary Grappled condition earned by the required hits.
+                # A previously linked victim must never be downgraded.
+                if any(source.source_id == attacker.combatant_id
+                       and source.linked_effect_id == rule.effect_id
+                       for source in state.grapple_sources):
                     continue
+                at_capacity = held >= rule.max_active_grapples
                 applied = apply_grapple(
                     state, attacker.combatant_id, rule.escape_dc, rule.range_ft,
-                    restrains=rule.restrains, blinds=rule.blinds,
-                    prevents_breathing=rule.prevents_breathing,
-                    linked_effect_id=rule.effect_id,
+                    restrains=rule.restrains and not at_capacity,
+                    blinds=rule.blinds and not at_capacity,
+                    prevents_breathing=rule.prevents_breathing and not at_capacity,
+                    linked_effect_id=None if at_capacity else rule.effect_id,
                 )
                 if not applied:
                     continue
                 conditions = [*applied]
-                if rule.blinds and "blinded" in state.active_effect_ids:
+                if not at_capacity and rule.blinds and "blinded" in state.active_effect_ids:
                     conditions.append("blinded")
                 results.append(BattleEvent(
                     sequence=sequence, round_number=round_number,
@@ -77,9 +84,10 @@ def apply_multi_hit_grapples(
                         f"{attacker.state.template.name}: {rule.source_name} after "
                         f"{rule.hits_required} hits on {state.template.name}; "
                         f"Grappled (escape DC {rule.escape_dc})"
-                        + (", Blinded" if rule.blinds else "")
-                        + (", Restrained" if rule.restrains else "")
-                        + (", unable to breathe" if rule.prevents_breathing else "")
+                        + (f"; {rule.source_name} capacity reached" if at_capacity else
+                           (", Blinded" if rule.blinds else "")
+                           + (", Restrained" if rule.restrains else "")
+                           + (", unable to breathe" if rule.prevents_breathing else ""))
                         + "."
                     ),
                 ))

@@ -34,7 +34,37 @@ assert.equal(target.state.grapple_sources[0].escape_dc,14);
 assert.equal(target.state.grapple_sources[0].prevents_breathing,true);
 assert.ok(target.state.active_effect_ids.includes("blinded"));
 assert.equal(runtime.resolve(2,2,owner,setup,[hit("hero"),hit("hero")]).events.length,0);
+// A second double-hit target becomes Grappled (not Engulfed) while capacity is full.
+const second={combatant_id:"second",side:"heroes",position_ft:5,state:{
+  is_alive:true,is_dead:false,current_hp:60,grapple_sources:[],timed_effects:[],
+  active_effect_ids:[],template:{size:"medium",name:"Second Hero"},
+}};
+setup.heroes.push(second);
+const fallback=runtime.resolve(3,2,owner,setup,[hit("second"),hit("second")]);
+assert.equal(fallback.events.length,1);
+assert.deepEqual(fallback.events[0].applied_condition_ids,["grappled"]);
+assert.ok(fallback.events[0].description.includes("capacity reached"));
+assert.equal(second.state.grapple_sources[0].linked_effect_id,null);
+assert.equal(second.state.grapple_sources[0].restrains,false);
+assert.equal(second.state.grapple_sources[0].blinds,false);
+assert.equal(second.state.grapple_sources[0].prevents_breathing,false);
+assert.deepEqual(second.state.active_effect_ids,["grappled"]);
+assert.equal(runtime.resolve(4,2,owner,setup,[hit("hero"),hit("hero")]).events.length,0);
+assert.equal(target.state.grapple_sources[0].linked_effect_id,"engulf");
 window.IRON_PIT_BROWSER_GRAPPLE.release(target.state,"holder");
+owner.state.action_available=true;
+window.IRON_PIT_ACTION_ECONOMY={
+  available:(state,cost)=>cost==="action" && state.action_available,
+  spend:(state,cost)=>{assert.equal(cost,"action");state.action_available=false;},
+};
+const available=window.IRON_PIT_BROWSER_GRAPPLE_UPGRADE_ACTION.choose(owner,setup);
+assert.equal(available.target,second);
+const upgraded=window.IRON_PIT_BROWSER_GRAPPLE_UPGRADE_ACTION.resolve(
+  5,3,owner,setup,"second","engulf");
+assert.equal(upgraded.events[0].feature_id,"Renamed Engulf");
+assert.equal(second.state.grapple_sources[0].linked_effect_id,"engulf");
+window.IRON_PIT_BROWSER_GRAPPLE.release(second.state,"holder");
+setup.heroes.pop();
 assert.equal(target.state.grapple_sources.length,0);
 for (const effect of ["grappled","restrained","blinded"])
   assert.ok(!target.state.active_effect_ids.includes(effect));
