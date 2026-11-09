@@ -32,6 +32,8 @@
   function targetAllowed(healer, target, action) {
     if (target.state.is_dead || !target.state.is_alive || swarm(target.state)) return false;
     if (action.stabilizeAtZero && (target.state.current_hp !== 0 || target.state.is_stable)) return false;
+    if (window.IRON_PIT_BROWSER_BREATHING?.blocksRecovery(target.state)
+      && (action.stabilizeAtZero || !action.grantsTemporaryHp)) return false;
     if (!action.stabilizeAtZero
       && target.state.current_hp >= S().effectiveMaxHp(target.state)
       && !riderWorthwhile(target, action)) return false;
