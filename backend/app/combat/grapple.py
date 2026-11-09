@@ -86,6 +86,10 @@ def release_grapple(state: CombatantState, source_id: str) -> None:
     removed = [source for source in state.grapple_sources if source.source_id == source_id]
     state.grapple_sources = [source for source in state.grapple_sources if source.source_id != source_id]
     _sync_effect_ids(state)
+    # Breathing resumes immediately when the last air-blocking Grapple releases.
+    if not any(source.prevents_breathing for source in state.grapple_sources):
+        from app.combat.breathing import reset_breathing
+        reset_breathing(state)
     # Clear only a source-owned Blindness; preserve a preexisting or timed one.
     if (any(source.blinds for source in removed)
             and not any(source.blinds for source in state.grapple_sources)
