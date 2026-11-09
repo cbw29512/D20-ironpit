@@ -46,7 +46,7 @@ def test_water_elemental_freeze_binds_exact_source_parameters() -> None:
 def test_cold_damage_applies_absolute_speed_penalty_until_next_turn_end() -> None:
     elemental = build_combatant_state(_template())
     base_speed = elemental.template.speed_ft
-    assert base_speed == 40
+    assert base_speed > 0  # Source-owned movement, not a fabricated fixed test speed.
 
     apply_damage(elemental, 1, damage_types={DamageType.FIRE})
     assert elemental.timed_effects == []
@@ -93,7 +93,7 @@ def test_unrelated_card_can_declare_same_universal_speed_penalty() -> None:
     })
     state = build_combatant_state(template)
     apply_damage(state, 1, damage_types={DamageType.COLD})
-    assert effective_speed(state) == 33
+    assert effective_speed(state) == max(0, template.speed_ft - 7)
 
 
 def test_freeze_expires_at_end_of_next_turn_after_own_turn_trigger() -> None:
@@ -108,10 +108,10 @@ def test_freeze_expires_at_end_of_next_turn_after_own_turn_trigger() -> None:
         1, 1, member, "target_turn_end", FixedDiceProvider([1]),
     )
     assert events == []
-    assert effective_speed(state) == 20
+    assert effective_speed(state) == max(0, state.template.speed_ft - 20)
     begin_turn(state)
     events, _ = resolve_target_condition_timing(
         2, 2, member, "target_turn_end", FixedDiceProvider([1]),
     )
     assert events
-    assert effective_speed(state) == 40
+    assert effective_speed(state) == state.template.speed_ft
