@@ -1,8 +1,15 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Active shared mechanic — source-owned save Grapple capacity, size and breathing (PR #1198)
+## Active 2014 source family — Whelm held-target turn damage (PR #1199)
 
-- **Exact-head gate:** generated browser assets and compatibility fixtures are synchronized on branch head `8e55b2355fb8c7d13a3bd0c672de88461552461b`. Revalidate CI and all required workflows on the next head; previous unsynchronized results are not accepted.
+- **Schema and engine:** source-approved `SourceTurnRelationDamage` declares 2d8+4 Bludgeoning at the source's turn start against current victims with `creatures_grappled_by_source`. Existing Python/browser universal relation damage owns dice, typed resistances, release and logging; card/source labels supply the name.
+- **Source audit:** the full printed Whelm source grammar, including save, size/capacity, breathing and third-party rescue, is checked before extracting this specific turn damage. Unrecognized riders fail closed and renamed Whelm compiles without changing runtime dispatch. Compiled browser data contains the rule.
+- **Tests:** all 327 source cards inspected, exact Water Elemental-only result, source mutations, rename, browser export, and held-versus-released owner-turn damage. This PR intentionally does not assert a source-admitted Water Elemental.
+- **Remaining:** the Whelm save Action, Recharge 4–6, failed-save grapple, water-breathing exception and helper rescue action still need complete end-to-end binding, plus webpage fights.
+
+## Universal save Grapple capacity — merged, PR #1198
+
+- **Merged:** PR #1198 passed all five exact-head required workflows and Bugbot review before squash merge `e9661469b4e242570d55bdbb8e74c097af6e62cd`. This is a shared mechanic, not a monster admission.
 
 - **Schema and state:** saving throw damage/legality stays separate from optional failed-save Grapple legality. Source-owned `grapple_max_target_size`, `grapple_max_active_grapples`, `grapple_large_target_slot_cost` and `grapple_prevents_breathing` live on immutable cards; live grapples and free capacity live in fight state.
 - **Python/browser implementation:** both runtimes check holding capacity, skip new grapples for oversized targets and full capacity, and preserve existing source-owned grapples. One Large consumes two slots; each Medium-or-smaller consumes one. Ordinary saving throw damage still resolves. Existing universal Grapple applies Grappled/Restrained and breathing metadata.
