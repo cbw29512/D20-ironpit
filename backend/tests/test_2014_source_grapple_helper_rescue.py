@@ -32,7 +32,7 @@ def _setup():
     # Use a certified 2014 pregen for a real source-correct Strength check.
     hero = build_encounter_setup(EncounterSelection(
         ruleset="2014",
-        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-commoner"],
+        hero_ids=["karnok-stoneward-2014-l1"], monster_ids=["2014-goblin"],
     )).heroes[0].state.template
     assert hero.ruleset == "2014" and hero.ability_scores is not None
     helper = EncounterCombatant(
