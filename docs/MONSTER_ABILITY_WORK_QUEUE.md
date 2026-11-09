@@ -1,11 +1,18 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Active family — universal shared-space save targeting (PR #1196)
+## Active shared mechanic — source-owned save Grapple capacity, size and breathing (PR #1198)
+
+- **Schema and state:** saving throw damage/legality stays separate from optional failed-save Grapple legality. Source-owned `grapple_max_target_size`, `grapple_max_active_grapples`, `grapple_large_target_slot_cost` and `grapple_prevents_breathing` live on immutable cards; live grapples and free capacity live in fight state.
+- **Python/browser implementation:** both runtimes check holding capacity, skip new grapples for oversized targets and full capacity, and preserve existing source-owned grapples. One Large consumes two slots; each Medium-or-smaller consumes one. Ordinary saving throw damage still resolves. Existing universal Grapple applies Grappled/Restrained and breathing metadata.
+- **Regression coverage:** synthetic renamed source, two Medium versus one Large, Huge still receiving save damage, preservation of existing grapple, missing setup fail-closed, and Python/browser parity. Generator-owned changes are synchronized automatically; five exact-head checks and review required before merge.
+- **Remaining Water Elemental work:** complete exact-source Whelm bind, Recharge 4–6, start-of-turn 2d8+4 for held creatures, helper DC14 Strength rescue action, and appropriate water-breathing distinction. No source admission or webpage battle certification is claimed.
+
+## Universal shared-space save targeting — merged, PR #1196
 
 - **Schema:** `AreaTargeting(shape="shared-space", origin="self")` matches exactly intersecting occupied combat squares; no radius, target distance or creature-name runtime lookup. Source/card parameters own effects.
 - **Engine:** same Python/browser area placement and save pipeline handles held-space Actions, with explicit friendly target exposure. Adjacent non-overlapping creatures are not targeted. Strict Pydantic validation rejects fake area dimensions and a remote origin.
 - **Scope:** strict source-only 327-card audit identifies exactly two Recharge Action headers with co-occupant saves: Water Elemental Whelm (DC 15 Strength, Recharge 4–6) and Air Elemental Whirlwind (DC 13 Strength, Recharge 4–6). Their full trailing damage/control outcomes remain unbound and are preserved explicitly in typed audit data. Cross-roster mutation and ability-renaming regressions prevent bogus classification. Additional swarm-attacks target creatures in the swarm space but are ordinary attack Actions, not these Recharge saves. This PR supplies targeting and source auditing only; complete save outcomes, grapple capacity, periodic damage, helper rescue and recharge still need separate universal bindings.
-- **Certification:** focused Python/Node regressions and exact-head full CI. Generator-owned blocker reports must stay generated; no monster admission or webpage fight is claimed.
+- **Merged evidence:** focused Python/Node regressions, 327-card strict source header audit, all five exact-head workflows and Bugbot review passed. Squash-merged as `b4498a20e71eac6328d9ddeb986ab5060a341223`. No new monster admission or webpage fight is claimed.
 
 ## Air Form / Water Form — merged, PR #1195
 
