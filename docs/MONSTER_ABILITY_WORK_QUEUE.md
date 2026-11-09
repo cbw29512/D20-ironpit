@@ -2,6 +2,8 @@
 
 ## Active shared mechanic — source-owned save Grapple capacity, size and breathing (PR #1198)
 
+- **Exact-head gate:** generated browser assets and compatibility fixtures are synchronized on branch head `8e55b2355fb8c7d13a3bd0c672de88461552461b`. Revalidate CI and all required workflows on the next head; previous unsynchronized results are not accepted.
+
 - **Schema and state:** saving throw damage/legality stays separate from optional failed-save Grapple legality. Source-owned `grapple_max_target_size`, `grapple_max_active_grapples`, `grapple_large_target_slot_cost` and `grapple_prevents_breathing` live on immutable cards; live grapples and free capacity live in fight state.
 - **Python/browser implementation:** both runtimes check holding capacity, skip new grapples for oversized targets and full capacity, and preserve existing source-owned grapples. One Large consumes two slots; each Medium-or-smaller consumes one. Ordinary saving throw damage still resolves. Existing universal Grapple applies Grappled/Restrained and breathing metadata.
 - **Regression coverage:** generic synthetic save action, two Medium versus one Large, Huge still eligible for save damage, preservation of existing grapple, missing setup fail-closed, and Python/browser parity. The generated browser monster assets were synchronized by CI on `68a4708d`; the pre-sync Python job rejected the two stale files, while browser combat regressions passed. Re-run all five workflows on the synchronized final PR head before merge; do not substitute pre-sync checks.
