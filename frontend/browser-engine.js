@@ -183,6 +183,20 @@
         if (current !== "active") return finish(setup, init, events, current, round, sequence);
         const member = byId.get(id);
         B()?.cleanupDisabledSources(setup);
+        if ((member.state.grapple_sources || []).some((source) => source.prevents_breathing)) {
+          const grapple = window.IRON_PIT_BROWSER_GRAPPLE;
+          if (!grapple?.cleanup) throw new Error("Breathing lifecycle requires Grapple cleanup.");
+          grapple.cleanup(setup);
+        }
+        const breathRuntime = window.IRON_PIT_BROWSER_BREATHING;
+        if ((member.state.grapple_sources || []).some((source) => source.prevents_breathing)
+            && !breathRuntime?.startTurn) {
+          throw new Error("Active breathing deprivation requires browser-breathing.js.");
+        }
+        if (breathRuntime) {
+          const breath = breathRuntime.startTurn(sequence, round, member, setup);
+          events.push(...breath.events); sequence = breath.sequence;
+        }
         window.IRON_PIT_BROWSER_MODIFIERS?.expireSourceTurnStart(states, member.combatant_id);
         S().refreshReactionsForNewTurn?.(states, member.state);
         S().refreshStartOfTurn(member.state);
