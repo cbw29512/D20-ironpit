@@ -29,6 +29,7 @@ from app.content.monster_included_weapon_traits_2014 import weapon_damage_source
 from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_innate_conditions_2014 import innate_condition_ids_2014
 from app.content.monster_grappler_damage_2014 import source_turn_grappler_damage_2014
+from app.content.monster_source_held_turn_damage_2014 import source_held_turn_damage_2014
 from app.content.monster_contextual_save_defenses import contextual_save_defenses_2014
 from app.content.monster_definition_adapter_support_2014 import (
     ability_values_2014,
@@ -317,6 +318,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
         source_turn_relation_damages=[
             *source_turn_grappler_damage_2014(monster),
+            *source_held_turn_damage_2014(monster),
             *([source_two_hit_engulf_2014(monster)[1]] if source_two_hit_engulf_2014(monster) else []),
         ],
         multi_hit_grapple_effects=[
