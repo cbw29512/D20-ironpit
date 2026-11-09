@@ -2,17 +2,18 @@
 from __future__ import annotations
 
 from app.combat.dice import FixedDiceProvider
+from app.combat.encounter_setup import build_encounter_setup
 from app.combat.grapple import apply_grapple
 from app.combat.grapple_helper_rescue import (
     choose_grapple_helper_rescue, resolve_grapple_helper_rescue,
 )
 from app.combat.state import build_combatant_state
 from app.content.capability_compiler import compile_combatant
-from app.content.demo import build_demo_fighter
 from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_grapple_rescue_2014 import source_grapple_rescue_rules_2014
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.models import EncounterSelection
 from scripts.browser_template_serializer import template_row
 
 
@@ -27,7 +28,12 @@ def _setup():
         state=build_combatant_state(
             compile_combatant(adapt_monster_mechanics_2014(card))),
     )
-    hero = build_demo_fighter()
+    # The 2024 demo fighter intentionally lacks authoritative ability scores.
+    # Use a certified 2014 pregen for a real source-correct Strength check.
+    hero = build_encounter_setup(EncounterSelection(
+        hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-commoner"],
+    )).heroes[0].state.template
+    assert hero.ruleset == "2014" and hero.ability_scores is not None
     helper = EncounterCombatant(
         combatant_id="helper", side="heroes", position_ft=5,
         state=build_combatant_state(hero),
