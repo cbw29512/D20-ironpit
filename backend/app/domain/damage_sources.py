@@ -20,12 +20,19 @@ class DamageTakenTimedEffect(BaseModel):
     target_turns: int = Field(default=1, ge=1, le=20)
     attack_roll_disadvantage: bool = False
     ability_check_disadvantage: bool = False
+    speed_penalty_ft: int = Field(default=0, ge=0)
 
     @model_validator(mode="after")
-    def validate_roll_scope(self) -> "DamageTakenTimedEffect":
+    def validate_effect_scope(self) -> "DamageTakenTimedEffect":
         try:
-            if not (self.attack_roll_disadvantage or self.ability_check_disadvantage):
-                raise ValueError("Damage-triggered timed effect must change at least one roll scope.")
+            if not (
+                self.attack_roll_disadvantage
+                or self.ability_check_disadvantage
+                or self.speed_penalty_ft > 0
+            ):
+                raise ValueError(
+                    "Damage-triggered timed effect must change at least one roll scope or apply a speed penalty."
+                )
             return self
         except Exception:
             logger.exception("Invalid damage-triggered timed effect %s.", self.effect_id)

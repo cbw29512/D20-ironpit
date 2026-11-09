@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_source_sections_2014 import source_sections_2014
 from app.domain.damage_sources import DamageTakenTimedEffect
 from app.domain.weapons import DamageType
 
@@ -23,15 +24,34 @@ def _fire_disadvantage_source_matches(monster: SourceMonster2014, trait_name: st
     ))
 
 
+_FREEZE_TRAITS = {
+    "Freeze": "freeze",
+}
+
+
+def _freeze_source_matches(monster: SourceMonster2014, trait_name: str) -> bool:
+    # Match only this trait's printed paragraph. Unrelated source clauses
+    # cannot supply a missing Freeze trigger, duration, or speed penalty.
+    printed = source_sections_2014(monster.source_traits).get(trait_name, "")
+    text = " ".join(printed.casefold().split())
+    return all(fragment in text for fragment in (
+        trait_name.casefold(),
+        "takes cold damage",
+        "partially freezes",
+        "speed is reduced by 20 feet",
+        "until the end of its next turn",
+    ))
+
+
 def damage_taken_timed_effects_2014(monster: SourceMonster2014) -> list[DamageTakenTimedEffect]:
     """Bind exact printed typed-damage triggers to universal timed roll scopes."""
     try:
+        effects: list[DamageTakenTimedEffect] = []
         matched = [
             (trait_name, source_slug)
             for trait_name, source_slug in _FIRE_DISADVANTAGE_TRAITS.items()
             if trait_name in monster.trait_names
         ]
-        effects: list[DamageTakenTimedEffect] = []
         for trait_name, source_slug in matched:
             if not _fire_disadvantage_source_matches(monster, trait_name):
                 raise ValueError(
@@ -45,6 +65,24 @@ def damage_taken_timed_effects_2014(monster: SourceMonster2014) -> list[DamageTa
                 target_turns=1,
                 attack_roll_disadvantage=True,
                 ability_check_disadvantage=True,
+            ))
+        freeze_matched = [
+            (trait_name, source_slug)
+            for trait_name, source_slug in _FREEZE_TRAITS.items()
+            if trait_name in monster.trait_names
+        ]
+        for trait_name, source_slug in freeze_matched:
+            if not _freeze_source_matches(monster, trait_name):
+                raise ValueError(
+                    f"{monster.name} {trait_name} source text does not match supported semantics."
+                )
+            effects.append(DamageTakenTimedEffect(
+                source_id=f"{monster.id}-{source_slug}",
+                source_name=trait_name,
+                trigger_damage_type=DamageType.COLD,
+                effect_id="damage-triggered-speed-penalty",
+                target_turns=1,
+                speed_penalty_ft=20,
             ))
         return effects
     except Exception:
