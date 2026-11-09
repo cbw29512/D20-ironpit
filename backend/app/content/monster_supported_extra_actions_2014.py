@@ -18,6 +18,9 @@ from app.content.monster_healing_2014 import healing_action_names_2014
 from app.content.monster_innate_support_2014 import innate_spell_names_2014
 from app.content.monster_leadership_2014 import leadership_labels_2014
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_source_grapple_rescue_2014 import source_grapple_rescue_rules_2014
+from app.content.monster_source_held_turn_damage_2014 import source_held_turn_damage_2014
+from app.content.monster_source_shared_space_held_save_2014 import source_proven_shared_space_held_saves_2014
 from app.content.monster_source_etherealness_2014 import verified_unavailable_etherealness_2014
 from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014
 from app.content.monster_source_ranged_save_only_hit_2014 import source_ranged_save_only_hit_attacks_2014
@@ -39,6 +42,36 @@ _NEUTRAL_MIND_ACTIONS = frozenset({"weird insight"})
 def _label(name: str) -> str:
     # Match the existing classifier's normalization of printed action headings.
     return action_label_2014(name).split(" (", 1)[0]
+
+
+def _fully_bound_held_save_labels_2014(monster: SourceMonster2014) -> set[str]:
+    """Only source actions whose save, hold, rescue and breathing all compile."""
+    try:
+        helper_rules = {
+            rule.source_action_id: rule
+            for rule in source_grapple_rescue_rules_2014(monster)
+        }
+        held_labels = {rule.source_name for rule in source_held_turn_damage_2014(monster)}
+        labels = set()
+        for save in source_proven_shared_space_held_saves_2014(monster):
+            rescue = helper_rules.get(save.id)
+            grapple = save.grapple
+            if (
+                rescue is None
+                or rescue.source_name != save.name
+                or save.name not in held_labels
+                or grapple is None
+                or not grapple.prevents_breathing
+                or grapple.breathing_exempt_medium is None
+                or not save.successful_save_exits_source_space
+                or not save.resource_id
+            ):
+                continue
+            labels.add(_label(save.name))
+        return labels
+    except Exception:
+        logger.exception("Failed complete held-save action admission for %s.", monster.id)
+        raise
 
 
 def source_supported_extra_action_labels_2014(monster: SourceMonster2014) -> set[str]:
@@ -70,6 +103,7 @@ def source_supported_extra_action_labels_2014(monster: SourceMonster2014) -> set
             | ({"animate chains"} if supports_animate_chains_arena_unavailable_2014(monster) else set())
             | ({"change shape"} if approved_inert_change_shape_2014(monster) else set())
             | leadership_labels_2014(monster)
+            | _fully_bound_held_save_labels_2014(monster)
             | {
                 _label(zone.name)
                 for zone in (fetid_cloud_zone_2014(monster),)
