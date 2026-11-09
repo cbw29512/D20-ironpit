@@ -26,7 +26,14 @@ def _sync_effect_ids(state: CombatantState) -> None:
             state.active_effect_ids.remove("dodge")
     elif GRAPPLED_EFFECT_ID in state.active_effect_ids:
         state.active_effect_ids.remove(GRAPPLED_EFFECT_ID)
-    restrained = state.swallowed is not None or any(source.restrains for source in state.grapple_sources)
+    # A source Grapple ending must not clear another independent Restrained
+    # effect (timed, innate or swallowed). Keep canonical ownership in state.
+    restrained = (
+        state.swallowed is not None
+        or any(source.restrains for source in state.grapple_sources)
+        or any(effect.effect_id == RESTRAINED_EFFECT_ID for effect in state.timed_effects)
+        or RESTRAINED_EFFECT_ID in state.template.innate_condition_ids
+    )
     if restrained and RESTRAINED_EFFECT_ID not in state.active_effect_ids:
         state.active_effect_ids.append(RESTRAINED_EFFECT_ID)
     elif not restrained and RESTRAINED_EFFECT_ID in state.active_effect_ids:
