@@ -6,6 +6,7 @@ import logging
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_ally_immunity_2014 import visible_ally_immunity_grants_2014
 from app.content.monster_contextual_save_defenses import contextual_save_defenses_2014
+from app.content.monster_resilience_save_grants_2014 import source_proven_resilience_grants_2014
 from app.domain.progression import SavingThrowAdvantageGrant
 from app.domain.passive_modifiers import PassiveModifierGrant
 from app.domain.tactical_actions import BonusActionTacticalGrant
@@ -84,6 +85,7 @@ def saving_throw_advantage_grants_2014(monster: SourceMonster2014) -> list[Savin
                 _TWO_HEAD_SAVE_TAGS,
             ))
         grants.extend(contextual_save_defenses_2014(monster)[1])
+        grants.extend(source_proven_resilience_grants_2014(monster))
         return grants
     except Exception:
         logger.exception("Failed to bind 2014 save-Advantage traits for %s.", monster.name)
@@ -115,6 +117,7 @@ def bound_passive_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]
         actions, grants = contextual_save_defenses_2014(monster)
         bound.update(item.name for item in actions)
         bound.update(item.source_name for item in grants)
+        bound.update(item.source_name for item in source_proven_resilience_grants_2014(monster))
         if _MAGIC_RESISTANCE in monster.trait_names:
             bound.add(_MAGIC_RESISTANCE)
         if _DARK_DEVOTION in monster.trait_names:
