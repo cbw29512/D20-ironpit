@@ -12,6 +12,7 @@ from app.combat.state import build_combatant_state
 from app.content.capability_compiler import _compile_save
 from app.content.demo import build_demo_fighter
 from app.domain.capability_save_definitions import SaveCapabilityDefinition
+from app.domain.actions import SavingThrowAction
 from app.domain.encounters import EncounterCombatant
 from scripts.browser_template_serializer import _save
 from app.content.capability_from_template import _save as reverse_save
@@ -81,3 +82,24 @@ def test_success_exit_requires_actual_shared_source_space():
             range_ft=5, area={"shape": "radius", "origin": "self", "radius_ft": 5},
             successful_save_exits_source_space=True,
         )
+
+
+def test_direct_runtime_template_cannot_skip_source_geometry_validation():
+    # Runtime constructors are also used by characters and homebrew, not
+    # only the source-adapter compiler. They must share the same fail-closed gate.
+    invalid = {
+        "id": "generic-undertow", "name": "Undertow",
+        "save_ability": "strength", "dc": 11, "range_ft": 5,
+        "successful_save_exits_source_space": True,
+    }
+    with pytest.raises(ValidationError, match="shared-space area"):
+        SavingThrowAction(**invalid)
+    with pytest.raises(ValidationError, match="shared-space area"):
+        SavingThrowAction(**{
+            **invalid, "area": {"shape": "radius", "origin": "self", "radius_ft": 5}
+        })
+    valid = SavingThrowAction(**{
+        **invalid, "range_ft": 0,
+        "area": {"shape": "shared-space", "origin": "self"},
+    })
+    assert valid.successful_save_exits_source_space is True
