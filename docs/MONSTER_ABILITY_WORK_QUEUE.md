@@ -1,11 +1,17 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Active next family — Shambling Mound Engulf (not source-admitted)
+## Shambling Mound Engulf — merged and source-admitted, PR #1194
 
-- **Merged foundation:** PR #1189 (45dd9cb8c24d477ee39bf7dfd15f417cc01e477b) added source-declared owner-turn saving throws and flat damage to the shared contained-target tick, with Python/browser regressions. Do not reimplement or reopen this completed primitive.
-- **Parity correction:** PR #1190 is open to prevent Python invoking the zero-damage dispatcher on a successful save. Record it complete only after exact-head CI and merge.
-- **Unresolved source obligations:** Two Slam hits against the **same Medium-or-smaller target** trigger Grappled (escape DC 14) and immediate Engulf; Engulf applies Blinded, Restrained and inability to breathe; at the start of each owner turn the target makes DC 14 Constitution save or takes 2d8+4 Bludgeoning; maximum one engulfed target. Existing Swallowed state incorrectly removes the grapple and grants total external cover, so it cannot be bound unchanged. Use source-neutral linked condition/ownership composition, not a monster-named resolver.
-- **Current classifier:** generated main shows 271/327 source-admitted, 56 blocked; Shambling Mound has mechanic:swallow and source:extra-action (not a separate outstanding multiattack:complex). No webpage fight certification claimed. Re-generate blockers only after actual source-complete integration, never hand-edit generated files.
+- **Complete universal binding:** two successful Slams against the same eligible target apply the source-owned Grapple and linked Engulf; optional independent Engulf Action upgrades an existing Grapple. Blinded, Restrained, inability to breathe, one-Engulf capacity, DC 14 Constitution save, 2d8+4 Bludgeoning and release all reuse shared Python/browser mechanics. When capacity is full, eligible hits still apply an ordinary Grapple; a held victim can be upgraded once the Engulf slot is free.
+- **Merged and certified automatically:** PR #1194 squash merge `dc4a4d2face6d1be96e4725505bc30083d75b126` passed all five required exact-head workflows. PRs #1189, #1190, #1192 and #1193 are also merged foundations.
+- **Current main-generated classification:** **272/327 source-admitted, 55 blocked**. Shambling Mound is no longer blocked; real webpage fight certification remains unverified and production publishing remains locked.
+
+## Communication-only trait family — PR #1168 (rebased, awaiting exact-head CI)
+
+- **Scope:** the complete printed 2014 Telepathic Bond and Limited Telepathy clauses on Succubus/Incubus, Homunculus, Otyugh and Pseudodragon; no combat targeting or outcome is introduced.
+- **Implementation:** source-owned clause verification replaces single-token acceptance, with negative source-mutation tests. No monster-name dispatch, new attack, or combat resolver. Source classification only; original cards are unchanged.
+- **Generated branch report:** 272/327 source-admitted and 55 blocked, unchanged, with `source:trait` demand reduced from 48 to 47; generator-owned artifacts committed by the sync workflow.
+- **Acceptance gate:** all five required CI workflows must succeed on the final PR head before any merge. No real webpage fights or production publishing are claimed.
 
 ## Purple Worm — Bite hit → failed Dexterity save → shared Swallowed (PR #1187 merged)
 
