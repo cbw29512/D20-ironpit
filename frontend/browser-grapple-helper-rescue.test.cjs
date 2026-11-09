@@ -31,6 +31,10 @@ try {
     false, null, {effectId: "synthetic-undertow"});
   attach();
   assert.deepEqual(Rescue.choose(helper, setup), {owner, target: held, rule});
+  held.state.grapple_sources[0].linked_effect_id = "different-action";
+  assert.equal(Rescue.choose(helper, setup), null);
+  held.state.grapple_sources[0].linked_effect_id = "synthetic-undertow";
+  assert.deepEqual(Rescue.choose(helper, setup), {owner, target: held, rule});
   const dice = window.IRON_PIT_DICE, originalRoll = dice.roll;
   try {
     dice.roll = (sides) => sides === 20 ? 1 : 2;
