@@ -8,6 +8,7 @@ from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_breakable_restraint_2014 import source_recharge_breakable_restraint_2014
 from app.content.monster_source_recharge_line_damage_2014 import source_proven_recharge_line_damage_2014
 from app.content.monster_source_shared_space_held_save_2014 import source_proven_shared_space_held_saves_2014
+from app.content.monster_source_shared_space_impact_save_2014 import source_proven_shared_space_impact_saves_2014
 from app.content.monster_source_recharge_timed_controls_2014 import (
     source_proven_recharge_timed_controls_2014,
 )
@@ -84,6 +85,7 @@ def supports_recharge_rules_2014(monster: SourceMonster2014) -> bool:
             *source_proven_recharge_line_damage_2014(monster),
             *source_proven_recharge_timed_controls_2014(monster),
             *source_proven_shared_space_held_saves_2014(monster),
+            *source_proven_shared_space_impact_saves_2014(monster),
         ]
         supported_ids.update(item.id for item in source_actions)
         supported_resources.update(
