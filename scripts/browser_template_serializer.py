@@ -406,6 +406,8 @@ def _save(action: Any) -> dict[str, Any]:
         row["grappleLargeTargetSlotCost"] = action.grapple_large_target_slot_cost
     if action.grapple_prevents_breathing:
         row["grapplePreventsBreathing"] = True
+    if action.grapple_breathing_exempt_medium is not None:
+        row["grappleBreathingExemptMedium"] = action.grapple_breathing_exempt_medium
     return row
 
 
@@ -1214,6 +1216,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         # only source-enabled hostile-space passage needs an explicit flag.
         if template.source_allows_hostile_overlap:
             row["source_allows_hostile_overlap"] = True
+        if template.can_breathe_water:
+            row["can_breathe_water"] = True
         if template.kind == "monster":
             row["creature_type"] = template.creature_type
             row["source_trait_names"] = list(template.source_trait_names)

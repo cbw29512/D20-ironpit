@@ -171,6 +171,7 @@ class SavingThrowAction(BaseModel):
     grapple_max_active_grapples: int | None = Field(default=None, ge=1, le=20)
     grapple_large_target_slot_cost: int = Field(default=1, ge=1, le=20)
     grapple_prevents_breathing: bool = False
+    grapple_breathing_exempt_medium: Literal["water"] | None = None
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     requires_no_active_grapple: bool = False

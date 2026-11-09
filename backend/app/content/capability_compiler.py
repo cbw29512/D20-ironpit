@@ -60,6 +60,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         grapple_max_active_grapples=grapple.max_active_grapples if grapple else None,
         grapple_large_target_slot_cost=grapple.large_target_slot_cost if grapple else 1,
         grapple_prevents_breathing=grapple.prevents_breathing if grapple else False,
+        grapple_breathing_exempt_medium=grapple.breathing_exempt_medium if grapple else None,
         resource_id=definition.resource_id, resource_cost=definition.resource_cost,
         requires_no_active_grapple=definition.requires_no_active_grapple,
         opening_initiative_only=definition.opening_initiative_only,
