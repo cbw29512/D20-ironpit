@@ -14,6 +14,8 @@ from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.size import CreatureSize
 from app.domain.weapons import DamageType
 
+from scripts.browser_template_serializer import _save
+
 
 def _member(name: str, side: str, size: CreatureSize) -> EncounterCombatant:
     template = build_demo_fighter().model_copy(update={"size": size, "name": name})
@@ -97,3 +99,19 @@ def test_source_capacity_requires_setup_and_complete_schema():
         _fail(owner, victim, _action(), None)
     with pytest.raises(ValidationError, match="total capacity"):
         GrappleEffectDefinition(escape_dc=14, large_target_slot_cost=2)
+
+
+def test_legacy_save_size_and_browser_json_remain_unchanged():
+    # Existing Constrict/held-target saves limit ALL save targets by size.
+    # New Whelm-like cards must opt into grapple-only size gating.
+    legacy = _compile_save(SaveCapabilityDefinition(
+        id="old-constrict", name="Constrict", save_ability="strength",
+        dc=12, range_ft=5, grapple=GrappleEffectDefinition(
+            escape_dc=12, max_target_size=CreatureSize.MEDIUM,
+        ),
+    ))
+    assert legacy.target_max_size == CreatureSize.MEDIUM
+    assert legacy.grapple_max_target_size is None
+    browser = _save(legacy)
+    assert browser["targetMaxSize"] == "medium"
+    assert "grappleMaxTargetSize" not in browser

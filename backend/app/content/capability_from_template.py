@@ -168,6 +168,8 @@ def _save(action) -> dict[str, object]:
             "max_target_size": action.grapple_max_target_size or action.target_max_size,
             "restrains": action.restrains_while_grappled,
         }
+        if action.grapple_max_target_size is not None:
+            grapple["size_only_applies_to_grapple"] = True
         if action.grapple_max_active_grapples is not None:
             grapple["max_active_grapples"] = action.grapple_max_active_grapples
         if action.grapple_large_target_slot_cost != 1:
