@@ -319,6 +319,8 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         innate_condition_ids=list(core.innate_condition_ids),
         source_allows_hostile_overlap=source_allows_hostile_overlap_2014(monster),
         can_breathe_water=source_can_breathe_water_2014(monster),
+        needs_air=source_needs_air_2014(monster),
+        breath_hold_rounds=source_breath_hold_rounds_2014(monster),
         source_trait_names=list(monster.trait_names), source_reaction_names=list(monster.reaction_names),
         grapple_rescue_rules=source_grapple_rescue_rules_2014(monster),
         source_turn_relation_damages=[
