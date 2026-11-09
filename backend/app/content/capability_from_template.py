@@ -163,10 +163,20 @@ def _save(action) -> dict[str, object]:
         result["damage"] = _dice(action.damage_dice_count, action.damage_dice_size, action.damage_bonus)
         result["damage_type"] = action.damage_type
     if action.grapple_escape_dc is not None:
-        result["grapple"] = {
+        grapple = {
             "kind": "grapple", "escape_dc": action.grapple_escape_dc,
-            "max_target_size": action.target_max_size, "restrains": action.restrains_while_grappled,
+            "max_target_size": action.grapple_max_target_size or action.target_max_size,
+            "restrains": action.restrains_while_grappled,
         }
+        if action.grapple_max_target_size is not None:
+            grapple["size_only_applies_to_grapple"] = True
+        if action.grapple_max_active_grapples is not None:
+            grapple["max_active_grapples"] = action.grapple_max_active_grapples
+        if action.grapple_large_target_slot_cost != 1:
+            grapple["large_target_slot_cost"] = action.grapple_large_target_slot_cost
+        if action.grapple_prevents_breathing:
+            grapple["prevents_breathing"] = True
+        result["grapple"] = grapple
     if action.failed_save_timed_effect is not None:
         result["failed_save_timed_effect"] = action.failed_save_timed_effect.model_dump(mode="json")
     if action.source_effect_immunity_on_success:

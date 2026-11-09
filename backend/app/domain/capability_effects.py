@@ -96,7 +96,24 @@ class GrappleEffectDefinition(BaseModel):
     restrains: bool = False
     requires_source_free: bool = False
     max_active_grapples: int | None = Field(default=None, ge=1, le=20)
+    # Legacy max_target_size limits the entire save. Only a source with a
+    # separately printed damage-versus-grapple size rule sets this true.
+    size_only_applies_to_grapple: bool = Field(
+        default=False, exclude_if=lambda value: not value,
+    )
+    # A source-defined slot cost makes a Large creature occupy two of two
+    # capacity slots without inventing creature/ability-name runtime logic.
+    large_target_slot_cost: int = Field(
+        default=1, ge=1, le=20, exclude_if=lambda value: value == 1,
+    )
+    prevents_breathing: bool = Field(default=False, exclude_if=lambda value: not value)
     periodic_damage: GrapplePeriodicDamage | None = None
+
+    @model_validator(mode="after")
+    def validate_capacity(self) -> "GrappleEffectDefinition":
+        if self.large_target_slot_cost > 1 and self.max_active_grapples is None:
+            raise ValueError("Weighted grapple slots require a total capacity.")
+        return self
 
 
 class ConditionEffectDefinition(BaseModel):

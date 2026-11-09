@@ -23,7 +23,12 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         range_ft=definition.range_ft,
         max_targets=definition.max_targets,
         target_scope=definition.target_scope,
-        target_max_size=definition.target_max_size or (grapple.max_target_size if grapple else None),
+        # Preserve legacy save-wide size gating unless immutable source data
+        # explicitly separates failed-save Grapple from the damage save.
+        target_max_size=definition.target_max_size or (
+            grapple.max_target_size
+            if grapple and not grapple.size_only_applies_to_grapple else None
+        ),
         area=definition.area,
         damage_dice_count=damage.count if damage else 0,
         damage_dice_size=damage.size if damage else 6,
@@ -48,6 +53,13 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         prohibited_environment_context_id=definition.prohibited_environment_context_id,
         grapple_escape_dc=grapple.escape_dc if grapple else None,
         restrains_while_grappled=grapple.restrains if grapple else False,
+        grapple_max_target_size=(
+            grapple.max_target_size
+            if grapple and grapple.size_only_applies_to_grapple else None
+        ),
+        grapple_max_active_grapples=grapple.max_active_grapples if grapple else None,
+        grapple_large_target_slot_cost=grapple.large_target_slot_cost if grapple else 1,
+        grapple_prevents_breathing=grapple.prevents_breathing if grapple else False,
         resource_id=definition.resource_id, resource_cost=definition.resource_cost,
         requires_no_active_grapple=definition.requires_no_active_grapple,
         opening_initiative_only=definition.opening_initiative_only,

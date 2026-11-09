@@ -396,6 +396,14 @@ def _save(action: Any) -> dict[str, Any]:
         row["grappleEscapeDc"] = action.grapple_escape_dc
     if action.restrains_while_grappled:
         row["restrainsWhileGrappled"] = True
+    if action.grapple_max_target_size is not None:
+        row["grappleMaxTargetSize"] = _value(action.grapple_max_target_size)
+    if action.grapple_max_active_grapples is not None:
+        row["grappleMaxActiveGrapples"] = action.grapple_max_active_grapples
+    if action.grapple_large_target_slot_cost != 1:
+        row["grappleLargeTargetSlotCost"] = action.grapple_large_target_slot_cost
+    if action.grapple_prevents_breathing:
+        row["grapplePreventsBreathing"] = True
     return row
 
 

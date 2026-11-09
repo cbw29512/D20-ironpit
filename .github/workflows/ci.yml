@@ -109,6 +109,7 @@ jobs:
           PYTHONPATH=.:backend pytest -q backend/tests/test_2014_water_elemental_freeze.py
           PYTHONPATH=.:backend pytest -q backend/tests/test_2014_hostile_space_source.py
           PYTHONPATH=.:backend pytest -q backend/tests/test_universal_shared_space_area.py
+          PYTHONPATH=.:backend pytest -q backend/tests/test_universal_save_grapple_capacity.py
           PYTHONPATH=.:backend pytest -q backend/tests/test_2014_shared_space_recharge_source.py
           PYTHONPATH=.:backend pytest -q backend/tests/test_2014_imp_invisibility.py
       - name: Reconcile canonical 2014 source-derived artifacts
@@ -579,6 +580,7 @@ jobs:
           node frontend/browser-2014-water-elemental-freeze.test.cjs
           node frontend/browser-hostile-space-form.test.cjs
           node frontend/browser-shared-space-area.test.cjs
+          node frontend/browser-save-grapple-capacity.test.cjs
           node frontend/browser-swallow-advanced.test.cjs
           node frontend/browser-bite-hit-swallow-save.test.cjs
           node frontend/browser-corrosion-roll-integration.test.cjs

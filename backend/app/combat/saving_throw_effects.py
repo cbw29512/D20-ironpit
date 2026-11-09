@@ -6,6 +6,7 @@ import logging
 from app.combat.failed_save_timed_apply import apply_failed_save_timed_effect
 from app.combat.forced_movement import push_straight_away
 from app.combat.grapple import apply_grapple
+from app.combat.save_grapple_capacity import can_apply_save_grapple
 from app.combat.source_effect_immunity import (
     grant_shared_source_effect_immunities,
     grant_source_effect_immunity,
@@ -73,6 +74,7 @@ def apply_save_effects(
             and target.state.is_alive
             and not target.state.is_dead
             and action.grapple_escape_dc is not None
+            and can_apply_save_grapple(actor, target, action, setup)
         ):
             applied_conditions = apply_grapple(
                 target.state,
@@ -81,6 +83,7 @@ def apply_save_effects(
                 action.range_ft,
                 restrains=action.restrains_while_grappled,
                 source_is_magical=action.magical_effect,
+                prevents_breathing=action.grapple_prevents_breathing,
             )
         pushed_ft = 0
         if (
