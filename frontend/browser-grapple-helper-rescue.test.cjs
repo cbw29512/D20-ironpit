@@ -58,6 +58,17 @@ try {
     assert.equal(Rescue.choose(helper, setup), null);
     assert.throws(() => Rescue.resolve(3, 3, helper, held, owner, rule, setup),
       /illegal/i);
+    // The ordinary browser support stage must actually invoke this action,
+    // not merely expose an unused resolver to standalone tests.
+    helper.position_ft = 5;
+    dice.roll = (sides) => sides === 20 ? 20 : 2;
+    const support = window.IRON_PIT_BROWSER_SUPPORT.resolve(
+      3, 3, helper, setup, "3:helper",
+    );
+    const rescueEvents = support.events.filter((event) => event.feature_id === "synthetic-undertow");
+    assert.equal(rescueEvents.length, 1);
+    assert.equal(rescueEvents[0].check_succeeded, true);
+    assert.deepEqual(held.state.grapple_sources, []);
   } finally {
     dice.roll = originalRoll;
   }
