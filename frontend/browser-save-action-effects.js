@@ -100,7 +100,7 @@
           null,
           { preventsBreathing: Boolean(action.grapplePreventsBreathing)
               && !(action.grappleBreathingExemptMedium === "water"
-                && Boolean(target.state.template.can_breathe_water)) },
+                && Boolean(target.state.template.can_breathe_water)), effectId: action.id },
         );
       }
       let pushedFt = 0;
