@@ -100,8 +100,10 @@ def resolve_grapple_helper_rescue(
             encounter_roller=helper, setup=setup,
         )
         spend(helper.state, rule.action_cost)
+        before_conditions = set(target.state.active_effect_ids)
         if succeeded:
             release_grapple(target.state, owner.combatant_id)
+        removed = sorted(before_conditions - set(target.state.active_effect_ids))
         return BattleEvent(
             sequence=sequence, round_number=round_number, event_type="feature",
             actor_id=helper.combatant_id, actor_name=helper.state.template.name,
@@ -109,7 +111,7 @@ def resolve_grapple_helper_rescue(
             feature_id=rule.source_action_id, animation="escape-check",
             ability_check_roll=check, check_ability=ability, check_dc=rule.check_dc,
             check_succeeded=succeeded,
-            removed_condition_ids=["grappled", "restrained"] if succeeded else [],
+            removed_condition_ids=removed,
             description=(
                 f"{helper.state.template.name} uses an Action to pull "
                 f"{target.state.template.name} out of {owner.state.template.name}'s "
