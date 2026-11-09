@@ -137,3 +137,15 @@ def test_rescue_failure_uses_action_but_keeps_grapple_and_range_is_source_owned(
     helper.state.action_available = True
     helper.position_ft = 15
     assert choose_grapple_helper_rescue(helper, setup) is None
+
+def test_ordinary_python_support_stage_selects_and_resolves_printed_rescue():
+    from app.combat.encounter_turn_support import resolve_support_actions
+    helper, held, owner, setup = _setup()
+    events, seq = resolve_support_actions(
+        1, 1, helper, setup, FixedDiceProvider([20]), "1:helper",
+    )
+    rescue = [event for event in events if event.feature_id == "whelm"]
+    assert seq >= 2 and len(rescue) == 1
+    assert rescue[0].check_succeeded is True
+    assert helper.state.action_available is False
+    assert held.state.grapple_sources == []
