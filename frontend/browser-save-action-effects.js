@@ -98,7 +98,7 @@
           Boolean(action.restrainsWhileGrappled),
           Boolean(action.magicalEffect),
           null,
-          { preventsBreathing: Boolean(action.grapplePreventsBreathing) },
+          { preventsBreathing: Boolean(action.grapplePreventsBreathing), effectId: action.id },
         );
       }
       let pushedFt = 0;
