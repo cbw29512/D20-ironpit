@@ -242,6 +242,12 @@ class SavingThrowAction(BaseModel):
         ]
         if any(not item.strip() for item in immunity_keys):
             raise ValueError("Save immunity keys must be nonblank.")
+        # Direct runtime templates, not just editor definitions, must fail closed.
+        if self.successful_save_exits_source_space and (
+            self.area is None or self.area.shape != "shared-space"
+            or self.area.origin != "self"
+        ):
+            raise ValueError("Successful shared-space exit needs a self shared-space area.")
         return self
 
 
