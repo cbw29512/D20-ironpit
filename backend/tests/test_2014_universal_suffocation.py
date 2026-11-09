@@ -69,6 +69,9 @@ def test_327_card_hold_breath_source_is_validated_and_exported():
     # A standard 2014 Crocodile explicitly holds its breath for 15 minutes.
     crocodile = cards["crocodile"]
     assert source_breath_hold_rounds_2014(crocodile) == 150
+    # 2014 Giant Octopus prints an additional out-of-water qualifier.
+    # The exact full paragraph is accepted without inventing a new resolver.
+    assert source_breath_hold_rounds_2014(cards["giant-octopus"]) == 600
     template = compile_combatant(adapt_monster_mechanics_2014(crocodile))
     assert template.breath_hold_rounds == 150
     assert template_row(template)["breath_hold_rounds"] == 150
