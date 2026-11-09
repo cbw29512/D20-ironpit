@@ -27,7 +27,8 @@ try {
   const Rescue = window.IRON_PIT_BROWSER_GRAPPLE_HELPER_RESCUE;
   assert.ok(Rescue);
 
-  const attach = () => G.apply(held.state, owner.combatant_id, 14, 0, true);
+  const attach = () => G.apply(held.state, owner.combatant_id, 14, 0, true,
+    false, null, {effectId: "synthetic-undertow"});
   attach();
   assert.deepEqual(Rescue.choose(helper, setup), {owner, target: held, rule});
   const dice = window.IRON_PIT_DICE, originalRoll = dice.roll;
