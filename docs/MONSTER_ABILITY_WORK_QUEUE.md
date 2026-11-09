@@ -1,12 +1,22 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Active 2014 source-linked helper Grapple rescue — PR #1204
+## Active 2014 Grapple breathing consequence — suffocation lifecycle (not implemented)
 
-- **Printed source:** Whelm's 2014 source gives any creature within 5 feet of the elemental an Action to pull out a held creature or object on a DC 14 Strength check. Source-wide proof scans all 327 source cards, matches the complete Whelm paragraph and fails closed on unknown rider text.
-- **Universal card/state:** the source owner's immutable `GrappleRescueRule` carries the printed Action name/id, Strength DC and range. The existing failed-save Grapple now retains its **source action ID** in fight state, so rescue cannot accidentally release a different grapple effect from the same creature.
-- **Universal combat behavior:** Python and browser support phases pick a held ally, check proximity to the grappler, spend the helper's Action, roll a real ability check, and invoke the existing source-aware Grapple release on success. Failure retains the hold. An object target has no targetable Pit object surface.
-- **Verification:** cross-roster full source scan, source mutations/renaming, export, direct and on-turn Python/browser successes, failures, range and wrong-source-effect rejection; five exact-head workflows and review before merge.
-- **Still blocked:** Water Elemental's water-breathing exception is not yet bound, so Whelm is not source-admitted or webpage fight-certified. No fabricated suffocation timer or automatic clearance.
+- **Exact remaining gap:** A source-owned Grapple can already declare `prevents_breathing`; PR #1205 also differentiates targets proven to breathe water. Python/browser still lack the 2014 held-breath/suffocation timing and its continuous zero-HP/recovery semantics. Do not interpret the breathing flag as complete suffocation behavior.
+- **Next cross-roster family:** verify the 2014 breathing/suffocation rule and every applicable source, then implement the smallest generic fight-state countdown/lifecycle with Python/browser parity, source-dependent release/reset, no monster-name dispatch and permanent tests. Preserve 2014 and 2024 rule separation; do not invent a timer or source values.
+- **Authoritative current result:** generated `docs/MONSTER_BLOCKERS_2014.md` on main after #1205 still reports **272/327 source-admitted, 55 blocked**. Water Elemental remains `source:extra-action`; no real webpage fight certification or production publish is implied.
+
+## Water-breathing medium exception — completed and merged PR #1205
+
+- **Cleared issue:** 327-card source proof identifies 40 monsters with exact printed Amphibious, Water Breathing or Limited Amphibiousness text. The immutable `can_breathe_water` flag and `breathing_exempt_medium="water"` Grapple parameter survive compilation/browser export; only targets unable to breathe water receive the owner-linked breathing restriction.
+- **Review repairs:** source proofs include unheaded continuation riders; reverse template compilation retains the medium exception. Source mutation, real Whelm versus Frog/Goblin, browser and round-trip tests cover both corrections.
+- **Verified:** all five required exact-head workflows passed; PR #1205 squash-merged into main as `ae0a00877c1ddd574d6db72196d5554271c02c0c`. **Remove the water-breathing exception from pending work**, but retain the separate suffocation lifecycle and Water Elemental monster blocker.
+
+## Source-linked helper Grapple rescue — completed and merged PR #1204
+
+- **Cleared issue:** 2014 Whelm grants a creature within 5 feet an Action to pull an ally from its Grapple after a DC 14 Strength check. Immutable `GrappleRescueRule` supplies source action ID, Strength DC and range; failed-save Grapple fight state remembers its source effect ID.
+- **Shared Python/browser resolver:** a helper spends its Action, checks legal proximity/target and uses the existing source-aware release on success. Failure spends the Action without releasing the target. Inanimate Pit objects have no targetable combat surface.
+- **Verified:** 327-card source proof, rename/mutation and source-specific rescue tests, all five exact-head workflows passed; PR #1204 squash-merged as `e9ce7623036820dddfa66705889458d7f36f27ba`. **Remove helper rescue from pending work**; do not mark the whole Whelm Action or Water Elemental complete.
 
 ## Universal Grapple-owned condition removal — merged PR #1203
 
@@ -17,7 +27,7 @@
 ## Shared-square Whelm/Whirlwind save and Recharge — merged PR #1202
 
 - **Merged:** `cc4ea87da21befc7aa2cbcb81064f83a112e3c09` after all five exact-head checks. Whelm's successful-save exit log is now bound on its printed card, and Air Elemental's Whirlwind uses the generic self shared-space Strength save, 3d8+2 Bludgeoning, half on success, Prone on failure, Recharge 4–6.
-- **Pending:** Water Elemental helper rescue (#1204) plus water-breathing exception. Air Elemental random fling/wall impact/secondary-creature collision remains an unbound source Action rider. No fake 5-foot emanation or straight-line push.
+- **Subsequently cleared:** Water Elemental helper rescue (#1204) and water-breathing exception (#1205) are merged. Its separate suffocation lifecycle is still unbound. Air Elemental random fling/wall impact/secondary-creature collision remains an unbound source Action rider; no fake 5-foot emanation or straight-line push.
 - **Verified main baseline before #1204:** 272/327 source-admitted, 55 blocked, and only 2 Recharge-blocked creatures (Ghost and Ice Devil). Automated suite and real webpage fight certification remain separate from source admission.
 
 ## Whelm held-target turn damage — merged, PR #1199
@@ -25,7 +35,7 @@
 - **Schema and engine:** source-approved `SourceTurnRelationDamage` declares 2d8+4 Bludgeoning at the source's turn start against current victims with `creatures_grappled_by_source`. Existing Python/browser universal relation damage owns dice, typed resistances, release and logging; card/source labels supply the name.
 - **Source audit:** the full printed Whelm source grammar, including save, size/capacity, breathing and third-party rescue, is checked before extracting this specific turn damage. Unrecognized riders fail closed and renamed Whelm compiles without changing runtime dispatch. Compiled browser data contains the rule.
 - **Merged evidence:** all 327 source cards inspected, exact Water Elemental-only result, source mutations, rename, browser export, held-versus-released damage; all five required exact-head workflows and Bugbot passed. PR #1199 squash merged as `4bcf122d9bc2551a3af73240ae10b9496750f296`. Water Elemental is still blocked.
-- **Remaining:** Whelm's source-approved helper DC14 Strength rescue and water-breathing distinction are not fully implemented. Source save/Recharge/Grapple/Restrained and successful-save exit event are merged in #1201/#1200. It remains blocked pending those riders and actual webpage fights.
+- **Historical handoff, now reconciled:** the source-approved helper DC14 Strength rescue merged in #1204 and water-breathing exception in #1205. Source save/Recharge/Grapple/Restrained and successful-save exit event were already merged in #1201/#1200. Water Elemental remains blocked by unimplemented suffocation lifecycle and separate real webpage fight certification.
 
 ## Universal save Grapple capacity — merged, PR #1198
 
@@ -34,7 +44,7 @@
 - **Schema and state:** saving throw damage/legality stays separate from optional failed-save Grapple legality. Source-owned `grapple_max_target_size`, `grapple_max_active_grapples`, `grapple_large_target_slot_cost` and `grapple_prevents_breathing` live on immutable cards; live grapples and free capacity live in fight state.
 - **Python/browser implementation:** both runtimes check holding capacity, skip new grapples for oversized targets and full capacity, and preserve existing source-owned grapples. One Large consumes two slots; each Medium-or-smaller consumes one. Ordinary saving throw damage still resolves. Existing universal Grapple applies Grappled/Restrained and breathing metadata.
 - **Regression coverage:** generic synthetic save action, two Medium versus one Large, Huge still eligible for save damage, preservation of existing grapple, missing setup fail-closed, and Python/browser parity. The generated browser monster assets were synchronized by CI on `68a4708d`; the pre-sync Python job rejected the two stale files, while browser combat regressions passed. Re-run all five workflows on the synchronized final PR head before merge; do not substitute pre-sync checks.
-- **Remaining Water Elemental work:** complete exact-source Whelm bind, Recharge 4–6, start-of-turn 2d8+4 for held creatures, helper DC14 Strength rescue action, and appropriate water-breathing distinction. No source admission or webpage battle certification is claimed.
+- **Historical Water Elemental handoff:** exact-source Whelm save/Recharge, held-creature start-turn damage, helper DC14 Strength rescue and water-breathing distinction have since been merged by #1201/#1202/#1199/#1204/#1205. The shared suffocation lifecycle remains unimplemented. No source admission or webpage battle certification is claimed.
 
 ## Universal shared-space save targeting — merged, PR #1196
 
