@@ -1,10 +1,17 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
-## Active family — universal hostile-space stopping (Air Form / Water Form, PR #1195)
+## Active family — universal shared-space save targeting (PR #1196)
+
+- **Schema:** `AreaTargeting(shape="shared-space", origin="self")` matches exactly intersecting occupied combat squares; no radius, target distance or creature-name runtime lookup. Source/card parameters own effects.
+- **Engine:** same Python/browser area placement and save pipeline handles held-space Actions, with explicit friendly target exposure. Adjacent non-overlapping creatures are not targeted. Strict Pydantic validation rejects fake area dimensions and a remote origin.
+- **Scope:** strict source-only 327-card audit identifies exactly two Recharge Action headers with co-occupant saves: Water Elemental Whelm (DC 15 Strength, Recharge 4–6) and Air Elemental Whirlwind (DC 13 Strength, Recharge 4–6). Their full trailing damage/control outcomes remain unbound and are preserved explicitly in typed audit data. Cross-roster mutation and ability-renaming regressions prevent bogus classification. Additional swarm-attacks target creatures in the swarm space but are ordinary attack Actions, not these Recharge saves. This PR supplies targeting and source auditing only; complete save outcomes, grapple capacity, periodic damage, helper rescue and recharge still need separate universal bindings.
+- **Certification:** focused Python/Node regressions and exact-head full CI. Generator-owned blocker reports must stay generated; no monster admission or webpage fight is claimed.
+
+## Air Form / Water Form — merged, PR #1195
 
 - **Source proof:** the 2014 roster is scanned; only a complete printed Air Form / Water Form paragraph can grant the existing source-owned `source_allows_hostile_overlap` flag. Mutated or extended text fails closed. The printed label is never a combat-dispatch key.
 - **Shared engine:** Python/browser route search, affordable stopping prefix, browser combatant export, tactical movement and turn movement honor stopping inside an enemy's space, never an ally's. Normal movement costs apply.
-- **Evidence:** source/rename regressions, unrelated synthetic form tests, hostile-versus-ally stopping parity tests, and focused Python/browser CI added. Exact-head full workflows and artifact synchronization remain merge requirements.
+- **Merged evidence:** source/rename regressions, unrelated synthetic form tests, hostile-versus-ally stopping parity tests, all five required exact-head CI workflows and Bugbot review passed. Squash merge `8e3dd2d2d8564dff0c631dff8765fd03690bae04` (#1195).
 - **Outstanding:** Water Elemental Whelm and Air Elemental Whirlwind Recharge still need complete mechanics. This tranche does not by itself admit or webpage-certify either creature. Production remains locked.
 - **Verified generated branch report:** source:trait blockers are reduced from 47 to 45 while 272/327 remain source-admitted and 55 remain independently blocked. Both formerly unbound Form traits are absent from the branch report; generated assets are owned by CI, not edited by hand. The branch emitted its source-enabled browser flag only when True to preserve unrelated deterministic fixtures.
 
