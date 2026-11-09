@@ -33,6 +33,7 @@ class TimedControlLimits(BaseModel):
     """Parameterized rider limits that are not a named ConditionName."""
 
     speed_multiplier: float = Field(default=1.0, gt=0.0, le=1.0)
+    speed_penalty_ft: int = Field(default=0, ge=0)
     action_bonus_exclusive: bool = False
     max_attacks_per_turn: int | None = Field(default=None, ge=1, le=20)
     d20_disadvantage_abilities: list[AbilityName] = Field(default_factory=list)
@@ -62,6 +63,7 @@ class TimedControlLimits(BaseModel):
 def compiled_control_limits(
     *,
     speed_multiplier: float = 1.0,
+    speed_penalty_ft: int = 0,
     action_bonus_exclusive: bool = False,
     max_attacks_per_turn: int | None = None,
     d20_disadvantage_abilities: list[str] | None = None,
@@ -82,6 +84,7 @@ def compiled_control_limits(
         ]
         if (
             speed_multiplier == 1.0
+            and speed_penalty_ft == 0
             and not action_bonus_exclusive
             and max_attacks_per_turn is None
             and not abilities
@@ -93,6 +96,7 @@ def compiled_control_limits(
             return None
         return TimedControlLimits(
             speed_multiplier=speed_multiplier,
+            speed_penalty_ft=speed_penalty_ft,
             action_bonus_exclusive=action_bonus_exclusive,
             max_attacks_per_turn=max_attacks_per_turn,
             d20_disadvantage_abilities=abilities,  # type: ignore[arg-type]

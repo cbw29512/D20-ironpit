@@ -19,6 +19,7 @@
             controlLimits: {
               attack_roll_disadvantage: Boolean(rule.attackRollDisadvantage),
               ability_check_disadvantage: Boolean(rule.abilityCheckDisadvantage),
+              speed_penalty_ft: Number(rule.speedPenaltyFt || 0),
             },
           },
         );

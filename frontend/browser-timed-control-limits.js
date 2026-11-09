@@ -17,6 +17,18 @@
     }
   }
 
+  function speedPenaltyFt(state) {
+    try {
+      return (state.timed_effects || []).reduce((value, effect) => {
+        const limits = limitsOf(effect);
+        return value + (limits && limits.speed_penalty_ft != null ? limits.speed_penalty_ft : 0);
+      }, 0);
+    } catch (error) {
+      console.error("Timed speed penalty lookup failed.", error);
+      throw error;
+    }
+  }
+
   function actionBonusExclusive(state) {
     return (state.timed_effects || []).some((effect) => Boolean(limitsOf(effect)?.action_bonus_exclusive));
   }
@@ -111,6 +123,6 @@
   window.IRON_PIT_BROWSER_TIMED_CONTROL = {
     abilityCheckDisadvantage, abilityD20Disadvantage, actionBonusExclusive, armorClassBonus,
     attackRollDisadvantage, maxAttacksPerTurn,
-    registerTurnAttack, savingThrowFlat, speedMultiplier, turnAttackAllowed,
+    registerTurnAttack, savingThrowFlat, speedMultiplier, speedPenaltyFt, turnAttackAllowed,
   };
 })();

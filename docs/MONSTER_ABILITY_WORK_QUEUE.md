@@ -1,17 +1,25 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## Active family — damage-triggered speed penalty, Water Elemental Freeze (PR #1188)
+
+- **Universal schema:** `DamageTakenTimedEffect` declares typed triggering damage, effect ID, source label, exact absolute `speed_penalty_ft` and target-turn duration. Shared Python/browser turn state and speed resolution apply it without monster/ability-name dispatch; synthetic unrelated card tests demonstrate 7-ft parameter reuse.
+- **2014 source proof:** Water Elemental's printed Freeze triggers only on Cold damage; its speed drops 20 ft until the end of its next actual turn. Source paragraph isolation, source-mutation rejection, Python/browser expiry and nonstacking regressions are included.
+- **Critical browser parity fix:** the prior draft omitted `speedPenaltyFt` in the generated browser combatant template. PR #1188 now serializes the value and tests the actual Python-to-browser export; browser speed penalty is no longer a fake fixture-only pass.
+- **Remaining independent blockers:** Water Elemental still requires Water Form and Whelm (Recharge 4–6) to be implemented/source-certified. Freeze alone does not admit the monster or certify a webpage fight.
+- **Gate:** branch regenerated artifacts and exact-head CI required before merge. Do not hand-edit generated blocker or inventory reports; production publishing remains locked.
+
 ## Shambling Mound Engulf — merged and source-admitted, PR #1194
 
 - **Complete universal binding:** two successful Slams against the same eligible target apply the source-owned Grapple and linked Engulf; optional independent Engulf Action upgrades an existing Grapple. Blinded, Restrained, inability to breathe, one-Engulf capacity, DC 14 Constitution save, 2d8+4 Bludgeoning and release all reuse shared Python/browser mechanics. When capacity is full, eligible hits still apply an ordinary Grapple; a held victim can be upgraded once the Engulf slot is free.
 - **Merged and certified automatically:** PR #1194 squash merge `dc4a4d2face6d1be96e4725505bc30083d75b126` passed all five required exact-head workflows. PRs #1189, #1190, #1192 and #1193 are also merged foundations.
 - **Current main-generated classification:** **272/327 source-admitted, 55 blocked**. Shambling Mound is no longer blocked; real webpage fight certification remains unverified and production publishing remains locked.
 
-## Communication-only trait family — PR #1168 (generated on merged main; final CI pending)
+## Communication-only trait family — merged, PR #1168
 
 - **Scope:** the complete printed 2014 Telepathic Bond and Limited Telepathy clauses on Succubus/Incubus, Homunculus, Otyugh and Pseudodragon; no combat targeting or outcome is introduced.
 - **Implementation:** source-owned clause verification replaces single-token acceptance, with negative source-mutation tests. No monster-name dispatch, new attack, or combat resolver. Source classification only; original cards are unchanged.
 - **Generated branch report:** 272/327 source-admitted and 55 blocked, unchanged, with `source:trait` demand reduced from 48 to 47; generator-owned artifacts committed by the sync workflow.
-- **Acceptance gate:** all five required CI workflows must succeed on the final PR head before any merge. No real webpage fights or production publishing are claimed.
+- **Merged:** PR #1168 squash merge `f53fd432ac2da5058d684b3d52fc3d6f0eed41a4` passed all five required exact-head workflows. This completes source classification only, not a monster fight or production release.
 
 ## Purple Worm — Bite hit → failed Dexterity save → shared Swallowed (PR #1187 merged)
 

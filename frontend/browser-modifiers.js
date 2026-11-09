@@ -126,7 +126,7 @@
           ? 0
           : (item.flat_bonus || 0)
       ), 0);
-    const base = Math.max(0, state.template.speed_ft + speedDelta);
+    const base = Math.max(0, state.template.speed_ft + speedDelta - (window.IRON_PIT_BROWSER_TIMED_CONTROL?.speedPenaltyFt(state) || 0));
     const multiplier = (state.active_modifiers || []).filter((item) => item.kind === "speed-multiplier")
       .reduce((value, item) => value * (item.multiplier ?? 1), 1);
     const timedMultiplier = window.IRON_PIT_BROWSER_TIMED_CONTROL?.speedMultiplier(state) ?? 1;

@@ -1543,6 +1543,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                     "targetTurns": item.target_turns,
                     "attackRollDisadvantage": item.attack_roll_disadvantage,
                     "abilityCheckDisadvantage": item.ability_check_disadvantage,
+                    "speedPenaltyFt": item.speed_penalty_ft,
                 }
                 for item in template.damage_taken_timed_effects
             ]
