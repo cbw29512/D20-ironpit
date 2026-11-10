@@ -113,7 +113,7 @@ def test_tendril_reaches_actual_shared_combatant_compiler():
         assert attack.reach_ft == 50 and attack.attack_bonus == 7
         template = compile_combatant(definition)
         compiled = [template.weapon_attack, *template.alternate_weapon_attacks]
-        assert any(row.name == "Tendril" for row in compiled)
+        assert any(row.id == "2014-roper-tendril" for row in compiled)
         assert "source:extra-action" in basic_blockers_2014(card)
     except Exception:
         logger.exception("Tendril did not reach universal combatant template")
