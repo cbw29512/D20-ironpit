@@ -177,6 +177,7 @@ def _check_mode(state: CombatantState, strength_check: bool, setup=None) -> Roll
         state,
         advantage_sources=advantage,
         disadvantage_sources=disadvantage,
+        ability="strength" if strength_check else "dexterity",
     )
 
 

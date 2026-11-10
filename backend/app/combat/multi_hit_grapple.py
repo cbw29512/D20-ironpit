@@ -11,6 +11,7 @@ from app.combat.grapple import apply_grapple
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import BattleEvent
 from app.domain.size import size_at_most
+from app.combat.timed_self_buff_facts import effective_creature_size
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +43,7 @@ def apply_multi_hit_grapples(
                 state = target.state
                 if state.is_dead or not state.is_alive or state.current_hp <= 0:
                     continue
-                if not size_at_most(state.template.size, rule.max_target_size):
+                if not size_at_most(effective_creature_size(state), rule.max_target_size):
                     continue
                 if abs(attacker.position_ft - target.position_ft) > rule.range_ft:
                     continue

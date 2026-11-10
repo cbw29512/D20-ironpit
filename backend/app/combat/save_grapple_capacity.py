@@ -11,6 +11,7 @@ import logging
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import SavingThrowAction
 from app.domain.size import CreatureSize, size_at_least, size_at_most
+from app.combat.timed_self_buff_facts import effective_creature_size
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +34,7 @@ def can_apply_save_grapple(
         if (
             action.grapple_max_target_size is not None
             and not size_at_most(
-                target.state.template.size, action.grapple_max_target_size,
+                effective_creature_size(target.state), action.grapple_max_target_size,
             )
         ):
             return False
@@ -55,9 +56,9 @@ def can_apply_save_grapple(
             if member.combatant_id == target.combatant_id:
                 # Never replace another linked effect's Grapple metadata.
                 return False
-            occupied += _cost(member.state.template.size, action)
+            occupied += _cost(effective_creature_size(member.state), action)
         return occupied + _cost(
-            target.state.template.size, action,
+            effective_creature_size(target.state), action,
         ) <= action.grapple_max_active_grapples
     except Exception:
         logger.exception(
