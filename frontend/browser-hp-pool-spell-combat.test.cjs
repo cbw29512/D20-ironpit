@@ -124,4 +124,16 @@ assert.equal(preparedCaster.state.resources["spell-slot-2"], 0);
 assert.equal(preparedCaster.state.spell_slot_expended_turn_key, "1:prepared");
 assert.ok(C.has(preparedTarget.state, "unconscious"));
 
+const immuneCaster = member("immune cluster caster", "monsters", 40, [sleep], { sleep: 1 }, [grant]);
+const clustered = Array.from({ length: 6 }, (_, i) => member(`cluster-${i}`, "heroes", 4));
+clustered.slice(0, 5).forEach(target => { target.state.template.creature_type = "undead"; });
+const clusterSetup = { monsters: [immuneCaster], heroes: clustered };
+const clusterChoice = P.choose(immuneCaster, clusterSetup, "1:immune-caster");
+assert.ok(clusterChoice, "Sleep must still cast when the largest cluster is immune");
+assert.ok(clusterChoice.placement.enemyIds.includes("cluster-5"));
+assert.ok(!clusterChoice.placement.enemyIds.includes("cluster-0"));
+R.resolve(1, 1, immuneCaster, clusterSetup, clusterChoice, "1:immune-caster");
+assert.ok(C.has(clustered[5].state, "unconscious"));
+assert.ok(clustered.slice(0, 5).every(target => !C.has(target.state, "unconscious")));
+
 console.log("2014 Sleep browser live casting, resource, wake and awake-first targeting parity passed.");
