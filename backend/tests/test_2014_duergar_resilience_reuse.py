@@ -74,7 +74,8 @@ def test_source_grants_compile_without_new_ability_resolver():
         assert all(len(item.abilities) == 6 for item in matching)
         assert "Duergar Resilience" in bound_passive_trait_names_2014(source)
         assert "Duergar Resilience" not in unsupported_traits_2014(source)
-        assert basic_blockers_2014(source)  # Other Actions are still outstanding.
+        # Trait coverage remains valid whether other monster blockers exist or not.
+        assert "source:trait" not in basic_blockers_2014(source)
         assert source.model_dump_json() == original
     except Exception:
         logger.exception("Duergar trait grant classification failed")
