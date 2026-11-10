@@ -9,6 +9,7 @@ from app.combat.area_save_actions import choose_area_save
 from app.combat.area_weapon_attacks import choose_area_weapon_attack
 from app.combat.attack_action_sequences import attack_action_melee_legal, attack_action_damage as _attack_action_damage
 from app.combat.auto_hit_spell_policy import choose_auto_hit_spell
+from app.combat.hit_point_pool_spell_policy import choose_hp_pool_spell
 from app.combat.concentration_repeat_saves import choose_concentration_repeat_save
 from app.combat.encounter_targeting import living_opponents
 from app.combat.intimidating_presence_2014 import can_use_presence
@@ -47,6 +48,7 @@ def _spell_offense_score(caster: EncounterCombatant, setup: EncounterSetup, turn
     for choice in (
         choose_concentration_repeat_save(caster, setup),
         choose_auto_hit_spell(caster, setup, turn_key),
+        choose_hp_pool_spell(caster, setup, turn_key),
         choose_spell_attack(caster, setup, turn_key),
         choose_spell(caster, setup, turn_key),
     ):
