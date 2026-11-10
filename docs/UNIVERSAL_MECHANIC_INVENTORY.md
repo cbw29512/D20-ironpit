@@ -436,7 +436,6 @@ Blocked monsters: **53**. These are grouped by printed ability name so the roste
 | Adhesive (Object Form Only) | Mimic | 1 |
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
 | False Appearance (Object Form Only) | Mimic | 1 |
-| Fire Aura | Balor | 1 |
 | Fire Form | Fire Elemental | 1 |
 | Freedom of Movement | Kraken | 1 |
 | Gibbering | Gibbering Mouther | 1 |
@@ -458,7 +457,7 @@ Blocked monsters: **53**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 44 |
+| `source:trait` | 43 |
 | `mechanic:spellcasting` | 32 |
 | `source:extra-action` | 24 |
 | `attack:incomplete` | 13 |

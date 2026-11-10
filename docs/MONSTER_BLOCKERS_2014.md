@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 44 |
+| `source:trait` | 43 |
 | `mechanic:spellcasting` | 32 |
 | `source:extra-action` | 24 |
 | `attack:incomplete` | 13 |
@@ -27,13 +27,13 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**4** monsters have exactly one remaining blocker category.
+**5** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
+| `attack:incomplete` | Balor, Magmin | 2 |
 | `source:extra-action` | Air Elemental, Succubus/Incubus | 2 |
 | `arena:neutral` | Frog | 1 |
-| `attack:incomplete` | Magmin | 1 |
 
 ## Every blocked monster
 
@@ -43,7 +43,7 @@ the underlying ability is already implemented or trivial.
 | Air Elemental | source:extra-action | — |
 | Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Spellcasting |
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
-| Balor | attack:incomplete, source:trait | Fire Aura |
+| Balor | attack:incomplete | — |
 | Cloaker | attack:incomplete, source:extra-action, source:trait | Damage Transfer, Light Sensitivity |
 | Cloud Giant | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Couatl | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
