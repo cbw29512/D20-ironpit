@@ -7,11 +7,9 @@ from app.domain.environment_contexts import EnvironmentContextReaction
 
 logger = logging.getLogger(__name__)
 
-
-
 _LIGHT_SENSITIVITY_CLAUSE_2014 = re.compile(
     r"while in bright light, the [a-z][a-z' -]* has disadvantage on "
-    r"attack rolls and wisdom \\(perception\\) checks that rely on sight\\."
+    r"attack rolls and wisdom \(perception\) checks that rely on sight\."
 )
 
 
