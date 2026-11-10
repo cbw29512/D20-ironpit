@@ -118,15 +118,20 @@ class FailedSaveTimedEffect(BaseModel):
                         "Save-action failure-margin escalation supports same-lifecycle "
                         "additional conditions only."
                     )
-            configured = (
-                self.repeat_save_ability is not None,
-                self.repeat_save_dc is not None,
-                self.repeat_save_timing is not None,
-            )
-            if any(configured) and not all(configured):
-                raise ValueError("Repeat-save riders require ability, DC, and timing together.")
-            if self.damage_repeat_save_trigger != "none" and not all(configured):
-                raise ValueError("Damage-triggered repeat saves require ability, DC, and timing.")
+            has_ability = self.repeat_save_ability is not None
+            has_dc = self.repeat_save_dc is not None
+            has_timing = self.repeat_save_timing is not None
+            # An event-triggered repeat save needs an ability/DC but no
+            # periodic turn timing. Old periodic effects still require all 3.
+            if has_ability != has_dc:
+                raise ValueError("Repeat-save riders require ability and DC together.")
+            if has_timing and not has_ability:
+                raise ValueError("Periodic repeat saves require ability and DC.")
+            if has_ability and not has_timing and self.damage_repeat_save_trigger == "none":
+                raise ValueError("A repeat save requires periodic timing or a damage trigger.")
+            if self.damage_repeat_save_trigger != "none" and not has_ability:
+                raise ValueError("Damage-triggered repeat saves require ability and DC.")
+            configured = (has_ability, has_dc, has_timing)
             if self.damage_repeat_save_trigger != "none" and self.ends_on_damage:
                 raise ValueError("A timed effect cannot end and repeat its save on the same damage.")
             if self.repeat_save_before_damaging_terrain and not all(configured):
