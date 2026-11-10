@@ -337,6 +337,10 @@ def _save(action: Any) -> dict[str, Any]:
         ]
     if action.prohibited_environment_context_id:
         row["prohibitedEnvironmentContextId"] = action.prohibited_environment_context_id
+    if action.reduce_hit_point_maximum_on_damage:
+        row["reduceHitPointMaximumOnDamage"] = True
+        if action.max_hp_zero_kills:
+            row["maxHpZeroKills"] = True
     if action.failure_sets_zero_hp:
         row["failureSetsZeroHp"] = True
     if action.requires_target_zero_hp_alive:
