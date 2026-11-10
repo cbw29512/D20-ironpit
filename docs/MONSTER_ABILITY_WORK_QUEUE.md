@@ -1,5 +1,12 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## [x] 2014 Succubus/Incubus — printed Charm save/condition integrated (PR #1225)
+
+- **Merged and certified:** [PR #1225](https://github.com/cbw29512/D20-ironpit/pull/1225), squash commit `7eeda3dc420bcef0414f56b295ec37e22f927dc8`. All five exact-head workflows passed: Python/browser CI, 2014 Basic Roster, 2014 Hero Certification, Paired Edition Monster Report, and generated-artifact synchronization.
+- **Now runnable:** Source-verified Charm saving throw against a visible Humanoid within 30 feet, DC 15 Wisdom, magical Charmed and one-day duration, target-capacity replacement and owner immunity, repeat save after harm without fabricated turn saves. Exact source label is preserved in combat logs; shared engine behavior is used in Python and browser.
+- **Still unresolved, not checked off:** Verbal/telepathic command obedience and suicidal-command repeat-save behavior, plus Draining Kiss's willing-target alternative. These are outcome-changing source obligations; no artificial arena-neutral exemption. **Succubus/Incubus remains `source:extra-action`; roster remains 277/327 source-admitted and 50 blocked** pending whole-card certification.
+- **Next:** Investigate existing command-control and consent/target-allegiance primitives before introducing any new combat resolver. Reuse universal mechanisms; keep source/edition semantics on the card. Production Netlify locked.
+
 ## [x] 2014 Succubus/Incubus — five universal combat foundations merged (PRs #1220–#1224)
 
 - **Complete, tested and merged:** PR #1220 universal save damage → maximum-HP reduction (including successful saves); PR #1221 repeat save on damage from any source; PR #1222 source-owned condition eligibility and Draining Kiss's hostile charmed-by-owner branch; PR #1223 source-owned control target cap and previous-target release/immunity; PR #1224 damage-trigger-only repeat saves without fabricated turn saves. Python/browser regression gates passed and source cards remain immutable.
