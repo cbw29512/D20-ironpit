@@ -32,10 +32,14 @@
       const choices = [];
       for (const [index, action] of (caster.state.template.hit_point_pool_spell_actions || []).entries()) {
         if (action.actionCost === "reaction" || !E().available(caster.state, action.actionCost)) continue;
-        const placement = A().bestPlacement(caster, setup, action.areaRadius, action.range);
+        const eligibleIds = enemies.filter(m => eligible(caster, m, action, setup))
+          .map(m => m.combatant_id);
+        if (!eligibleIds.length) continue;
+        const placement = A().bestPlacement(caster, setup, action.areaRadius, action.range,
+          [], null, eligibleIds);
         if (!placement) continue;
         const hp = enemies.filter(m => placement.enemyIds.includes(m.combatant_id)
-          && eligible(caster, m, action, setup)).map(m => m.state.current_hp).sort((a, b) => a - b);
+          && eligibleIds.includes(m.combatant_id)).map(m => m.state.current_hp).sort((a, b) => a - b);
         if (!hp.length) continue;
         for (const { castLevel: slotLevel, alternateCast } of H().castOptions(caster, {
           ...action, upcastDicePerLevel: action.extraDicePerUpcastLevel,
