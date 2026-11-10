@@ -34,8 +34,14 @@ def resolve_hp_pool_spell(
             raise ValueError(f"{action.name} cannot be cast inside Silence.")
         if not action.level <= choice.slot_level <= 9:
             raise ValueError("Illegal HP-pool cast level.")
+        enemies = setup.monsters if caster.side == "heroes" else setup.heroes
+        eligible_ids = {
+            member.combatant_id for member in enemies
+            if eligible_pool_target(caster, member, action, setup)
+        }
         expected_placement = best_area_placement(
             caster, setup, action.area_radius_ft, action.range_ft,
+            eligible_enemy_ids=eligible_ids,
         )
         if expected_placement is None or expected_placement != choice.placement:
             raise ValueError("HP-pool spell placement is no longer a legal ally-safe area.")
