@@ -3,6 +3,8 @@
 
   const DR = () => window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH;
   const AHP = () => window.IRON_PIT_BROWSER_AUTO_HIT_SPELL_POLICY;
+  const HPP = () => window.IRON_PIT_BROWSER_HP_POOL_SPELL_POLICY;
+  const HPR = () => window.IRON_PIT_BROWSER_HP_POOL_SPELL;
   const AHR = () => window.IRON_PIT_BROWSER_AUTO_HIT_SPELL;
   const AP = () => window.IRON_PIT_BROWSER_SPELL_ATTACK_POLICY;
   const AR = () => window.IRON_PIT_BROWSER_SPELL_ATTACK;
@@ -18,15 +20,25 @@
     if (activeRepeat && !CR()) throw new Error("Concentration repeat-save runtime is not loaded.");
     const repeat = CR()?.choose(member, setup) || null;
     const autoHit = AHP()?.choose(member, setup, turnKey) || null;
+    if ((sourceTemplate.hit_point_pool_spell_actions || []).length && !HPP()) {
+      throw new Error("HP-pool spell policy is not loaded.");
+    }
+    const pool = HPP()?.choose(member, setup, turnKey) || null;
     const attack = AP()?.choose(member, setup, turnKey) || null;
     const save = SP()?.choose(member, setup, turnKey) || null;
     const normalExpected = Math.max(
       autoHit?.expectedDamage ?? Number.NEGATIVE_INFINITY,
       attack?.expectedDamage ?? Number.NEGATIVE_INFINITY,
       save?.expectedDamage ?? Number.NEGATIVE_INFINITY,
+      pool?.expectedDamage ?? Number.NEGATIVE_INFINITY,
     );
     if (repeat && repeat.expectedDamage >= normalExpected) return { kind: "repeat", choice: repeat };
-    if (!autoHit && !attack && !save) return null;
+    if (!autoHit && !attack && !save && !pool) return null;
+    if (pool && pool.expectedDamage >= Math.max(
+      autoHit?.expectedDamage ?? Number.NEGATIVE_INFINITY,
+      attack?.expectedDamage ?? Number.NEGATIVE_INFINITY,
+      save?.expectedDamage ?? Number.NEGATIVE_INFINITY,
+    )) return { kind: "pool", choice: pool };
     if (autoHit && autoHit.expectedDamage >= Math.max(
       attack?.expectedDamage ?? Number.NEGATIVE_INFINITY,
       save?.expectedDamage ?? Number.NEGATIVE_INFINITY,
@@ -38,6 +50,10 @@
 
   function resolveChoice(sequence, round, member, setup, turnKey, selected) {
     if (!selected) return { events: [], sequence };
+    if (selected.kind === "pool") {
+      if (!HPR()) throw new Error("HP-pool spell casting runtime is not loaded.");
+      return HPR().resolve(sequence, round, member, setup, selected.choice, turnKey);
+    }
     if (selected.kind === "auto-hit") {
       if (!AHR()) throw new Error("Auto-hit spell runtime is not loaded.");
       const event = AHR().resolve(
