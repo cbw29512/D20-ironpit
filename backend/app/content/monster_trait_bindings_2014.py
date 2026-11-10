@@ -150,6 +150,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         if "Evasion" in monster.trait_names and progression_features_2014(monster).evasion:
             bound.add("Evasion")
         bound.update(bound_passive_trait_names_2014(monster))
+        # Every source-proven environment reaction uses the same shared resolver.
+        bound.update(reaction.source_name for reaction in environment_context_reactions_2014(monster))
         bound.update(source_proven_hostile_overlap_traits_2014(monster))
         bound.update(action.name for action in source_proven_zero_hp_finisher_2014(monster))
         bound.update(rule.source_name for rule in source_turn_grappler_damage_2014(monster))
