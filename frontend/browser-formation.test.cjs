@@ -62,6 +62,8 @@ enemyBack.state.active_effect_ids.push("unconscious");
 enemyBack.state.timed_effects.push({ effect_id: "unconscious", ends_on_damage: true });
 assert.deepEqual(F.targetOrder(front, setup).map((member) => member.combatant_id), ["monster-front", "monster-back"],
   "when all living enemies are asleep, normal attacks may target them");
+assert.equal(F.chooseStandardAttack(front, setup).target.combatant_id, "monster-front",
+  "all sleeping enemies must remain eligible for real melee attack selection");
 enemyFront.state.active_effect_ids = enemyFront.state.active_effect_ids.filter(id => id !== "unconscious");
 enemyBack.state.active_effect_ids = enemyBack.state.active_effect_ids.filter(id => id !== "unconscious");
 enemyFront.state.timed_effects = [];
