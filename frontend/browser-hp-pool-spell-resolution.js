@@ -22,7 +22,11 @@
       if (!Number.isInteger(choice.slotLevel) || choice.slotLevel < action.level || choice.slotLevel > 9) {
         throw new Error("Illegal HP-pool spell slot level.");
       }
-      const selected = A().bestPlacement(caster, setup, action.areaRadius, action.range);
+      const enemies = caster.side === "heroes" ? setup.monsters : setup.heroes;
+      const eligibleIds = enemies.filter(target => P().eligible(caster, target, action, setup))
+        .map(target => target.combatant_id);
+      const selected = A().bestPlacement(caster, setup, action.areaRadius, action.range,
+        [], null, eligibleIds);
       if (!selected || JSON.stringify(selected) !== JSON.stringify(choice.placement)) {
         throw new Error("HP-pool spell placement is no longer legal.");
       }
