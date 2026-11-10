@@ -64,7 +64,7 @@ class AttackCapabilityDefinition(BaseModel):
     target_max_size: CreatureSize | None = None
     attack_kind: WeaponAttackKind
     attack_bonus: int
-    critical_dice_multiplier: int = Field(default=2, ge=2, le=3)
+    critical_dice_multiplier: int = Field(default=2, ge=2, le=3, exclude_if=lambda value: value == 2)
     damage: DiceSpec | None = None
     fixed_damage: int | None = Field(default=None, ge=0)
     damage_type: DamageType

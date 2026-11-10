@@ -121,7 +121,11 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
     if printed_attack is None:
         raise ValueError(f"{monster.id} attack {attack.id} is missing from the 327-card registry")
     attack = attack.model_copy(update={
-        "on_hit_save_effect": printed_attack.on_hit_save_effect,
+        "on_hit_save_effect": (
+            printed_attack.on_hit_save_effect
+            if printed_attack.on_hit_save_effect is not None
+            else attack.on_hit_save_effect
+        ),
         "control_effect": printed_attack.control_effect,
     })
     charge_source = corrected_charge_profile_2014(monster, attack)
