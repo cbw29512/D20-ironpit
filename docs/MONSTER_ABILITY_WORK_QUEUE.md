@@ -1,5 +1,12 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## [x] 2014 Duergar — full source obligations cleared and merged (PR #1212)
+
+- **Checked off on main:** PR #1212 passed all five required exact-head workflows, including Python rules reference, browser regressions and combat certification, and squash-merged as `1642301cc20dc63be7a79d25c14fabb20f7ad1ad`.
+- **Mechanics reused:** Permanent Resilience save Advantage (#1208), rest-recharge Invisibility and named Enlarge expiry (#1209), effect-gated weapon dice (#1210), fight-local timed size/Strength-check Advantage (#1211), and complete 2014 Enlarge plus printed War Pick/Javelin melee/ranged variants (#1212). No Duergar-specific combat resolver.
+- **Verified classification:** Regenerated `docs/MONSTER_BLOCKERS_2014.md` on merged main reports **274/327 source-admitted, 53 blocked**. Duergar is absent from the blocked monster list. Its former `attack:incomplete` and `source:extra-action` obligations are closed.
+- **Separate evidence still needed:** A completed real webpage fight for Duergar has not been verified here; source admission and automated tests do not constitute live webpage-fight certification. Production Netlify remains locked.
+
 ## 2014 universal Grapple suffocation — completed and merged PR #1207
 
 - **Verified and merged:** PR #1207 passed every required exact-head certification lane, including full Python, browser and combat-certification workflows; merged to `main` as `20864c4e6f476a3ce214581a985b79a3854ffc36`.
@@ -430,7 +437,7 @@ Checked against main `72fe95258db3793c5aba4d86ba5487217c03da51`, including close
 | Drow | `mechanic:spellcasting`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
 | Druid | `mechanic:spellcasting`, `source:trait` | Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
 | Dryad | `mechanic:spellcasting`, `source:extra-action`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
-| Duergar | `attack:incomplete`, `source:extra-action` | — | Duergar Resilience is completed and merged (#1208). Recover incomplete source attack and bind the printed Enlarge/Invisibility Actions using existing universal mechanics. |
+| Duergar | — (**cleared in current main**, historical row) | — | **[x] Source obligations closed:** Resilience #1208, Invisibility #1209, Enlarge and War Pick/Javelin melee/ranged #1212; source-admitted at merge `1642301c`. Real webpage fight remains an independent certification requirement. |
 | Dust Mephit | `mechanic:recharge`, `mechanic:spellcasting`, `source:extra-action`, `source:trait` | Death Burst, Innate Spellcasting | Bind the card's recharge trigger/dice and resource to a universal Action or save effect. |
 | Efreeti | `mechanic:spellcasting`, `source:trait` | Innate Spellcasting | Bind printed prepared/innate spell list and uses to universal spell actions and resource grammar; park missing spells individually. |
 | Erinyes | `attack:incomplete`, `source:trait` (main baseline) | Hellish Weapons; Longbow Poisoned rider | [PR #970](https://github.com/cbw29512/D20-ironpit/pull/970) reconciles old #941's source-proven Hellish Weapons into current main and binds Longbow's printed DC 14 Constitution save → Poisoned until magical removal using the existing universal save, indefinite condition and removal mechanics; no name-based runtime resolver and no duplicate 3d8 poison damage. **237/327 source-admitted on branch; exact-head CI, merge and webpage fight pending.** Old #941 must not be merged independently. |
