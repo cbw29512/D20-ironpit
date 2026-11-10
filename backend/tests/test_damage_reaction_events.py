@@ -337,7 +337,7 @@ def test_damage_repeat_save_ignores_effect_source_damage() -> None:
 
 
 def test_damage_repeat_save_card_requires_complete_repeat_save_contract() -> None:
-    with pytest.raises(ValueError, match="require ability, DC, and timing"):
+    with pytest.raises(ValueError, match="require ability and DC"):
         FailedSaveTimedEffect(
             effect_id="incapacitated",
             damage_repeat_save_trigger="other_than_effect_source",
