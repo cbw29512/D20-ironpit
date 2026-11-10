@@ -56,13 +56,14 @@
     }
     const active = pool.filter(target => alive(target) && target.state.swallowed == null);
     if (active.length) {
-      // Match Python's universal active-threat -> Incapacitated -> downed priority.
-      // An Unconscious enemy that wakes when damaged is not a priority while
-      // another capable opponent remains, but is still attackable if all are down.
-      const conditions = window.IRON_PIT_BROWSER_CONDITION_RULES;
-      if (!conditions?.incapacitated) throw new Error("Target priority requires universal condition rules.");
-      const threats = active.filter(target => !conditions.incapacitated(target.state));
-      return threats.length ? threats : active;
+      // A source-owned Unconscious effect with endsOnDamage is Sleep-like.
+      // Prefer other targets, but never make sleepers untargetable: if every
+      // available enemy sleeps, ordinary attacks may wake one on damage.
+      // Other Incapacitated states keep their existing targeting precedence.
+      const sleeping = (target) => (target.state.timed_effects || []).some(effect =>
+        effect.effect_id === "unconscious" && effect.ends_on_damage === true);
+      const awake = active.filter(target => !sleeping(target));
+      return awake.length ? awake : active;
     }
     return pool.filter((target) => target.state.template.kind === "character"
       && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0
