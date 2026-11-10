@@ -69,6 +69,24 @@ def test_combat_relevant_mutation_restores_blocker(action, old, new):
         raise
 
 
+@pytest.mark.parametrize("action", _ACTIONS)
+def test_missing_printed_heading_fails_closed(action):
+    try:
+        monster = _card("night-hag")
+        heading = f"<strong>{action}.</strong>"
+        assert heading in (monster.source_actions or "")
+        broken = monster.model_copy(update={
+            "source_actions": monster.source_actions.replace(
+                heading, "<strong>Unknown Action.</strong>", 1,
+            ),
+        })
+        assert not verified_nonactionable_action_2014(broken, action)
+        assert "source:extra-action" in basic_blockers_2014(broken)
+    except Exception:
+        logger.exception("Missing printed Action heading did not fail closed: %s", action)
+        raise
+
+
 def test_hidden_continuation_rider_restores_action_blocker():
     try:
         monster = _card("night-hag")
