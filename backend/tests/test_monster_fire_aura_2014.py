@@ -26,6 +26,18 @@ def _member(template, combatant_id, side, position):
     )
 
 
+def _aura_host_template():
+    """Test a real source-compiled aura on an already admitted generic host.
+
+    Balor itself stays blocked until its two printed attacks also compile.
+    """
+    azer = _source("azer")
+    template = compile_combatant(adapt_basic_monster_2014(azer))
+    return template.model_copy(update={
+        "timed_self_buff_actions": fire_aura_action_2014(_source("balor")),
+    })
+
+
 def test_balor_fire_aura_binds_exact_printed_parameters():
     m = _source("balor")
     before = m.model_dump_json()
@@ -50,8 +62,7 @@ def test_balor_fire_aura_binds_exact_printed_parameters():
 
 
 def test_balor_fire_aura_browser_serialization():
-    m = _source("balor")
-    template = compile_combatant(adapt_basic_monster_2014(m))
+    template = _aura_host_template()
     action = next(a for a in template.timed_self_buff_actions if a.id == "fire-aura")
     row = template_row(template)
     row_action = next(a for a in row["timed_self_buff_actions"] if a["id"] == "fire-aura")
@@ -71,7 +82,7 @@ def test_balor_fire_aura_browser_serialization():
 
 
 def test_balor_fire_aura_melee_hit_and_source_turn_start():
-    balor = _member(compile_combatant(adapt_basic_monster_2014(_source("balor"))), "balor", "monsters", 0)
+    balor = _member(_aura_host_template(), "balor", "monsters", 0)
     hero_template = build_commoner().model_copy(update={"max_hp": 100})
     hero = _member(hero_template, "hero", "heroes", 5)
     applied = apply_melee_hit_retaliation(
@@ -94,7 +105,7 @@ def test_balor_fire_aura_melee_hit_and_source_turn_start():
 
 def test_balor_source_turn_aura_hits_allies_and_fails_closed_on_mutations():
     card = _source("balor")
-    balor = _member(compile_combatant(adapt_basic_monster_2014(card)), "balor", "monsters", 0)
+    balor = _member(_aura_host_template(), "balor", "monsters", 0)
     ally = _member(build_commoner().model_copy(update={"max_hp": 100}), "ally", "monsters", 5)
     enemy = _member(build_commoner().model_copy(update={"max_hp": 100}), "enemy", "heroes", 10)
     setup = EncounterSetup(heroes=[enemy], monsters=[balor, ally])
