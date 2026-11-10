@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available, spend
+from app.combat.owner_action_expiry import expire_on_owner_event
 from app.combat.concentration import start_concentration
 from app.combat.modifier_stack import add_modifier
 from app.combat.timed_conditions import apply_timed_condition
@@ -54,6 +55,12 @@ def resolve_timed_self_buff(
             spend(member.state, action.action_cost)
         if resource is not None:
             resource.current_uses -= action.resource_cost
+        # The same source-neutral named-action expiry used by attack/save
+        # Actions must also fire when the declared Action is a self buff.
+        expire_on_owner_event(
+            member.state, "action", affected_states or [member.state],
+            action_id=action.id,
+        )
         applied: list[str] = []
         defenses_attached = False
         expires_round = (
