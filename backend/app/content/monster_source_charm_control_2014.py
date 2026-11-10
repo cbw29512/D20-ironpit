@@ -64,6 +64,8 @@ def source_proven_charm_control_2014(
                 id=action_id, name=name,
                 save_ability=match["save"].casefold(),
                 dc=dc, range_ft=range_ft, magical_effect=True,
+                # Shared charm/condition saving-throw defenses consult effect tags.
+                effect_tags=["charmed"],
                 requires_target_sight=True,
                 required_target_creature_types=[match["kind"].casefold()],
                 source_effect_immunity_on_success=True,
