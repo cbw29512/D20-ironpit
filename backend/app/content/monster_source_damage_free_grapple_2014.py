@@ -72,7 +72,9 @@ def source_proven_damage_free_grapple_attacks_2014(
             if match["owner"].lower() != trait["owner"].lower():
                 continue
             bonus, reach, dc = (int(match[key]) for key in ("bonus", "reach", "dc"))
-            if bonus < 0 or reach <= 0 or reach % 5 or not (1 <= dc <= 40):
+            # This partial binding is pinned to source-corroborated values;
+            # unexpected changes require new source review before admission.
+            if (bonus, reach, dc) != (7, 50, 15):
                 continue
             source_id = re.sub(r"[^a-z0-9]+", "-", heading.lower()).strip("-")
             if not source_id or any(attack.name.casefold() == heading.casefold()
