@@ -24,6 +24,8 @@ def environment_context_reactions_2014(
             reactions.append(sunlight_sensitivity_2014())
         if verified_sunlight_weakness_2014(monster):
             reactions.append(sunlight_weakness_2014())
+        if verified_light_sensitivity_2014(monster):
+            reactions.append(light_sensitivity_2014())
         return reactions
     except Exception:
         logger.exception(
