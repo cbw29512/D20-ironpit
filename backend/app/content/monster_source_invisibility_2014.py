@@ -30,11 +30,11 @@ _PRINTED_INVISIBILITY = re.compile(
 # Independent complete printed form: invisibility includes the owner's light
 # rather than gear, and ends on the source-named non-spell Bonus Action.
 _REST_INVISIBILITY = re.compile(
-    r"^The (?P<owner>[a-z][a-z'\\-]*) magically turns invisible "
+    r"^The (?P<owner>[a-z][a-z'-]*) magically turns invisible "
     r"until it attacks, casts a spell, or uses its (?P<action>[A-Za-z][a-zA-Z ]+), "
-    r"or until its concentration is broken, up to (?P<hours>\\d+) hour(?:s)? "
-    r"\\(as if concentrating on a spell\\)\\. Any equipment the (?P=owner) "
-    r"wears or carries is invisible with it\\.$", re.IGNORECASE,
+    r"or until its concentration is broken, up to (?P<hours>\d+) hour(?:s)? "
+    r"\(as if concentrating on a spell\)\. Any equipment the (?P=owner) "
+    r"wears or carries is invisible with it\.$", re.IGNORECASE,
 )
 _REST_HEADING = "Invisibility (Recharges after a Short or Long Rest)"
 
