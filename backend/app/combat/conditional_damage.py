@@ -12,6 +12,8 @@ def conditional_damage_active(
 ) -> bool:
     if conditional.trigger == "attack_advantage":
         return attack_mode is RollMode.ADVANTAGE
+    if conditional.trigger == "attacker_effect_active":
+        return conditional.required_effect_id in attacker.active_effect_ids
     if conditional.trigger == "attacker_bloodied":
         return is_bloodied(attacker)
     if conditional.trigger == "round1_initiative_lead":
