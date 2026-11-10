@@ -1,3 +1,9 @@
+## [x] 2014 Roper — Reel displacement-only Action (PR #1228)
+
+- **Completed and merged:** PR #1228 passed all five exact-head workflows; squash-merged as `3801b4312935820675c59184210f99a719a2110a`.
+- **Universal policy:** Printed Reel is displacement only; the Pit's locked forced-movement policy ignores position displacement. Exact complete source paragraph and mutation tests fail closed on an added combat rider.
+- **Still blocked:** Tendril attack, its source-defined ongoing Strength disadvantages and per-tendril state, individual destruction/break/regrowth, and printed Multiattack. The `source:extra-action` and `source:trait` monster blockers remain until those are certified; this checkmark is for Reel alone.
+
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
 ## [x] 2014 Succubus/Incubus — printed Charm save/condition integrated (PR #1225)
@@ -527,7 +533,7 @@ Checked against main `72fe95258db3793c5aba4d86ba5487217c03da51`, including close
 | Quasit | `attack:complex`, `source:extra-action`, `source:trait` | Shapechanger | Compose complete source on-hit riders/conditional attacks with reusable attack effect grammar. |
 | Rakshasa | `mechanic:defense`, `mechanic:spellcasting`, `source:trait` | Limited Magic Immunity, Innate Spellcasting | Compile printed damage/condition/spell defenses to universal defense and targeting gates. |
 | Remorhaz | `mechanic:swallow`, `source:extra-action` | — | Compose grapple/restrain/blind/cover/periodic damage and escape as generic linked state. |
-| Roper | `source:extra-action`, `source:trait` | Grasping Tendrils | Compile printed Action into universal attack/save/AoE/control/resource action; verify AI selection and turn timing. |
+| Roper | `source:extra-action`, `source:trait` | Grasping Tendrils | Reel has been individually source-certified and merged in PR #1228. Tendril, destructible tendrils, Strength penalties, regeneration, and full Multiattack remain open; PR #1229 is partial, not admission. |
 | Rug of Smothering | `attack:none`, `source:extra-action`, `source:trait` | Damage Transfer | Source-proof the monster's intended no-attack or special-action behavior; admit only if runnable under arena policy. |
 | Rust Monster | No current source blocker | — | Full printed Antennae was source-proven as an equipment-only nonactionable Action, in addition to Iron Scent/Rust Metal; Bite remains playable. New 2026-11-05 policy confirms no item rusting/destruction. No real-webpage fight certification is claimed. |
 | Sea Hag | `source:extra-action`, `source:trait` | Horrific Appearance | Compile printed Action into universal attack/save/AoE/control/resource action; verify AI selection and turn timing. |
