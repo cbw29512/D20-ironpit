@@ -39,10 +39,14 @@ def test_both_inert_actions_remove_night_hag_extra_action_blocker():
         original = monster.model_dump_json()
         assert all(action in monster.action_names for action in _ACTIONS)
         assert all(verified_nonactionable_action_2014(monster, a) for a in _ACTIONS)
-        # Full printed combat spells remain independent and unresolved.
+        # The real Sleep cast is now separately certified in the shared
+        # HP-pool spell suite; neither inert Action may mask its binding.
+        from app.content.monster_hp_pool_spell_bindings_2014 import innate_hp_pool_spells_2014
+        assert {action.id for action in innate_hp_pool_spells_2014(monster)} == {"sleep"}
         blockers = basic_blockers_2014(monster)
         assert "source:extra-action" not in blockers
-        assert "mechanic:spellcasting" in blockers
+        assert "mechanic:spellcasting" not in blockers
+        assert blockers == (), "Night Hag must have no remaining source blockers"
         assert monster.model_dump_json() == original
     except Exception:
         logger.exception("Night Hag noncombat Action verification failed.")
