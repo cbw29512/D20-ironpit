@@ -52,7 +52,7 @@ from app.content.monster_prepared_spells_2014 import (
     prepared_spell_attack_actions_2014,
     prepared_spell_save_actions_2014,
 )
-from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014
+from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014, source_invisibility_resources_2014
 from app.content.monster_source_ranged_save_only_hit_2014 import source_ranged_save_only_hit_attacks_2014
 from app.content.monster_innate_support_2014 import (
     innate_alternate_spell_casts_2014,
@@ -218,6 +218,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
     resources.extend(monster_spell_slot_resources_2014(monster))
     resources.extend(zero_hp_prevention_resources_2014(monster))
     resources.extend(recharge_self_buff_resources_2014(monster))
+    resources.extend(source_invisibility_resources_2014(monster))
     legendary_resource = legendary_resistance_resource_2014(monster)
     if legendary_resource is not None:
         resources.append(legendary_resource)
