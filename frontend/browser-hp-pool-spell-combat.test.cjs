@@ -110,4 +110,18 @@ assert.ok(window.IRON_PIT_BROWSER_SPELL_OFFENSE.choose(member("control", "monste
   [sleep], { sleep: 1 }, [grant]), { monsters: [], heroes: [member("enemy", "heroes", 3)] },
   "1:control"), "generic HP-pool spell must participate in normal spell choice");
 
+const preparedCaster = member("prepared caster", "monsters", 25, [sleep], { "spell-slot-2": 1 });
+const preparedTarget = member("prepared target", "heroes", 4);
+const preparedSetup = { monsters: [preparedCaster], heroes: [preparedTarget] };
+const preparedChoice = P.choose(preparedCaster, preparedSetup, "1:prepared");
+assert.ok(preparedChoice, "prepared Sleep uses ordinary spell slots");
+assert.equal(preparedChoice.slotLevel, 2);
+assert.equal(preparedChoice.alternateCast, null);
+const preparedResult = R.resolve(1, 1, preparedCaster, preparedSetup, preparedChoice, "1:prepared");
+assert.equal(preparedResult.events[0].feature_roll.rolls.length, 7,
+  "2014 upcast adds exactly two d8 for one higher slot");
+assert.equal(preparedCaster.state.resources["spell-slot-2"], 0);
+assert.equal(preparedCaster.state.spell_slot_expended_turn_key, "1:prepared");
+assert.ok(C.has(preparedTarget.state, "unconscious"));
+
 console.log("2014 Sleep browser live casting, resource, wake and awake-first targeting parity passed.");
