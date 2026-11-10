@@ -53,6 +53,10 @@ from app.content.monster_prepared_spells_2014 import (
     prepared_spell_save_actions_2014,
 )
 from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014, source_invisibility_resources_2014
+from app.content.monster_source_enlarge_2014 import (
+    source_enlarge_action_2014, source_enlarge_resources_2014,
+    source_enlarge_ranged_weapon_2014,
+)
 from app.content.monster_source_ranged_save_only_hit_2014 import source_ranged_save_only_hit_attacks_2014
 from app.content.monster_innate_support_2014 import (
     innate_alternate_spell_casts_2014,
@@ -208,6 +212,19 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         *[_attack(monster, attack) for attack in monster.attacks],
         *source_ranged_save_only_hit_attacks_2014(monster),
     ]
+    for source_weapon in monster.attacks:
+        if not source_enlarge_ranged_weapon_2014(monster, source_weapon):
+            continue
+        melee = next(item for item in attacks if item.id == attack_id_2014(monster, source_weapon.id))
+        attacks.append(melee.model_copy(update={
+            "id": melee.id + "-ranged",
+            "weapon_id": melee.weapon_id + "-ranged",
+            "name": melee.name + " (Ranged)",
+            "attack_kind": "ranged",
+            "normal_range_ft": source_weapon.normal_range_ft,
+            "long_range_ft": source_weapon.long_range_ft,
+            "animation": "projectile", "projectile": "projectile",
+        }))
     blindsight_ft, truesight_ft = special_senses_2014(monster)
     bounded = bounded_blindsight_2014(monster)
     resources = [*save_resources_2014(monster), *fetid_cloud_resources_2014(monster), *leadership_resources_2014(monster)]
@@ -219,6 +236,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
     resources.extend(zero_hp_prevention_resources_2014(monster))
     resources.extend(recharge_self_buff_resources_2014(monster))
     resources.extend(source_invisibility_resources_2014(monster))
+    resources.extend(source_enlarge_resources_2014(monster))
     legendary_resource = legendary_resistance_resource_2014(monster)
     if legendary_resource is not None:
         resources.append(legendary_resource)
@@ -283,6 +301,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         ],
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
             *source_invisibility_action_2014(monster),
+            *source_enlarge_action_2014(monster),
             *berserk_self_buffs_2014(monster),
             *heated_body_retaliation_2014(monster),
             *corrosive_form_retaliation_2014(monster),
