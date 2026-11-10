@@ -55,7 +55,9 @@ def test_balor_is_complete_with_exact_2014_attack_data_and_browser_export():
     assert whip.on_hit_condition_save.dc == 20
     assert whip.on_hit_condition_save.condition_id is None
     assert whip.on_hit_condition_save.failure_pull_ft == 25
-    assert len(template.multiattack_slots) == 2
+    assert template.attack_action is not None
+    assert len(template.attack_action.slots) == 2
+    assert [slot.attack_ids for slot in template.attack_action.slots] == [[attacks["Longsword"].id], [attacks["Whip"].id]]
     rows = {x["name"]: x for x in template_row(template)["attacks"]}
     assert rows["Longsword"]["criticalDiceMultiplier"] == 3
     assert rows["Whip"]["onHitConditionSave"]["failurePullFt"] == 25
