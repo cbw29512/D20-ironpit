@@ -12,7 +12,7 @@ Blocker categories overlap: a monster may require several fixes.
 |---|---:|
 | `source:trait` | 43 |
 | `mechanic:spellcasting` | 32 |
-| `source:extra-action` | 24 |
+| `source:extra-action` | 23 |
 | `attack:incomplete` | 12 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
@@ -76,7 +76,7 @@ the underlying ability is already implemented or trivial.
 | Magmin | attack:incomplete | — |
 | Mimic | attack:incomplete, source:trait | Adhesive (Object Form Only), False Appearance (Object Form Only), Grappler |
 | Mummy Lord | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
-| Night Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
+| Night Hag | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Oni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Planetar | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Priest | mechanic:spellcasting, source:trait | Spellcasting |
