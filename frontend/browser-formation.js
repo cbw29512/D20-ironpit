@@ -54,7 +54,15 @@
         .filter((target) => conditions.canSee(member.state, target.state, S().distance(member, target)));
     }
     const active = pool.filter(target => alive(target) && target.state.swallowed == null);
-    if (active.length) return active;
+    if (active.length) {
+      // Match Python's universal active-threat -> Incapacitated -> downed priority.
+      // An Unconscious enemy that wakes when damaged is not a priority while
+      // another capable opponent remains, but is still attackable if all are down.
+      const conditions = window.IRON_PIT_BROWSER_CONDITION_RULES;
+      if (!conditions?.incapacitated) throw new Error("Target priority requires universal condition rules.");
+      const threats = active.filter(target => !conditions.incapacitated(target.state));
+      return threats.length ? threats : active;
+    }
     return pool.filter((target) => target.state.template.kind === "character"
       && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0
       && target.state.swallowed == null);
