@@ -22,6 +22,8 @@ def failed_save_timed_effect_row(rider: Any) -> dict[str, Any]:
             "nextAttackDisadvantage": rider.next_attack_disadvantage,
             "repeatSaveFailuresToLock": rider.repeat_save_failures_to_lock,
         }
+        if rider.source_target_limit is not None:
+            row["sourceTargetLimit"] = rider.source_target_limit
         if rider.additional_effect_ids:
             row["additionalEffectIds"] = list(rider.additional_effect_ids)
         if rider.failure_margin_escalation is not None:

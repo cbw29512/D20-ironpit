@@ -17,6 +17,8 @@ class FailedSaveTimedEffect(BaseModel):
     additional_effect_ids: list[ConditionName] = Field(default_factory=list)
     failure_margin_escalation: FailureMarginEscalation | None = None
     duration_rounds: int | None = Field(default=None, ge=1, le=100800)
+    # A source may control only N simultaneous targets of the same effect.
+    source_target_limit: int | None = Field(default=None, ge=1, le=20)
     expiry_timing: SaveEffectTiming | None = "target_turn_end"
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
@@ -69,6 +71,7 @@ class FailedSaveTimedEffect(BaseModel):
                 "start_of_turn_damage_type": None,
                 "repeat_save_failure_condition_id": None,
                 "repeat_save_disadvantage_while_source_visible": False,
+                "source_target_limit": None,
                 "damage_repeat_save_trigger": "none",
                 "repeat_save_before_damaging_terrain": False,
                 "source_maintenance_action_cost": "none",

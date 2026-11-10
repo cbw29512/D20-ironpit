@@ -115,6 +115,12 @@ def apply_failed_save_timed_effect(
             )
             if result is not None:
                 applied.append(result)
+        if applied and rider.source_target_limit is not None:
+            from app.combat.source_target_capacity import enforce_source_target_capacity
+            enforce_source_target_capacity(
+                actor, target, action.id, rider.effect_id,
+                rider.source_target_limit, setup,
+            )
         if len(condition_ids) == 1:
             return applied[0] if applied else None
         return applied
