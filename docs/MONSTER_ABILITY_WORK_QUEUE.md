@@ -1,5 +1,12 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## [x] 2014 Succubus/Incubus — five universal combat foundations merged (PRs #1220–#1224)
+
+- **Complete, tested and merged:** PR #1220 universal save damage → maximum-HP reduction (including successful saves); PR #1221 repeat save on damage from any source; PR #1222 source-owned condition eligibility and Draining Kiss's hostile charmed-by-owner branch; PR #1223 source-owned control target cap and previous-target release/immunity; PR #1224 damage-trigger-only repeat saves without fabricated turn saves. Python/browser regression gates passed and source cards remain immutable.
+- **Not a completed monster:** Succubus/Incubus remains **`source:extra-action`**. Printed Charm still needs complete source action binding, correct command obedience and suicidal-order repeat save behavior; Draining Kiss still has its willing-target alternative. Never count partial source-wired mechanics as whole-monster admission.
+- **Current unmerged work:** PR #1225 binds the pinned source Charm save/condition/range/target cap/duration on top of merged PR #1224, while preserving unsupported command clauses in the blocker report. PR #1225 must be reconciled onto the new `main`, rerun on its exact head, and merge before its partial Charm action is checked off.
+- **Verified merged source admission:** **277/327; 50 blocked**. No new source-admitted monsters in this tranche, and live webpage fights remain a separate gate. The older Sleep and Charm status entries below are historical snapshots, not current authority. No manual edits to generated blocker reports. Production Netlify locked.
+
 ## [x] 2014 Sleep — complete Python/browser casting merged (PR #1217, November 10, 2026)
 
 - **Fully merged:** PR #1217 passed all five exact-head workflows (including Python and browser combat certification), then merged into `main` as `1bd83b785282f1163d286ec6e0d512a6ad3df42d`.
