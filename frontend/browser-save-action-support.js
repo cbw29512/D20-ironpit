@@ -10,10 +10,25 @@
       const S = window.IRON_PIT_BROWSER_STATE;
       const timed = window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS;
       const shared = window.IRON_PIT_BROWSER_SAVE_IMMUNITY;
+      const conditionImmunity = window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
       if (action.requiresTargetZeroHpAlive
         && !(target.state.current_hp === 0 && target.state.is_alive && !target.state.is_dead)) return false;
       if (action.requiredTargetCondition
         && !Q.has(target.state, action.requiredTargetCondition)) return false;
+      if (action.requiredTargetSourceCondition) {
+        // Only an active effect owned by this source can authorize the save.
+        // Condition suppression remains authoritative through Q.has().
+        if (!sourceId || !Q.has(target.state, action.requiredTargetSourceCondition)) return false;
+        if (!conditionImmunity?.immune) {
+          throw new Error("Source-owned save requires universal condition immunity.");
+        }
+        if (!(target.state.timed_effects || []).some((effect) =>
+          effect.effect_id === action.requiredTargetSourceCondition
+          && effect.source_id === sourceId
+          && !conditionImmunity.immune(target.state, effect.effect_id, null, {
+            sourceIsMagical: Boolean(effect.source_is_magical),
+          }))) return false;
+      }
       if (action.requiresTargetGrappledBySource) {
         if (!actor || !sourceId || sourceId !== actor.combatant_id
           || !target.state.is_alive || target.state.is_dead

@@ -50,6 +50,8 @@ class SaveCapabilityDefinition(BaseModel):
     requires_target_to_see_source: bool = Field(default=False, exclude_if=lambda value: not value)
     requires_target_sight: bool = Field(default=False, exclude_if=lambda value: not value)
     required_target_condition: ConditionName | None = Field(default=None, exclude_if=lambda value: value is None)
+    # The live target condition must originate from this save-action actor.
+    required_target_source_condition: ConditionName | None = Field(default=None, exclude_if=lambda value: value is None)
     requires_target_grappled_by_source: bool = Field(default=False, exclude_if=lambda value: not value)
     required_target_creature_types: list[str] = Field(default_factory=list, exclude_if=lambda value: not value)
     prohibited_target_source_effect_ids: list[str] = Field(default_factory=list, exclude_if=lambda value: not value)
@@ -92,6 +94,9 @@ class SaveCapabilityDefinition(BaseModel):
                 raise ValueError("Damage-linked maximum-HP reduction requires a typed save damage roll.")
             if self.max_hp_zero_kills and not self.reduce_hit_point_maximum_on_damage:
                 raise ValueError("Terminal maximum-HP loss requires damage-linked maximum-HP reduction.")
+            if (self.required_target_condition is not None and self.required_target_source_condition is not None
+                and self.required_target_condition != self.required_target_source_condition):
+                raise ValueError("Source-owned and unqualified required conditions cannot disagree.")
             if self.damage_only_on_success and self.success_damage != "none":
                 raise ValueError("Success-only save damage must not declare legacy success scaling.")
             if self.damage_only_on_success and self.damage is None:

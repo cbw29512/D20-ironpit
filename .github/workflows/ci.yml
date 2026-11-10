@@ -103,6 +103,7 @@ jobs:
           pytest -q backend/tests/test_universal_save_max_hp_reduction.py
           pytest -q backend/tests/test_universal_save_max_hp_lifecycle.py
           pytest -q backend/tests/test_universal_any_source_damage_repeat_save.py
+          pytest -q backend/tests/test_2014_owned_condition_drain_source.py backend/tests/test_2014_owned_condition_drain_fight.py
           pytest -q backend/tests/test_2014_chuul_tentacles_source.py backend/tests/test_2014_chuul_tentacles_fight.py
           PYTHONPATH=.:backend pytest -q backend/tests/test_2014_shambling_mound_engulf.py
           PYTHONPATH=.:backend pytest -q backend/tests/test_2014_engulf_standalone.py
@@ -569,6 +570,7 @@ jobs:
           node frontend/browser-hit-point-pool.test.cjs
           node frontend/browser-hp-pool-spell-combat.test.cjs
           node frontend/browser-save-maximum-hp-on-damage.test.cjs
+          node frontend/browser-owned-condition-save-targets.test.cjs
           node frontend/browser-turn-start-hooks.test.cjs
           node frontend/browser-condition-auras.test.cjs
           node frontend/browser-fire-aura-2014.test.cjs
