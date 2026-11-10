@@ -37,8 +37,10 @@ def test_reel_exact_printed_displacement_only_is_arena_inert():
             "straight toward it."
         )
         assert verified_nonactionable_action_2014(roper, "Reel")
-        assert "source:extra-action" not in basic_blockers_2014(roper)
-        # Reel alone must not silently certify Grappling Tendrils or other traits.
+        # Reel is handled, but the separate unbound Tendril Action still blocks.
+        assert "Tendril" in roper.action_names
+        assert "source:extra-action" in basic_blockers_2014(roper)
+        # Grasping Tendrils also remains independently unsupported.
         assert "source:trait" in basic_blockers_2014(roper)
     except Exception:
         logger.exception("Roper exact printed Reel proof failed")
