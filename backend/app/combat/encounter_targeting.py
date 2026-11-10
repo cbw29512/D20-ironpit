@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.charmed_targeting import charmed_blocks_hostile_target
-from app.combat.condition_rules import can_see, is_incapacitated
+from app.combat.condition_rules import can_see, is_incapacitated, has_condition
 from app.combat.grid_geometry import footprint_distance_ft
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
@@ -60,9 +60,18 @@ def _target_priority(member: EncounterCombatant) -> int | None:
     if not state.is_alive or state.is_dead or _removed_from_battlefield(state):
         return None
     if state.current_hp > 0:
-        return 1 if is_incapacitated(state) else 0
+        if not is_incapacitated(state):
+            return 0
+        # A timed Unconscious effect that ends on damage (such as Sleep) is
+        # deliberately deferred behind other living foes, including stunned ones.
+        if has_condition(state, "unconscious") and any(
+            effect.effect_id == "unconscious" and effect.ends_on_damage
+            for effect in state.timed_effects
+        ):
+            return 2
+        return 1
     if state.template.kind == "character" and state.current_hp == 0:
-        return 2
+        return 3
     return None
 
 
