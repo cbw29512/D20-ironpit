@@ -1,5 +1,12 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## [x] 2014 Night Hag — noncombat Change Shape and Nightmare Haunting actions cleared (PR #1215)
+
+- **Verified:** All five required exact-head workflows (CI including full Python/browser and combat certification, 2014 roster, heroes, paired-edition, generated-artifact sync) passed on head `1a53083a0c23bd2c0f5bd8883f6411653bb050cb`; PR #1215 squash-merged as `ecb79f04c3c95612af6df0919383699d908ac4dd`.
+- **Source proof:** Whole printed 2014 Change Shape (statistics unchanged) and Nightmare Haunting (requires the forbidden Ethereal Plane and at least one hour with a sleeping humanoid) are classified nonactionable under locked Pit rules. Exact-clause checks include unheaded continuation text. Renamed-source and altered-statistics/hour/hidden combat-rider regressions fail closed. Existing full Etherealness proof remains separate. No universal combat resolver or source card is changed.
+- **Checked off only these two actions:** 327-card catalog audit plus merged generator shows `source:extra-action` decreases **24 → 23**; Night Hag's remaining row is `mechanic:spellcasting, source:trait` (Innate Spellcasting). Overall **275/327 source-admitted; 52 blocked** is unchanged.
+- **Not finished:** Night Hag still needs its printed combat spell access/behavior, including the source-approved shared Sleep spell family. No real webpage fight was certified. Netlify production remains locked.
+
 ## [x] 2014 Balor — Fire Aura and source attacks cleared (PR #1214)
 
 - **Verified and merged:** All five required exact-head GitHub Actions workflows passed for PR #1214 head `bd46c3eb0ca02c4cc575fcd719429c33e7714943`; squash-merged into `main` as `54f486fe749e188a89b78b03ce0f7819bb706e8b`.
