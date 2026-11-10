@@ -113,8 +113,18 @@ from app.content.monster_unnerving_mask_2014 import source_unnerving_mask_reacti
 def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapabilityDefinition:
     source_grapple_periodic_proof_2014(monster, attack)
     attack = source_completed_mixed_attack_2014(monster, attack)
+    # One printed melee-or-ranged attack can compile as two universal attack
+    # slots. The ranged ID is synthetic, but only from a source-proven dual
+    # range paragraph; it still uses the same immutable damage registry row.
+    ranged_origin = next((
+        row.id for row in source_enlarged_dual_range_attacks_2014(monster)
+        if row.id == attack.id and row.kind == "ranged"
+        for original in monster.attacks
+        if f"{original.id}-ranged" == row.id and original.name == row.name
+    ), None)
+    registry_id = ranged_origin.removesuffix("-ranged") if ranged_origin else attack.id
     printed_attack = next((item for item in monster_core_fields_2014(monster.id).attacks
-                           if item.source_id == attack.id), None)
+                           if item.source_id == registry_id), None)
     if printed_attack is None:
         raise ValueError(f"{monster.id} attack {attack.id} is missing from the 327-card registry")
     attack = attack.model_copy(update={
