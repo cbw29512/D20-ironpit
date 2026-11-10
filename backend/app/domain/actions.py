@@ -201,10 +201,18 @@ class SavingThrowAction(BaseModel):
     excluded_target_creature_types: list[str] = Field(default_factory=list)
     minimum_remaining_hp: int = Field(default=0, ge=0)
     reduce_hit_point_maximum_on_failed_save: bool = False
+    reduce_hit_point_maximum_on_damage: bool = Field(default=False, exclude_if=lambda value: not value)
+    max_hp_zero_kills: bool = Field(default=False, exclude_if=lambda value: not value)
     animation: str = "save-effect"
 
     @model_validator(mode="after")
     def validate_asymmetric_save_outcomes(self) -> "SavingThrowAction":
+        if self.reduce_hit_point_maximum_on_damage and self.reduce_hit_point_maximum_on_failed_save:
+            raise ValueError("Choose one maximum-HP reduction trigger per save Action.")
+        if self.reduce_hit_point_maximum_on_damage and not (self.damage_dice_count or self.damage_components):
+            raise ValueError("Damage-linked maximum-HP reduction requires a typed damage roll.")
+        if self.max_hp_zero_kills and not self.reduce_hit_point_maximum_on_damage:
+            raise ValueError("Terminal maximum-HP loss requires a damage-linked reduction.")
         if self.grapple_escape_dc is None and (
             self.grapple_max_target_size is not None
             or self.grapple_max_active_grapples is not None
