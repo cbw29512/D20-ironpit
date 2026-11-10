@@ -35,6 +35,9 @@ class SaveCapabilityDefinition(BaseModel):
     damage_type: DamageType | None = None
     damage_components: list[SaveDamageComponent] = Field(default_factory=list)
     success_damage: Literal["none", "half"] = "none"
+    # Generic damage-linked maximum-HP loss; applies after either save result.
+    reduce_hit_point_maximum_on_damage: bool = Field(default=False, exclude_if=lambda value: not value)
+    max_hp_zero_kills: bool = Field(default=False, exclude_if=lambda value: not value)
     failure_sets_zero_hp: bool = Field(default=False, exclude_if=lambda value: not value)
     # Generic typed finisher: a living 0-HP creature saves or dies; healing
     # occurs only if that death actually completes (prevention may apply).
@@ -85,6 +88,10 @@ class SaveCapabilityDefinition(BaseModel):
                 or self.save_ability not in self.save_ability_choices
             ):
                 raise ValueError("Target-chosen save abilities must be distinct and include the primary ability.")
+            if self.reduce_hit_point_maximum_on_damage and self.damage is None and not self.damage_components:
+                raise ValueError("Damage-linked maximum-HP reduction requires a typed save damage roll.")
+            if self.max_hp_zero_kills and not self.reduce_hit_point_maximum_on_damage:
+                raise ValueError("Terminal maximum-HP loss requires damage-linked maximum-HP reduction.")
             if self.damage_only_on_success and self.success_damage != "none":
                 raise ValueError("Success-only save damage must not declare legacy success scaling.")
             if self.damage_only_on_success and self.damage is None:

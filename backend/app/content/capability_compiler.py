@@ -36,6 +36,8 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         damage_type=definition.damage_type.value if definition.damage_type else None,
         damage_components=list(definition.damage_components),
         success_damage=definition.success_damage,
+        reduce_hit_point_maximum_on_damage=definition.reduce_hit_point_maximum_on_damage,
+        max_hp_zero_kills=definition.max_hp_zero_kills,
         failure_sets_zero_hp=definition.failure_sets_zero_hp,
         requires_target_zero_hp_alive=definition.requires_target_zero_hp_alive,
         instant_death_on_failed_save=definition.instant_death_on_failed_save,

@@ -67,16 +67,28 @@ def resolve_save_damage(
                 damage_components=components,
                 source_id=source_id,
             )
-            end_rage_if_incapacitated(target.state)
-            if (
+            if action.reduce_hit_point_maximum_on_damage and incoming:
+                # Save halves and typed defenses are already included in incoming.
+                # Use the same fight-local HP-maximum lifecycle as on-hit effects.
+                from app.combat.restoration_riders import apply_hit_point_maximum_reduction_state
+                apply_hit_point_maximum_reduction_state(
+                    target.state, incoming,
+                    zero_max_hp_kills=action.max_hp_zero_kills,
+                )
+            elif (
                 not succeeded
                 and action.reduce_hit_point_maximum_on_failed_save
                 and incoming
             ):
-                from app.combat.restoration_riders import (
-                    apply_hit_point_maximum_reduction,
-                )
+                from app.combat.restoration_riders import apply_hit_point_maximum_reduction
                 apply_hit_point_maximum_reduction(target, incoming)
+            # Maximum-HP loss can kill even if temporary HP absorbed the hit.
+            # Complete the same universal incapacitation lifecycle as ordinary
+            # damage, after applying the declared maximum-HP change.
+            end_rage_if_incapacitated(target.state)
+            if target.state.is_dead:
+                from app.combat.concentration import end_concentration_if_incapacitated
+                end_concentration_if_incapacitated(target.state, affected_states)
         if not succeeded and action.failure_sets_zero_hp:
             reduce_to_zero_hit_points(
                 target.state,
