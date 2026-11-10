@@ -41,6 +41,9 @@ from app.content.monster_definition_adapter_support_2014 import (
     movement_modes_2014,
     save_bonuses_2014,
 )
+from app.content.monster_hp_pool_spell_bindings_2014 import (
+    innate_hp_pool_spells_2014, prepared_hp_pool_spells_2014,
+)
 from app.content.monster_innate_spells_2014 import (
     innate_auto_hit_spell_actions_2014,
     innate_spell_attack_actions_2014,
@@ -290,6 +293,10 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         spell_save_actions=[
             *innate_spell_save_actions_2014(monster),
             *prepared_spell_save_actions_2014(monster),
+        ],
+        hit_point_pool_spell_actions=[
+            *innate_hp_pool_spells_2014(monster),
+            *prepared_hp_pool_spells_2014(monster),
         ],
         spell_attack_actions=[
             *innate_spell_attack_actions_2014(monster),
