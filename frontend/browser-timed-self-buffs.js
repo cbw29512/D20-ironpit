@@ -27,8 +27,14 @@
       // Apply the same generic named-action expiry as attack/save Actions.
       // It must run before the new self buff is attached.
       const timed = window.IRON_PIT_BROWSER_TIMED;
-      if (!timed?.expireOnOwnerEvent) throw new Error("Self-buff Actions require generic named-action expiry.");
-      timed.expireOnOwnerEvent(member.state, "action", options.affectedStates || [member.state], action.id);
+      const matching = (member.state.timed_effects || []).some((effect) =>
+        (effect.ends_on_owner_action_ids || []).includes(action.id.toLowerCase()));
+      if (matching && !timed?.expireOnOwnerEvent) {
+        throw new Error("Named-action expiry is required for a declared self-buff Action.");
+      }
+      timed?.expireOnOwnerEvent?.(
+        member.state, "action", options.affectedStates || [member.state], action.id,
+      );
       const applied = [];
       let defensesAttached = false;
       const hasDuration = Number.isInteger(action.durationRounds);
