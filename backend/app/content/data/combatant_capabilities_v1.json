@@ -77,7 +77,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -120,7 +119,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -298,7 +296,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -327,7 +324,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -490,7 +486,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 10,
@@ -519,7 +514,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -697,7 +691,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -726,7 +719,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -892,7 +884,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -935,7 +926,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -1144,7 +1134,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -1174,7 +1163,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -1335,7 +1323,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -1495,7 +1482,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -1524,7 +1510,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -1685,7 +1670,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -1847,7 +1831,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -2005,7 +1988,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -2180,7 +2162,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -2338,7 +2319,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -2506,7 +2486,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -2673,7 +2652,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 10,
@@ -2840,7 +2818,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -3029,7 +3006,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -3058,7 +3034,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -3244,7 +3219,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 1,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -3406,7 +3380,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -3564,7 +3537,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -3724,7 +3696,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -3882,7 +3853,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 4,
@@ -4042,7 +4012,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 1,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -4200,7 +4169,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -4363,7 +4331,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -4523,7 +4490,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -4686,7 +4652,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -4715,7 +4680,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 10,
@@ -4882,7 +4846,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 9,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 12,
@@ -5065,7 +5028,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -5232,7 +5194,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 10,
@@ -5261,7 +5222,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -5423,7 +5383,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "bludgeoning",
         "animation": "heavy-strike",
@@ -5579,7 +5538,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 2,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -5631,7 +5589,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -5811,7 +5768,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -5853,7 +5809,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 3,
           "size": 6,
@@ -6161,7 +6116,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -6344,7 +6298,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 1,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "slashing",
         "animation": "heavy-slash",
@@ -6502,7 +6455,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "piercing",
         "animation": "bite",
@@ -6658,7 +6610,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "piercing",
         "animation": "bite",
@@ -6812,7 +6763,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "slashing",
         "animation": "slash",
@@ -6968,7 +6918,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "bludgeoning",
         "animation": "heavy-strike",
@@ -7124,7 +7073,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "piercing",
         "animation": "bite",
@@ -7281,7 +7229,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "slashing",
         "animation": "slash",
@@ -7435,7 +7382,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "piercing",
         "animation": "bite",
@@ -7591,7 +7537,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "slashing",
         "animation": "slash",
@@ -7747,7 +7692,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "piercing",
         "animation": "bite",
@@ -7903,7 +7847,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "piercing",
         "animation": "bite",
@@ -8059,7 +8002,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "piercing",
         "animation": "bite",
@@ -8213,7 +8155,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -8371,7 +8312,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -8531,7 +8471,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -8691,7 +8630,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -8874,7 +8812,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -9032,7 +8969,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -9192,7 +9128,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -9350,7 +9285,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -9515,7 +9449,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -9677,7 +9610,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 1,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "fire",
         "animation": "bite",
@@ -9835,7 +9767,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -9995,7 +9926,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 10,
@@ -10159,7 +10089,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -10321,7 +10250,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -10479,7 +10407,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -10642,7 +10569,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -10802,7 +10728,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 8,
@@ -10962,7 +10887,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 4,
@@ -11122,7 +11046,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 8,
@@ -11151,7 +11074,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -11180,7 +11102,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -11340,7 +11261,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 8,
@@ -11521,7 +11441,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -11706,7 +11625,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -11737,7 +11655,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -11920,7 +11837,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -11949,7 +11865,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -12113,7 +12028,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -12284,7 +12198,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -12455,7 +12368,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -12655,7 +12567,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -12692,7 +12603,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -12896,7 +12806,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -12925,7 +12834,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 10,
@@ -13118,7 +13026,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -13311,7 +13218,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -13480,7 +13386,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -13654,7 +13559,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 8,
@@ -13683,7 +13587,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -13886,7 +13789,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -14061,7 +13963,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -14237,7 +14138,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -14415,7 +14315,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 3,
           "size": 6,
@@ -14598,7 +14497,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 10,
@@ -14784,7 +14682,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -14981,7 +14878,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -15157,7 +15053,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 8,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 3,
           "size": 10,
@@ -15194,7 +15089,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 8,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 3,
           "size": 8,
@@ -15384,7 +15278,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -15608,7 +15501,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 10,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 4,
           "size": 12,
@@ -15645,7 +15537,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 10,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 4,
           "size": 8,
@@ -15833,7 +15724,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -16025,7 +15915,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -16194,7 +16083,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 8,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 8,
@@ -16223,7 +16111,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 8,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -16426,7 +16313,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 3,
           "size": 6,
@@ -16589,7 +16475,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -16760,7 +16645,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "piercing",
         "animation": "strike",
@@ -16929,7 +16813,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 4,
@@ -17118,7 +17001,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -17289,7 +17171,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 3,
           "size": 6,
@@ -17318,7 +17199,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 3,
           "size": 6,
@@ -17349,7 +17229,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 10,
@@ -17534,7 +17413,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 10,
@@ -17717,7 +17595,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 8,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 3,
           "size": 8,
@@ -17751,7 +17628,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 8,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 10,
@@ -17944,7 +17820,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 5,
           "size": 6,
@@ -18104,7 +17979,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -18273,7 +18147,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -18302,7 +18175,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -18495,7 +18367,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 8,
@@ -18662,7 +18533,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -18833,7 +18703,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "piercing",
         "animation": "strike",
@@ -19000,7 +18869,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -19029,7 +18897,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -19196,7 +19063,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "piercing",
         "animation": "strike",
@@ -19366,7 +19232,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -19408,7 +19273,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -19583,7 +19447,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -19832,7 +19695,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -19861,7 +19723,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 10,
@@ -20025,7 +19886,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 4,
@@ -20196,7 +20056,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -20382,7 +20241,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 4,
           "size": 6,
@@ -20411,7 +20269,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 10,
@@ -20617,7 +20474,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -20784,7 +20640,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 9,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 3,
           "size": 10,
@@ -20971,7 +20826,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 3,
           "size": 6,
@@ -21135,7 +20989,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "fixed_damage": 1,
         "damage_type": "piercing",
         "animation": "strike",
@@ -21295,7 +21148,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 4,
@@ -21458,7 +21310,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -21652,7 +21503,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 4,
@@ -21845,7 +21695,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -22096,7 +21945,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -22346,7 +22194,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 10,
@@ -22594,7 +22441,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 10,
@@ -22845,7 +22691,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 6,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 10,
@@ -23092,7 +22937,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -23341,7 +23185,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 4,
@@ -23598,7 +23441,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 9,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -23853,7 +23695,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -24111,7 +23952,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 10,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -24365,7 +24205,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 7,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 4,
@@ -24621,7 +24460,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -24789,7 +24627,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 4,
@@ -24977,7 +24814,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 2,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 4,
@@ -25165,7 +25001,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 4,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 4,
           "size": 8,
@@ -25363,7 +25198,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 6,
@@ -25392,7 +25226,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 10,
@@ -25583,7 +25416,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -25625,7 +25457,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 2,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 10,
@@ -25831,7 +25662,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 1,
           "size": 8,
@@ -25994,7 +25824,6 @@
         "resource_cost": 1,
         "attack_kind": "melee",
         "attack_bonus": 5,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 6,
@@ -26023,7 +25852,6 @@
         "resource_cost": 1,
         "attack_kind": "ranged",
         "attack_bonus": 3,
-        "critical_dice_multiplier": 2,
         "damage": {
           "count": 2,
           "size": 10,
