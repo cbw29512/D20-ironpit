@@ -68,7 +68,7 @@ def test_invisible_resource_concentration_and_named_action_expiry():
         # casting any source-named self-buff must trigger generic owner expiry.
         enlarge = TimedSelfBuffAction(
             id="enlarge", name="Alternate Shape", duration_rounds=1,
-            condition_ids=["invisible"], magical_effect=True,
+            damage_resistances=["cold"], magical_effect=True,
         )
         # An unrelated self-action does not end the declared source.
         other = enlarge.model_copy(update={"id": "other"})
