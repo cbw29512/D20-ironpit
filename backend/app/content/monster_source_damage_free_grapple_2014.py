@@ -58,7 +58,10 @@ def source_proven_damage_free_grapple_attacks_2014(
         limit = _WORD_COUNTS.get(trait["limit"].lower())
         if limit is None:
             return []
-        if int(trait["break_dc"]) != 15 or int(trait["ac"]) < 1 or int(trait["hp"]) < 1:
+        # This partial binding is certified only against the pinned source.
+        # Changed durability must fail closed until the generic object rider
+        # actually supports that source profile.
+        if (int(trait["break_dc"]), int(trait["ac"]), int(trait["hp"])) != (15, 20, 10):
             return []
         output: list[AttackCapabilityDefinition] = []
         for heading in monster.action_names:
