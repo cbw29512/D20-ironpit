@@ -35,6 +35,7 @@ class SourceAttack2014(BaseModel):
     normal_range_ft: int | None = None
     long_range_ft: int | None = None
     source_complete: bool = True
+    critical_dice_multiplier: int = Field(default=2, ge=2, le=3)
     conditional_damage: list[object] = Field(default_factory=list)
     conditional_attack_advantage: list[object] = Field(default_factory=list)
     on_hit_damage: list[object] = Field(default_factory=list)

@@ -164,6 +164,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "name": attack.name,
         "attack_kind": attack.kind,
         "attack_bonus": printed_attack.attack_bonus,
+        "critical_dice_multiplier": attack.critical_dice_multiplier,
         "resource_id": attack.id if (attack.id in attack_ammunition_2014(monster) or breakable is not None) else None,
         "target_max_size": breakable.max_target_size if breakable is not None else None,
         "attack_ability": attack.attack_ability,
