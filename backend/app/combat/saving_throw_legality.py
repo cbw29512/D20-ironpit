@@ -12,6 +12,7 @@ from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import SavingThrowAction
 from app.domain.size import size_at_most
+from app.combat.timed_self_buff_facts import effective_creature_size
 
 logger = logging.getLogger(__name__)
 
@@ -88,7 +89,7 @@ def legal_save_action(
             return False
         return (
             action.target_max_size is None
-            or size_at_most(template.size, action.target_max_size)
+            or size_at_most(effective_creature_size(target.state), action.target_max_size)
         )
     except Exception:
         logger.exception(
