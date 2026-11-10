@@ -1,5 +1,12 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## [x] 2014 Sleep — shared source and universal HP-pool foundation merged (PR #1216)
+
+- **Merged:** PR #1216 passed all five required exact-head workflows on `3fea3dfe3c8172cfbbab827cf3b4b35343c60a39` and squash-merged as `31c239c635c97762f098c8b91a82e07bd7a42b3b`. Old overlapping source-only draft #1128 was closed without merging.
+- **Reusable source/schema:** Separate, strictly validated 2014 Sleep source pins 5d8 HP pool, +2d8 per level above first, 90-ft point range, 20-ft radius, 10-round Unconscious duration, no saving throw, wake/damage expiry and creature/condition exclusions. Does not mutate original monster cards.
+- **Shared mechanics and tests:** Python and browser generic HP-pool allocators pass common parity fixtures for ascending current HP, skipped ineligible/0-HP creatures, exact/insufficient pool, tied order and fail-closed invalid data. No monster-name dispatch, direct HP mutation or duplicate Unconscious resolver.
+- **Do not check off the four casters:** Dust Mephit, Night Hag, Oni and Spirit Naga still require the complete **no-save cast** integration: actual point-area target selection, Action and source daily-use/slot spending, generic timed Unconscious lifecycle, damage/wake exits, Python/browser serialization, independent fight tests and report regeneration. The generated Sleep audit remains **0/4 wired**; overall **275/327 source-admitted, 52 blocked** is unchanged. No real webpage fight was certified. Production Netlify remains locked.
+
 ## [x] 2014 Night Hag — noncombat Change Shape and Nightmare Haunting actions cleared (PR #1215)
 
 - **Verified:** All five required exact-head workflows (CI including full Python/browser and combat certification, 2014 roster, heroes, paired-edition, generated-artifact sync) passed on head `1a53083a0c23bd2c0f5bd8883f6411653bb050cb`; PR #1215 squash-merged as `ecb79f04c3c95612af6df0919383699d908ac4dd`.
