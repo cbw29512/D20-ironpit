@@ -55,7 +55,7 @@ the underlying ability is already implemented or trivial.
 | Druid | mechanic:spellcasting, source:trait | Spellcasting |
 | Dryad | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Efreeti | mechanic:spellcasting, source:trait | Innate Spellcasting |
-| Fire Elemental | attack:incomplete, source:trait | Fire Form, Water Susceptibility |
+| Fire Elemental | attack:incomplete, source:trait | Fire Form |
 | Flameskull | mechanic:spellcasting, source:trait | Spellcasting |
 | Frog | arena:neutral | — |
 | Gelatinous Cube | source:extra-action, source:trait | Ooze Cube, Transparent |

@@ -451,7 +451,6 @@ Blocked monsters: **50**. These are grouped by printed ability name so the roste
 | Spellcasting | Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 12 |
 | Transparent | Gelatinous Cube | 1 |
 | Vampire Weaknesses | Vampire, Vampire Spawn | 2 |
-| Water Susceptibility | Fire Elemental | 1 |
 
 ## Monster blocker categories
 

@@ -6041,13 +6041,6 @@
           "Vampire Spawn"
         ],
         "printed_name": "Vampire Weaknesses"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Fire Elemental"
-        ],
-        "printed_name": "Water Susceptibility"
       }
     ]
   },
