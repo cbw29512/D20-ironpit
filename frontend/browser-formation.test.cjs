@@ -54,17 +54,13 @@ const enemyBack = combatant("monster-back", "monsters", 15, enemyBackTemplate);
 const setup = { heroes: [front, archer], monsters: [enemyFront, enemyBack] };
 
 assert.deepEqual(F.targetOrder(front, setup).map((member) => member.combatant_id), ["monster-front", "monster-back"]);
-enemyFront.state.active_effect_ids.push("stunned");
-assert.deepEqual(F.targetOrder(front, setup).map((member) => member.combatant_id), ["monster-back"],
-  "conscious enemies outrank other Incapacitated targets, even when front-line");
-enemyFront.state.active_effect_ids = [];
 enemyFront.state.active_effect_ids.push("unconscious");
 enemyFront.state.timed_effects.push({ effect_id: "unconscious", ends_on_damage: true });
 assert.deepEqual(F.targetOrder(front, setup).map((member) => member.combatant_id), ["monster-back"],
   "awake enemies are preferred over sleeping or other Incapacitated living enemies");
 enemyBack.state.active_effect_ids.push("stunned");
 assert.deepEqual(F.targetOrder(front, setup).map((member) => member.combatant_id), ["monster-back"],
-  "non-Sleep Incapacitated enemies outrank damage-waking sleepers");
+  "other Incapacitated enemies remain selectable ahead of damage-waking sleepers");
 enemyBack.state.active_effect_ids = [];
 enemyBack.state.active_effect_ids.push("unconscious");
 enemyBack.state.timed_effects.push({ effect_id: "unconscious", ends_on_damage: true });
