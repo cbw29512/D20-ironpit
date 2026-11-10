@@ -120,9 +120,12 @@ def test_damage_wakes_the_sleeping_target_and_targeting_resumes():
 def test_synthetic_rename_does_not_change_spell_mechanics():
     source = next(card for card in load_monster_source_2014() if card.id == "night-hag")
     renamed = source.model_copy(update={"id": "renamed-source", "name": "Unrelated Caster"})
-    original = compile_combatant(adapt_monster_mechanics_2014(source))
-    same = compile_combatant(adapt_monster_mechanics_2014(renamed))
-    assert same.hit_point_pool_spell_actions == original.hit_point_pool_spell_actions
+    # The full adapter requires a canonical source ID to load AC/HP. The
+    # spell binding itself must not: proving the reusable action is independent
+    # of a printed monster identity must test the source-to-spell adapter.
+    from app.content.monster_hp_pool_spell_bindings_2014 import innate_hp_pool_spells_2014
+
+    assert innate_hp_pool_spells_2014(renamed) == innate_hp_pool_spells_2014(source)
 
 def test_sleep_target_is_deferred_even_behind_other_incapacitated_foes():
     caster, targets, setup = _encounter("night-hag", hp=10, target_count=2)
