@@ -1,0 +1,135 @@
+{
+  "cases": [
+    {
+      "name": "lowest-current-hp-first",
+      "pool": 12,
+      "candidates": [
+        {
+          "combatantId": "high",
+          "currentHp": 12
+        },
+        {
+          "combatantId": "low",
+          "currentHp": 4
+        },
+        {
+          "combatantId": "mid",
+          "currentHp": 7
+        }
+      ],
+      "affected": [
+        "low",
+        "mid"
+      ],
+      "remaining": 1
+    },
+    {
+      "name": "insufficient-pool-stops",
+      "pool": 5,
+      "candidates": [
+        {
+          "combatantId": "first",
+          "currentHp": 6
+        },
+        {
+          "combatantId": "second",
+          "currentHp": 7
+        }
+      ],
+      "affected": [],
+      "remaining": 5
+    },
+    {
+      "name": "ineligible-does-not-spend",
+      "pool": 4,
+      "candidates": [
+        {
+          "combatantId": "immune",
+          "currentHp": 1,
+          "eligible": false
+        },
+        {
+          "combatantId": "ordinary",
+          "currentHp": 3,
+          "eligible": true
+        }
+      ],
+      "affected": [
+        "ordinary"
+      ],
+      "remaining": 1
+    },
+    {
+      "name": "zero-hp-and-unconscious-skipped",
+      "pool": 5,
+      "candidates": [
+        {
+          "combatantId": "defeated",
+          "currentHp": 0
+        },
+        {
+          "combatantId": "sleeper",
+          "currentHp": 2,
+          "eligible": false
+        },
+        {
+          "combatantId": "awake",
+          "currentHp": 5
+        }
+      ],
+      "affected": [
+        "awake"
+      ],
+      "remaining": 0
+    },
+    {
+      "name": "equal-hp-retains-source-selection-order",
+      "pool": 5,
+      "candidates": [
+        {
+          "combatantId": "chosen-first",
+          "currentHp": 5
+        },
+        {
+          "combatantId": "second",
+          "currentHp": 5
+        }
+      ],
+      "affected": [
+        "chosen-first"
+      ],
+      "remaining": 0
+    },
+    {
+      "name": "empty-pool",
+      "pool": 0,
+      "candidates": [
+        {
+          "combatantId": "a",
+          "currentHp": 1
+        }
+      ],
+      "affected": [],
+      "remaining": 0
+    },
+    {
+      "name": "exact-fit-after-filtering",
+      "pool": 7,
+      "candidates": [
+        {
+          "combatantId": "enemy",
+          "currentHp": 7
+        },
+        {
+          "combatantId": "ally",
+          "currentHp": 2,
+          "eligible": false
+        }
+      ],
+      "affected": [
+        "enemy"
+      ],
+      "remaining": 0
+    }
+  ]
+}

@@ -563,6 +563,7 @@ jobs:
           node frontend/browser-paladin-2024-level12.test.cjs
           node frontend/browser-ability-hooks.test.cjs
           node frontend/browser-recharge.test.cjs
+          node frontend/browser-hit-point-pool.test.cjs
           node frontend/browser-turn-start-hooks.test.cjs
           node frontend/browser-condition-auras.test.cjs
           node frontend/browser-fire-aura-2014.test.cjs
