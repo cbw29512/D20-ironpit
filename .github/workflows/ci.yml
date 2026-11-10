@@ -704,6 +704,7 @@ jobs:
           node frontend/browser-generated-monsters.test.cjs
           node frontend/browser-creature-types.test.cjs
           node frontend/browser-monster-saves.test.cjs
+          node frontend/browser-2014-source-enlarge.test.cjs
           node frontend/browser-duergar-resilience.test.cjs
           node frontend/browser-condition-immunity.test.cjs
           node frontend/browser-debuff-counters.test.cjs
