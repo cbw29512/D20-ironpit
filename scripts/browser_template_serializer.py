@@ -861,6 +861,8 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         "activationTiming": action.activation_timing,
         "resourceId": action.resource_id, "resourceCost": action.resource_cost,
         "durationRounds": action.duration_rounds, "conditionIds": list(action.condition_ids),
+        "sizeOverride": _value(action.size_override) if action.size_override else None,
+        "abilityCheckAdvantageAbilities": list(action.ability_check_advantage_abilities),
         "magicalEffect": action.magical_effect,
         "endsOnOwnerAttack": action.ends_on_owner_attack,
         "endsOnOwnerSpellCast": action.ends_on_owner_spell_cast,
