@@ -54,6 +54,14 @@ const enemyBack = combatant("monster-back", "monsters", 15, enemyBackTemplate);
 const setup = { heroes: [front, archer], monsters: [enemyFront, enemyBack] };
 
 assert.deepEqual(F.targetOrder(front, setup).map((member) => member.combatant_id), ["monster-front", "monster-back"]);
+enemyFront.state.active_effect_ids.push("unconscious");
+assert.deepEqual(F.targetOrder(front, setup).map((member) => member.combatant_id), ["monster-back"],
+  "awake enemies are preferred over sleeping or other Incapacitated living enemies");
+enemyBack.state.active_effect_ids.push("unconscious");
+assert.deepEqual(F.targetOrder(front, setup).map((member) => member.combatant_id), ["monster-front", "monster-back"],
+  "when all living enemies are asleep, normal attacks may target them");
+enemyFront.state.active_effect_ids = enemyFront.state.active_effect_ids.filter(id => id !== "unconscious");
+enemyBack.state.active_effect_ids = enemyBack.state.active_effect_ids.filter(id => id !== "unconscious");
 assert.equal(F.chooseStandardAttack(front, setup).attack.id, "blade", "frontline defaults to melee");
 assert.equal(F.chooseStandardAttack(archer, setup).attack.id, "bow", "protected backline stays ranged");
 
