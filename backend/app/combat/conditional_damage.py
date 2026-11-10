@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 from app.combat.bloodied import is_bloodied
 from app.domain.models import CombatantState, ConditionalDamage, RollMode, WeaponAttack
 
@@ -10,6 +14,10 @@ def conditional_damage_active(
     target: CombatantState | None,
     attack_mode: RollMode,
 ) -> bool:
+    if conditional.trigger == "attacker_active_effect":
+        if conditional.required_effect_id is None:
+            raise ValueError("Active effect damage requires a source effect ID.")
+        return conditional.required_effect_id in attacker.active_effect_ids
     if conditional.trigger == "attack_advantage":
         return attack_mode is RollMode.ADVANTAGE
     if conditional.trigger == "attacker_bloodied":

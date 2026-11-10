@@ -275,6 +275,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                     "damageBonus": conditional.damage_bonus, "damageType": conditional.damage_type.value,
                 }
                 if conditional.source_name: row["conditionalDamage"]["sourceName"] = conditional.source_name
+                if conditional.required_effect_id:
+                    row["conditionalDamage"]["requiredEffectId"] = conditional.required_effect_id
         control = _control(attack.control_effect)
         if control:
             row["controlEffect"] = control
