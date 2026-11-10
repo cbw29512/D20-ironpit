@@ -7,8 +7,8 @@ import logging
 from app.combat.action_economy import is_available
 from app.combat.attack_legality import attack_allowed_against
 from app.combat.spell_policy import spell_has_higher_slot_scaling
-from app.combat.spellcasting import legal_slot_levels
-from app.combat.alternate_spell_casts import available_alternate_casts, slot_spell_available
+from app.combat.spellcasting import legal_slot_levels, slot_spell_available
+from app.combat.alternate_spell_casts import available_alternate_casts
 from app.domain.encounters import EncounterCombatant
 from app.domain.weapons import WeaponAttackKind
 from app.domain.size import size_at_most
