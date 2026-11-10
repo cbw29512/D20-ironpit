@@ -109,6 +109,17 @@ def test_source_charm_uses_generic_sight_and_range_target_gate():
     try:
         _card, owner, (target, _), setup, charm = _fight()
         assert not legal_save_action(charm, target, 35, owner.combatant_id, owner)
+        # The printed Charm only targets humanoids. Renamed, nonhumanoid
+        # synthetic combatants use the same generic creature-type gate.
+        construct = EncounterCombatant(
+            combatant_id="construct", side="heroes", position_ft=5,
+            state=build_combatant_state(
+                build_demo_fighter().model_copy(update={"creature_type": "construct"}),
+            ),
+        )
+        assert not legal_save_action(
+            charm, construct, 5, owner.combatant_id, owner,
+        )
         owner.state.active_effect_ids.append("blinded")
         assert not legal_save_action(charm, target, 5, owner.combatant_id, owner)
         owner.state.active_effect_ids.remove("blinded")
