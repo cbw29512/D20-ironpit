@@ -7,7 +7,8 @@ import logging
 from app.combat.action_economy import is_available
 from app.combat.attack_legality import attack_allowed_against
 from app.combat.spell_policy import spell_has_higher_slot_scaling
-from app.combat.spellcasting import legal_slot_levels, slot_spell_available
+from app.combat.spellcasting import legal_slot_levels
+from app.combat.alternate_spell_casts import available_alternate_casts, slot_spell_available
 from app.domain.encounters import EncounterCombatant
 from app.domain.weapons import WeaponAttackKind
 from app.domain.size import size_at_most
@@ -93,6 +94,12 @@ def _spell_ranges(attacker: EncounterCombatant, turn_key: str) -> list[Offensive
                 higher_slot_scaling=action.projectiles_per_slot_above > 0,
             ):
                 ranges.append(("spell", action.range_ft))
+        for action in attacker.state.template.hit_point_pool_spell_actions:
+            if action.action_cost == "reaction" or not is_available(attacker.state, action.action_cost):
+                continue
+            if legal_slot_levels(attacker.state, turn_key, action.level,
+                                 higher_slot_scaling=action.extra_dice_per_upcast_level > 0) or available_alternate_casts(attacker.state, action.id):
+                ranges.append(("spell", action.range_ft + action.area_radius_ft))
         for action in attacker.state.template.spell_save_actions:
             if action.action_cost == "reaction" or action.concentration or not is_available(attacker.state, action.action_cost):
                 continue
