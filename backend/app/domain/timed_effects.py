@@ -33,7 +33,7 @@ class TimedEffect(BaseModel):
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
-    damage_repeat_save_trigger: Literal["none", "other_than_effect_source"] = "none"
+    damage_repeat_save_trigger: Literal["none", "other_than_effect_source", "any_damage_source"] = "none"
     repeat_save_before_damaging_terrain: bool = False
     source_maintenance_action_cost: Literal["none", "bonus_action"] = "none"
     source_turn_count_at_application: int | None = Field(default=None, ge=0)
