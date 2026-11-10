@@ -8,6 +8,7 @@ from app.combat.dice import FixedDiceProvider
 from app.combat.hit_point_pool_spell_policy import choose_hp_pool_spell
 from app.combat.hit_point_pool_spell_resolution import resolve_hp_pool_spell
 from app.combat.pit_policy import target_order
+from app.combat.timed_conditions import apply_timed_condition
 from app.combat.state import build_combatant_state
 from app.combat.zero_hp import apply_damage
 from app.content.capability_compiler import compile_combatant
@@ -122,3 +123,14 @@ def test_synthetic_rename_does_not_change_spell_mechanics():
     original = compile_combatant(adapt_monster_mechanics_2014(source))
     same = compile_combatant(adapt_monster_mechanics_2014(renamed))
     assert same.hit_point_pool_spell_actions == original.hit_point_pool_spell_actions
+
+def test_sleep_target_is_deferred_even_behind_other_incapacitated_foes():
+    caster, targets, setup = _encounter("night-hag", hp=10, target_count=2)
+    apply_timed_condition(
+        targets[0].state, "unconscious", caster.combatant_id,
+        source_effect_id="synthetic-sleep", applied_round=1,
+        expires_round=11, expiry_timing="source_turn_start",
+        ends_on_damage=True, use_default_poison_recovery=False,
+    )
+    targets[1].state.active_effect_ids.append("stunned")
+    assert [member.combatant_id for member in target_order(caster, setup)] == ["hero-1"]
