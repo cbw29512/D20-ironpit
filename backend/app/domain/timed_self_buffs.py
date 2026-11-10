@@ -89,20 +89,29 @@ class TimedSelfBuffAction(BaseModel):
         try:
             if self.activation_timing == "passive":
                 # Passive source data is discovered directly, never cast/spent.
-                if sum(aura is not None for aura in (
+                source_turn_damage = (
+                    self.start_turn_emanation_damage is not None
+                    and self.start_turn_emanation_damage.trigger == "source_turn_start"
+                )
+                passive_count = sum(aura is not None for aura in (
                     self.hostile_start_turn_condition_aura, self.friendly_save_advantage_aura,
                     self.melee_hit_retaliation,
-                )) != 1:
-                    raise ValueError("Passive activation requires exactly one condition or friendly-save aura.")
+                )) + int(source_turn_damage)
+                if passive_count != 1 and not (
+                    passive_count == 2 and source_turn_damage and self.melee_hit_retaliation is not None
+                ):
+                    raise ValueError("Passive activation requires a supported passive aura composition.")
                 if self.resource_id or self.concentration or self.duration_rounds is not None or self.ends_if_source_incapacitated:
                     raise ValueError("Passive condition auras cannot own activation resources or a source timer.")
                 if any((self.condition_ids, self.damage_resistances,
                     self.debuff_counters, self.saving_throw_advantage_grants, self.movement_mode_grants,
                     self.friendly_cover_aura, self.friendly_roll_bonus_aura,
                     self.friendly_weapon_damage_aura, self.friendly_recovery_aura,
-                    self.start_turn_emanation_damage, self.emitted_environment_contexts,
+                    self.emitted_environment_contexts,
                     self.size_override, self.ability_check_advantage_abilities,
-                    self.spell_save_dc_bonus, self.spell_attack_advantage, self.modifier_effects)):
+                    self.spell_save_dc_bonus, self.spell_attack_advantage, self.modifier_effects)) or (
+                    self.start_turn_emanation_damage is not None and not source_turn_damage
+                ):
                     raise ValueError("Passive effects cannot silently include activation-owned effects.")
                 aura = self.hostile_start_turn_condition_aura
                 if aura is not None and aura.condition_expiry_timing is None:
