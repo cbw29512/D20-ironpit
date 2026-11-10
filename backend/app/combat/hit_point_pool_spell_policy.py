@@ -65,13 +65,22 @@ def choose_hp_pool_spell(
         for index, action in enumerate(caster.state.template.hit_point_pool_spell_actions):
             if action.action_cost == "reaction" or not is_available(caster.state, action.action_cost):
                 continue
-            placement = best_area_placement(caster, setup, action.area_radius_ft, action.range_ft)
+            eligible_ids = {
+                member.combatant_id for member in enemies
+                if eligible_pool_target(caster, member, action, setup)
+            }
+            if not eligible_ids:
+                continue
+            placement = best_area_placement(
+                caster, setup, action.area_radius_ft, action.range_ft,
+                eligible_enemy_ids=eligible_ids,
+            )
             if placement is None:
                 continue
             affected_candidates = sorted(
-                (member.state.current_hp for member in enemies
-                 if member.combatant_id in placement.enemy_ids
-                 and eligible_pool_target(caster, member, action, setup))
+                member.state.current_hp for member in enemies
+                if member.combatant_id in placement.enemy_ids
+                and member.combatant_id in eligible_ids
             )
             if not affected_candidates:
                 continue
