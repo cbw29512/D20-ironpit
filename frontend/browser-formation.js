@@ -56,14 +56,10 @@
     }
     const active = pool.filter(target => alive(target) && target.state.swallowed == null);
     if (active.length) {
-      // A source-owned Unconscious effect with endsOnDamage is Sleep-like.
-      // Prefer other targets, but never make sleepers untargetable: if every
-      // available enemy sleeps, ordinary attacks may wake one on damage.
-      // Other Incapacitated states keep their existing targeting precedence.
-      const sleeping = (target) => (target.state.timed_effects || []).some(effect =>
-        effect.effect_id === "unconscious" && effect.ends_on_damage === true);
-      const awake = active.filter(target => !sleeping(target));
-      return awake.length ? awake : active;
+      // Use the canonical browser target tiers: awake, other Incapacitated,
+      // Sleep-like damage-waking Unconscious; sleepers remain legal when alone.
+      const priority = Math.min(...active.map(target => S().targetPriority(target)));
+      return active.filter(target => S().targetPriority(target) === priority);
     }
     return pool.filter((target) => target.state.template.kind === "character"
       && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0
