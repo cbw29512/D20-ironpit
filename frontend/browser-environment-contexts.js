@@ -39,7 +39,9 @@
         if (removed(source.state)) continue;
         for (const action of activeActions(source)) {
           for (const context of emitted(action)) {
-            if ((context.context_id || context.contextId) !== contextId) continue;
+            const emittedId = context.context_id || context.contextId;
+            // Sunlight is bright light, but artificial bright light is not sunlight.
+            if (emittedId !== contextId && !(contextId === "bright_light" && emittedId === "sunlight")) continue;
             if (distance(source, actor) <= (context.radius_ft || context.radiusFt)) return true;
           }
         }
