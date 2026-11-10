@@ -72,6 +72,16 @@
         }).length) continue;
         ranges.push({ family: "spell", range: action.range || 0 });
       }
+      for (const action of member.state.template.hit_point_pool_spell_actions || []) {
+        if (action.actionCost === "reaction" || !E().available(member.state, action.actionCost)) continue;
+        const slots = C().legalSlotLevels(member.state, turnKey, action.level, {
+          higherSlotScaling: (action.extraDicePerUpcastLevel || 0) > 0,
+        });
+        const alt = (member.state.template.alternate_spell_cast_grants || []).some(grant =>
+          grant.spell_id === action.id && (!grant.resource_id
+          || (member.state.resources?.[grant.resource_id] || 0) >= (grant.resource_cost || 1)));
+        if (slots.length || alt) ranges.push({ family: "spell", range: action.range + action.areaRadius });
+      }
       for (const action of member.state.template.spell_save_actions || []) {
         if (action.actionCost === "reaction" || action.concentration || !E().available(member.state, action.actionCost)) continue;
         if (!SP().slotLevels(member, action, turnKey).length) continue;
