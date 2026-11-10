@@ -100,6 +100,7 @@ jobs:
           pytest -q backend/tests/test_2014_bite_hit_swallow_save.py
           pytest -q backend/tests/test_2014_fire_form_contact_family.py
           pytest -q backend/tests/test_2014_start_turn_ignition_family.py
+          pytest -q backend/tests/test_universal_save_max_hp_reduction.py
           pytest -q backend/tests/test_2014_chuul_tentacles_source.py backend/tests/test_2014_chuul_tentacles_fight.py
           PYTHONPATH=.:backend pytest -q backend/tests/test_2014_shambling_mound_engulf.py
           PYTHONPATH=.:backend pytest -q backend/tests/test_2014_engulf_standalone.py
@@ -565,6 +566,7 @@ jobs:
           node frontend/browser-recharge.test.cjs
           node frontend/browser-hit-point-pool.test.cjs
           node frontend/browser-hp-pool-spell-combat.test.cjs
+          node frontend/browser-save-maximum-hp-on-damage.test.cjs
           node frontend/browser-turn-start-hooks.test.cjs
           node frontend/browser-condition-auras.test.cjs
           node frontend/browser-fire-aura-2014.test.cjs
