@@ -182,6 +182,7 @@ class SavingThrowAction(BaseModel):
     requires_target_hearing: bool = False
     requires_target_to_see_source: bool = Field(default=False, exclude_if=lambda value: not value)
     required_target_condition: ConditionName | None = Field(default=None, exclude_if=lambda value: value is None)
+    required_target_source_condition: ConditionName | None = Field(default=None, exclude_if=lambda value: value is None)
     requires_target_grappled_by_source: bool = Field(default=False, exclude_if=lambda value: not value)
     prohibited_environment_context_id: EnvironmentContextId | None = Field(
         default=None, exclude_if=lambda value: value is None,
@@ -207,6 +208,9 @@ class SavingThrowAction(BaseModel):
 
     @model_validator(mode="after")
     def validate_asymmetric_save_outcomes(self) -> "SavingThrowAction":
+        if (self.required_target_condition is not None and self.required_target_source_condition is not None
+            and self.required_target_condition != self.required_target_source_condition):
+            raise ValueError("Source-owned and unqualified required conditions cannot disagree.")
         if self.reduce_hit_point_maximum_on_damage and self.reduce_hit_point_maximum_on_failed_save:
             raise ValueError("Choose one maximum-HP reduction trigger per save Action.")
         if self.reduce_hit_point_maximum_on_damage and not (self.damage_dice_count or self.damage_components):

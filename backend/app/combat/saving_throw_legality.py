@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.condition_rules import can_see, has_condition
+from app.combat.condition_immunity import condition_is_immune
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.source_effect_immunity import (
     has_shared_source_effect_immunity,
@@ -44,6 +45,21 @@ def legal_save_action(
             and not has_condition(target.state, action.required_target_condition)
         ):
             return False
+        if action.required_target_source_condition is not None:
+            # Universal source ownership: a Charmed/Grappled/etc. condition
+            # from another actor cannot satisfy this actor's action gate.
+            if not source_id or not has_condition(target.state, action.required_target_source_condition):
+                return False
+            if not any(
+                effect.effect_id == action.required_target_source_condition
+                and effect.source_id == source_id
+                and not condition_is_immune(
+                    target.state, effect.effect_id,
+                    source_is_magical=effect.source_is_magical,
+                )
+                for effect in target.state.timed_effects
+            ):
+                return False
         if action.requires_target_grappled_by_source:
             if (actor is None or not source_id or source_id != actor.combatant_id
                     or not target.state.is_alive or target.state.is_dead
