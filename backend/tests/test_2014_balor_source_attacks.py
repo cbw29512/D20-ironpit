@@ -118,7 +118,6 @@ def test_source_mutations_fail_closed_and_renamed_cards_keep_mechanics():
         assert bound.source_complete
     for before, after in (
         ("rolls damage dice three times", "rolls damage dice four times"),
-        ("DC 20 Strength saving throw", "DC 17 Strength saving throw"),
         ("pulled up to 25 feet", "pushed up to 25 feet"),
     ):
         mutated = m.model_copy(update={
@@ -126,3 +125,19 @@ def test_source_mutations_fail_closed_and_renamed_cards_keep_mechanics():
         })
         assert mutated.source_actions != m.source_actions
         assert "attack:incomplete" in basic_blockers_2014(mutated)
+
+
+def test_source_declaration_updates_valid_save_dc_without_new_resolver():
+    original = _balor()
+    edited = original.model_copy(update={
+        "source_actions": original.source_actions.replace(
+            "DC 20 Strength saving throw", "DC 17 Strength saving throw",
+        ),
+    })
+    assert edited.source_actions != original.source_actions
+    assert basic_blockers_2014(edited) == ()
+    from app.content.monster_source_save_pull_2014 import source_completed_save_pull_attack_2014
+    whip = next(attack for attack in edited.attacks if attack.name == "Whip")
+    compiled = source_completed_save_pull_attack_2014(edited, whip)
+    assert compiled.source_complete is True
+    assert compiled.on_hit_save_effect["dc"] == 17
