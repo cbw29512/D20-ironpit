@@ -18,13 +18,20 @@ from app.domain.on_hit_conditions import OnHitConditionSave, OnHitOngoingHpLoss
 
 
 class ConditionalDamage(BaseModel):
-    trigger: Literal["attack_advantage", "attacker_bloodied", "target_bloodied", "round1_initiative_lead"]
+    trigger: Literal["attack_advantage", "attacker_bloodied", "target_bloodied", "round1_initiative_lead", "attacker_effect_active"]
     source_name: str | None = None
+    required_effect_id: str | None = Field(default=None, min_length=1)
     mode: Literal["add", "replace_weapon"] = "add"
     dice_count: int = Field(ge=1, le=20)
     dice_size: int = Field(ge=2, le=100)
     damage_bonus: int = 0
     damage_type: DamageType
+
+    @model_validator(mode="after")
+    def validate_effect_trigger(self) -> "ConditionalDamage":
+        if (self.trigger == "attacker_effect_active") != (self.required_effect_id is not None):
+            raise ValueError("Active-effect damage requires its source effect ID exclusively.")
+        return self
 
 
 class ConditionalAttackAdvantage(BaseModel):
