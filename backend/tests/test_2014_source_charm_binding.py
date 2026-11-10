@@ -40,6 +40,9 @@ def test_charm_compiles_to_source_named_universal_save_and_browser_fields():
         assert row["range"] == 30 and row["requiresTargetSight"]
         assert row["requiredTargetCreatureTypes"] == ["humanoid"]
         assert row["magicalEffect"]
+        assert definition.effect_tags == ["charmed"]
+        assert runtime.effect_tags == ["charmed"]
+        assert row["effectTags"] == ["charmed"]
         assert row["sourceEffectImmunityOnSuccess"]
         rider = runtime.failed_save_timed_effect
         assert rider and rider.effect_id == "charmed"
