@@ -82,6 +82,7 @@ def source_proven_damage_free_grapple_attacks_2014(
                 # The Action deals no damage. This type is a zero-damage
                 # carrier required by the existing attack schema.
                 fixed_damage=0, damage_type=DamageType.BLUDGEONING,
+                animation="slash",
                 effects=[GrappleEffectDefinition(
                     escape_dc=dc, restrains=True, max_active_grapples=limit,
                 )],
