@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class TimedEmanationDamage(BaseModel):
     """Typed emanation damage emitted by an active timed effect at a declared window."""
 
-    trigger: Literal["enemy_turn_start", "enter_or_start"] = "enemy_turn_start"
+    trigger: Literal["enemy_turn_start", "enter_or_start", "source_turn_start"] = "enemy_turn_start"
     radius_ft: int = Field(ge=1, le=120)
     fixed_damage: int = Field(default=0, ge=0, le=500)
     dice_count: int = Field(default=0, ge=0, le=40)

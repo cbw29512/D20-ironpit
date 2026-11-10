@@ -155,6 +155,7 @@ class WeaponAttack(BaseModel):
     weapon: Weapon
     attack_bonus: int
     damage_bonus: int
+    critical_dice_multiplier: int = Field(default=2, ge=2, le=3)
     damage_die_minimum: int | None = Field(default=None, ge=2, le=100)
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=1000)

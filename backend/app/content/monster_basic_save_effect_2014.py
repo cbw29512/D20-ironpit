@@ -85,7 +85,7 @@ def save_effect_2014(attack: SourceAttack2014) -> AttackEffectDefinition:
             return SaveConditionEffectDefinition(
                 save_ability=str(row["save_ability"]).lower(),
                 dc=int(row["dc"]),
-                condition=str(row["condition_id"]).lower(),
+                condition=(str(row["condition_id"]).lower() if row.get("condition_id") is not None else None),
                 max_target_size=(
                     CreatureSize(str(max_size).lower()) if max_size is not None else None
                 ),
@@ -96,6 +96,7 @@ def save_effect_2014(attack: SourceAttack2014) -> AttackEffectDefinition:
                     if row.get("repeat_save_failure_condition_id") is not None else None
                 ),
                 failure_push_ft=int(row.get("failure_push_ft", 0)),
+                failure_pull_ft=int(row.get("failure_pull_ft", 0)),
                 cannot_regain_hit_points=bool(
                     row.get("cannot_regain_hit_points", False)
                 ),

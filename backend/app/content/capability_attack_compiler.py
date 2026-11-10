@@ -42,6 +42,7 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             resource_cost=definition.resource_cost,
             target_max_size=definition.target_max_size,
             attack_bonus=definition.attack_bonus,
+            critical_dice_multiplier=definition.critical_dice_multiplier,
             damage_bonus=damage.bonus if damage else 0,
             attack_ability=definition.attack_ability,
             attack_ability_modifier=definition.attack_ability_modifier,

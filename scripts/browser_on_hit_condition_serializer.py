@@ -46,6 +46,8 @@ def serialize_on_hit_condition_save(effect: OnHitConditionSave) -> dict[str, Any
             }
         if effect.failure_push_ft:
             row["failurePushFt"] = effect.failure_push_ft
+        if effect.failure_pull_ft:
+            row["failurePullFt"] = effect.failure_pull_ft
         if effect.excluded_creature_types:
             row["excludedCreatureTypes"] = list(effect.excluded_creature_types)
         if effect.excluded_creature_subtypes:

@@ -84,3 +84,28 @@ def resolve_target_turn_start_emanations(
     except Exception as exc:
         logger.exception("Timed emanation turn-start resolution failed for %s.", target.combatant_id)
         raise RuntimeError("Timed emanation turn-start effects could not be resolved.") from exc
+
+def resolve_source_turn_start_emanations(
+    sequence: int, round_number: int, source: EncounterCombatant,
+    setup: EncounterSetup, dice: DiceProvider, turn_key: str | None = None,
+) -> tuple[list[BattleEvent], int]:
+    """Source-turn-start damage affects nearby allies and enemies, not the source."""
+    try:
+        events: list[BattleEvent] = []
+        active_turn = turn_key or f"{round_number}:{source.combatant_id}"
+        for action in _active_emanations(source):
+            aura = action.start_turn_emanation_damage
+            if aura is None or aura.trigger != "source_turn_start":
+                continue
+            for target in [*setup.heroes, *setup.monsters]:
+                if target.combatant_id == source.combatant_id or target.state.is_dead or not target.state.is_alive:
+                    continue
+                event, sequence = resolve_emanation_hit(
+                    sequence, round_number, source, target, action, setup, dice, active_turn,
+                )
+                if event is not None:
+                    events.append(event)
+        return events, sequence
+    except Exception as exc:
+        logger.exception("Source-turn-start emanation failed for %s.", source.combatant_id)
+        raise RuntimeError("Source-turn-start emanation resolution failed.") from exc

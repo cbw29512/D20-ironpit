@@ -129,7 +129,12 @@ def build_attack_description(
                 description += f" {prefix} save DC {resolution.save_dc}: {actual_defender_name} {succeeded}."
                 moved = getattr(resolution, "forced_movement_ft", 0)
                 if moved:
-                    description += f" {actual_defender_name} is pushed {moved} feet away."
+                    direction = getattr(resolution, "forced_movement_direction", "away_from_source")
+                    description += (
+                        f" {actual_defender_name} is pulled {moved} feet toward the source."
+                        if direction == "toward_source"
+                        else f" {actual_defender_name} is pushed {moved} feet away."
+                    )
                 reduction = getattr(resolution, "reduction_applied", 0)
                 if reduction:
                     description += (

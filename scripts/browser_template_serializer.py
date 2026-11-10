@@ -90,6 +90,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             "damageBonus": attack.damage_bonus, "damageType": weapon.damage_type.value,
             "reach": weapon.reach_ft, "animation": weapon.animation,
         }
+        if attack.critical_dice_multiplier != 2:
+            row["criticalDiceMultiplier"] = attack.critical_dice_multiplier
         if weapon.damage_type_choices:
             row["damageTypeChoices"] = [item.value for item in weapon.damage_type_choices]
         if attack.damage_source_qualifiers:
@@ -222,6 +224,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                 }
             if effect.failure_push_ft:
                 save_row["failurePushFt"] = effect.failure_push_ft
+            if effect.failure_pull_ft:
+                save_row["failurePullFt"] = effect.failure_pull_ft
             if effect.excluded_creature_types:
                 save_row["excludedCreatureTypes"] = list(effect.excluded_creature_types)
             if effect.excluded_creature_subtypes:

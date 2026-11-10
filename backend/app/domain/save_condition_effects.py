@@ -33,12 +33,13 @@ class SaveConditionEffectDefinition(BaseModel):
     kind: Literal["save_condition"] = "save_condition"
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
-    condition: ConditionName
+    condition: ConditionName | None = None
     max_target_size: CreatureSize | None = None
     duration_rounds: int | None = Field(default=None, ge=1, le=100800)
     repeat_save_timing: ConditionTiming | None = None
     repeat_save_failure_condition: ConditionName | None = None
     failure_push_ft: int = Field(default=0, ge=0)
+    failure_pull_ft: int = Field(default=0, ge=0)
     cannot_regain_hit_points: bool = False
     start_of_turn_damage_dice_count: int = Field(default=0, ge=0, le=40)
     start_of_turn_damage_dice_size: int = Field(default=6, ge=2, le=100)
@@ -50,6 +51,12 @@ class SaveConditionEffectDefinition(BaseModel):
     @model_validator(mode="after")
     def validate_condition_lifecycle(self) -> "SaveConditionEffectDefinition":
         try:
+            if self.condition is None and not (self.failure_push_ft or self.failure_pull_ft):
+                raise ValueError("A save effect must apply a condition or forced movement.")
+            if self.failure_push_ft and self.failure_pull_ft:
+                raise ValueError("A saving throw cannot both pull and push.")
+            if self.failure_push_ft % 5 or self.failure_pull_ft % 5:
+                raise ValueError("Forced movement must use five-foot increments.")
             if self.repeat_save_failure_condition is not None and self.repeat_save_timing is None:
                 raise ValueError("Failure escalation requires a repeat-save timing.")
             has_start_damage = self.start_of_turn_damage_dice_count > 0

@@ -19592,6 +19592,7 @@
           },
           "attack_bonus": 6,
           "damage_bonus": 4,
+          "critical_dice_multiplier": 2,
           "resource_cost": 1,
           "conditional_damage": [],
           "conditional_attack_advantage": [],

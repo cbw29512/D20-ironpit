@@ -4,7 +4,7 @@ import logging
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.dice import DiceProvider
 from app.combat.failure_margin_runtime import escalation_duration
-from app.combat.forced_movement import push_straight_away
+from app.combat.forced_movement import push_straight_away, pull_straight_toward
 from app.combat.on_hit_condition_targeting import excluded_on_hit_condition_target
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import apply_terminal_condition_outcome, apply_timed_condition
@@ -22,6 +22,7 @@ class OnHitConditionSaveResolution:
     applied_condition: str | None = None
     forced_movement_ft: int = 0
     additional_conditions: tuple[str, ...] = ()
+    forced_movement_direction: str = "away_from_source"
 def resolve_on_hit_condition_save(
     defender: CombatantState,
     attack: WeaponAttack,
@@ -64,7 +65,7 @@ def resolve_on_hit_condition_save(
         applied = None; additional: list[str] = []
         escalation = effect.failure_margin_escalation
         escalated, duration = escalation_duration(effect, save_roll, succeeded, dice)
-        if not succeeded:
+        if not succeeded and (effect.effect_id is not None or effect.condition_id is not None):
             runtime_effect_id = effect.effect_id or effect.condition_id
             if runtime_effect_id is None:
                 raise ValueError("Failed-save effect has no runtime effect id.")
@@ -142,9 +143,22 @@ def resolve_on_hit_condition_save(
                 target_member, source_member, setup, effect.failure_push_ft,
                 round_number=round_number or 1,
             )
+        elif not succeeded and effect.failure_pull_ft:
+            if setup is None or target_id is None or source_id is None:
+                raise ValueError("Failed-save pull requires encounter identities and setup.")
+            members = {item.combatant_id: item for item in [*setup.heroes, *setup.monsters]}
+            source_member = members.get(source_id)
+            target_member = members.get(target_id)
+            if source_member is None or target_member is None:
+                raise ValueError("Failed-save pull combatants are missing from encounter setup.")
+            moved = pull_straight_toward(
+                target_member, source_member, setup, effect.failure_pull_ft,
+                round_number=round_number or 1,
+            )
         return OnHitConditionSaveResolution(
             save_roll, effect.save_ability, effect.dc, succeeded, applied, moved,
             tuple(additional),
+            "toward_source" if effect.failure_pull_ft else "away_from_source",
         )
     except Exception:
         logger.exception("Failed to resolve on-hit condition save for %s.", defender.template.name)

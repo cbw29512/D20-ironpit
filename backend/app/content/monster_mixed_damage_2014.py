@@ -10,6 +10,8 @@ import re
 
 from app.content.monster_source_2014 import SourceAttack2014, SourceDamage2014, SourceMonster2014
 from app.content.monster_source_enlarge_2014 import source_enlarge_weapon_2014
+from app.content.monster_source_critical_attacks_2014 import source_completed_critical_attack_2014
+from app.content.monster_source_save_pull_2014 import source_completed_save_pull_attack_2014
 from app.content.monster_source_armor_corrosion_2014 import source_on_hit_armor_corrosion_2014
 from app.content.monster_healing_block_source_2014 import source_completed_healing_block_2014
 from app.content.monster_source_magic_cured_condition_2014 import source_completed_magic_cured_condition_2014
@@ -40,6 +42,8 @@ def source_completed_mixed_attack_2014(
 ) -> SourceAttack2014:
     """Upgrade a parser-incomplete attack only when both source hit dice are proven."""
     attack = source_enlarge_weapon_2014(monster, attack)
+    attack = source_completed_critical_attack_2014(monster, attack)
+    attack = source_completed_save_pull_attack_2014(monster, attack)
     attack = source_completed_limited_grapple_2014(monster, attack)
     attack = source_completed_healing_block_2014(monster, attack)
     attack = source_completed_magic_cured_condition_2014(monster, attack)

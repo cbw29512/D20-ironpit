@@ -22,6 +22,7 @@ from app.content.monster_charge_source_corrections_2014 import corrected_charge_
 from app.content.monster_conditional_damage_defenses_2014 import template_defense_fields_2014
 from app.content.monster_healing_2014 import healing_actions_2014, healing_resources_2014
 from app.content.monster_heated_body_2014 import heated_body_retaliation_2014, corrosive_form_retaliation_2014, fire_form_contact_retaliation_2014
+from app.content.monster_fire_aura_2014 import fire_aura_action_2014
 from app.content.monster_grapple_periodic_2014 import supports_grapple_periodic_2014, source_grapple_periodic_proof_2014
 from app.content.monster_damage_taken_effects_2014 import damage_taken_timed_effects_2014
 from app.content.monster_hostile_overlap_source_2014 import source_allows_hostile_overlap_2014
@@ -120,7 +121,11 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
     if printed_attack is None:
         raise ValueError(f"{monster.id} attack {attack.id} is missing from the 327-card registry")
     attack = attack.model_copy(update={
-        "on_hit_save_effect": printed_attack.on_hit_save_effect,
+        "on_hit_save_effect": (
+            printed_attack.on_hit_save_effect
+            if printed_attack.on_hit_save_effect is not None
+            else attack.on_hit_save_effect
+        ),
         "control_effect": printed_attack.control_effect,
     })
     charge_source = corrected_charge_profile_2014(monster, attack)
@@ -163,6 +168,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "name": attack.name,
         "attack_kind": attack.kind,
         "attack_bonus": printed_attack.attack_bonus,
+        "critical_dice_multiplier": attack.critical_dice_multiplier,
         "resource_id": attack.id if (attack.id in attack_ammunition_2014(monster) or breakable is not None) else None,
         "target_max_size": breakable.max_target_size if breakable is not None else None,
         "attack_ability": attack.attack_ability,
@@ -306,6 +312,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *heated_body_retaliation_2014(monster),
             *corrosive_form_retaliation_2014(monster),
             *fire_form_contact_retaliation_2014(monster),
+            *fire_aura_action_2014(monster),
             *condition_auras_from_source(monster.source_traits, "2014"),
             *contextual_save_defenses_2014(monster)[0], *leadership_actions_2014(monster),
             *recharge_self_buff_actions_2014(monster),

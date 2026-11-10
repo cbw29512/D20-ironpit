@@ -18,7 +18,7 @@ _TIMINGS = frozenset(get_args(ConditionTiming))
 _KEYS = frozenset({
     "condition_id", "dc", "max_target_size", "save_ability",
     "duration_rounds", "repeat_save_timing", "repeat_save_failure_condition_id",
-    "failure_push_ft", "excluded_creature_types", "excluded_creature_subtypes",
+    "failure_push_ft", "failure_pull_ft", "excluded_creature_types", "excluded_creature_subtypes",
     "cannot_regain_hit_points", "failure_margin_escalation",
     "start_of_turn_damage_dice_count", "start_of_turn_damage_dice_size",
     "start_of_turn_damage_type",
@@ -66,6 +66,15 @@ def supported_save_condition_2014(value: object) -> bool:
         push = value.get("failure_push_ft", 0)
         if not isinstance(push, int) or push < 0 or push % 5:
             return False
+        pull = value.get("failure_pull_ft", 0)
+        if not isinstance(pull, int) or pull < 0 or pull % 5 or (push and pull):
+            return False
+        condition = value.get("condition_id")
+        if condition is None and (
+            not (push or pull)
+            or not set(value) <= {"save_ability", "dc", "failure_push_ft", "failure_pull_ft"}
+        ):
+            return False
         start_count = value.get("start_of_turn_damage_dice_count", 0)
         start_size = value.get("start_of_turn_damage_dice_size", 6)
         start_type = value.get("start_of_turn_damage_type")
@@ -79,7 +88,7 @@ def supported_save_condition_2014(value: object) -> bool:
         if (start_count > 0) != valid_start_type:
             return False
         return (
-            str(value.get("condition_id", "")).lower() in _CONDITIONS
+            (condition is None or str(condition).lower() in _CONDITIONS)
             and isinstance(value.get("dc"), int) and 0 < int(value["dc"]) <= 40
             and str(value.get("save_ability", "")).lower() in _ABILITIES
             and _optional_size(value.get("max_target_size"))

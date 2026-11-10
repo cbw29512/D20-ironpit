@@ -27,8 +27,9 @@ def roll_weapon_component(
     critical: bool,
     turn_key: str | None,
     damage_die_minimum: int | None = None,
+    critical_dice_multiplier: int = 2,
 ) -> DamageRollComponent:
-    count = dice_count * (2 if critical else 1)
+    count = dice_count * (critical_dice_multiplier if critical else 1)
 
     def candidate() -> DamageRollComponent:
         raw_rolls = [dice.roll(dice_size) for _ in range(count)]
