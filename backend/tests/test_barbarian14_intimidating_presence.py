@@ -193,7 +193,7 @@ def test_bonus_action_save_is_not_rediscovered_as_main_action() -> None:
 
 
 def test_repeat_save_rider_requires_complete_repeat_metadata() -> None:
-    with pytest.raises(ValueError, match="ability, DC, and timing"):
+    with pytest.raises(ValueError, match="ability and DC together"):
         FailedSaveTimedEffect(
             effect_id="frightened",
             repeat_save_ability="wisdom",
