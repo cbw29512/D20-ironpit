@@ -71,6 +71,10 @@ assert.ok(C.has(low.state, "unconscious"));
 assert.ok(!C.has(high.state, "unconscious"));
 assert.deepEqual(F.targetOrder(caster, setup).map(m => m.combatant_id), ["high HP"],
   "awake target must be preferred over an Incapacitated target");
+high.state.active_effect_ids.push("stunned");
+assert.equal(S.targetPriority(low), 2, "damage-waking Sleep has lower priority");
+assert.equal(S.targetPriority(high), 1, "non-sleep Incapacitated remains targetable first");
+high.state.active_effect_ids = high.state.active_effect_ids.filter(id => id !== "stunned");
 assert.equal(low.state.current_hp, 2, "Sleep never deals HP damage");
 assert.equal(low.state.timed_effects[0].ends_on_damage, true);
 assert.equal(low.state.timed_effects[0].expires_round, 11);
