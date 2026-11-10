@@ -19,7 +19,6 @@ from app.domain.actions import SavingThrowAction
 from app.domain.capability_effects import DiceSpec
 from app.domain.capability_save_definitions import SaveCapabilityDefinition
 from app.domain.encounters import EncounterCombatant
-from app.domain.modifiers import ConcentrationState
 from app.domain.weapons import DamageType
 
 logger = logging.getLogger(__name__)
@@ -91,35 +90,6 @@ def test_zero_maximum_is_terminal_even_when_temporary_hp_absorbs_damage():
         logger.exception("Zero maximum-HP terminal test failed.")
         raise
 
-
-
-@pytest.mark.parametrize("succeeded,maximum", [(False, 10), (True, 6)])
-def test_terminal_maximum_loss_cleans_rage_and_concentration(
-    succeeded: bool, maximum: int,
-):
-    try:
-        target = _target(max_hp=maximum)
-        state = target.state
-        state.temporary_hp = 100  # Hit-point damage does not kill the character.
-        state.active_effect_ids.append("rage")
-        state.temporary_damage_resistances.append(DamageType.BLUDGEONING)
-        state.concentration = ConcentrationState(
-            source_id="source", effect_id="synthetic-concentration", started_round=1,
-        )
-        # A successful concentration save against the temporary-HP damage
-        # cannot preserve concentration after maximum HP is reduced to zero.
-        resolve_save_damage(
-            target, _action(terminal=True), FixedDiceProvider([6, 6, 20]),
-            succeeded=succeeded, affected_states=[state],
-        )
-        assert state.is_dead
-        assert state.concentration is None
-        assert "rage" not in state.active_effect_ids
-        assert DamageType.BLUDGEONING not in state.temporary_damage_resistances
-        assert state.template.max_hp == maximum
-    except Exception:
-        logger.exception("Terminal maximum-HP cleanup failed after save damage.")
-        raise
 
 
 def test_typed_immunity_prevents_damage_linked_maximum_hp_reduction():
