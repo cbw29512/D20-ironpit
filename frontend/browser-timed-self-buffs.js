@@ -24,6 +24,11 @@
       }
       if (spendActionCost) E().spend(member.state, action.actionCost);
       if (action.resourceId != null) member.state.resources[action.resourceId] -= action.resourceCost || 1;
+      // Apply the same generic named-action expiry as attack/save Actions.
+      // It must run before the new self buff is attached.
+      const timed = window.IRON_PIT_BROWSER_TIMED;
+      if (!timed?.expireOnOwnerEvent) throw new Error("Self-buff Actions require generic named-action expiry.");
+      timed.expireOnOwnerEvent(member.state, "action", options.affectedStates || [member.state], action.id);
       const applied = [];
       let defensesAttached = false;
       const hasDuration = Number.isInteger(action.durationRounds);
