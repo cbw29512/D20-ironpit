@@ -1,5 +1,14 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## [x] 2014 Sleep — complete Python/browser casting merged (PR #1217, November 10, 2026)
+
+- **Fully merged:** PR #1217 passed all five exact-head workflows (including Python and browser combat certification), then merged into `main` as `1bd83b785282f1163d286ec6e0d512a6ad3df42d`.
+- **Cross off the entire 2014 Sleep action family:** Dust Mephit, Night Hag, Oni and Spirit Naga share one genuine no-save HP-pool Spell Action with point-area targeting, 5d8 (+2d8/slot), Unconscious, Action/slot/innate use expenditure, target immunity and 10-round/wake/damage exit. Python and browser target awake enemies first, falling back to sleepers when every legal enemy is asleep. No special damage roll or source-name resolver.
+- **Verified `main` source classifier:** **277/327 admitted; 50 blocked**. Dust Mephit and Night Hag have no remaining source blockers; Oni and Spirit Naga remain blocked by other actions/spells. These are source-admitted outcomes, not independent live webpage-fight certification. Older Sleep foundation-only queue entries below are historical and superseded here.
+- **Next single-blocker target (read-only source audit completed):** Succubus/Incubus has only `source:extra-action`. Its **Charm** is DC 15 Wisdom / Charmed with source-owned control, harm-triggered saves, one-target limit and 24-hour immunity; **Draining Kiss** is DC 15 Constitution / 5d10+5 Psychic (half on success), with damage-linked maximum-HP reduction and death at zero maximum. The existing engine has general save/condition/damage/HP-maximum primitives, but not all the source-owner and successful-save semantics; implement/reuse them by behavior in narrowly scoped PRs. **Do not mark the monster complete until both Actions work in Python and browser.**
+- **Parked, not counted:** Magmin's helper dousing has no printed range; Air Elemental's Whirlwind still needs random fling and real collision handling; Fire Elemental's future water-exposure damage must stay a typed permanent context effect before source certification. Do not invent a range, erase collision damage or declare future water exposure fully implemented.
+- Production Netlify remains locked. Generated blocker reports are generator-owned; never hand-edit them.
+
 ## [x] 2014 Sleep — shared source and universal HP-pool foundation merged (PR #1216)
 
 - **Merged:** PR #1216 passed all five required exact-head workflows on `3fea3dfe3c8172cfbbab827cf3b4b35343c60a39` and squash-merged as `31c239c635c97762f098c8b91a82e07bd7a42b3b`. Old overlapping source-only draft #1128 was closed without merging.
