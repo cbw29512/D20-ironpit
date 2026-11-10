@@ -106,6 +106,7 @@ jobs:
           pytest -q backend/tests/test_2014_owned_condition_drain_source.py backend/tests/test_2014_owned_condition_drain_fight.py
           pytest -q backend/tests/test_universal_source_target_capacity.py
           pytest -q backend/tests/test_universal_event_only_repeat_save.py
+          PYTHONPATH=.:backend pytest -q backend/tests/test_2014_source_charm_binding.py backend/tests/test_2014_source_charm_fight.py
           pytest -q backend/tests/test_2014_chuul_tentacles_source.py backend/tests/test_2014_chuul_tentacles_fight.py
           PYTHONPATH=.:backend pytest -q backend/tests/test_2014_shambling_mound_engulf.py
           PYTHONPATH=.:backend pytest -q backend/tests/test_2014_engulf_standalone.py
