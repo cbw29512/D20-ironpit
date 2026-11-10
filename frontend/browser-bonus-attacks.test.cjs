@@ -27,6 +27,10 @@ window.IRON_PIT_BROWSER_DAMAGE_REACTION_DISPATCH = null;
 window.IRON_PIT_BROWSER_STATE = {
   distance: () => 5,
   packTactics: () => false,
+  // This isolated fixture has only conscious, positive-HP targets. Preserve
+  // the real formation selector's requirement for an explicit priority API.
+  targetPriority: (member) => member.state.is_alive && !member.state.is_dead
+    && member.state.current_hp > 0 ? 0 : null,
 };
 window.IRON_PIT_BROWSER_GRID_BARRIERS = {
   clearBetweenMembers: (_member, target) => target.combatant_id !== "blocked",
