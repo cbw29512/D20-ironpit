@@ -12,6 +12,7 @@ from app.domain.delayed_effect_transition import DelayedTimedEffectTransition
 from app.domain.movement import MovementModeGrant
 from app.domain.size import CreatureSize
 from app.domain.saving_throw_context import SavingThrowContext
+from app.domain.repeat_save_validation import validate_repeat_save_fields
 from app.domain.timed_control_limits import TimedControlLimits
 from app.domain.breakable_restraints import BreakableObjectState
 
@@ -106,27 +107,19 @@ class TimedEffect(BaseModel):
     def validate_lifecycle(self) -> "TimedEffect":
         try:
             repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
-            has_ability, has_dc, has_timing = (item is not None for item in repeat_fields)
-            # The same schema applies to live fight state. Damage-only saves
-            # do not gain an invented start/end-of-turn repeat roll.
-            if has_ability != has_dc:
-                raise ValueError("Timed effect repeat saves require ability and DC together.")
-            if has_timing and not has_ability:
-                raise ValueError("Periodic timed effect repeat saves require ability and DC.")
-            if has_ability and not has_timing and self.damage_repeat_save_trigger == "none":
-                raise ValueError("Timed effect repeat saves need timing or a damage trigger.")
+            validate_repeat_save_fields(
+                *repeat_fields, self.damage_repeat_save_trigger,
+            )
             if self.minimum_removal_spell_level and not self.removal_effect_tag:
                 raise ValueError("Minimum removal spell level requires an effect tag.")
             if self.removal_effect_tag is not None and not self.removal_effect_tag.strip():
                 raise ValueError("Removal effect tag cannot be blank.")
             if (self.activates_target_turn_count is None) != (self.pending_transition is None):
                 raise ValueError("Delayed transition requires activation count and rule together.")
-            if self.damage_repeat_save_trigger != "none" and not has_ability:
-                raise ValueError("Damage-triggered repeat saves require ability and DC.")
             if self.damage_repeat_save_trigger != "none" and self.ends_on_damage:
                 raise ValueError("A timed effect cannot end and repeat its save on the same damage.")
-            if self.repeat_save_before_damaging_terrain and not has_ability:
-                raise ValueError("Damaging-terrain repeat saves require ability and DC.")
+            if self.repeat_save_before_damaging_terrain and not all(item is not None for item in repeat_fields):
+                raise ValueError("Damaging-terrain repeat saves require ability, DC, and timing.")
             if self.source_maintenance_action_cost != "none" and self.source_turn_count_at_application is None:
                 raise ValueError("Source-maintained effects require the source turn count at application.")
             if (self.escape_check_ability is None) != (self.escape_check_dc is None):
