@@ -6,6 +6,7 @@ import logging
 from app.content.environment_context_reactions import (
     sunlight_sensitivity_2014, sunlight_weakness_2014,
     verified_sunlight_weakness_2014,
+    verified_light_sensitivity_2014, light_sensitivity_2014,
 )
 from app.content.monster_source_2014 import SourceMonster2014
 from app.domain.environment_contexts import EnvironmentContextReaction
