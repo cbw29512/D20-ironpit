@@ -45,6 +45,7 @@ class OnHitConditionSave(BaseModel):
     repeat_save_timing: ConditionTiming | None = None
     repeat_save_failure_condition_id: ConditionName | None = None
     failure_push_ft: int = Field(default=0, ge=0)
+    failure_pull_ft: int = Field(default=0, ge=0)
     cannot_regain_hit_points: bool = False
     start_of_turn_damage_dice_count: int = Field(default=0, ge=0, le=40)
     start_of_turn_damage_dice_size: int = Field(default=6, ge=2, le=100)
@@ -56,8 +57,12 @@ class OnHitConditionSave(BaseModel):
     @model_validator(mode="after")
     def validate_condition_lifecycle(self) -> "OnHitConditionSave":
         try:
-            if self.condition_id is None and self.effect_id is None:
-                raise ValueError("On-hit save requires a condition or persistent effect id.")
+            if self.condition_id is None and self.effect_id is None and not (self.failure_push_ft or self.failure_pull_ft):
+                raise ValueError("On-hit save requires a condition, effect or forced movement.")
+            if self.failure_push_ft and self.failure_pull_ft:
+                raise ValueError("An on-hit save cannot both pull and push.")
+            if self.failure_push_ft % 5 or self.failure_pull_ft % 5:
+                raise ValueError("Forced movement must use five-foot increments.")
             if self.curse_id is not None and self.effect_id is None:
                 raise ValueError("A curse-linked on-hit save requires a persistent effect id.")
             if any(not item.strip() for item in self.allowed_removal_action_ids):

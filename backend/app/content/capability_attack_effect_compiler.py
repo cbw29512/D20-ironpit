@@ -116,6 +116,7 @@ def compile_attack_effects(definition: AttackCapabilityDefinition) -> CompiledAt
                     repeat_save_timing=effect.repeat_save_timing,
                     repeat_save_failure_condition_id=effect.repeat_save_failure_condition,
                     failure_push_ft=effect.failure_push_ft,
+                    failure_pull_ft=effect.failure_pull_ft,
                     cannot_regain_hit_points=effect.cannot_regain_hit_points,
                     start_of_turn_damage_dice_count=effect.start_of_turn_damage_dice_count,
                     start_of_turn_damage_dice_size=effect.start_of_turn_damage_dice_size,
