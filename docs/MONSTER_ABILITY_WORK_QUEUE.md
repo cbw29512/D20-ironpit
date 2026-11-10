@@ -11,7 +11,14 @@
 - **Checked off after exact-head green:** PR #1208 passed full Python, browser regressions, combat certification, 2014 roster, hero certification, paired-edition report and generated-artifact sync; merged to `main` as `030fd37b01e3469e27a2737a5a1f3a10f8405f03`.
 - **Universal reuse, not a new resolver:** The printed 2014 Duergar Resilience clause compiles to five permanent contextual save-Advantage grants: spells, Poison, Illusion, Charm and Paralyzed. Separate Poison damage Resistance stays intact. Whole-roster source audit, source mutation, renamed-card, Python and browser regressions passed.
 - **Remove completed trait from pending work:** Generated `main` blocker report no longer includes Duergar Resilience or `source:trait` for Duergar; category count falls from 45 to 44.
-- **Keep the monster open:** Duergar still has `attack:incomplete` and `source:extra-action` (Enlarge/Invisibility). The total remains **273/327 source-admitted, 54 blocked**. Do not count Duergar as a completed monster or as a certified live webpage fight.
+- **Keep the monster open:** Duergar still has `attack:incomplete` and `source:extra-action` (Enlarge); Invisibility was subsequently merged in PR #1209. The total remains **273/327 source-admitted, 54 blocked**. Do not count Duergar as a completed monster or as a certified live webpage fight.
+
+## Completed: Duergar Invisibility rest-recharge action — merged PR #1209
+
+- **Checked off after exact-head certification:** PR #1209 passed full Python, browser, combat-certification, 2014 roster, hero and paired-edition report, and generated-artifact sync. Merged as `7ef3b347d634378f2483f467cf8897ce863eb74b`.
+- **Universal reuse:** 2014 source-proven one-hour concentrating Invisibility Action (rest-recharge), attack/spell-cast/named Enlarge expiry and fight-local resource run through the shared timed self-buff and owner action event engines; no Duergar-specific combat resolver.
+- **Keep Duergar incomplete:** The printed Enlarge transformation (one minute, Large size, Strength checks and saves with Advantage and alternate weapon dice) and linked War Pick/Javelin alternatives are not yet certified. PR #1210 is the separate universal source-active weapon-profile building block, not a completed Enlarge or whole-monster clearance.
+- **Bookkeeping:** Remove Invisibility from active pending ability work; leave `source:extra-action` (Enlarge) and `attack:incomplete` open. Generated source admission remains **273/327**, with **54** blocked.
 
 ## Water-breathing medium exception — completed and merged PR #1205
 
