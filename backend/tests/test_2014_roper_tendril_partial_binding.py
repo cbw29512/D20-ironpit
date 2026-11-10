@@ -5,6 +5,8 @@ import logging
 
 import pytest
 
+from app.content.capability_compiler import compile_combatant
+from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_source_damage_free_grapple_2014 import (
     source_proven_damage_free_grapple_attacks_2014,
@@ -99,4 +101,20 @@ def test_tendril_compiles_on_renamed_source_identity():
         assert attack.id.startswith("2014-alternate-grappler-")
     except Exception:
         logger.exception("Roper Tendril renamed-card test failed")
+        raise
+
+
+def test_tendril_reaches_actual_shared_combatant_compiler():
+    try:
+        card = _source()
+        definition = adapt_monster_mechanics_2014(card)
+        attack = next(row for row in definition.attacks if row.name == "Tendril")
+        assert attack.fixed_damage == 0
+        assert attack.reach_ft == 50 and attack.attack_bonus == 7
+        template = compile_combatant(definition)
+        compiled = [template.weapon_attack, *template.alternate_weapon_attacks]
+        assert any(row.name == "Tendril" for row in compiled)
+        assert "source:extra-action" in basic_blockers_2014(card)
+    except Exception:
+        logger.exception("Tendril did not reach universal combatant template")
         raise
