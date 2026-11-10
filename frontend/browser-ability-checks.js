@@ -19,6 +19,9 @@
   function mode(state, advantageSources = 0, disadvantageSources = 0, options = {}) {
     try {
       const generic = window.IRON_PIT_BROWSER_MODIFIERS?.d20TestAdvantage(state) || 0;
+      const sourceAdvantage = Number(Boolean(options.ability && (state.timed_effects || []).some(
+        (effect) => (effect.ability_check_advantage_abilities || []).includes(options.ability),
+      )));
       const contexts = window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS;
       const context = options.member
         ? (contexts?.disadvantageSources(options.member, options.setup, "ability_checks") || 0)
@@ -30,7 +33,7 @@
       const timed = (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(state, options.ability) || 0)
         + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityCheckDisadvantage(state) || 0);
       return window.IRON_PIT_BROWSER_ROLLS.modeFromSources(
-        advantageSources + generic, disadvantageSources + context + timed,
+        advantageSources + generic + sourceAdvantage, disadvantageSources + context + timed,
       );
     } catch (error) {
       console.error("Browser ability-check roll mode failed", { combatant: state?.template?.name, error });

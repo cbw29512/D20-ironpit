@@ -118,6 +118,11 @@
   }
   const suppressesVoluntaryTurn = (state) => suppressesAction(state) && suppressesBonusAction(state) && suppressesMovement(state);
   function removeEffect(state, effect) {
+    const size = window.IRON_PIT_BROWSER_TIMED_SIZE_OVERRIDE;
+    if (effect.owned_override_size != null && !size?.restore) {
+      throw new Error("Owned temporary size cleanup requires size lifecycle runtime.");
+    }
+    size?.restore?.(state, effect);
     state.timed_effects = state.timed_effects.filter((item) => item !== effect);
     for (const curseId of effect.owned_curse_ids || []) {
       const stillOwned = state.timed_effects.some((item) => (item.owned_curse_ids || []).includes(curseId));

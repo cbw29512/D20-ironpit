@@ -61,7 +61,7 @@
       const ability = rule.check_ability;
       const poisonOrFear = C().has(helper.state, "poisoned")
         || C().has(helper.state, "frightened", setup) ? 1 : 0;
-      const mode = A().mode(helper.state, 0, poisonOrFear, {member: helper, setup});
+      const mode = A().mode(helper.state, 0, poisonOrFear, {member: helper, setup, ability});
       let check = R().d20(
         X().abilityCheckBonus(helper.state, ability)
           + (window.IRON_PIT_BROWSER_EXHAUSTION?.d20Modifier(helper.state) || 0),

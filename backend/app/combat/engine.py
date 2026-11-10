@@ -50,7 +50,7 @@ def run_duel(
 
         for state in (fighter, monster):
             initiative_mode = ability_check_roll_mode(
-                state,
+                state, ability="dexterity",
                 advantage_sources=int(state.template.progression_features.initiative_advantage),
                 disadvantage_sources=ability_check_disadvantage_sources(state),
             )

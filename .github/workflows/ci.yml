@@ -722,6 +722,7 @@ jobs:
           node frontend/browser-triggered-extra-attacks.test.cjs
           node frontend/browser-legendary-actions.test.cjs
           node frontend/browser-ability-check-escape.test.cjs
+          node frontend/browser-timed-size-override.test.cjs
           node frontend/browser-unicorn-2014.test.cjs
           node frontend/browser-2014-innate-fireball.test.cjs
           node frontend/browser-2014-innate-blur.test.cjs

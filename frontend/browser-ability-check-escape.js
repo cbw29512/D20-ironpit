@@ -47,7 +47,7 @@
       const disadvantage = (actor.state.active_effect_ids.includes(POISONED)
         || window.IRON_PIT_BROWSER_CONDITION_RULES.has(actor.state, FRIGHTENED, setup)) ? 1 : 0;
       const mode = A()?.mode
-        ? A().mode(actor.state, 0, disadvantage)
+        ? A().mode(actor.state, 0, disadvantage, { ability })
         : R().modeFromSources(0, disadvantage);
       let check = R().d20(abilityCheckBonus(actor.state, ability) + (X()?.d20Modifier(actor.state) || 0), mode);
       const resolved = A()?.resolve

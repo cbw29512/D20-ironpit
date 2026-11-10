@@ -94,7 +94,7 @@ def resolve_grapple_helper_rescue(
             or has_condition(helper.state, "frightened", setup=setup)
         )
         mode = ability_check_roll_mode(
-            helper.state, disadvantage_sources=disadvantage,
+            helper.state, ability=ability, disadvantage_sources=disadvantage,
             member=helper, setup=setup,
         )
         check = roll_d20(dice, ability_check_bonus(helper.state, ability) + d20_modifier(helper.state), mode)

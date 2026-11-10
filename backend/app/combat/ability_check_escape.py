@@ -67,6 +67,7 @@ def resolve_escape_check(
         )
         mode = ability_check_roll_mode(
             actor.state,
+            ability=ability,
             disadvantage_sources=disadvantage,
         )
         check = roll_d20(dice, ability_check_bonus(actor.state, ability) + d20_modifier(actor.state), mode)

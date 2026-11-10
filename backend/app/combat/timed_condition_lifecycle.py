@@ -7,6 +7,8 @@ logger = logging.getLogger(__name__)
 
 def remove_effect_instance(state: CombatantState, effect: TimedEffect) -> bool:
     try:
+        from app.combat.timed_size_override import restore_size_override
+        restore_size_override(state, effect)
         state.timed_effects = [item for item in state.timed_effects if item != effect]
         for curse_id in effect.owned_curse_ids:
             still_owned = any(curse_id in item.owned_curse_ids for item in state.timed_effects)

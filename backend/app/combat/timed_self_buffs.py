@@ -111,6 +111,8 @@ def resolve_timed_self_buff(
             or action.spell_save_dc_bonus
             or action.spell_attack_advantage
             or action.modifier_effects
+            or action.size_override is not None
+            or action.ability_check_advantage_abilities
             or action.target_policy != "normal"
         ):
             apply_timed_condition(
@@ -142,6 +144,17 @@ def resolve_timed_self_buff(
             activate_source_recovery_aura(
                 member, action, setup, dice, round_number=round_number,
             )
+        if action.size_override is not None or action.ability_check_advantage_abilities:
+            # The existing timed group owns both temporary size and check context.
+            owned = [effect for effect in member.state.timed_effects
+                     if effect.source_id == member.combatant_id
+                     and effect.source_effect_id == action.id]
+            if len(owned) != 1:
+                raise ValueError("Size/check buffs require one source-owned timed group.")
+            owned[0].ability_check_advantage_abilities = list(action.ability_check_advantage_abilities)
+            if action.size_override is not None:
+                from app.combat.timed_size_override import apply_size_override
+                apply_size_override(member.state, member.combatant_id, action.id, action.size_override)
         if action.concentration:
             slot_level = None
             if action.resource_id and action.resource_id.startswith("spell-slot-"):

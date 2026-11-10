@@ -41,6 +41,7 @@ def skill_check_bonus(state: CombatantState, ability: AbilityName, skill: str) -
 def ability_check_roll_mode(
     state: CombatantState,
     *,
+    ability: AbilityName | None = None,
     advantage_sources: int = 0,
     disadvantage_sources: int = 0,
     member: EncounterCombatant | None = None,
@@ -59,8 +60,12 @@ def ability_check_roll_mode(
                 context_disadvantage += environment_context_disadvantage_sources(
                     member, setup, "sight_based_perception_checks",
                 )
+        timed_advantage = int(ability is not None and any(
+            ability in item.ability_check_advantage_abilities
+            for item in state.timed_effects
+        ))
         return resolve_roll_mode(
-            advantage_sources + d20_test_advantage_sources(state),
+            advantage_sources + timed_advantage + d20_test_advantage_sources(state),
             disadvantage_sources + context_disadvantage + timed_ability_check_disadvantage_sources(state),
         )
     except Exception as exc:
