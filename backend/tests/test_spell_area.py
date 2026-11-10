@@ -96,3 +96,17 @@ def test_area_does_not_jump_over_an_occupied_card_space() -> None:
     result = best_area_placement(setup.heroes[0], setup, 10, 150)
     assert result is not None
     assert len(result.enemy_ids) == 1
+
+
+def test_eligible_enemy_scoring_keeps_full_area_geometry() -> None:
+    setup = _setup(1, 6, monster_position=30)
+    caster = setup.heroes[0]
+    default = best_area_placement(caster, setup, 20, 150)
+    assert default is not None and "monsters-5" not in default.enemy_ids
+    chosen = best_area_placement(
+        caster, setup, 20, 150, eligible_enemy_ids={"monsters-5"},
+    )
+    assert chosen is not None
+    assert chosen.enemy_ids == ("monsters-2", "monsters-3", "monsters-4", "monsters-5")
+    assert chosen.friendly_ids == ()
+    assert best_area_placement(caster, setup, 20, 150, eligible_enemy_ids=set()) is None

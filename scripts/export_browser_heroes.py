@@ -910,6 +910,22 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
             item.model_dump(mode="json") for item in template.concentration_repeat_save_actions
         ]
     if template.auto_hit_spell_actions: row["auto_hit_spell_actions"] = [_auto_hit_spell(item) for item in template.auto_hit_spell_actions]
+    if template.hit_point_pool_spell_actions:
+        row["hit_point_pool_spell_actions"] = [{
+            "id": item.id, "name": item.name, "level": item.level,
+            "actionCost": item.action_cost, "range": item.range_ft,
+            "areaRadius": item.area_radius_ft,
+            "poolDiceCount": item.pool_dice_count, "poolDiceSize": item.pool_dice_size,
+            "extraDicePerUpcastLevel": item.extra_dice_per_upcast_level,
+            "targetOrder": item.target_order,
+            "conditionId": item.condition_id, "durationRounds": item.duration_rounds,
+            "expiryTiming": item.expiry_timing, "skipUnconscious": item.skip_unconscious,
+            "endsOnDamage": item.ends_on_damage,
+            "excludedCreatureTypes": list(item.excluded_creature_types),
+            "excludedConditionImmunities": list(item.excluded_condition_immunities),
+            "allowedRemovalActionIds": list(item.allowed_removal_action_ids),
+            "animation": item.animation, "source": item.source,
+        } for item in template.hit_point_pool_spell_actions]
     if template.persistent_spell_attack_actions:
         row["persistent_spell_attack_actions"] = [_persistent_spell_attack(item) for item in template.persistent_spell_attack_actions]
     if template.defensive_spell_actions: row["defensive_spell_actions"] = [_defense(item) for item in template.defensive_spell_actions]

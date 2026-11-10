@@ -30,8 +30,10 @@
     return points;
   }
 
-  function bestPlacement(caster, setup, radius, spellRange, protectedAllyIds = [], protectedAllyLimit = null) {
+  function bestPlacement(caster, setup, radius, spellRange, protectedAllyIds = [], protectedAllyLimit = null, eligibleEnemyIds = null) {
     const slotCount = areaSlotCount(radius);
+    // Filter tactical scoring only; physical area membership is unchanged.
+    const eligible = eligibleEnemyIds == null ? null : new Set(eligibleEnemyIds);
     const [enemies, friends] = sides(caster, setup);
     const protectedIds = new Set(protectedAllyIds);
     const livingEnemies = enemies.filter(living);
@@ -44,7 +46,7 @@
           .map((member, slot) => ({ member, slot }))
           .filter(({ member, slot }) => living(member) && inside(member, slot, start, slotCount, center, radius))
           .map(({ member }) => member.combatant_id);
-        if (!enemyIds.length) continue;
+        if (!enemyIds.length || (eligible !== null && !enemyIds.some(id => eligible.has(id)))) continue;
 
         const friendlyIds = [], protectedFriendlyIds = [], protectableIds = [];
         friends.forEach((member, slot) => {
@@ -60,7 +62,9 @@
     }
 
     if (!candidates.length) return null;
-    candidates.sort((a, b) => b.enemyIds.length - a.enemyIds.length
+    const eligibleCount = (placement) => eligible === null ? placement.enemyIds.length
+      : placement.enemyIds.filter(id => eligible.has(id)).length;
+    candidates.sort((a, b) => eligibleCount(b) - eligibleCount(a)
       || b.protectedFriendlyIds.length - a.protectedFriendlyIds.length
       || Math.abs(caster.position_ft - a.centerFt) - Math.abs(caster.position_ft - b.centerFt)
       || a.startSlot - b.startSlot);

@@ -77,4 +77,15 @@ assert.equal(A.areaSlotCount(60), 6);
   assert.equal(A.bestPlacement(heroes[0], setup(heroes, monsters), 10, 150).enemyIds.length, 1);
 }
 
+{
+  const heroes = [member("heroes", 0, 0)];
+  const monsters = Array.from({ length: 6 }, (_, i) => member("monsters", i, 30));
+  const battle = setup(heroes, monsters);
+  assert.ok(!A.bestPlacement(heroes[0], battle, 20, 150).enemyIds.includes("monsters-5"));
+  const eligible = A.bestPlacement(heroes[0], battle, 20, 150, [], null, ["monsters-5"]);
+  assert.deepEqual(eligible.enemyIds, ["monsters-2", "monsters-3", "monsters-4", "monsters-5"]);
+  assert.deepEqual(eligible.friendlyIds, []);
+  assert.equal(A.bestPlacement(heroes[0], battle, 20, 150, [], null, []), null);
+}
+
 console.log("Browser spell-area decision regressions passed.");

@@ -137,8 +137,13 @@
   function targetPriority(member) {
     const state = member.state;
     if (!state.is_alive || state.is_dead) return null;
-    if (state.current_hp > 0) return Q().incapacitated(state) ? 1 : 0;
-    if (state.template.kind === "character" && state.current_hp === 0) return 2;
+    if (state.current_hp > 0) {
+      if (!Q().incapacitated(state)) return 0;
+      const sleepLike = (state.timed_effects || []).some(effect =>
+        effect.effect_id === "unconscious" && effect.ends_on_damage === true);
+      return sleepLike && (window.IRON_PIT_BROWSER_CONDITION_RULES?.has?.(state, "unconscious") ?? true) ? 2 : 1;
+    }
+    if (state.template.kind === "character" && state.current_hp === 0) return 3;
     return null;
   }
   function priorityTargets(member, setup) {

@@ -27,8 +27,8 @@ def test_327_source_cards_prove_exactly_three_planar_only_actions() -> None:
         if card.id in found:
             assert "Etherealness" in card.action_names
             assert "etherealness" in source_supported_extra_action_labels_2014(card)
-            # An independently unsupported Action or trait must remain blocked.
-            assert basic_blockers_2014(card)
+            # Etherealness is source-proven arena-inert, not itself a card blocker.
+            # Other abilities may legitimately become completely supported later.
 
 
 def test_unknown_combat_riders_and_changed_plane_clauses_fail_closed() -> None:
@@ -56,6 +56,9 @@ def test_unknown_combat_riders_and_changed_plane_clauses_fail_closed() -> None:
             ),
         })
         assert not verified_unavailable_etherealness_2014(altered, "Etherealness")
+        assert basic_blockers_2014(altered), (
+            "A new damage/condition rider must reblock even a previously admitted card."
+        )
         renamed = card.model_copy(update={"id": "arbitrary-homebrew-creature", "name": "Renamed"})
         assert verified_unavailable_etherealness_2014(renamed, "Etherealness")
         assert card.model_dump_json() == original

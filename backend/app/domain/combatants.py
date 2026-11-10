@@ -36,6 +36,7 @@ from app.domain.size import CreatureSize
 from app.domain.spell_cast_modifiers import ResourceBackedSpellDurationModifier, ResourceBackedSpellRangeModifier, ResourceBackedSpellSaveDisadvantage
 from app.domain.spell_cast_effects import SpellCastTimedResistance
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
+from app.domain.hit_point_pool_spells import HitPointPoolSpellAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.source_turn_relation_damage import SourceTurnRelationDamage
 from app.domain.grapple_rescue import GrappleRescueRule
@@ -109,6 +110,7 @@ class CombatantTemplate(BaseModel):
     hp_threshold_condition_actions: list[HpThresholdConditionAction] = Field(default_factory=list)
     hp_threshold_instant_death_actions: list[HpThresholdInstantDeathAction] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
+    hit_point_pool_spell_actions: list[HitPointPoolSpellAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list)
     auto_hit_spell_actions: list[AutoHitSpellAction] = Field(default_factory=list)
     spell_cast_timed_resistances: list[SpellCastTimedResistance] = Field(default_factory=list)

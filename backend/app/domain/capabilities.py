@@ -37,6 +37,7 @@ from app.domain.rulesets import RulesetId
 from app.domain.size import CreatureSize
 from app.domain.legendary_actions import LegendaryActionOption
 from app.domain.spells import DefensiveSpellAction, SpellAttackAction, SpellSaveAction
+from app.domain.hit_point_pool_spells import HitPointPoolSpellAction
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 from app.domain.source_turn_relation_damage import SourceTurnRelationDamage
 from app.domain.grapple_rescue import GrappleRescueRule
@@ -90,6 +91,7 @@ class CombatantDefinition(BaseModel):
     area_weapon_attack_actions: list[AreaWeaponAttackAction] = Field(default_factory=list)
     save_actions: list[SaveCapabilityDefinition] = Field(default_factory=list)
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
+    hit_point_pool_spell_actions: list[HitPointPoolSpellAction] = Field(default_factory=list)
     persistent_save_zone_actions: list[PersistentSaveZoneAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list, exclude_if=lambda items: not items)
     auto_hit_spell_actions: list[AutoHitSpellAction] = Field(default_factory=list, exclude_if=lambda items: not items)

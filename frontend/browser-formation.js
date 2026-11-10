@@ -15,6 +15,7 @@
   function hasRangedSpellOffense(template) {
     if ((template?.spell_attack_actions || []).some((action) => action.attackKind === "ranged" && (action.range || 0) > 5)) return true;
     if ((template?.auto_hit_spell_actions || []).some((action) => (action.range || 0) > 5)) return true;
+    if ((template?.hit_point_pool_spell_actions || []).some((action) => (action.range || 0) > 5)) return true;
     return (template?.spell_save_actions || []).some((action) => (action.range || 0) > 5);
   }
   function hasTrueRangeOffense(template) { return hasRangedWeaponOffense(template) || hasRangedSpellOffense(template); }
@@ -54,7 +55,16 @@
         .filter((target) => conditions.canSee(member.state, target.state, S().distance(member, target)));
     }
     const active = pool.filter(target => alive(target) && target.state.swallowed == null);
-    if (active.length) return active;
+    if (active.length) {
+      // A source-owned Unconscious effect with endsOnDamage is Sleep-like.
+      // Prefer other targets, but never make sleepers untargetable: if every
+      // available enemy sleeps, ordinary attacks may wake one on damage.
+      // Other Incapacitated states keep their existing targeting precedence.
+      const sleeping = (target) => (target.state.timed_effects || []).some(effect =>
+        effect.effect_id === "unconscious" && effect.ends_on_damage === true);
+      const awake = active.filter(target => !sleeping(target));
+      return awake.length ? awake : active;
+    }
     return pool.filter((target) => target.state.template.kind === "character"
       && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0
       && target.state.swallowed == null);
