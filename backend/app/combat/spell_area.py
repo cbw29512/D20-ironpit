@@ -76,6 +76,7 @@ def best_area_placement(
     spell_range_ft: int,
     protected_ally_ids: set[str] | None = None,
     protected_ally_limit: int | None = None,
+    eligible_enemy_ids: set[str] | None = None,
 ) -> AreaPlacement | None:
     """Maximize enemies with a legal ally-safe point placement; otherwise decline the AoE."""
     slot_count = area_slot_count(radius_ft)
@@ -92,7 +93,12 @@ def best_area_placement(
                 member.combatant_id for index, member in enumerate(enemies)
                 if _living(member) and _inside(member, index, start, slot_count, center_ft, radius_ft)
             )
-            if not enemy_ids:
+            # Eligibility changes tactical priority, not who occupies the
+            # sphere: keep every intersecting enemy in the resulting area.
+            if not enemy_ids or (
+                eligible_enemy_ids is not None
+                and not eligible_enemy_ids.intersection(enemy_ids)
+            ):
                 continue
             exposed, spared = [], []
             protectable = []
@@ -115,7 +121,8 @@ def best_area_placement(
     return max(
         candidates,
         key=lambda item: (
-            len(item.enemy_ids),
+            len(item.enemy_ids) if eligible_enemy_ids is None
+            else len(eligible_enemy_ids.intersection(item.enemy_ids)),
             len(item.protected_friendly_ids),
             -abs(caster.position_ft - item.center_ft),
             -item.start_slot,
