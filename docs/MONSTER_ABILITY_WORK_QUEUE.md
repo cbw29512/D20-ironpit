@@ -1,5 +1,12 @@
 # D20 Iron Pit — single operational monster ability queue (2014 first)
 
+## [x] 2014 Balor — Fire Aura and source attacks cleared (PR #1214)
+
+- **Verified and merged:** All five required exact-head GitHub Actions workflows passed for PR #1214 head `bd46c3eb0ca02c4cc575fcd719429c33e7714943`; squash-merged into `main` as `54f486fe749e188a89b78b03ce0f7819bb706e8b`.
+- **Universal reuse:** Strict printed Fire Aura proof composes passive 5-ft 3d6 Fire contact retaliation and owner-turn-start 5-ft 3d6 Fire emanation (including nearby allies); complete Longsword and Whip through card-owned triple critical dice and shared saving-throw pull/movement grammar. Python/browser parity, typed defenses, rename/mutation, generated artifacts and source events are covered by the passing final-head gates. No monster-name runtime resolver.
+- **Checked off:** Generated merged `docs/MONSTER_BLOCKERS_2014.md` reports **275/327 source-admitted, 52 blocked**. Balor is absent from blockers. Both prior `attack:incomplete` and `source:trait` obligations are resolved; this supersedes Balor's 2026-10-18 historical issue-matrix row below.
+- **Separate evidence:** No completed real webpage fight for Balor was verified; source admission and automated gates do not constitute live webpage-fight certification. Netlify production remains locked.
+
 ## [x] 2014 Duergar — full source obligations cleared and merged (PR #1212)
 
 - **Checked off on main:** PR #1212 passed all five required exact-head workflows, including Python rules reference, browser regressions and combat certification, and squash-merged as `1642301cc20dc63be7a79d25c14fabb20f7ad1ad`.
