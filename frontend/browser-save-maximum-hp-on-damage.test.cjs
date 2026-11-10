@@ -38,6 +38,21 @@ window.IRON_PIT_BROWSER_SAVE_DAMAGE = {
 window.IRON_PIT_BROWSER_SAVE_DAMAGE_LEGACY = { resolve: () => null };
 load("browser-maximum-hp.js");
 load("browser-save-damage-apply.js");
+let terminalCleanupCalls = 0;
+window.IRON_PIT_BROWSER_RAGE = {
+  endIfIncapacitated(state) {
+    if (!state.is_dead) return;
+    state.active_effect_ids = (state.active_effect_ids || []).filter((id) => id !== "rage");
+    terminalCleanupCalls += 1;
+  },
+};
+window.IRON_PIT_BROWSER_CONCENTRATION = {
+  endIfIncapacitated(state) {
+    if (!state.is_dead) return;
+    state.concentration = null;
+    terminalCleanupCalls += 1;
+  },
+};
 
 const target = (hp = 40, temporaryHp = 0) => ({
   combatant_id: "synthetic-target",
@@ -68,6 +83,8 @@ for (const [succeeded, expected] of [[false, 15], [true, 7]]) {
 {
   // HP-maximum-zero is terminal even if the typed attack only depleted temp HP.
   const victim = target(10, 100);
+  victim.state.active_effect_ids = ["rage"];
+  victim.state.concentration = { source_id: "owner", effect_id: "effect" };
   window.IRON_PIT_BROWSER_SAVE_DAMAGE_APPLY.resolveAndApply(
     victim, action({ maxHpZeroKills: true }), false,
   );
@@ -76,6 +93,9 @@ for (const [succeeded, expected] of [[false, 15], [true, 7]]) {
   assert.equal(victim.state.is_dead, true);
   assert.equal(victim.state.is_alive, false);
   assert.equal(victim.state.template.max_hp, 10);
+  assert.deepEqual(victim.state.active_effect_ids, []);
+  assert.equal(victim.state.concentration, null);
+  assert.equal(terminalCleanupCalls, 2, "both cleanup hooks run after terminal death");
 }
 
 {
