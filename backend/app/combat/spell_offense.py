@@ -3,6 +3,8 @@ from __future__ import annotations
 import logging
 
 from app.combat.auto_hit_spell_policy import choose_auto_hit_spell
+from app.combat.hit_point_pool_spell_policy import choose_hp_pool_spell
+from app.combat.hit_point_pool_spell_resolution import resolve_hp_pool_spell
 from app.combat.auto_hit_spell_resolution import resolve_auto_hit_spell
 from app.combat.concentration_repeat_saves import (
     choose_concentration_repeat_save,
@@ -32,6 +34,7 @@ def resolve_best_spell_offense(
     try:
         repeat = choose_concentration_repeat_save(caster, setup)
         auto_hit = choose_auto_hit_spell(caster, setup, turn_key)
+        hp_pool = choose_hp_pool_spell(caster, setup, turn_key)
         attack = choose_spell_attack(caster, setup, turn_key)
         save = choose_spell(caster, setup, turn_key)
 
@@ -39,6 +42,7 @@ def resolve_best_spell_offense(
             auto_hit.expected_damage if auto_hit is not None else float("-inf"),
             attack.expected_damage if attack is not None else float("-inf"),
             save.expected_damage if save is not None else float("-inf"),
+            hp_pool.expected_damage if hp_pool is not None else float("-inf"),
         )
         if repeat is not None and repeat.expected_damage >= normal_expected:
             return resolve_concentration_repeat_save(
@@ -51,8 +55,14 @@ def resolve_best_spell_offense(
                 dice,
             )
 
-        if auto_hit is None and attack is None and save is None:
+        if auto_hit is None and attack is None and save is None and hp_pool is None:
             return [], sequence
+        if hp_pool is not None and hp_pool.expected_damage >= max(
+            auto_hit.expected_damage if auto_hit is not None else float("-inf"),
+            attack.expected_damage if attack is not None else float("-inf"),
+            save.expected_damage if save is not None else float("-inf"),
+        ):
+            return resolve_hp_pool_spell(sequence, round_number, caster, setup, hp_pool, turn_key, dice)
         if auto_hit is not None and auto_hit.expected_damage >= max(
             attack.expected_damage if attack is not None else float("-inf"),
             save.expected_damage if save is not None else float("-inf"),
