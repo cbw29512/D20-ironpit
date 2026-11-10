@@ -38,7 +38,7 @@
         .reduce((sum, roll) => sum + roll, 0) * escalation.replacementDurationRoundMultiplier;
     }
     if (escalated && duration == null) throw new Error("Escalated timed conditions require a source-declared duration.");
-    if (!save.succeeded) {
+    if (!save.succeeded && (effect.effectId || effect.conditionId)) {
       const runtimeEffectId = effect.effectId || effect.conditionId;
       if (!runtimeEffectId) throw new Error("Failed-save effect has no runtime effect id.");
       const timed = duration != null || effect.repeatSaveTiming || effect.effectId || effect.cannotRegainHitPoints
@@ -96,10 +96,19 @@
       forcedMovementFt = window.IRON_PIT_BROWSER_FORCED_MOVEMENT.pushStraightAway(
         target, attacker, setup, effect.failurePushFt,
       );
+    } else if (!save.succeeded && (effect.failurePullFt || 0) > 0) {
+      if (!setup || !attacker) throw new Error("Failed-save pull requires encounter setup and attacker.");
+      if (!window.IRON_PIT_BROWSER_FORCED_MOVEMENT?.pullStraightToward) {
+        throw new Error("Source-declared pull requires the shared forced-movement runtime.");
+      }
+      forcedMovementFt = window.IRON_PIT_BROWSER_FORCED_MOVEMENT.pullStraightToward(
+        target, attacker, setup, effect.failurePullFt,
+      );
     }
     return {
       saveRoll: save.roll, saveAbility: effect.saveAbility, saveDc: effect.dc,
       saveSucceeded: save.succeeded, appliedCondition, additionalConditions, forcedMovementFt,
+      forcedMovementDirection: effect.failurePullFt ? "toward_source" : "away_from_source",
     };
     } catch (error) {
       console.error("On-hit condition save resolution failed", { target: target?.combatant_id, error }); throw error;

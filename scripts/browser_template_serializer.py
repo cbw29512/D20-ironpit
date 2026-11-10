@@ -224,6 +224,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
                 }
             if effect.failure_push_ft:
                 save_row["failurePushFt"] = effect.failure_push_ft
+            if effect.failure_pull_ft:
+                save_row["failurePullFt"] = effect.failure_pull_ft
             if effect.excluded_creature_types:
                 save_row["excludedCreatureTypes"] = list(effect.excluded_creature_types)
             if effect.excluded_creature_subtypes:

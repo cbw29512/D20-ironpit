@@ -213,7 +213,11 @@
     if (exileApplied) description += ` ${actualTarget.state.template.name} is Banished by ${exileApplied.sourceName} until the source-relative return point.`;
     if (outcome.postHitSelfBuffApplied) description += ` ${outcome.postHitSelfBuffApplied.sourceName} activates.`;
     if (attackSave) description += ` ${attackSave.saveAbility} save DC ${attackSave.saveDc}: ${actualTarget.state.template.name} ${attackSave.saveSucceeded ? "succeeds" : "fails"}.`;
-    if (hitSave?.forcedMovementFt) description += ` ${actualTarget.state.template.name} is pushed ${hitSave.forcedMovementFt} feet away.`;
+    if (hitSave?.forcedMovementFt) {
+      description += hitSave.forcedMovementDirection === "toward_source"
+        ? ` ${actualTarget.state.template.name} is pulled ${hitSave.forcedMovementFt} feet toward the source.`
+        : ` ${actualTarget.state.template.name} is pushed ${hitSave.forcedMovementFt} feet away.`;
+    }
     if (abilityReduction) {
       description += ` ${abilityReduction.source || attack.name} reduces ${actualTarget.state.template.name}'s ${abilityReduction.ability} by ${abilityReduction.applied} (${abilityReduction.scoreBefore} to ${abilityReduction.scoreAfter}).`;
       if (abilityReduction.deathOutcome === "dead") description += ` ${actualTarget.state.template.name} dies at ${abilityReduction.ability} 0.`;
