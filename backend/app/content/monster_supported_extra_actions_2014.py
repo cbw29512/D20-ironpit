@@ -23,6 +23,7 @@ from app.content.monster_source_held_turn_damage_2014 import source_held_turn_da
 from app.content.monster_source_shared_space_held_save_2014 import source_proven_shared_space_held_saves_2014
 from app.content.monster_source_etherealness_2014 import verified_unavailable_etherealness_2014
 from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014
+from app.content.monster_source_enlarge_2014 import source_enlarge_actions_2014
 from app.content.monster_source_ranged_save_only_hit_2014 import source_ranged_save_only_hit_attacks_2014
 from app.content.monster_source_scare_2014 import source_scare_2014
 from app.content.monster_source_limited_audible_conditions_2014 import (
@@ -81,6 +82,7 @@ def source_supported_extra_action_labels_2014(monster: SourceMonster2014) -> set
             healing_action_names_2014(monster)
             | innate_spell_names_2014(monster)
             | {_label(action.name) for action in source_invisibility_action_2014(monster)}
+            | {_label(action.name) for action in source_enlarge_actions_2014(monster)}
             | {_label(action.name) for action in source_ranged_save_only_hit_attacks_2014(monster)}
             | {
                 _label(action.name)

@@ -206,9 +206,41 @@
     member.state.movement_remaining_ft -= moved;
     return { before, after: distance(member, target), moved };
   }
-  const sizeAtMost = (member, maxSize) => Boolean(maxSize) && SIZE_RANK[member.state.template.size] <= SIZE_RANK[maxSize];
+  function activeTimedSelfBuffActions(state) {
+    try {
+      const active = new Set((state.timed_effects || [])
+        .filter((effect) => effect.source_id && effect.source_effect_id)
+        .map((effect) => effect.source_effect_id));
+      return (state.template.timed_self_buff_actions || []).filter((action) => active.has(action.id));
+    } catch (error) {
+      console.error("Failed active timed self-buff lookup", { combatant: state?.template?.name, error });
+      throw error;
+    }
+  }
+  function effectiveSize(state) {
+    try {
+      const sizes = [...new Set(activeTimedSelfBuffActions(state)
+        .map((action) => action.sizeOverride).filter(Boolean))];
+      if (sizes.length > 1) throw new Error("Conflicting timed size overrides");
+      return sizes[0] || state.template.size;
+    } catch (error) {
+      console.error("Failed browser effective creature size", { combatant: state?.template?.name, error });
+      throw error;
+    }
+  }
+  function timedCheckAdvantage(state, ability) {
+    try {
+      if (!ability) return 0;
+      return activeTimedSelfBuffActions(state).filter((action) =>
+        (action.abilityCheckAdvantageAbilities || []).includes(ability)).length;
+    } catch (error) {
+      console.error("Failed browser timed ability-check Advantage", { ability, error });
+      throw error;
+    }
+  }
+  const sizeAtMost = (member, maxSize) => Boolean(maxSize) && SIZE_RANK[effectiveSize(member.state)] <= SIZE_RANK[maxSize];
   window.IRON_PIT_BROWSER_STATE = {
     active, beginTurn, buildState, canProne: (target, maxSize) => sizeAtMost(target, maxSize), distance, downedCharacter, effectiveMaxHp, effectiveMovementModes, grantTemporaryHp, hasActiveAlly,
-    hasAdjacentActiveAlly, hasVisibleActiveAllyWithin, moveToward, nearestTarget, packTactics, refreshReaction, refreshReactionsForNewTurn, refreshStartOfTurn, sizeAtMost, targetPriority, terminateTurn,
+    hasAdjacentActiveAlly, hasVisibleActiveAllyWithin, moveToward, nearestTarget, packTactics, refreshReaction, refreshReactionsForNewTurn, refreshStartOfTurn, effectiveSize, timedCheckAdvantage, sizeAtMost, targetPriority, terminateTurn,
   };
 })();

@@ -53,6 +53,8 @@ from app.content.monster_prepared_spells_2014 import (
     prepared_spell_save_actions_2014,
 )
 from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014, source_invisibility_resources_2014
+from app.content.monster_source_enlarge_2014 import source_enlarge_actions_2014, source_enlarge_resources_2014
+from app.content.monster_source_enlarged_attacks_2014 import source_enlarged_dual_range_attacks_2014
 from app.content.monster_source_ranged_save_only_hit_2014 import source_ranged_save_only_hit_attacks_2014
 from app.content.monster_innate_support_2014 import (
     innate_alternate_spell_casts_2014,
@@ -111,8 +113,18 @@ from app.content.monster_unnerving_mask_2014 import source_unnerving_mask_reacti
 def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapabilityDefinition:
     source_grapple_periodic_proof_2014(monster, attack)
     attack = source_completed_mixed_attack_2014(monster, attack)
+    # One printed melee-or-ranged attack can compile as two universal attack
+    # slots. The ranged ID is synthetic, but only from a source-proven dual
+    # range paragraph; it still uses the same immutable damage registry row.
+    ranged_origin = next((
+        row.id for row in source_enlarged_dual_range_attacks_2014(monster)
+        if row.id == attack.id and row.kind == "ranged"
+        for original in monster.attacks
+        if f"{original.id}-ranged" == row.id and original.name == row.name
+    ), None)
+    registry_id = ranged_origin.removesuffix("-ranged") if ranged_origin else attack.id
     printed_attack = next((item for item in monster_core_fields_2014(monster.id).attacks
-                           if item.source_id == attack.id), None)
+                           if item.source_id == registry_id), None)
     if printed_attack is None:
         raise ValueError(f"{monster.id} attack {attack.id} is missing from the 327-card registry")
     attack = attack.model_copy(update={
@@ -206,6 +218,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
     movement = movement_modes_2014(monster)
     attacks = [
         *[_attack(monster, attack) for attack in monster.attacks],
+        *[_attack(monster, attack) for attack in source_enlarged_dual_range_attacks_2014(monster)],
         *source_ranged_save_only_hit_attacks_2014(monster),
     ]
     blindsight_ft, truesight_ft = special_senses_2014(monster)
@@ -218,6 +231,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
     resources.extend(monster_spell_slot_resources_2014(monster))
     resources.extend(zero_hp_prevention_resources_2014(monster))
     resources.extend(recharge_self_buff_resources_2014(monster))
+    resources.extend(source_enlarge_resources_2014(monster))
     resources.extend(source_invisibility_resources_2014(monster))
     legendary_resource = legendary_resistance_resource_2014(monster)
     if legendary_resource is not None:
@@ -282,6 +296,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *prepared_persistent_save_zone_actions_2014(monster),
         ],
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
+            *source_enlarge_actions_2014(monster),
             *source_invisibility_action_2014(monster),
             *berserk_self_buffs_2014(monster),
             *heated_body_retaliation_2014(monster),
