@@ -4,9 +4,9 @@ from app.domain.capability_effects import DamageEffectDefinition, DiceSpec
 from app.domain.weapons import DamageType
 
 _CONDITIONAL_DAMAGE_KEYS = frozenset({
-    "trigger", "mode", "dice_count", "dice_size", "damage_bonus", "damage_type",
+    "trigger", "mode", "dice_count", "dice_size", "damage_bonus", "damage_type", "required_effect_id",
 })
-_CONDITIONAL_TRIGGERS = frozenset({"attack_advantage", "attacker_bloodied", "target_bloodied", "round1_initiative_lead"})
+_CONDITIONAL_TRIGGERS = frozenset({"attack_advantage", "attacker_bloodied", "target_bloodied", "round1_initiative_lead", "attacker_active_effect"})
 _CONDITIONAL_MODES = frozenset({"add", "replace_weapon"})
 _DAMAGE_TYPES = frozenset(item.value for item in DamageType)
 
@@ -16,6 +16,8 @@ def supports_conditional_damage_2014(value: object) -> bool:
         return False
     return (
         str(value.get("trigger", "")) in _CONDITIONAL_TRIGGERS
+        and ((value.get("trigger") == "attacker_active_effect") ==
+             (isinstance(value.get("required_effect_id"), str) and bool(value.get("required_effect_id"))))
         and str(value.get("mode", "add")) in _CONDITIONAL_MODES
         and isinstance(value.get("dice_count"), int) and int(value["dice_count"]) > 0
         and isinstance(value.get("dice_size"), int) and int(value["dice_size"]) >= 2
@@ -38,4 +40,5 @@ def conditional_damage_effect_2014(value: object, source: str) -> DamageEffectDe
         damage_type=DamageType(str(value["damage_type"]).lower()),
         trigger=str(value["trigger"]),
         mode=str(value.get("mode", "add")),
+        required_effect_id=value.get("required_effect_id"),
     )

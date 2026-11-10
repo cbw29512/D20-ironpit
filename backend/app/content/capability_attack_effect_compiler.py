@@ -72,6 +72,7 @@ def compile_attack_effects(definition: AttackCapabilityDefinition) -> CompiledAt
                         mode=effect.mode, dice_count=effect.dice.count,
                         dice_size=effect.dice.size, damage_bonus=effect.dice.bonus,
                         damage_type=effect.damage_type,
+                        required_effect_id=effect.required_effect_id,
                     ))
             elif isinstance(effect, SaveDamageEffectDefinition):
                 result.on_hit_save_damage = OnHitSaveDamage(

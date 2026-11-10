@@ -65,6 +65,10 @@
 
   function conditionalActive(spec, attacker, target, mode) {
     if (!spec) return false;
+    if (spec.trigger === "attacker_active_effect") {
+      if (!spec.requiredEffectId) throw new Error("Active-effect weapon damage requires an effect ID.");
+      return (attacker.active_effect_ids || []).includes(spec.requiredEffectId);
+    }
     if (spec.trigger === "attack_advantage") return mode === "advantage";
     if (spec.trigger === "attacker_bloodied") return bloodied(attacker);
     if (spec.trigger === "round1_initiative_lead") {

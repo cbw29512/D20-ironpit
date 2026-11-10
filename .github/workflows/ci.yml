@@ -649,6 +649,7 @@ jobs:
           node frontend/browser-formation.test.cjs
           node frontend/browser-formation-rows.test.cjs
           node frontend/browser-conditional-damage.test.cjs
+          node frontend/browser-active-effect-weapon-damage.test.cjs
           node frontend/browser-swarm.test.cjs
           node frontend/browser-rage.test.cjs
           node frontend/browser-instinctive-pounce.test.cjs
