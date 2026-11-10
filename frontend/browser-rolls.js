@@ -66,6 +66,10 @@
   function conditionalActive(spec, attacker, target, mode) {
     if (!spec) return false;
     if (spec.trigger === "attack_advantage") return mode === "advantage";
+    if (spec.trigger === "attacker_effect_active") {
+      if (!spec.requiredEffectId) throw new Error("Conditional damage requires an active source effect ID.");
+      return (attacker.active_effect_ids || []).includes(spec.requiredEffectId);
+    }
     if (spec.trigger === "attacker_bloodied") return bloodied(attacker);
     if (spec.trigger === "round1_initiative_lead") {
       if (!target) throw new Error("Opening-initiative damage requires target state.");
