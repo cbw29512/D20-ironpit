@@ -29,8 +29,15 @@ class DamageEffectDefinition(BaseModel):
     source: str
     dice: DiceSpec
     damage_type: DamageType
-    trigger: Literal["on_hit", "attack_advantage", "attacker_bloodied", "target_bloodied", "round1_initiative_lead"] = "on_hit"
+    trigger: Literal["on_hit", "attack_advantage", "attacker_bloodied", "target_bloodied", "round1_initiative_lead", "attacker_effect_active"] = "on_hit"
     mode: Literal["add", "replace_weapon"] = "add"
+    required_effect_id: str | None = Field(default=None, min_length=1)
+
+    @model_validator(mode="after")
+    def validate_source_effect(self) -> "DamageEffectDefinition":
+        if (self.trigger == "attacker_effect_active") != (self.required_effect_id is not None):
+            raise ValueError("Active-effect conditional damage requires an effect ID.")
+        return self
 
 
 class SaveDamageEffectDefinition(BaseModel):
