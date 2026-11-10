@@ -96,7 +96,7 @@ def test_balor_fire_aura_melee_hit_and_source_turn_start():
         affected_states=[balor.state, hero.state],
     ) == 0
     hero.position_ft = 5
-    setup = EncounterSetup(heroes=[hero], monsters=[balor])
+    setup = EncounterSetup(heroes=[hero], monsters=[balor], hero_total_levels=1, monster_total_cr="1/4")
     events, _ = resolve_source_turn_start_emanations(
         1, 1, balor, setup, FixedDiceProvider([6, 6, 6]),
     )
@@ -108,7 +108,7 @@ def test_balor_source_turn_aura_hits_allies_and_fails_closed_on_mutations():
     balor = _member(_aura_host_template(), "balor", "monsters", 0)
     ally = _member(build_commoner().model_copy(update={"max_hp": 100}), "ally", "monsters", 5)
     enemy = _member(build_commoner().model_copy(update={"max_hp": 100}), "enemy", "heroes", 10)
-    setup = EncounterSetup(heroes=[enemy], monsters=[balor, ally])
+    setup = EncounterSetup(heroes=[enemy], monsters=[balor, ally], hero_total_levels=1, monster_total_cr="1/4")
     events, _ = resolve_source_turn_start_emanations(1, 1, balor, setup, FixedDiceProvider([3, 3, 3]))
     assert [event.target_id for event in events] == ["ally"]
     assert ally.state.current_hp == 91 and enemy.state.current_hp == 100
