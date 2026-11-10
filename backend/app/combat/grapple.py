@@ -175,6 +175,7 @@ def _check_mode(state: CombatantState, strength_check: bool, setup=None) -> Roll
     disadvantage += int(has_condition(state, POISONED_EFFECT_ID) or has_condition(state, FRIGHTENED_EFFECT_ID, setup=setup))
     return ability_check_roll_mode(
         state,
+        ability="strength" if strength_check else "dexterity",
         advantage_sources=advantage,
         disadvantage_sources=disadvantage,
     )

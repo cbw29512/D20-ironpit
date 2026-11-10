@@ -10,6 +10,7 @@ from app.domain.combatants import DamageType
 from app.domain.debuffs import DebuffCounter
 from app.domain.delayed_effect_transition import DelayedTimedEffectTransition
 from app.domain.movement import MovementModeGrant
+from app.domain.size import CreatureSize
 from app.domain.saving_throw_context import SavingThrowContext
 from app.domain.timed_control_limits import TimedControlLimits
 from app.domain.breakable_restraints import BreakableObjectState
@@ -68,6 +69,9 @@ class TimedEffect(BaseModel):
     # clear, including source qualifiers and conditional movement costs.
     owned_debuff_counters: list[DebuffCounter] = Field(default_factory=list)
     owned_movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
+    owned_previous_size: CreatureSize | None = None
+    owned_override_size: CreatureSize | None = None
+    ability_check_advantage_abilities: list[AbilityName] = Field(default_factory=list)
     removed_from_battlefield: bool = False
     return_damage_dice_count: int = Field(default=0, ge=0)
     return_damage_dice_size: int = Field(default=0, ge=0)

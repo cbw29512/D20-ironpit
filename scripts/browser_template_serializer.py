@@ -869,6 +869,10 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         "expiryTiming": action.expiry_timing, "priority": action.priority,
         "animation": action.animation,
     }
+    if action.size_override is not None:
+        row["sizeOverride"] = action.size_override.value
+    if action.ability_check_advantage_abilities:
+        row["abilityCheckAdvantageAbilities"] = list(action.ability_check_advantage_abilities)
     if action.selection_group is not None:
         row["selectionGroup"] = action.selection_group
         row["selectionStrategy"] = action.selection_strategy

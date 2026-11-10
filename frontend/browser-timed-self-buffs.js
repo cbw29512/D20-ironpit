@@ -77,6 +77,7 @@
         || (action.emittedEnvironmentContexts || []).length
         || action.meleeHitRetaliation
         || action.spellSaveDcBonus || action.spellAttackAdvantage || (action.modifierEffects || []).length
+        || action.sizeOverride || (action.abilityCheckAdvantageAbilities || []).length
         || (action.targetPolicy || "normal") !== "normal"
       )) {
         T().apply(member.state, action.id, member.combatant_id, {
@@ -103,6 +104,17 @@
       }
       if (action.friendlyRecoveryAura) {
         window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS?.activate(member, action, options.setup, round);
+      }
+      if (action.sizeOverride || (action.abilityCheckAdvantageAbilities || []).length) {
+        const owned = (member.state.timed_effects || []).filter((effect) =>
+          effect.source_id === member.combatant_id && effect.source_effect_id === action.id);
+        if (owned.length !== 1) throw new Error("Size/check buff must own one timed group.");
+        owned[0].ability_check_advantage_abilities = [...(action.abilityCheckAdvantageAbilities || [])];
+        if (action.sizeOverride) {
+          const size = window.IRON_PIT_BROWSER_TIMED_SIZE_OVERRIDE;
+          if (!size?.apply) throw new Error("Temporary size buff requires source-owned size runtime.");
+          size.apply(member.state, member.combatant_id, action.id, action.sizeOverride);
+        }
       }
       if (action.concentration) {
         const concentration = window.IRON_PIT_BROWSER_CONCENTRATION;
