@@ -30,9 +30,10 @@ BonusDamageSpec = tuple[str, int, int, DamageType] | tuple[str, int, int, int, D
 def roll_damage_component(
     dice: DiceProvider, source: str, dice_count: int, dice_size: int, modifier: int,
     damage_type: DamageType, critical: bool,
+    critical_dice_multiplier: int = 2,
 ) -> DamageRollComponent:
     try:
-        count = dice_count * (2 if critical else 1)
+        count = dice_count * (critical_dice_multiplier if critical else 1)
         rolls = [dice.roll(dice_size) for _ in range(count)]
         return DamageRollComponent(
             source=source, notation=f"{count}d{dice_size}+{modifier}", rolls=rolls,
@@ -97,6 +98,7 @@ def resolve_weapon_damage(
             components = [roll_damage_component(
                 dice, weapon.name, replacement.dice_count, replacement.dice_size,
                 replacement.damage_bonus, replacement.damage_type, critical,
+                critical_dice_multiplier=attack.critical_dice_multiplier,
             )]
         elif attack.fixed_damage is not None:
             components = [fixed_damage_component(weapon.name, attack.fixed_damage, selected_damage_type)]
@@ -111,6 +113,7 @@ def resolve_weapon_damage(
                 attacker, dice, source=weapon.name, dice_count=weapon.dice_count,
                 dice_size=weapon.dice_size, modifier=weapon_modifier, damage_type=selected_damage_type,
                 critical=critical, turn_key=turn_key, damage_die_minimum=attack.damage_die_minimum,
+                critical_dice_multiplier=attack.critical_dice_multiplier,
             )]
 
         components[0] = corrosion_adjusted_weapon_component(attacker, attack.weapon.id, components[0])
@@ -124,6 +127,7 @@ def resolve_weapon_damage(
                 components.append(roll_damage_component(
                     dice, extra.source, extra.dice_count, extra.dice_size,
                     extra.damage_bonus, extra.damage_type, critical,
+                    critical_dice_multiplier=attack.critical_dice_multiplier,
                 ))
 
         for conditional in attack.conditional_damage:
@@ -133,6 +137,7 @@ def resolve_weapon_damage(
             components.append(roll_damage_component(
                 dice, source, conditional.dice_count, conditional.dice_size,
                 conditional.damage_bonus, conditional.damage_type, critical,
+                critical_dice_multiplier=attack.critical_dice_multiplier,
             ))
 
         _append_bonus_component(

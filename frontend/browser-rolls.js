@@ -27,7 +27,7 @@
   }
 
   function candidate(attack, critical) {
-    const count = attack.diceCount * (critical ? 2 : 1);
+    const count = attack.diceCount * (critical ? (attack.criticalDiceMultiplier || 2) : 1);
     const rawRolls = dice().rollMany(count, attack.diceSize);
     const rolls = attack.damageDieMinimum ? rawRolls.map((roll) => Math.max(roll, attack.damageDieMinimum)) : rawRolls;
     return {
@@ -42,12 +42,12 @@
     return { notation: String(attack.fixedDamage), rolls: [], modifier: 0, total: attack.fixedDamage };
   }
 
-  function damageComponent(spec, critical) {
+  function damageComponent(spec, critical, criticalDiceMultiplier = 2) {
     const modifier = spec.damageBonus || 0;
     if (spec.diceCount === 0) {
       return { source: spec.source, damage_type: spec.damageType, notation: String(modifier), rolls: [], modifier: 0, total: modifier };
     }
-    const count = spec.diceCount * (critical ? 2 : 1);
+    const count = spec.diceCount * (critical ? criticalDiceMultiplier : 1);
     const rolls = dice().rollMany(count, spec.diceSize);
     return {
       source: spec.source,
@@ -153,7 +153,7 @@
     const components = [{ source: attack.name, damage_type: replacement?.damageType || selectedDamageType, ...rolled }];
     const brutal = critical && attack.kind === "melee" ? attacker.template.brutal_critical_dice || 0 : 0;
     if (brutal) components.push(damageComponent({ source: "Brutal Critical", diceCount: brutal, diceSize: attack.diceSize, damageBonus: 0, damageType: attack.damageType }, false));
-    for (const extra of attack.onHitDamage || []) components.push(damageComponent(extra, critical));
+    for (const extra of attack.onHitDamage || []) components.push(damageComponent(extra, critical, attack.criticalDiceMultiplier || 2));
     if (mode === "advantage" && attack.conditionalAdvantage) {
       const [baseCount, sides] = attack.conditionalAdvantage;
       const count = baseCount * (critical ? 2 : 1);
@@ -164,7 +164,7 @@
       });
     }
     if (conditional?.mode === "add" && conditionalActive(conditional, attacker, target, mode)) {
-      components.push(damageComponent({ ...conditional, source: conditional.sourceName || "Conditional bonus damage" }, critical));
+      components.push(damageComponent({ ...conditional, source: conditional.sourceName || "Conditional bonus damage" }, critical, attack.criticalDiceMultiplier || 2));
     }
     const sneak = window.IRON_PIT_BROWSER_SNEAK_ATTACK?.bonusDamage(
       attacker, attack, mode, turnKey, sneakAllyAvailable, target,

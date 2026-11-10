@@ -90,6 +90,8 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             "damageBonus": attack.damage_bonus, "damageType": weapon.damage_type.value,
             "reach": weapon.reach_ft, "animation": weapon.animation,
         }
+        if attack.critical_dice_multiplier != 2:
+            row["criticalDiceMultiplier"] = attack.critical_dice_multiplier
         if weapon.damage_type_choices:
             row["damageTypeChoices"] = [item.value for item in weapon.damage_type_choices]
         if attack.damage_source_qualifiers:
