@@ -31,6 +31,23 @@ _NONCOMBAT_ACTION_CLAUSES_2014 = {
         "sprite also knows the creature's alignment. Celestials, fiends, and "
         "undead automatically fail the saving throw."
     ),
+    "Change Shape": (
+        "The hag magically polymorphs into a Small or Medium female humanoid, or back "
+        "into her true form. Her statistics are the same in each form. Any equipment "
+        "she is wearing or carrying isn't transformed. She reverts to her true form if "
+        "she dies."
+    ),
+    "Nightmare Haunting (1/Day)": (
+        "While on the Ethereal Plane, the hag magically touches a sleeping humanoid on "
+        "the Material Plane. A protection from evil and good spell cast on the target "
+        "prevents this contact, as does a magic circle. As long as the contact "
+        "persists, the target has dreadful visions. If these visions last for at least "
+        "1 hour, the target gains no benefit from its rest, and its hit point maximum "
+        "is reduced by 5 (1d10). If this effect reduces the target's hit point maximum "
+        "to 0, the target dies, and if the target was evil, its soul is trapped in the "
+        "hag's soul bag. The reduction to the target's hit point maximum lasts until "
+        "removed by the greater restoration spell or similar magic."
+    ),
 }
 
 
@@ -46,7 +63,9 @@ def verified_nonactionable_action_2014(monster: SourceMonster2014, action_name: 
         expected = _NONCOMBAT_ACTION_CLAUSES_2014.get(action_name)
         if expected is None:
             return False
-        printed = source_sections_2014(monster.source_actions).get(action_name)
+        printed = source_sections_2014(
+            monster.source_actions, include_continuations=True,
+        ).get(action_name)
         if printed is None:
             return False
         normalize = lambda text: " ".join(text.casefold().replace("’", "'").split())
