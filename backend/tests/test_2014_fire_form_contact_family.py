@@ -1,6 +1,6 @@
 """Fire Form's contact clause reuses the same passive combat rule as Heated Body.
 
-The movement/ignition and water clauses remain independent blockers.
+The movement/ignition clauses remain blocked; water-only susceptibility is inert.
 """
 from __future__ import annotations
 
@@ -69,7 +69,7 @@ def test_fire_form_passive_is_compiled_but_compound_trait_stays_blocked():
             "damageType": "fire", "onContact": True,
         }
         assert "Fire Form" in unsupported_traits_2014(card)
-        assert "Water Susceptibility" in unsupported_traits_2014(card)
+        assert "Water Susceptibility" not in unsupported_traits_2014(card)
         assert "source:trait" in basic_blockers_2014(card)
         assert card.model_dump_json() == original
     except Exception:

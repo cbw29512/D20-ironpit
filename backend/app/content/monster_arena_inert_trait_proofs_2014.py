@@ -15,6 +15,12 @@ logger = logging.getLogger(__name__)
 # Approved decisions #818/#819. Corrode Metal is deliberately absent: the
 # Gray Ooze's distinct fight-only weapon penalty was approved in #784.
 _APPROVED_CLAUSES = {
+    # No water terrain or splashable water exists in the standard Iron Pit.
+    # This proof does not waive the unrelated combat-active Fire Form trait.
+    "Water Susceptibility": (
+        "For every 5 feet the elemental moves in water, or for every gallon of "
+        "water splashed on it, it takes 1 cold damage."
+    ),
     "Iron Scent": (
         "The rust monster can pinpoint, by scent, the location of ferrous metal "
         "within 30 feet of it."
