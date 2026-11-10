@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field, model_serializer, model_validator
 from app.domain.action_types import ConditionName
 from app.domain.character_builds import AbilityName
 from app.domain.failure_margin import FailureMarginEscalation, require_escalation_duration
+from app.domain.repeat_save_validation import validate_repeat_save_fields
 from app.domain.timed_control_limits import TimedControlLimits, TimedSaveFlatBonus, compiled_control_limits
 from app.domain.weapons_base import DamageType
 logger = logging.getLogger(__name__)
@@ -118,15 +119,15 @@ class FailedSaveTimedEffect(BaseModel):
                         "Save-action failure-margin escalation supports same-lifecycle "
                         "additional conditions only."
                     )
+            validate_repeat_save_fields(
+                self.repeat_save_ability, self.repeat_save_dc,
+                self.repeat_save_timing, self.damage_repeat_save_trigger,
+            )
             configured = (
                 self.repeat_save_ability is not None,
                 self.repeat_save_dc is not None,
                 self.repeat_save_timing is not None,
             )
-            if any(configured) and not all(configured):
-                raise ValueError("Repeat-save riders require ability, DC, and timing together.")
-            if self.damage_repeat_save_trigger != "none" and not all(configured):
-                raise ValueError("Damage-triggered repeat saves require ability, DC, and timing.")
             if self.damage_repeat_save_trigger != "none" and self.ends_on_damage:
                 raise ValueError("A timed effect cannot end and repeat its save on the same damage.")
             if self.repeat_save_before_damaging_terrain and not all(configured):

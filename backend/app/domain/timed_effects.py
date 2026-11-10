@@ -12,6 +12,7 @@ from app.domain.delayed_effect_transition import DelayedTimedEffectTransition
 from app.domain.movement import MovementModeGrant
 from app.domain.size import CreatureSize
 from app.domain.saving_throw_context import SavingThrowContext
+from app.domain.repeat_save_validation import validate_repeat_save_fields
 from app.domain.timed_control_limits import TimedControlLimits
 from app.domain.breakable_restraints import BreakableObjectState
 
@@ -106,16 +107,15 @@ class TimedEffect(BaseModel):
     def validate_lifecycle(self) -> "TimedEffect":
         try:
             repeat_fields = (self.repeat_save_ability, self.repeat_save_dc, self.repeat_save_timing)
-            if any(item is not None for item in repeat_fields) and not all(item is not None for item in repeat_fields):
-                raise ValueError("Timed effect repeat save requires ability, DC, and timing together.")
+            validate_repeat_save_fields(
+                *repeat_fields, self.damage_repeat_save_trigger,
+            )
             if self.minimum_removal_spell_level and not self.removal_effect_tag:
                 raise ValueError("Minimum removal spell level requires an effect tag.")
             if self.removal_effect_tag is not None and not self.removal_effect_tag.strip():
                 raise ValueError("Removal effect tag cannot be blank.")
             if (self.activates_target_turn_count is None) != (self.pending_transition is None):
                 raise ValueError("Delayed transition requires activation count and rule together.")
-            if self.damage_repeat_save_trigger != "none" and not all(item is not None for item in repeat_fields):
-                raise ValueError("Damage-triggered repeat saves require ability, DC, and timing.")
             if self.damage_repeat_save_trigger != "none" and self.ends_on_damage:
                 raise ValueError("A timed effect cannot end and repeat its save on the same damage.")
             if self.repeat_save_before_damaging_terrain and not all(item is not None for item in repeat_fields):
