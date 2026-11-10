@@ -52,7 +52,17 @@
             options.sourceId || null,
           );
         }
-        if (!succeeded && action.reduceHitPointMaximumOnFailedSave && incoming) {
+        if (action.reduceHitPointMaximumOnDamage && incoming) {
+          // This universal outcome follows ordinary half-save and typed defenses.
+          // It is not tied to a monster or spell name.
+          const maximum = window.IRON_PIT_BROWSER_MAXIMUM_HP;
+          if (!maximum?.applyReduction) {
+            throw new Error("Damage-linked maximum-HP reduction runtime is unavailable.");
+          }
+          maximum.applyReduction(target.state, incoming, {
+            zeroMaxHpKills: Boolean(action.maxHpZeroKills),
+          });
+        } else if (!succeeded && action.reduceHitPointMaximumOnFailedSave && incoming) {
           window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS
             .applyHitPointMaximumReduction(target.state, incoming);
         }
