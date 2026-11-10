@@ -22,6 +22,12 @@ logger = logging.getLogger(__name__)
 # Whole, inspected printed clauses. Extra combat-effective riders must fail
 # closed instead of inheriting a permissive name-based exclusion.
 _NONCOMBAT_ACTION_CLAUSES_2014 = {
+    # The locked Pit ignores forced positional displacement. Reel has no
+    # damage, save, condition, or other rider in the pinned 2014 source.
+    # Match the complete paragraph; any future combat rider fails closed.
+    "Reel": (
+        "The roper pulls each creature grappled by it up to 25 feet straight toward it."
+    ),
     "Create Food and Water": (
         "The spectator magically creates enough food and water to sustain itself for 24 hours."
     ),
