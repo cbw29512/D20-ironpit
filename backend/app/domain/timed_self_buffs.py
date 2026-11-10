@@ -5,7 +5,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import ActionCost, ConditionName, ConditionTiming
+from app.domain.actions import AbilityName, ActionCost, ConditionName, ConditionTiming
+from app.domain.size import CreatureSize
 from app.domain.debuffs import DebuffCounter
 from app.domain.environment_contexts import EmittedEnvironmentContext
 from app.domain.friendly_combat_auras import (
@@ -52,6 +53,8 @@ class TimedSelfBuffAction(BaseModel):
     opening_eligible: bool = True
     duration_rounds: int | None = Field(default=None, ge=1, le=600)
     condition_ids: list[ConditionName] = Field(default_factory=list)
+    size_override: CreatureSize | None = None
+    ability_check_advantage_abilities: list[AbilityName] = Field(default_factory=list)
     magical_effect: bool = False
     ends_on_owner_attack: bool = False
     ends_on_owner_spell_cast: bool = False
@@ -94,6 +97,7 @@ class TimedSelfBuffAction(BaseModel):
                 if self.resource_id or self.concentration or self.duration_rounds is not None or self.ends_if_source_incapacitated:
                     raise ValueError("Passive condition auras cannot own activation resources or a source timer.")
                 if any((self.condition_ids, self.damage_resistances,
+                    self.size_override is not None, self.ability_check_advantage_abilities,
                     self.debuff_counters, self.saving_throw_advantage_grants, self.movement_mode_grants,
                     self.friendly_cover_aura, self.friendly_roll_bonus_aura,
                     self.friendly_weapon_damage_aura, self.friendly_recovery_aura,
@@ -116,6 +120,8 @@ class TimedSelfBuffAction(BaseModel):
                 raise ValueError("Non-spell slot expenditure requires a spell-slot resource.")
             if self.action_cost == "reaction":
                 raise ValueError("Timed self-buff Actions currently require an on-turn Action or Bonus Action.")
+            if len(set(self.ability_check_advantage_abilities)) != len(self.ability_check_advantage_abilities):
+                raise ValueError("Ability-check Advantage abilities must be unique.")
             if len(set(self.condition_ids)) != len(self.condition_ids):
                 raise ValueError("Timed self-buff condition ids must be unique.")
             if len(set(self.damage_resistances)) != len(self.damage_resistances):
@@ -143,7 +149,9 @@ class TimedSelfBuffAction(BaseModel):
             if len(grant_keys) != len(self.saving_throw_advantage_grants):
                 raise ValueError("Timed self-buff saving-throw Advantage grants must be unique.")
             if not (
-                self.condition_ids
+                self.size_override is not None
+                or self.ability_check_advantage_abilities
+                or self.condition_ids
                 or self.damage_resistances
                 or self.debuff_counters
                 or self.saving_throw_advantage_grants
