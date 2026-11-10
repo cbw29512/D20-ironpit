@@ -44,7 +44,11 @@ def actor_inside_environment_context(
                 continue
             for action in _active_emitting_actions(source):
                 for context in action.emitted_environment_contexts:
-                    if context.context_id != context_id:
+                    # Genuine sunlight is bright light; ordinary bright light is NOT sunlight.
+                    # Source-owned context facts decide both, never source names.
+                    if context.context_id != context_id and not (
+                        context_id == "bright_light" and context.context_id == "sunlight"
+                    ):
                         continue
                     if combatant_distance(source, actor) <= context.radius_ft:
                         return True
