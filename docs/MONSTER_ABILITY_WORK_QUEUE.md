@@ -1,3 +1,10 @@
+## [ ] 2014 Green Hag — existing universal disguise, invisibility, and spell
+
+- **Only existing combat primitives:** Claws is the already compiled melee hit; Vicious Mockery is the shared 2014 save spell using printed DC 12. Invisible Passage is the same concentration/Invisibility self-buff used by other 2014 creatures, with exact attack-or-spell exit. Illusory Appearance uses the same visual inspection and death/dismissal rules as Sea Hag, but is not selected as a free opening tactic when no visual-dependent combat trigger exists.
+- **Source-only context:** Amphibious and Mimicry do not change standard Pit math; Dancing Lights and Minor Illusion remain printed but are arena-neutral in the standard Pit. No monster-name combat resolver.
+- **Proof:** Whole printed Illusory Appearance/Invisible Passage paragraphs, DC 20 Investigation and action cost, source mutation failure, renamed identity, generic Invisibility owner-spellcast expiration, and all 327 source cards remain part of certification.
+- **Gate:** Rebuild generated 2014 admitted/blocked report, run Python/browser + roster/hero/paired-edition workflows, and merge only after exact-head pass. Do not mark Green Hag admitted early.
+
 ## [ ] 2014 Ice Devil — complete Wall of Ice (Recharge 6) binding
 
 - **Exact unresolved source action:** Bind the printed 60-foot placement, 30-foot wall or 20-foot dome geometry, occupied-space DC 17 Dexterity save for 10d6 Cold/half, Pit-ignored displacement logging, 10-round/owner-incapacitated/death expiry, AC 5 and 30 HP per 10-foot section, printed immunities, destroyed-section frigid-air traversal DC 17 Constitution save for 5d6 Cold/half, and Recharge 6 lifecycle.
