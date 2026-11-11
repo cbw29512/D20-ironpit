@@ -47,6 +47,7 @@ def test_mimic_natural_form_is_a_complete_basic_candidate():
         # that Action is excluded by the Pit, so object-form riders cannot fire.
         assert "Shapechanger" in card.trait_names
         assert "If the mimic is in object form" in card.source_actions
+        assert card.source_actions.count("If the mimic is in object form") == 1
         assert basic_blockers_2014(card) == ()
         template = compile_combatant(adapt_monster_mechanics_2014(card))
         row = template_row(template)
