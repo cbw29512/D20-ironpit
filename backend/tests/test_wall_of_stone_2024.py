@@ -73,6 +73,7 @@ def test_wall_of_stone_2024_source_data_and_slot_cast_are_exact() -> None:
     assert action.armor_class == 15
     assert action.hit_points_per_section == 180
     assert action.damage_immunities == ["poison", "psychic"]
+    assert action.damage_vulnerabilities == []
     assert action.required_support_material == "stone"
 
     event, sequence = cast_persistent_barrier(

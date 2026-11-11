@@ -19,6 +19,7 @@ class BarrierDamageResult:
     hp_after: int
     destroyed: bool
     immune: bool
+    vulnerable: bool
 
 
 def _section(
@@ -61,7 +62,9 @@ def apply_barrier_section_damage(
         section = _section(setup, barrier_id, section_id)
         hp_before = section.current_hp
         immune = damage_type in set(section.damage_immunities)
-        applied = 0 if immune or section.destroyed else min(damage, section.current_hp)
+        vulnerable = not immune and damage_type in set(section.damage_vulnerabilities)
+        scaled = damage * 2 if vulnerable else damage
+        applied = 0 if immune or section.destroyed else min(scaled, section.current_hp)
         section.current_hp = max(0, section.current_hp - applied)
         if section.current_hp == 0:
             section.destroyed = True
@@ -74,6 +77,7 @@ def apply_barrier_section_damage(
             hp_after=section.current_hp,
             destroyed=section.destroyed,
             immune=immune,
+            vulnerable=vulnerable,
         )
     except ValueError:
         raise

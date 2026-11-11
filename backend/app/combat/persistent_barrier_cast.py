@@ -85,6 +85,7 @@ def cast_persistent_barrier(
                 current_hp=action.hit_points_per_section,
                 armor_class=action.armor_class,
                 damage_immunities=list(action.damage_immunities),
+                damage_vulnerabilities=list(action.damage_vulnerabilities),
             )
             for index, edges in enumerate(section_edges, start=1)
         ]
