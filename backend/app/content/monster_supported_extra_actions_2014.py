@@ -10,6 +10,7 @@ import logging
 from app.content.monster_arena_action_policy_2014 import (
     PIT_BANNED_ACTION_LABELS_2014, action_label_2014,
     source_proven_ethereal_shift_action_2014,
+    arena_unavailable_wall_action_labels_2014,
 )
 from app.content.monster_animate_chains_2014 import supports_animate_chains_arena_unavailable_2014
 from app.content.monster_change_shape_policy_2014 import approved_inert_change_shape_2014
@@ -91,6 +92,7 @@ def source_supported_extra_action_labels_2014(monster: SourceMonster2014) -> set
             }
             | {_label(action.name) for action in source_scare_2014(monster)}
             | PIT_BANNED_ACTION_LABELS_2014
+            | arena_unavailable_wall_action_labels_2014(monster)
             | {
                 _label(name) for name in monster.action_names
                 if verified_unavailable_etherealness_2014(monster, name)
