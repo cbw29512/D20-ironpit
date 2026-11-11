@@ -1,4 +1,4 @@
-"""Source-defined damage and recurring effect on entering a another creature's occupied square."""
+"""Source-defined damage and recurring effect on entering another creature's occupied square."""
 from __future__ import annotations
 
 import logging
