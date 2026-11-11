@@ -229,6 +229,7 @@
       if (abilityReduction.deathOutcome === "dead") description += ` ${actualTarget.state.template.name} dies at ${abilityReduction.ability} 0.`;
     }
     if (typedDrain?.damageTaken) description += ` ${attack.name} reduces ${actualTarget.state.template.name}'s maximum HP by ${typedDrain.maximumReduced} and heals ${attacker.state.template.name} for ${typedDrain.healed} HP.`;
+    if (typedDrain?.killedByZeroMaximum) description += ` ${actualTarget.state.template.name} dies as maximum HP reaches 0.`;
     if (maximumHpSave?.reductionApplied) description += ` ${actualTarget.state.template.name}'s hit point maximum is reduced by ${maximumHpSave.reductionApplied}.`;
     if (maximumHpSave?.killedByZeroMaximum) description += ` ${actualTarget.state.template.name} dies as its hit point maximum reaches 0.`;
     if (contestedMovement?.targetRoll) {
