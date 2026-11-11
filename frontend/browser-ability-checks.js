@@ -32,8 +32,9 @@
         : 0;
       const timed = (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(state, options.ability) || 0)
         + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityCheckDisadvantage(state) || 0);
+      const held = window.IRON_PIT_BROWSER_GRAPPLE?.checkSaveDisadvantage?.(state, options.ability) || 0;
       return window.IRON_PIT_BROWSER_ROLLS.modeFromSources(
-        advantageSources + generic + sourceAdvantage, disadvantageSources + context + timed,
+        advantageSources + generic + sourceAdvantage, disadvantageSources + context + timed + held,
       );
     } catch (error) {
       console.error("Browser ability-check roll mode failed", { combatant: state?.template?.name, error });
