@@ -22,7 +22,7 @@
   }
 
   function expire(setup, round) {
-    const owners = new Map([...setup.heroes, ...setup.monsters]
+    const owners = new Map([...(setup.heroes || []), ...(setup.monsters || [])]
       .map((member) => [member.combatant_id, member.state]));
     setup.save_zones = (setup.save_zones || []).filter((zone) => {
       if (zone.expires_round <= round) return false;
