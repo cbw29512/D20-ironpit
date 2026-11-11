@@ -20,7 +20,7 @@ for (const file of [
   "browser-healing-policy.js", "browser-healing-resolution.js", "browser-group-healing.js", "browser-healing.js",
   "browser-condition-removal-policy.js", "browser-condition-removal-policy.js", "browser-condition-removal.js", "browser-support.js", "browser-formation.js", "browser-arena-map.js", "browser-grid-geometry.js",
   "browser-grid-movement-support.js", "browser-grid-path-search-support.js", "browser-grid-path-search.js",
-  "browser-grid-movement.js", "browser-grid-reaction-support.js", "browser-reaction-movement.js",
+  "browser-grid-movement.js", "browser-grid-reaction-support.js", "browser-creature-space-entry.js", "browser-reaction-movement.js",
   "browser-offensive-ranges.js", "browser-offensive-movement.js", "browser-grid-placement.js",
   "browser-frenzy-2014.js", "browser-2014-monk.js", "browser-steady-aim.js", "browser-persistent-spell-attacks.js", "browser-targeted-concentration-damage.js", "browser-bonus-attacks.js",
   "browser-tactical-actions.js", "browser-timed-self-buff-policy.js", "browser-timed-self-buffs.js", "browser-ability-hook-installation.js", "browser-main-action-profiles.js", "browser-main-action-selection.js", "browser-main-action-providers.js", "browser-spell-offense.js", "browser-turn.js", "browser-initiative.js", "browser-initiative-resource-refill.js", "browser-engine.js",
