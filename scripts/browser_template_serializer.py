@@ -844,6 +844,8 @@ def _save_zone(action: Any) -> dict[str, Any]:
             "resourceId": action.resource_id, "resourceCost": action.resource_cost,
             "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
         }
+        if action.creates_difficult_terrain:
+            row["createsDifficultTerrain"] = True
         if action.target_policy != "enemies":
             row["targetPolicy"] = action.target_policy
         if action.save_context != "spell":
