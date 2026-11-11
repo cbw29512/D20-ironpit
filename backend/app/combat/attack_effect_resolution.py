@@ -6,6 +6,7 @@ from typing import Any
 
 from app.combat.attack_hit_damage import resolve_attack_hit_damage
 from app.combat.attack_hit_riders import resolve_attack_hit_riders
+from app.combat.on_hit_typed_drain import TypedDrainResult
 from app.combat.barbarian import end_rage_if_incapacitated
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
@@ -25,6 +26,7 @@ class AttackEffectResolution:
     save_damage: Any = None
     on_hit_save: Any = None
     on_hit_maximum_hp_save: Any = None
+    typed_drain: TypedDrainResult | None = None
     ability_reduction: Any = None
     contested_movement: Any = None
     cunning_strike: Any = None
