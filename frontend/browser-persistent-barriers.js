@@ -166,7 +166,10 @@
         section_id: `${barrierId}:section-${index + 1}`, edges: edges.map((edge) => ({ first: {...edge.first}, second: {...edge.second} })),
         current_hp: action.hitPointsPerSection, armor_class: action.armorClass,
         damage_immunities: [...(action.damageImmunities || [])],
-        damage_vulnerabilities: [...(action.damageVulnerabilities || [])], destroyed: false,
+        damage_vulnerabilities: [...(action.damageVulnerabilities || [])],
+        destroyed_section_crossing_save: action.destroyedSectionCrossingSave
+          ? JSON.parse(JSON.stringify(action.destroyedSectionCrossingSave)) : null,
+        destroyed: false,
       })),
       animation: action.animation || "persistent-barrier",
     });
