@@ -33,9 +33,9 @@ def test_only_printed_damage_or_grapple_family_reuses_shared_engine():
             if (proof := source_proven_damage_or_grapple_2014(card))
         }
         assert set(admitted) == {"vampire", "vampire-spawn"}
-        for identity, dc, bonus, regen in (
-            ("vampire", 18, 9, 20),
-            ("vampire-spawn", 13, 6, 10),
+        for identity, dc, bonus, regen, bite_necrotic_dice in (
+            ("vampire", 18, 9, 20, 3),
+            ("vampire-spawn", 13, 6, 10, 2),
         ):
             source = cards[identity]
             before = source.model_dump_json()
@@ -56,6 +56,16 @@ def test_only_printed_damage_or_grapple_family_reuses_shared_engine():
                            if item["id"] == alternative.id)
             assert browser["fixedDamage"] == 0
             assert browser["controlEffect"]["grappleEscapeDc"] == dc
+            # The same mixed-damage attack compiler owns both Bites; the
+            # source declares only the different Necrotic dice and hit bonus.
+            bite = next(item for item in template_row(runtime)["attacks"]
+                        if item["name"].casefold().startswith("bite"))
+            assert bite["bonus"] == bonus
+            necrotic = next(item for item in bite["onHitDamage"]
+                            if item["damageType"] == "necrotic")
+            assert (necrotic["diceCount"], necrotic["diceSize"]) == (
+                bite_necrotic_dice, 6,
+            )
             assert runtime.regeneration.amount == regen
             assert runtime.regeneration.requires_positive_hp
             assert "radiant" in [x.value for x in runtime.regeneration.suppressed_by_damage_types]
