@@ -5870,13 +5870,13 @@
       "attack:incomplete": 7,
       "attack:none": 1,
       "mechanic:legendary": 9,
-      "mechanic:recharge": 1,
-      "mechanic:spellcasting": 30,
+      "mechanic:recharge": 2,
+      "mechanic:spellcasting": 29,
       "multiattack:complex": 3,
       "source:extra-action": 21,
       "source:legendary": 9,
       "source:reaction": 1,
-      "source:trait": 38
+      "source:trait": 37
     },
     "unresolved_printed_abilities": [
       {
@@ -5916,7 +5916,7 @@
         "printed_name": "Grasping Tendrils"
       },
       {
-        "demand_count": 18,
+        "demand_count": 17,
         "monsters": [
           "Cloud Giant",
           "Couatl",
@@ -5927,7 +5927,6 @@
           "Dryad",
           "Efreeti",
           "Glabrezu",
-          "Green Hag",
           "Ice Mephit",
           "Lamia",
           "Magma Mephit",

@@ -10,15 +10,15 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 38 |
-| `mechanic:spellcasting` | 30 |
+| `source:trait` | 37 |
+| `mechanic:spellcasting` | 29 |
 | `source:extra-action` | 21 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
 | `attack:incomplete` | 7 |
 | `multiattack:complex` | 3 |
+| `mechanic:recharge` | 2 |
 | `arena:neutral` | 1 |
-| `mechanic:recharge` | 1 |
 | `attack:none` | 1 |
 | `source:reaction` | 1 |
 
@@ -59,9 +59,9 @@ the underlying ability is already implemented or trivial.
 | Ghost | mechanic:recharge, source:extra-action | — |
 | Gibbering Mouther | multiattack:complex, source:trait | Aberrant Ground, Gibbering |
 | Glabrezu | mechanic:spellcasting, source:trait | Innate Spellcasting |
-| Green Hag | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Guardian Naga | mechanic:spellcasting, source:trait | Spellcasting |
 | Gynosphinx | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
+| Ice Devil | mechanic:recharge, source:extra-action | — |
 | Ice Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Kraken | mechanic:legendary, multiattack:complex, source:extra-action, source:legendary, source:trait | Freedom of Movement |
 | Lamia | attack:incomplete, mechanic:spellcasting, multiattack:complex, source:extra-action, source:trait | Innate Spellcasting |

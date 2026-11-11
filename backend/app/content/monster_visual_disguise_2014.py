@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_visual_disguise_2014 import source_proven_visual_disguise_2014
+from app.content.monster_visual_turn_start_2014 import visual_turn_start_rule_2014
 from app.domain.visual_disguise import VisualDisguiseAction
 
 
@@ -10,6 +11,10 @@ def visual_disguise_action_2014(monster: SourceMonster2014) -> VisualDisguiseAct
     facts = source_proven_visual_disguise_2014(monster)
     if facts is None:
         return None
+    # Only a source with an appearance-dependent combat trigger needs to
+    # select the optional disguise as its free opening buff. Other printed
+    # disguises retain inspection/expiry data but do not waste a Pit turn.
+    opening_needed = visual_turn_start_rule_2014(monster) is not None
     return VisualDisguiseAction(
         id="visual-disguise", name=facts.source_name,
         activation_cost=facts.activation_cost,
@@ -25,6 +30,6 @@ def visual_disguise_action_2014(monster: SourceMonster2014) -> VisualDisguiseAct
         investigation_reveals_true_form=facts.investigation_reveals_true_form,
         # This is a selected arena tactic, not an invented printed rule.
         opening_priority=20,
-        opening_eligible=True,
-        dismiss_on_first_turn=True,
+        opening_eligible=opening_needed,
+        dismiss_on_first_turn=opening_needed,
     )
