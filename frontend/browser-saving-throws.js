@@ -56,6 +56,7 @@
         + (context.advantageSources || []).length;
       const disadvantage = X().saveDisadvantage(state) + (DF().saveDisadvantage?.(state, ability) || 0)
         + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(state, ability) || 0)
+        + (window.IRON_PIT_BROWSER_GRAPPLE?.checkSaveDisadvantage?.(state, ability) || 0)
         + (context.disadvantageSources || []).length
         + (context.encounterRoller
           ? (window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS?.disadvantageSources(

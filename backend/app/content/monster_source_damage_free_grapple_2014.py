@@ -90,6 +90,7 @@ def source_proven_damage_free_grapple_attacks_2014(
                 animation="slash",
                 effects=[GrappleEffectDefinition(
                     escape_dc=dc, restrains=True, max_active_grapples=limit,
+                    check_save_disadvantage_abilities=["strength"],
                 )],
             ))
         return output

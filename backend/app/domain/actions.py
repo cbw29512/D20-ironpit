@@ -38,6 +38,7 @@ class GrappleSource(BaseModel):
     prevents_breathing: bool = False
     blinded_preexisting: bool = False
     linked_effect_id: str | None = None
+    check_save_disadvantage_abilities: list[AbilityName] = Field(default_factory=list)
 
 
 class HitControlEffect(BaseModel):
@@ -46,6 +47,7 @@ class HitControlEffect(BaseModel):
     restrains_while_grappled: bool = False
     grapple_requires_source_free: bool = False
     grapple_max_active_grapples: int | None = Field(default=None, ge=1, le=20)
+    grapple_check_save_disadvantage_abilities: list[AbilityName] = Field(default_factory=list)
     grapple_periodic_damage: GrapplePeriodicDamage | None = None
     condition_id: ConditionName | None = None
     expires_at_start_of_source_turn: bool = False
