@@ -1,3 +1,10 @@
+## [ ] 2014 Magmin — no-douse AI and full Touch admission (PR #1240)
+
+- **User-locked universal AI decision:** Automated monsters and pregens never spend Actions extinguishing Burning, on themselves or other combatants. Preserve the exact printed source text, continue typed Burning damage, and do not invent helper distance. Rules are recorded in both canonical contracts in this PR.
+- **Implementation:** Python/browser douse selectors refuse the Action; pre-existing source-owned douse resolver remains for source fidelity but is not offered by the automated AI. Exact full-hit source proof binds Touch plus target-end 1d6 Fire via existing recurring-damage primitives. Tests cover no dousing and continuing damage.
+- **Generated branch result:** The official generator reports **280/327 source-admitted and 47 blocked** on #1240, with Magmin absent and the recurring-damage coverage report at 1/1 in both engines, zero exceptions.
+- **Merge gate:** This is **not yet merged or final-head certified**. Require all five exact-head workflows after generated artifacts are synchronized; only then check Magmin off on main. Production Netlify remains locked.
+
 ## [x] 2014 Roper — Reel displacement-only Action (PR #1228)
 
 - **Completed and merged:** PR #1228 passed all five exact-head workflows; squash-merged as `3801b4312935820675c59184210f99a719a2110a`.
