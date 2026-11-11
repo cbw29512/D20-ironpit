@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import logging
 
-from app.content.monster_arena_action_policy_2014 import action_label_2014
+from app.content.monster_arena_action_policy_2014 import (
+    action_label_2014, arena_unavailable_wall_action_labels_2014,
+)
 from app.content.monster_recharge_self_buffs_2014 import recharge_self_buff_bindings_2014
 from app.content.monster_save_capability_support_2014 import (
     supports_recharge_rules_2014,
@@ -49,6 +51,7 @@ def unsupported_source_actions_2014(
 ) -> list[str]:
     try:
         allowed = {attack.name.casefold() for attack in monster.attacks}
+        allowed.update(arena_unavailable_wall_action_labels_2014(monster))
         allowed.update(
             str(action.get("name", "")).casefold()
             for action in monster.saving_throw_actions if isinstance(action, dict)
