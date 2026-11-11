@@ -5,6 +5,7 @@ import logging
 from app.content.monster_arena_action_policy_2014 import arena_unavailable_recharge_ids_2014
 from app.content.monster_recharge_self_buffs_2014 import recharge_self_buff_bindings_2014
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_barrier_bindings_2014 import source_barrier_actions_2014
 from app.content.monster_source_breakable_restraint_2014 import source_recharge_breakable_restraint_2014
 from app.content.monster_source_recharge_line_damage_2014 import source_proven_recharge_line_damage_2014
 from app.content.monster_source_shared_space_held_save_2014 import source_proven_shared_space_held_saves_2014
@@ -88,6 +89,9 @@ def supports_recharge_rules_2014(monster: SourceMonster2014) -> bool:
             *source_proven_shared_space_impact_saves_2014(monster),
         ]
         supported_ids.update(item.id for item in source_actions)
+        barriers = source_barrier_actions_2014(monster)
+        supported_ids.update(item.id for item in barriers)
+        supported_resources.update(item.resource_id for item in barriers if item.resource_id)
         supported_resources.update(
             item.resource_id for item in source_actions if item.resource_id
         )
