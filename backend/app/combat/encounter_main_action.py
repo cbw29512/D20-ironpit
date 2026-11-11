@@ -17,6 +17,7 @@ from app.combat.landing_offense_policy import decide_post_move_offense
 from app.combat.opening_burst import opening_feature_id
 from app.combat.multi_target_save_actions import resolve_multi_target_save_action
 from app.combat.persistent_save_zone_cast import cast_save_zone
+from app.combat.persistent_barrier_offense_resolution import resolve_offensive_barrier
 from app.combat.spell_offense import resolve_best_spell_offense
 from app.combat.standard_attack_action import resolve_standard_attack_action
 from app.combat.encounter_swallow_action import resolve_swallow_action
@@ -50,6 +51,12 @@ def resolve_post_move_action(events, sequence, round_number, attacker, target, s
                 sequence += 1
                 return finish_turn(events, sequence, round_number, attacker,
                                    setup, dice, turn_key)
+        if pick.family == "barrier":
+            more, sequence = resolve_offensive_barrier(
+                sequence, round_number, attacker, setup, dice, turn_key, pick.payload,
+            )
+            events.extend(more)
+            return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         if pick.family == "save-zone":
             action, center = pick.payload
             more, sequence = cast_save_zone(
