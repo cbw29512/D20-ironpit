@@ -32,6 +32,12 @@ def test_2014_source_barrier_compiles_with_real_recharge_resource_but_is_still_b
         assert (action.resource_id, action.resource_cost) == ("wall-of-ice", 1)
         assert action.ends_on_source_incapacitated
         assert action.ends_on_source_death
+        assert (action.on_creation_save.save_ability, action.on_creation_save.dc) == ("dexterity", 17)
+        assert (action.on_creation_save.damage_dice_count, action.on_creation_save.damage_dice_size) == (10, 6)
+        assert (action.destroyed_section_crossing_save.save_ability,
+                action.destroyed_section_crossing_save.dc) == ("constitution", 17)
+        assert (action.destroyed_section_crossing_save.damage_dice_count,
+                action.destroyed_section_crossing_save.damage_dice_size) == (5, 6)
 
         template = compile_combatant(adapt_monster_mechanics_2014(source))
         assert template.persistent_barrier_actions == [action]
@@ -41,6 +47,8 @@ def test_2014_source_barrier_compiles_with_real_recharge_resource_but_is_still_b
         assert browser["resourceId"] == "wall-of-ice"
         assert browser["armorClass"] == 5
         assert browser["damageVulnerabilities"] == ["fire"]
+        assert browser["onCreationSave"]["damageDiceCount"] == 10
+        assert browser["destroyedSectionCrossingSave"]["damageDiceCount"] == 5
         assert source.model_dump_json() == unchanged
         # Resource/action bindings are only a partial mechanic: the creation
         # and broken-section saving throws still block complete admission.
