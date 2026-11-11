@@ -79,8 +79,15 @@
 
   function resolveStartOfTurn(sequence, round, member, setup) {
     try {
-      const regen = window.IRON_PIT_BROWSER_REGENERATION?.resolve(sequence, round, member);
       const events = [];
+      const environment = window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS;
+      const hasStartTurnEnvironmentDamage = (member.state.template.environment_context_reactions || [])
+        .some((reaction) => (reaction.start_turn_damage_amount || reaction.startTurnDamageAmount || 0) > 0);
+      if (hasStartTurnEnvironmentDamage && !environment?.resolveStartTurnDamage)
+        throw new Error("Source-defined environment turn damage requires its shared resolver.");
+      const exposed = environment?.resolveStartTurnDamage?.(sequence, round, member, setup);
+      if (exposed) { events.push(...exposed.events); sequence = exposed.sequence; }
+      const regen = window.IRON_PIT_BROWSER_REGENERATION?.resolve(sequence, round, member, setup);
       if (regen) { events.push(...regen.events); sequence = regen.sequence; }
       window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS?.resolveWindows(member, setup);
       for (const source of members(setup)) {
