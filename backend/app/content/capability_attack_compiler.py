@@ -58,6 +58,8 @@ def compile_attack(definition: AttackCapabilityDefinition) -> WeaponAttack:
             on_hit_recurring_damage=definition.on_hit_recurring_damage,
             on_hit_attachment=effects.on_hit_attachment,
             on_hit_maximum_hp_save=effects.on_hit_maximum_hp_save,
+            on_hit_typed_drain=definition.on_hit_typed_drain,
+            target_qualification=definition.target_qualification,
             on_hit_ability_score_reduction=effects.on_hit_ability_score_reduction,
             on_hit_contested_movement=effects.on_hit_contested_movement,
             on_hit_modifier_effects=effects.on_hit_modifiers,
