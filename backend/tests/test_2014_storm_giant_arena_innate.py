@@ -61,6 +61,8 @@ def test_storm_giant_fights_with_existing_melee_ranged_and_lightning_actions():
         assert lightning.damage_dice_count == 12
         assert lightning.damage_dice_size == 8
         assert lightning.damage_type == "lightning"
+        assert lightning.success_damage == "half"
+        assert lightning.resource_id == "lightning-strike"
         assert not template.spell_save_actions
         assert not template.timed_self_buff_actions
         assert source.model_dump_json() == snapshot
