@@ -40,7 +40,7 @@ def source_proven_ethereal_shift_action_2014(
     # Full-string grammar prevents new combat riders from being discarded.
     complete_shift = re.fullmatch(
         r"the [a-z][a-z-]* magically enters the ethereal plane from the "
-        r"material plane, or vice versa\\.",
+        r"material plane, or vice versa\.",
         normalized,
     )
     return bool(complete_shift) or normalized == (
