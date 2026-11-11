@@ -3,6 +3,7 @@ from app.content.monster_visual_turn_start_2014 import visual_turn_start_rule_20
 import logging, re
 
 from app.content.environment_context_reactions import verified_sunlight_weakness_2014
+from app.content.monster_source_sunlight_hypersensitivity_2014 import source_proven_sunlight_hypersensitivity_2014
 from app.content.monster_environment_context_bindings_2014 import environment_context_reactions_2014
 from app.content.monster_berserk_2014 import berserk_self_buffs_2014
 from app.content.monster_damage_absorption import damage_absorptions_from_source
@@ -184,6 +185,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add(_SUNLIGHT_SENSITIVITY)
         if verified_sunlight_weakness_2014(monster):
             bound.add("Sunlight Weakness")
+        if source_proven_sunlight_hypersensitivity_2014(monster) is not None:
+            bound.add("Vampire Weaknesses")
         if bonus_attack_grants_2014(monster):
             bound.add(_RAMPAGE)
         bound.update(bound_terminal_effect_trait_names_2014(monster))
