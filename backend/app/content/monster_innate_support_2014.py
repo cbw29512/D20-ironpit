@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_hp_pool_spell_bindings_2014 import innate_hp_pool_spells_2014
+from app.content.monster_environmental_spell_proofs_2014 import source_proven_arena_inert_innate_spells_2014
 from app.content.monster_innate_spells_2014 import (
     ARENA_NEUTRAL_INNATE_SPELLS_2014,
     _PIT_BANNED_INNATE_SPELLS_2014,
@@ -197,7 +198,11 @@ def supports_innate_spellcasting_2014(monster) -> bool:
         known = {str(spell.get("id") or "") for spell in _spells(monster)}
         if not known:
             return False
-        bound = ARENA_NEUTRAL_INNATE_SPELLS_2014 | _PIT_BANNED_INNATE_SPELLS_2014 | {
+        # Source-proven noncombat weather, water, height and light magic does
+        # not create fake arena Actions; unrelated innate spells still block.
+        bound = (ARENA_NEUTRAL_INNATE_SPELLS_2014
+                 | source_proven_arena_inert_innate_spells_2014(monster)
+                 | _PIT_BANNED_INNATE_SPELLS_2014) | {
             action.id for action in innate_spell_save_actions_2014(monster)
         } | {
             action.id for action in innate_auto_hit_spell_actions_2014(monster)

@@ -1,3 +1,10 @@
+## [ ] 2014 Storm Giant — source-exact arena-inert innate utility magic
+
+- **Universal combat retained:** two Greatsword melee attacks through Multiattack, Rock as an ordinary ranged attack, Lightning Strike as the existing Recharge 5–6 DC 17 Dexterity 12d8 Lightning area save. No special Storm Giant combat branches or fake attacks.
+- **Source-verified utility:** Detect Magic already stays arena-neutral. The complete printed innate source additionally verifies Feather Fall (no falling event), Levitate (vertical displacement not modeled under the locked horizontal-flight Pit), Light (no standard light obstruction), Control Weather (10-minute casting and no weather battlefield), and Water Breathing (no underwater arena). Preserve their full printed metadata but do not grant combat buffs, movement, saves or actions.
+- **Fail-closed:** Source text, exact six spell IDs, per-day/at-will uses, spell ability/DC, and source completeness must all match. Changed source, an extra future combat spell or altered frequency restores the spellcasting blocker. A renamed card with the same source proves independently of monster identity.
+- **Gate:** Rebuild the entire 327-card blocker report, run Python/browser/source/roster/hero checks, and confirm the Storm Giant row clears before merging. No production Netlify deployment.
+
 ## [ ] 2014 Deva — source-verified arena-inert spells and Change Shape
 
 - **Existing combat mechanics:** Preserve printed Mace damage, two-attack Multiattack, Healing Touch (3/day), Angelic Weapons and Magic Resistance. No replacement attacks or new creature-form subsystem.
