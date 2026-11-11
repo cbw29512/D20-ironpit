@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 _PRINTED_SEQUENCE = re.compile(
     r"The (?P<actor>[a-z][a-z-]*) makes (?P<count>four) attacks with its "
     r"(?P<control>tendrils), uses Reel, and makes one attack with its "
-    r"(?P<damage>bite)\\.",
+    r"(?P<damage>bite)\.",
     re.IGNORECASE,
 )
 
