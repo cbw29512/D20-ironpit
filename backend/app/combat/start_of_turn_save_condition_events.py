@@ -33,14 +33,17 @@ def resolve_start_of_turn_save_condition_damage_events(
     """Apply printed start-of-turn save-condition damage and emit one event per packet."""
     try:
         events: list[BattleEvent] = []
-        environment_events, sequence = resolve_environment_start_turn_damage(
-            sequence, round_number, member, setup, dice,
-        )
-        events.extend(environment_events)
+        # Resolve the previous turn's damage ledger first. Live environmental
+        # suppression remains active; new start-turn Radiant damage belongs to
+        # the following Regeneration window, not this consumed window.
         regen_events, sequence = resolve_start_of_turn_regeneration(
             sequence, round_number, member, setup,
         )
         events.extend(regen_events)
+        environment_events, sequence = resolve_environment_start_turn_damage(
+            sequence, round_number, member, setup, dice,
+        )
+        events.extend(environment_events)
         attached, sequence = resolve_attachment_turn_start_events(
             sequence, round_number, member, setup, dice,
         )
