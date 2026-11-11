@@ -3,12 +3,18 @@
 
   const H = () => window.IRON_PIT_BROWSER_HEALING;
 
-  function apply(state) {
+  function apply(state, member = null, setup = null) {
     try {
       const trait = state.template.regeneration;
       if (!trait) return { healed: 0, died: false, suppressed: false };
       const taken = new Set(state.damage_types_taken_since_regen || []);
-      const suppressed = (trait.suppressed_by_damage_types || []).some((item) => taken.has(String(item)));
+      let suppressed = (trait.suppressed_by_damage_types || []).some((item) => taken.has(String(item)));
+      if (member && setup && (trait.suppressed_by_environment_contexts || []).length) {
+        const context = window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS;
+        if (!context?.inside) throw new Error("Environment-conditional Regeneration needs live context runtime.");
+        suppressed = suppressed || trait.suppressed_by_environment_contexts.some((id) =>
+          context.inside(member, setup, id));
+      }
       const eligibleToHeal = !suppressed && !(trait.requires_positive_hp && state.current_hp <= 0);
       // Validate the shared resolver before consuming any turn-local suppression state.
       const healing = H();
@@ -37,12 +43,12 @@
     }
   }
 
-  function resolve(sequence, round, member) {
+  function resolve(sequence, round, member, setup = null) {
     try {
       const trait = member.state.template.regeneration;
       if (!trait) return { events: [], sequence };
       const hpBefore = member.state.current_hp;
-      const result = apply(member.state);
+      const result = apply(member.state, member, setup);
       let description = "";
       if (result.died) {
         description = `${member.state.template.name} starts the turn at 0 HP without ${trait.source_name || "Regeneration"} and dies.`;
