@@ -11,6 +11,7 @@ from app.combat.d20_outcome_adjustments import apply_resource_backed_d20_outcome
 from app.combat.dice import DiceProvider
 from app.combat.failed_d20_test_override import apply_failed_d20_test_override
 from app.combat.environment_contexts import environment_context_disadvantage_sources
+from app.combat.persistent_save_zone_geometry import sight_is_lightly_obscured
 from app.combat.modifier_stack import d20_test_advantage_sources
 from app.combat.timed_ability_d20 import timed_ability_check_disadvantage_sources
 from app.combat.rolls import resolve_roll_mode
@@ -60,6 +61,9 @@ def ability_check_roll_mode(
                 context_disadvantage += environment_context_disadvantage_sources(
                     member, setup, "sight_based_perception_checks",
                 )
+                # Lightly obscured (not Blinded): universal Disadvantage only
+                # on sight-reliant Perception, not attack/other d20 tests.
+                context_disadvantage += int(sight_is_lightly_obscured(member, setup))
         timed_advantage = int(ability is not None and any(
             ability in item.ability_check_advantage_abilities
             for item in state.timed_effects
