@@ -14,6 +14,7 @@ from app.combat.emanation_enter import resolve_emanation_entries
 from app.combat.creature_space_entry import resolve_creature_space_entry
 from app.combat.persistent_beneficial_zone_effects import sync_persistent_beneficial_zones
 from app.combat.persistent_hazards import resolve_persistent_hazard_entries
+from app.combat.persistent_barrier_frigid_air import resolve_destroyed_barrier_crossing
 from app.combat.persistent_save_zone_windows import resolve_save_zone_window
 from app.combat.suppression_zone_effects import sync_suppression_zone_effects
 from app.combat.source_bound_effects import resolve_damaging_terrain_repeat_saves
@@ -158,6 +159,13 @@ def move_toward_on_grid(
             )
             events.append(last_movement)
             sequence += 1
+            crossing_events, sequence = resolve_destroyed_barrier_crossing(
+                sequence, round_number, mover, setup, dice, before_position,
+                mover.state.position, turn_key or f"{round_number}:{mover.combatant_id}",
+            )
+            events.extend(crossing_events)
+            if mover.state.is_dead or mover.state.is_unconscious:
+                return events, sequence, last_movement
             entry_events, sequence = resolve_creature_space_entry(
                 sequence, round_number, mover, setup, dice,
                 turn_key or f"{round_number}:{mover.combatant_id}",
