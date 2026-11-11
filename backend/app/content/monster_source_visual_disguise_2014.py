@@ -34,13 +34,13 @@ _ILLUSION = re.compile(
 _OTHER_VISUAL_ILLUSION = re.compile(
     r"The hag covers herself and anything she is wearing or carrying with a "
     r"magical illusion that makes her look like another creature of her general "
-    r"size and humanoid shape\\. The illusion ends if the hag takes a bonus "
-    r"action to end it or if she dies\\. The changes wrought by this effect fail "
-    r"to hold up to physical inspection\\. For example, the hag could appear "
-    r"to have smooth skin, but someone touching her would feel her rough flesh\\. "
+    r"size and humanoid shape\. The illusion ends if the hag takes a bonus "
+    r"action to end it or if she dies\. The changes wrought by this effect fail "
+    r"to hold up to physical inspection\. For example, the hag could appear "
+    r"to have smooth skin, but someone touching her would feel her rough flesh\. "
     r"Otherwise, a creature must take an action to visually inspect the illusion "
-    r"and succeed on a DC (?P<dc>\\d+) Intelligence \\(Investigation\\) check "
-    r"to discern that the hag is disguised\\.",
+    r"and succeed on a DC (?P<dc>\d+) Intelligence \(Investigation\) check "
+    r"to discern that the hag is disguised\.",
     flags=re.IGNORECASE,
 )
 
