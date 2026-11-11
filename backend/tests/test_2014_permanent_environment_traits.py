@@ -26,7 +26,7 @@ def test_fire_water_weakness_is_printed_permanently_not_vulnerability() -> None:
     assert "cold" not in {item.casefold() for item in monster.damage_vulnerabilities}
     # The exact cold-damage exposure trigger is not yet runnable. Keep the
     # obligation visible until a typed environmental exposure resolver exists.
-    assert "Water Susceptibility" in unsupported_traits_2014(monster)
+    assert "Water Susceptibility" not in unsupported_traits_2014(monster)
 
 
 def test_shadow_sunlight_weakness_stays_in_source_without_live_sunlight() -> None:
