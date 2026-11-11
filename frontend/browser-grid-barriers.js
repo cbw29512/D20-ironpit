@@ -104,6 +104,21 @@
         if ((barrier.sections || []).every((section) => section.destroyed || (section.current_hp ?? 0) <= 0)) {
           removed.push(barrier.barrier_id); continue;
         }
+        if (barrier.ends_on_source_death || barrier.ends_on_source_incapacitated) {
+          const owner = members.get(barrier.source_id);
+          if (!owner || (barrier.ends_on_source_death && owner.state.is_dead)) {
+            removed.push(barrier.barrier_id); continue;
+          }
+          if (barrier.ends_on_source_incapacitated) {
+            const economy = window.IRON_PIT_ACTION_ECONOMY;
+            if (!economy?.isIncapacitated) {
+              throw new Error("Barrier owner incapacitation requires shared condition rules.");
+            }
+            if (economy.isIncapacitated(owner.state)) {
+              removed.push(barrier.barrier_id); continue;
+            }
+          }
+        }
         if (roundNumber >= barrier.expires_round) {
           if (barrier.permanent_after_full_duration) {
             barrier.concentration = false; barrier.permanent_after_full_duration = false; kept.push(barrier);
