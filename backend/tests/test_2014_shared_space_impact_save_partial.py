@@ -67,7 +67,9 @@ def test_source_compiler_recharge_browser_and_remaining_blocker():
     assert browser["failedSaveTimedEffect"]["effectId"] == "prone"
     assert browser["failedSaveTimedEffect"]["expiryTiming"] is None
     assert "mechanic:recharge" not in basic_blockers_2014(card)
-    assert "source:extra-action" in basic_blockers_2014(card)
+    # Every combat-effective rider is already compiled. The only omitted
+    # clauses require displacement/collision, impossible in this locked Pit.
+    assert basic_blockers_2014(card) == ()
     assert before == card.model_dump_json()
 
 
@@ -84,6 +86,7 @@ def test_unknown_collision_rider_fails_closed_but_rename_reuses_primitive():
             "source_actions": card.source_actions.replace(old, new),
         })
         assert source_proven_shared_space_impact_saves_2014(changed) == []
+        assert "source:extra-action" in basic_blockers_2014(changed)
     renamed = card.model_copy(update={
         "id": "synthetic-air-source",
         "name": "Synthetic Air Source",
