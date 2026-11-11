@@ -5,7 +5,11 @@ change teams, alter visibility, or bypass normal action/target legality.
 """
 from __future__ import annotations
 
+import logging
+
 from pydantic import BaseModel, Field, model_validator
+
+logger = logging.getLogger(__name__)
 
 
 class BodyControlLink(BaseModel):
@@ -17,6 +21,10 @@ class BodyControlLink(BaseModel):
 
     @model_validator(mode="after")
     def reject_self_control(self) -> "BodyControlLink":
-        if self.source_id == self.host_id:
-            raise ValueError("A body-control link requires distinct participants.")
-        return self
+        try:
+            if self.source_id == self.host_id:
+                raise ValueError("A body-control link requires distinct participants.")
+            return self
+        except Exception:
+            logger.exception("Invalid body-control participant ownership.")
+            raise
