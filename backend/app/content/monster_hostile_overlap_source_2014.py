@@ -8,6 +8,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_fire_form_entry_2014 import fire_form_space_entry_2014
 from app.content.monster_source_sections_2014 import source_sections_2014
 
 logger = logging.getLogger(__name__)
@@ -30,6 +31,7 @@ def source_proven_hostile_overlap_traits_2014(
             name for name in monster.trait_names
             if " ".join(sections.get(name, "").casefold().replace("’", "'").split())
             == _HOSTILE_OVERLAP_SOURCE
+            or (name == "Fire Form" and fire_form_space_entry_2014(monster) is not None)
         )
     except Exception:
         logger.exception(
