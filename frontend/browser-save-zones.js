@@ -217,5 +217,26 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_SAVE_ZONES = { choose, cast, expire, resolveWindow, memberInZone };
+  function lightObscuresSightCheck(member, setup) {
+    try {
+      if (!member || !setup) return false;
+      const owners = new Map([...(setup.heroes || []), ...(setup.monsters || [])]
+        .map((actor) => [actor.combatant_id, actor.state]));
+      return (setup.save_zones || []).some((zone) => {
+        if (!zone.lightlyObscured) return false;
+        if (zone.concentration
+          && owners.get(zone.source_id)?.concentration?.effect_id !== zone.action_id) return false;
+        return memberInZone(member, zone, setup);
+      });
+    } catch (error) {
+      console.error("Could not evaluate generic save-zone light obscurity", {
+        actor: member?.combatant_id, error,
+      });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_SAVE_ZONES = {
+    choose, cast, expire, resolveWindow, memberInZone, lightObscuresSightCheck,
+  };
 })();
