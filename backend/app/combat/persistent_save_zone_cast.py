@@ -6,6 +6,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.concentration import start_concentration
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.persistent_save_zone_resolution import resolve_save_zone_trigger
+from app.combat.persistent_save_zone_terrain import apply_persistent_zone_terrain
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.combat.suppression_zone_geometry import verbal_casting_blocked, zone_center_legal
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -153,6 +154,7 @@ def cast_save_zone(
             animation=action.animation,
         )
         setup.save_zones.append(zone)
+        apply_persistent_zone_terrain(setup, action, zone)
         events = [BattleEvent(
             sequence=sequence,
             round_number=round_number,
