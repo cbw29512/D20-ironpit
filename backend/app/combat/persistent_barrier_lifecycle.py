@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.domain.encounters import EncounterSetup
+from app.combat.condition_rules import is_incapacitated
 
 logger = logging.getLogger(__name__)
 
@@ -18,6 +19,18 @@ def cleanup_persistent_barriers(setup: EncounterSetup, round_number: int) -> lis
             if all(section.destroyed or section.current_hp <= 0 for section in barrier.sections):
                 removed.append(barrier.barrier_id)
                 continue
+
+            if barrier.ends_on_source_death or barrier.ends_on_source_incapacitated:
+                owner = members.get(barrier.source_id)
+                if owner is None:
+                    removed.append(barrier.barrier_id)
+                    continue
+                if barrier.ends_on_source_death and owner.state.is_dead:
+                    removed.append(barrier.barrier_id)
+                    continue
+                if barrier.ends_on_source_incapacitated and is_incapacitated(owner.state):
+                    removed.append(barrier.barrier_id)
+                    continue
 
             if round_number >= barrier.expires_round:
                 if barrier.permanent_after_full_duration:
