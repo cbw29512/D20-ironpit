@@ -97,4 +97,32 @@ const broken = window.IRON_PIT_BROWSER_PERSISTENT_BARRIERS.damage(
 assert.equal(broken.destroyed, true);
 assert.equal(section.current_hp, 0);
 
+// A different source card declares Fire vulnerability without any named-monster branch.
+caster.state.action_available = true;
+caster.state.resources["spell-slot-5"] = 1;
+setup.persistent_barriers = [];
+const vulnerableAction = { ...action, damageVulnerabilities: ["fire"] };
+window.IRON_PIT_BROWSER_PERSISTENT_BARRIERS.cast(
+  20, 2, caster, setup, vulnerableAction, panels, "2:thalen",
+);
+const iceLike = setup.persistent_barriers[0];
+const iceSection = iceLike.sections[0];
+assert.deepEqual(iceSection.damage_vulnerabilities, ["fire"]);
+const immuneCold = window.IRON_PIT_BROWSER_PERSISTENT_BARRIERS.damage(
+  setup, iceLike.barrier_id, iceSection.section_id, 400, "poison",
+);
+assert.equal(immuneCold.immune, true);
+assert.equal(immuneCold.vulnerable, false);
+const doubled = window.IRON_PIT_BROWSER_PERSISTENT_BARRIERS.damage(
+  setup, iceLike.barrier_id, iceSection.section_id, 6, "fire",
+);
+assert.equal(doubled.vulnerable, true);
+assert.equal(doubled.appliedDamage, 12);
+const ordinary = window.IRON_PIT_BROWSER_PERSISTENT_BARRIERS.damage(
+  setup, iceLike.barrier_id, iceSection.section_id, 6, "slashing",
+);
+assert.equal(ordinary.vulnerable, false);
+assert.equal(ordinary.appliedDamage, 6);
+assert.equal(iceSection.current_hp, 162);
+
 console.log("browser persistent barrier regressions passed");
