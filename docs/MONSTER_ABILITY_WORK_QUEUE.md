@@ -1215,3 +1215,9 @@ This audit removes campaign-time implementation debt without weakening any claus
 
 - `QUEUED`: named blocker only; source/mechanic check not completed.
 - `READY TO IMPLEMENT`: exact printed source and universal reuse mapped.
+- `IN PR`: code pushed, may fail CI; continue independent preparation.
+- `WAITING ON PR`: cannot safely integrate without an earlier change.
+- `MERGED + CERTIFIED`: exact-head gate passed, merge confirmed, source blocker changed, worksheet checked.
+- `PARKED`: precisely stated semantic gap; move to next item.
+
+**Last edited 2026-10-08.** PR states above are snapshots; reconcile them from GitHub before each merge/queue promotion.
