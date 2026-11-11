@@ -155,6 +155,13 @@ def resolve_attack(
             deferred_effect_armed=deferred_effect_armed,
         )
         description += attack_damage_reduction_description(effects, actual_defender.template.name)
+        if effects.typed_drain is not None and effects.typed_drain.damage_taken:
+            drain = effects.typed_drain
+            description += (
+                f" {weapon.name} reduces {actual_defender.template.name}'s maximum HP "
+                f"by {drain.max_hp_reduced} and heals {attacker.template.name} "
+                f"for {drain.attacker_healed} HP."
+            )
         if effects.ability_reduction is not None:
             reduction = effects.ability_reduction
             description += (
