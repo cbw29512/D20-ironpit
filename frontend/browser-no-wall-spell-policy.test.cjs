@@ -36,7 +36,8 @@ const caster = {
 };
 const target = {
   combatant_id: "target", side: "monsters",
-  state: { position: { x: 7, y: 7 }, is_alive: true, is_dead: false },
+  state: { position: { x: 7, y: 7 }, is_alive: true, is_dead: false,
+    template: { size: "medium" } },
 };
 const setup = {
   heroes: [caster], monsters: [target],
