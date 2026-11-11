@@ -27,6 +27,7 @@ class PersistentSaveZoneAction(BaseModel):
     radius_ft: int = Field(ge=5)
     duration_rounds: int = Field(ge=1)
     concentration: bool = False
+    creates_difficult_terrain: bool = False
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     triggers: list[SaveZoneTrigger] = Field(min_length=1)
@@ -57,6 +58,8 @@ class PersistentSaveZoneAction(BaseModel):
         try:
             if self.follows_source and not self.center_on_source:
                 raise ValueError("Source-following zones must start at their source.")
+            if self.creates_difficult_terrain and self.follows_source:
+                raise ValueError("Moving Difficult Terrain zones require a separate geometry proof.")
             if self.radius_ft % 5:
                 raise ValueError("Save zones must use 5-foot increments.")
             if len(set(self.triggers)) != len(self.triggers):
