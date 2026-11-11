@@ -45,6 +45,7 @@
       prevents_breathing: Boolean(linked.preventsBreathing),
       blinded_preexisting: blindedPreexisting,
       linked_effect_id: linked.effectId || null,
+      check_save_disadvantage_abilities: [...(linked.checkSaveDisadvantageAbilities || [])],
     });
     sync(state);
     return effectiveRestrains ? ["grappled", "restrained"] : ["grappled"];
@@ -87,6 +88,17 @@
   const speedIsZero = (state) => state.grapple_sources.some((source) =>
     !C().prevented(state, "speed-reduction", { sourceIsMagical: Boolean(source.source_is_magical) }))
     || Q().speedZero(state);
+  function checkSaveDisadvantage(state, ability) {
+    try {
+      if (!ability) return 0;
+      return (state.grapple_sources || []).filter(source =>
+        (source.check_save_disadvantage_abilities || []).includes(ability)).length;
+    } catch (error) {
+      console.error("Grapple-linked check/save disadvantage failed", { ability, error });
+      throw error;
+    }
+  }
+
   function attackDisadvantage(state, targetId) {
     if (!state.grapple_sources.length) return 0;
     return state.grapple_sources.some((source) => source.source_id === targetId) ? 0 : 1;
@@ -173,5 +185,5 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_GRAPPLE = { apply, attackDisadvantage, cleanup, escape, release, resolveMovementCounters, shouldEscape, sourceGrappleCount, sourceHasActiveGrapple, speedIsZero };
+  window.IRON_PIT_BROWSER_GRAPPLE = { apply, attackDisadvantage, checkSaveDisadvantage, cleanup, escape, release, resolveMovementCounters, shouldEscape, sourceGrappleCount, sourceHasActiveGrapple, speedIsZero };
 })();
