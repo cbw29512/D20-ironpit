@@ -11,6 +11,7 @@ from app.combat.grid_reaction_movement_support import approaches_fear_source, di
 from app.combat.grapple import speed_is_zero
 from app.combat.opportunity_attacks import MovementSource, resolve_opportunity_attack
 from app.combat.emanation_enter import resolve_emanation_entries
+from app.combat.creature_space_entry import resolve_creature_space_entry
 from app.combat.persistent_beneficial_zone_effects import sync_persistent_beneficial_zones
 from app.combat.persistent_hazards import resolve_persistent_hazard_entries
 from app.combat.persistent_save_zone_windows import resolve_save_zone_window
@@ -157,6 +158,11 @@ def move_toward_on_grid(
             )
             events.append(last_movement)
             sequence += 1
+            entry_events, sequence = resolve_creature_space_entry(
+                sequence, round_number, mover, setup, dice,
+                turn_key or f"{round_number}:{mover.combatant_id}",
+            )
+            events.extend(entry_events)
             hazard_events, sequence = resolve_persistent_hazard_entries(
                 sequence,
                 round_number,

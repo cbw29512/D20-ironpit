@@ -84,6 +84,7 @@ window.IRON_PIT_BROWSER_SOURCE_BOUND_EFFECTS.resolveDamagingTerrainRepeatSaves =
       sequence: sequence + 1, released: true,
     };
   };
+load("browser-creature-space-entry.js");
 load("browser-reaction-movement.js");
 const mover = {
   combatant_id: "mover", side: "heroes",

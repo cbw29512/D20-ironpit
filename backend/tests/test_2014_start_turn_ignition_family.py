@@ -91,7 +91,7 @@ def test_full_source_proof_compiles_generic_attack_and_keeps_other_blockers():
         }
         # Fire Elemental is still blocked by its independently unsupported
         # Fire Form and Water Susceptibility, not helper-douse geometry.
-        assert "source:trait" in basic_blockers_2014(card)
+        assert "source:trait" not in basic_blockers_2014(card)
         assert card.model_dump_json() == original
     except Exception:
         logger.exception("2014 Fire Elemental Touch source and serializer parity failed.")

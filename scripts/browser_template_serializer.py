@@ -938,6 +938,23 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         row["emittedEnvironmentContexts"] = [
             item.model_dump(mode="json") for item in action.emitted_environment_contexts
         ]
+    if action.creature_space_entry_damage is not None:
+        entry = action.creature_space_entry_damage
+        recurrence = entry.recurring_damage
+        row["creatureSpaceEntryDamage"] = {
+            "diceCount": entry.dice_count, "diceSize": entry.dice_size,
+            "damageType": _value(entry.damage_type),
+            "recurringDamage": {
+                "effectId": recurrence.effect_id,
+                "diceCount": recurrence.dice_count,
+                "diceSize": recurrence.dice_size,
+                "damageType": _value(recurrence.damage_type),
+                "tickTiming": recurrence.tick_timing,
+                "stacking": recurrence.stacking,
+                "endsIfSourceDead": recurrence.ends_if_source_dead,
+                "removalActionIds": list(recurrence.removal_action_ids),
+            },
+        }
     if action.melee_hit_retaliation is not None:
         row["meleeHitRetaliation"] = {
             "rangeFt": action.melee_hit_retaliation.range_ft,
@@ -1243,6 +1260,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         if template.kind == "monster":
             row["creature_type"] = template.creature_type
             row["source_trait_names"] = list(template.source_trait_names)
+            if template.source_weakness_trait_names:
+                row["source_weakness_trait_names"] = list(template.source_weakness_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
             row["source_bonus_action_names"] = list(template.source_bonus_action_names)
             row["source_limited_use_names"] = list(template.source_limited_use_names)

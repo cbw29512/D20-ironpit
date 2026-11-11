@@ -428,13 +428,12 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **47**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **46**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
 | Aberrant Ground | Gibbering Mouther | 1 |
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
-| Fire Form | Fire Elemental | 1 |
 | Freedom of Movement | Kraken | 1 |
 | Gibbering | Gibbering Mouther | 1 |
 | Grasping Tendrils | Roper | 1 |
@@ -448,13 +447,12 @@ Blocked monsters: **47**. These are grouped by printed ability name so the roste
 | Spellcasting | Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 12 |
 | Transparent | Gelatinous Cube | 1 |
 | Vampire Weaknesses | Vampire, Vampire Spawn | 2 |
-| Water Susceptibility | Fire Elemental | 1 |
 
 ## Monster blocker categories
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 40 |
+| `source:trait` | 39 |
 | `mechanic:spellcasting` | 30 |
 | `source:extra-action` | 22 |
 | `attack:incomplete` | 9 |

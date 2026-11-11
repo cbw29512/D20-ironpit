@@ -1,3 +1,10 @@
+## [ ] 2014 Fire Elemental — complete Fire Form and arena-inactive Water Susceptibility (PR #1248)
+
+- **Owner-locked arena rule:** Preserve both printed permanent traits. Fire Form remains a live passive buff: melee/contact retaliation and creature-space entry ignition must execute in combat. Water Susceptibility is a grey/inactive permanent weakness because standard Iron Pit has no legal water-exposure source; future water-enabled contexts remain fail-closed.
+- **Universal implementation submitted:** A source-verified compound Fire Form carries generic 1d10 Fire on first entry to each occupied creature square per turn (including allies), plus the existing target-turn-start nonstacking 1d10 Burning lifecycle and douse Action. Source-owned hostile overlap is enabled through existing grid movement; the generic Python/browser movement hook runs without dispatch on the printed monster or trait name. Contact retaliation and Touch burning remain intact.
+- **Regression safeguards:** Preserved the previously merged Vampire/Vampire Spawn Grapple alternative compiler and its Python/CI tests after a stale-branch merge was detected. Added source-derived permanent-weakness metadata so Water Susceptibility appears grey in **DEBUFFS**, while Fire Form appears active under **BUFFS**, without a monster-name UI resolver.
+- **Certification gate:** Proposed source admission is **281/327** with **46 blocked** on the feature branch. The synced static artifact, exact-head Python/browser/roster/hero/paired-report checks, and merge are required before checking this off. Independent webpage fight certification and production publishing remain separate.
+
 ## [x] 2014 Vampire family — printed damage-or-Grapple attack alternatives (PR #1245)
 
 - **Merged and certified:** [PR #1245](https://github.com/cbw29512/D20-ironpit/pull/1245) passed CI, 2014 Basic Roster, 2014 Hero Certification, Paired Edition Monster Report and generated-artifact synchronization on exact head `9aaec2b58f6c0f544bf8e9ef1c564cf292d57291`; squash-merged as `2ff0dd43ed65210742b8b48cd8556ef8129555ee`.

@@ -109,6 +109,7 @@ class CombatantDefinition(BaseModel):
     needs_air: bool = Field(default=True, exclude_if=lambda value: value)
     breath_hold_rounds: int | None = Field(default=None, ge=1)
     source_trait_names: list[str] = Field(default_factory=list)
+    source_weakness_trait_names: list[str] = Field(default_factory=list)
     source_turn_relation_damages: list[SourceTurnRelationDamage] = Field(default_factory=list)
     grapple_rescue_rules: list[GrappleRescueRule] = Field(default_factory=list)
     multi_hit_grapple_effects: list[MultiHitGrappleEffect] = Field(default_factory=list)

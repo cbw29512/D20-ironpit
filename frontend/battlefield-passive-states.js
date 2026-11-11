@@ -17,6 +17,16 @@
           && (modifier.required_active_effect_ids || []).every((id) => (member.state.active_effect_ids || []).includes(id)));
         passives.set(grant.source_name, enabled || Boolean(passives.get(grant.source_name)));
       }
+      // A source-defined passive self-buff is present and enabled for the full
+      // fight; unlike an activated buff, it consumes no Action or duration.
+      // Names are display-only; activation is determined by the shared action
+      // schema rather than a monster-specific name.
+      for (const action of member.state.template.timed_self_buff_actions || []) {
+        const timing = action.activation_timing || action.activationTiming;
+        if (timing === "passive" && action.name) {
+          passives.set(action.name, true);
+        }
+      }
       for (const [id, enabled] of passives) {
         if (!result.some((item) => item.id === id)) {
           result.push({ id, active: enabled, explanation: "Source-owned permanent combat modifier." });
@@ -41,17 +51,24 @@
           explanation: "Source-owned permanent environmental weakness.",
         });
       }
-      // Every printed source trait appears as a permanent buff for completeness,
-      // even when arena-neutral. Active only if already projected above.
+      // Card data, not trait-name guessing, determines harmful passive lane.
+      // Environmental weaknesses stay grey when their context cannot occur.
+      const sourceTraits = member.state.template.source_trait_names || [];
+      const sourceWeaknesses = new Set(member.state.template.source_weakness_trait_names || []);
+      for (const name of sourceWeaknesses) {
+        if (!sourceTraits.includes(name)) throw new Error("Weakness display metadata must match printed source traits.");
+      }
       const seen = new Set(result.map((item) => item.label || item.id));
       for (const name of member.state.template.source_trait_names || []) {
         if (!name || seen.has(name)) continue;
         result.push({
           id: name,
           label: name,
-          lane: "buff",
+          lane: sourceWeaknesses.has(name) ? "debuff" : "buff",
           active: false,
-          explanation: "Source-owned permanent trait (arena-neutral or inactive).",
+          explanation: sourceWeaknesses.has(name)
+            ? "Source-owned permanent weakness (arena trigger inactive)."
+            : "Source-owned permanent trait (arena-neutral or inactive).",
         });
         seen.add(name);
       }

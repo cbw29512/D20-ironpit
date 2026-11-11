@@ -3,6 +3,7 @@ from collections import Counter
 import logging
 from app.content.arena_neutral_bonus_actions import is_arena_neutral_bonus_action
 from app.content.monster_arena_neutral_traits_2014 import ARENA_NEUTRAL_TRAITS_2014, verified_arena_inert_trait_2014
+from app.content.monster_arena_inactive_environment_2014 import arena_inactive_environment_traits_2014
 from app.content.monster_informational_action_proofs_2014 import verified_nonactionable_action_2014
 from app.content.monster_arena_unavailable_reactions_2014 import arena_unavailable_reaction_names_2014
 from app.content.monster_charge_profile_2014 import supports_charge_profile_2014
@@ -42,6 +43,7 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     try:
         certified = set(ARENA_NEUTRAL_TRAITS_2014) | set(_MODELED_2014_TRAITS)
         certified.update(bound_trait_names_2014(monster))
+        certified.update(arena_inactive_environment_traits_2014(monster))
         certified.update(proven_natural_form_only_traits_2014(monster))
         certified.update(source_proven_form_qualified_charge_traits_2014(monster))
         certified.update(variable_head_trait_names_2014(monster))

@@ -68,9 +68,10 @@ def test_fire_form_passive_is_compiled_but_compound_trait_stays_blocked():
             "rangeFt": 5, "diceCount": 1, "diceSize": 10,
             "damageType": "fire", "onContact": True,
         }
-        assert "Fire Form" in unsupported_traits_2014(card)
-        assert "Water Susceptibility" in unsupported_traits_2014(card)
-        assert "source:trait" in basic_blockers_2014(card)
+        assert "Fire Form" not in unsupported_traits_2014(card)
+        assert effect.creature_space_entry_damage is not None
+        assert "Water Susceptibility" not in unsupported_traits_2014(card)
+        assert "source:trait" not in basic_blockers_2014(card)
         assert card.model_dump_json() == original
     except Exception:
         logger.exception("Fire Form source-binding/blocked-obligation test failed.")

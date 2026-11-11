@@ -183,6 +183,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -375,6 +376,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -583,6 +585,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -777,6 +780,7 @@
       "Pack Tactics",
       "Sunlight Sensitivity"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -1019,6 +1023,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -1218,6 +1223,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -1378,6 +1384,7 @@
     "source_trait_names": [
       "Training"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -1567,6 +1574,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -1729,6 +1737,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -1887,6 +1896,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -2062,6 +2072,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -2220,6 +2231,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -2380,6 +2392,7 @@
     "source_trait_names": [
       "Spider Climb"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -2555,6 +2568,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -2722,6 +2736,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -2903,6 +2918,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -3125,6 +3141,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -3287,6 +3304,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -3445,6 +3463,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -3605,6 +3624,7 @@
     "source_trait_names": [
       "Agile"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -3763,6 +3783,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -3921,6 +3942,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -4081,6 +4103,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -4244,6 +4267,7 @@
     "source_trait_names": [
       "Bloodied Fury"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -4404,6 +4428,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -4567,6 +4592,7 @@
     "source_trait_names": [
       "Bloodied Fury"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -4755,6 +4781,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -4945,6 +4972,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -5105,6 +5133,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -5302,6 +5331,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -5458,6 +5488,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -5689,6 +5720,7 @@
     "source_trait_names": [
       "Amphibious"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -6026,6 +6058,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -6221,6 +6254,7 @@
     "source_trait_names": [
       "Flyby"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -6375,6 +6409,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -6533,6 +6568,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -6689,6 +6725,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -6845,6 +6882,7 @@
     "source_trait_names": [
       "Jumper"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -7001,6 +7039,7 @@
     "source_trait_names": [
       "Amphibious"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -7158,6 +7197,7 @@
       "Amphibious",
       "Standing Leap"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -7312,6 +7352,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -7468,6 +7509,7 @@
     "source_trait_names": [
       "Spider Climb"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -7624,6 +7666,7 @@
     "source_trait_names": [
       "Flyby"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -7780,6 +7823,7 @@
     "source_trait_names": [
       "Agile"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -7936,6 +7980,7 @@
     "source_trait_names": [
       "Mimicry"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -8090,6 +8135,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -8248,6 +8294,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -8406,6 +8453,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -8568,6 +8616,7 @@
     "source_trait_names": [
       "Hold Breath"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -8749,6 +8798,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -8909,6 +8959,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -9069,6 +9120,7 @@
     "source_trait_names": [
       "Flyby"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -9227,6 +9279,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -9390,6 +9443,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -9554,6 +9608,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -9710,6 +9765,7 @@
     "source_trait_names": [
       "Illumination"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -9872,6 +9928,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -10032,6 +10089,7 @@
     "source_trait_names": [
       "Flyby"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -10198,6 +10256,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -10356,6 +10415,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -10519,6 +10579,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -10679,6 +10740,7 @@
     "source_trait_names": [
       "Beast of Burden"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -10839,6 +10901,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -10999,6 +11062,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -11215,6 +11279,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -11396,6 +11461,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -11579,6 +11645,7 @@
     "source_trait_names": [
       "Running Leap"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -11794,6 +11861,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -11986,6 +12054,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -12158,6 +12227,7 @@
     "source_trait_names": [
       "Hold Breath"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -12330,6 +12400,7 @@
     "source_trait_names": [
       "Amphibious"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -12531,6 +12602,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -12772,6 +12844,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -12994,6 +13067,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -13188,6 +13262,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -13357,6 +13432,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -13529,6 +13605,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -13762,6 +13839,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -13937,6 +14015,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -14113,6 +14192,7 @@
     "source_trait_names": [
       "Flyby"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -14291,6 +14371,7 @@
     "source_trait_names": [
       "Spider Climb"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -14474,6 +14555,7 @@
     "source_trait_names": [
       "Amphibious"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -14660,6 +14742,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -14854,6 +14937,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -15030,6 +15114,7 @@
       "charge"
     ],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -15260,6 +15345,7 @@
     "source_trait_names": [
       "Hold Breath"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -15485,6 +15571,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -15710,6 +15797,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -15891,6 +15979,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -16060,6 +16149,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -16292,6 +16382,7 @@
       "Earth Glide",
       "Siege Monster"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -16460,6 +16551,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -16636,6 +16728,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -16805,6 +16898,7 @@
     "source_trait_names": [
       "Flyby"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -16988,6 +17082,7 @@
     "source_trait_names": [
       "Flyby"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -17165,6 +17260,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -17408,6 +17504,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -17591,6 +17688,7 @@
     "source_trait_names": [
       "Hold Breath"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -17817,6 +17915,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -17977,6 +18076,7 @@
     "source_trait_names": [
       "Hold Breath"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -18137,6 +18237,7 @@
     "source_trait_names": [
       "Hellish Restoration"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -18367,6 +18468,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -18529,6 +18631,7 @@
     "source_trait_names": [
       "Undead Fortitude"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -18705,6 +18808,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -18872,6 +18976,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -19060,6 +19165,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -19237,6 +19343,7 @@
       "Spider Climb",
       "Web Walker"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -19451,6 +19558,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -19644,6 +19752,7 @@
       "Loathsome Limbs (4/Day)",
       "Regeneration"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -19894,6 +20003,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -20065,6 +20175,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -20246,6 +20357,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -20477,6 +20589,7 @@
       "Earth Glide",
       "Treasure Sense"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -20647,6 +20760,7 @@
     "source_trait_names": [
       "Undead Fortitude"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -20839,6 +20953,7 @@
     "source_trait_names": [
       "Water Breathing"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -21003,6 +21118,7 @@
     "source_trait_names": [
       "Water Breathing"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -21163,6 +21279,7 @@
     "source_trait_names": [
       "Water Breathing"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -21326,6 +21443,7 @@
       "Pack Tactics",
       "Water Breathing"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -21515,6 +21633,7 @@
       "Limited Amphibiousness",
       "Shark Telepathy"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -21700,6 +21819,7 @@
       "Swarm",
       "Water Breathing"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -21948,6 +22068,7 @@
     "source_trait_names": [
       "Pack Tactics"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -22198,6 +22319,7 @@
     "source_trait_names": [
       "Amphibious"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -22446,6 +22568,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -22695,6 +22818,7 @@
     "source_trait_names": [
       "Amphibious"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -22944,6 +23068,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -23193,6 +23318,7 @@
     "source_trait_names": [
       "Ice Walk"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -23450,6 +23576,7 @@
     "source_trait_names": [
       "Amphibious"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -23705,6 +23832,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -23961,6 +24089,7 @@
     "source_trait_names": [
       "Amphibious"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -24217,6 +24346,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -24473,6 +24603,7 @@
     "source_trait_names": [
       "Ice Walk"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -24657,6 +24788,7 @@
     },
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -24832,6 +24964,7 @@
     "source_trait_names": [
       "Swarm"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -25020,6 +25153,7 @@
     "source_trait_names": [
       "Swarm"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -25212,6 +25346,7 @@
     "source_trait_names": [
       "Swarm"
     ],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -25445,6 +25580,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -25690,6 +25826,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -25855,6 +25992,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
@@ -26074,6 +26212,7 @@
     "skill_bonuses": {},
     "combat_traits": [],
     "source_trait_names": [],
+    "source_weakness_trait_names": [],
     "source_turn_relation_damages": [],
     "grapple_rescue_rules": [],
     "multi_hit_grapple_effects": [],
