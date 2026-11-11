@@ -423,6 +423,7 @@ Standard battlefield and deterministic deployment:
 Permanent arena rules:
 
 - Each combatant has one authoritative `x,y` grid position. Movement, reach, range, Opportunity Attacks, forced movement, and area geometry consume that same state.
+- **Locked Whirlwind-style random-fling exception (2026-11-10):** Iron Pit does not relocate targets flung randomly by an effect such as the 2014 Air Elemental's Whirlwind. No path of thrown-body travel occurs, so wall/floor impact damage and secondary creature collision saves/damage cannot trigger. Resolve all independently printed damage, original target saving throws, conditions such as Prone, and Recharge normally. This narrow arena override does not disable unrelated forced-movement mechanics that explicitly remain supported elsewhere.
 - If the final active front-row ally is defeated or removed, remaining back-row allies become the effective frontline automatically, with no action or movement cost. Their existing `x,y` positions **do not move**; it is a tactical-row state update, not teleportation. After deployment, row labels are not hard walls or movement constraints.
 - All combatants occupy exactly one 5-ft cell in the Iron Pit. Printed creature size is retained for non-footprint rules. Source size does not alter deployment, pathfinding collision, AoE membership, or grid distance.
 - The moving battlefield representation is the combatant's card/art presentation rendered inside that footprint; presentation never determines mechanics.
