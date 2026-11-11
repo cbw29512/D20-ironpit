@@ -10,6 +10,8 @@ import re
 
 from app.content.monster_source_2014 import SourceAttack2014, SourceDamage2014, SourceMonster2014
 from app.content.monster_source_enlarge_2014 import source_enlarge_weapon_2014
+from app.content.monster_source_necrotic_drain_2014 import source_proven_typed_drain_2014
+from app.content.monster_source_damage_or_grapple_2014 import source_proven_damage_or_grapple_2014
 from app.content.monster_source_critical_attacks_2014 import source_completed_critical_attack_2014
 from app.content.monster_source_save_pull_2014 import source_completed_save_pull_attack_2014
 from app.content.monster_source_armor_corrosion_2014 import source_on_hit_armor_corrosion_2014
@@ -54,6 +56,12 @@ def source_completed_mixed_attack_2014(
     attack = source_completed_persistent_save_2014(monster, attack)
     attack = source_completed_start_turn_damage_condition_2014(monster, attack)
     attack = source_bound_staged_disease_2014(monster, attack)
+    # A printed alternative Grapple is already an ordinary zero-damage hit
+    # within the shared Multiattack slots. Preserve the damage branch too.
+    if any(item.id.endswith(attack.id + "-grapple") for item in source_proven_damage_or_grapple_2014(monster)):
+        return attack.model_copy(update={"source_complete": True})
+    if source_proven_typed_drain_2014(monster, attack) is not None:
+        return attack.model_copy(update={"source_complete": True})
     # Classify a complete gear-only corrosion rider as arena-neutral.
     # Preserve both already-sourced damage components (Bludgeoning + Acid).
     # Any additional combat rider or changed printed damage fails closed.
