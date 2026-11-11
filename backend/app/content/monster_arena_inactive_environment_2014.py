@@ -29,9 +29,13 @@ def arena_inactive_environment_traits_2014(monster: SourceMonster2014) -> frozen
                 accepted.add("Fire Form")
         if "Water Susceptibility" in monster.trait_names:
             clause = " ".join(sections.get("Water Susceptibility", "").casefold().split())
-            if all(part in clause for part in (
-                "moves in water", "gallon of water", "1 cold damage",
-            )):
+            # Exact source proof: a changed exposure distance, water quantity,
+            # damage amount, or added clause must not silently pass admission.
+            expected = (
+                "for every 5 feet the elemental moves in water, or for every "
+                "gallon of water splashed on it, it takes 1 cold damage."
+            )
+            if clause == expected:
                 # The standard arena has no water exposure source.
                 # This does not certify the trait in water-enabled arenas.
                 accepted.add("Water Susceptibility")
