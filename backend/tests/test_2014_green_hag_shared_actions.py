@@ -39,7 +39,7 @@ def test_green_hag_reuses_damage_and_complete_action_capabilities():
             source_supported_extra_action_labels_2014(card)
         )
         facts = source_proven_visual_disguise_2014(card)
-        assert facts and facts.inspection_dc == 20
+        assert facts and facts.investigation_dc == 20
         assert facts.investigation_skill == "investigation"
         action, = source_invisibility_action_2014(card)
         assert action.name == "Invisible Passage"
