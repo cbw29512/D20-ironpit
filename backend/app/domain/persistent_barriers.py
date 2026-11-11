@@ -59,6 +59,7 @@ class PersistentBarrierAction(BaseModel):
     armor_class: int = Field(ge=1, le=40)
     hit_points_per_section: int = Field(ge=1)
     damage_immunities: list[DamageTypeName] = Field(default_factory=list)
+    damage_vulnerabilities: list[DamageTypeName] = Field(default_factory=list)
     blocks_movement: bool = True
     blocks_line_of_sight: bool = True
     material: str | None = None
@@ -91,6 +92,7 @@ class PersistentBarrierSectionState(BaseModel):
     current_hp: int = Field(ge=0)
     armor_class: int = Field(ge=1, le=40)
     damage_immunities: list[DamageTypeName] = Field(default_factory=list)
+    damage_vulnerabilities: list[DamageTypeName] = Field(default_factory=list)
     destroyed: bool = False
 
 
