@@ -17,6 +17,16 @@
           && (modifier.required_active_effect_ids || []).every((id) => (member.state.active_effect_ids || []).includes(id)));
         passives.set(grant.source_name, enabled || Boolean(passives.get(grant.source_name)));
       }
+      // A source-defined passive self-buff is present and enabled for the full
+      // fight; unlike an activated buff, it consumes no Action or duration.
+      // Names are display-only; activation is determined by the shared action
+      // schema rather than a monster-specific name.
+      for (const action of member.state.template.timed_self_buff_actions || []) {
+        const timing = action.activation_timing || action.activationTiming;
+        if (timing === "passive" && action.name) {
+          passives.set(action.name, true);
+        }
+      }
       for (const [id, enabled] of passives) {
         if (!result.some((item) => item.id === id)) {
           result.push({ id, active: enabled, explanation: "Source-owned permanent combat modifier." });
