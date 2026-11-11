@@ -10,7 +10,10 @@ from app.domain.models import BattleEvent, CombatantState
 logger = logging.getLogger(__name__)
 
 
-def apply_start_of_turn_regeneration(state: CombatantState) -> tuple[int, bool, bool]:
+def apply_start_of_turn_regeneration(
+    state: CombatantState, *, member: EncounterCombatant | None = None,
+    setup=None,
+) -> tuple[int, bool, bool]:
     """Resolve start-of-turn Regeneration. Returns healed, died, suppressed."""
     try:
         trait = state.template.regeneration
@@ -19,6 +22,12 @@ def apply_start_of_turn_regeneration(state: CombatantState) -> tuple[int, bool, 
         taken = set(state.damage_types_taken_since_regen)
         state.damage_types_taken_since_regen = []
         suppressed = trait.suppressed_by(taken)
+        if member is not None and setup is not None and trait.suppressed_by_environment_contexts:
+            from app.combat.environment_contexts import actor_inside_environment_context
+            suppressed = suppressed or any(
+                actor_inside_environment_context(member, setup, context_id)
+                for context_id in trait.suppressed_by_environment_contexts
+            )
         if suppressed or (trait.requires_positive_hp and state.current_hp <= 0):
             if trait.survives_zero_until_turn and state.current_hp <= 0 and not state.is_dead:
                 state.current_hp = 0
@@ -41,6 +50,7 @@ def resolve_start_of_turn_regeneration(
     sequence: int,
     round_number: int,
     member: EncounterCombatant,
+    setup=None,
 ) -> tuple[list[BattleEvent], int]:
     """Emit one start-of-turn Regeneration event when the trait exists."""
     try:
@@ -48,7 +58,9 @@ def resolve_start_of_turn_regeneration(
         if trait is None:
             return [], sequence
         hp_before = member.state.current_hp
-        healed, died, suppressed = apply_start_of_turn_regeneration(member.state)
+        healed, died, suppressed = apply_start_of_turn_regeneration(
+            member.state, member=member, setup=setup,
+        )
         if died:
             description = (
                 f"{member.state.template.name} starts the turn at 0 HP without "
