@@ -84,4 +84,27 @@ enemy.state.position = { x: 2, y: 2 };
 const none = runtime.resolve(7, 2, source, setup, "3:source");
 assert.equal(none.events.length, 2, "Only actually occupied squares trigger.");
 assert.ok(first.events.every((event) => event.feature_id === "Blazing Body"));
+// Verify that the real source card, not only a synthetic fixture, is exposed
+// with the generic movement trigger and accurate permanent status lanes.
+load("browser-monsters-2014.js");
+load("battlefield-passive-states.js");
+const fire = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-fire-elemental"];
+assert.ok(fire, "The admitted 2014 Fire Elemental must be in the browser roster.");
+assert.equal(fire.source_allows_hostile_overlap, true);
+assert.equal(fire.timed_self_buff_actions.find((a) => a.name === "Fire Form")
+  .creatureSpaceEntryDamage.recurringDamage.effectId, "burning");
+const passives = window.IRON_PIT_BATTLEFIELD_PASSIVE_STATES.permanentPassiveStates({
+  combatant_id: "source-card-fire-elemental",
+  state: {
+    template: fire,
+    active_modifiers: [],
+    active_effect_ids: [],
+  },
+}, {});
+const fireForm = passives.find((p) => (p.label || p.id) === "Fire Form");
+const water = passives.find((p) => (p.label || p.id) === "Water Susceptibility");
+assert.ok(fireForm && fireForm.active, "Fire Form is an always-active permanent buff.");
+assert.ok(water && !water.active, "Water Susceptibility stays grey in the dry arena.");
+assert.equal(water.lane, "buff", "Printed source traits remain visible in the buff lane.");
+
 console.log("Universal creature-space entry and recurring Burning parity passed.");
