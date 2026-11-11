@@ -28,6 +28,7 @@ class PersistentSaveZoneAction(BaseModel):
     duration_rounds: int = Field(ge=1)
     concentration: bool = False
     creates_difficult_terrain: bool = False
+    lightly_obscured: bool = False
     save_ability: AbilityName
     dc: int = Field(ge=1, le=40)
     triggers: list[SaveZoneTrigger] = Field(min_length=1)
@@ -113,5 +114,6 @@ class PersistentSaveZoneState(BaseModel):
     failed_save_action_bonus_exclusive: bool = False
     failed_save_expiry_timing: Literal["target_turn_start", "target_turn_end"] = "target_turn_end"
     concentration: bool = False
+    lightly_obscured: bool = False
     triggered_turn_keys: dict[str, str] = Field(default_factory=dict)
     animation: str = "save-zone"
