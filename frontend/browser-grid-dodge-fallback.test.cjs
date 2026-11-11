@@ -39,7 +39,7 @@ window.IRON_PIT_BROWSER_FORMATION = {
 };
 
 load("browser-grid-reaction-support.js");
-load("browser-reaction-movement.js");
+load("browser-creature-space-entry.js", "browser-reaction-movement.js");
 load("browser-offensive-ranges.js");
 load("browser-offensive-movement.js");
 load("browser-dodge.js");
