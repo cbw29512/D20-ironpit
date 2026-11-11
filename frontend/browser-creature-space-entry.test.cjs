@@ -12,7 +12,7 @@ const load = (name) => vm.runInThisContext(
 load("browser-on-hit-recurring-damage.js");
 load("browser-creature-space-entry.js");
 
-const diceQueue = [7, 6, 4, 8, 5];
+const diceQueue = [7, 4, 6, 8, 4, 5];
 window.IRON_PIT_DICE = {
   rollMany: (count) => Array.from({ length: count }, () => diceQueue.shift() ?? 3),
 };
