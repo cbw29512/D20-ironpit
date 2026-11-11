@@ -12,9 +12,16 @@ logger = logging.getLogger(__name__)
 ARENA_NEUTRAL_INNATE_SPELLS_2014 = frozenset({
     "detect-evil-and-good",
     "druidcraft",
+    # Dancing Lights changes lighting, not a supported standard Pit outcome;
+    # keep its source on the card without inventing an Attack or buff.
+    "dancing-lights",
     "pass-without-trace",
     "disguise-self",
     "scrying",
+    # Commune (1 minute) and Raise Dead (1 hour) cannot finish during Pit combat.
+    # Preserve their printed source spell metadata; exclude only Action choice.
+    "commune",
+    "raise-dead",
     "detect-thoughts",
     "detect-magic",
     "mage-hand",

@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available
+from app.content.arena_wall_spell_policy import is_arena_unavailable_wall_effect
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.grid_geometry import footprint_distance_ft
 from app.combat.persistent_save_zone_cast import _resource
@@ -51,6 +52,9 @@ def choose_damaging_save_zone(
             return None
         best: tuple[float, PersistentSaveZoneAction, GridPosition] | None = None
         for action in caster.state.template.persistent_save_zone_actions:
+            # Arena walls are unavailable even if their printed damage is high.
+            if is_arena_unavailable_wall_effect(action.id):
+                continue
             if not action.damage_dice_count or not is_available(caster.state, action.action_cost):
                 continue
             if action.concentration and caster.state.concentration is not None:

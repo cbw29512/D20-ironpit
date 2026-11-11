@@ -59,13 +59,18 @@ def test_change_shape_fails_closed_without_exact_printed_source(monster_id):
         raise
 
 
-def test_change_shape_not_globally_disabled_for_other_source_creatures():
+def test_change_shape_source_policy_adds_verified_deva_not_a_global_bypass():
     try:
+        # Deva's two-paragraph printed voluntary replacement form is now
+        # arena-inert by the user-locked no-shapechanging combat rule.
         deva = _source("deva")
-        assert not approved_inert_change_shape_2014(deva)
-        assert "source:extra-action" in basic_blockers_2014(deva)
+        assert approved_inert_change_shape_2014(deva)
+        assert basic_blockers_2014(deva) == ()
+        # A separate shapechange source is not admitted through this proof.
+        hag = _source("night-hag")
+        assert not approved_inert_change_shape_2014(hag)
     except Exception:
-        logger.exception("Unapproved Change Shape exclusion regression")
+        logger.exception("Printed voluntary-form arena classification failed.")
         raise
 
 

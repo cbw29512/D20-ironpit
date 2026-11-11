@@ -1,4 +1,4 @@
-"""2014 destructible wall source audit; no combat admission claimed."""
+"""Source-exact Ice Devil wall proof stays immutable under the arena wall ban."""
 from __future__ import annotations
 
 import logging
@@ -47,10 +47,9 @@ def test_printed_barrier_is_exact_unique_and_mutation_safe() -> None:
             })
             assert altered.source_actions != source.source_actions
             assert source_barrier_parameters_2014(altered) is None
-        assert any(
-            blocker in basic_blockers_2014(source)
-            for blocker in ("mechanic:recharge", "source:extra-action")
-        )
+        # Locked no-wall arena policy permits admission without constructing
+        # a wall, making frigid air, or rolling Wall of Ice Recharge.
+        assert not basic_blockers_2014(source)
     except Exception:
         logger.exception("2014 source barrier proof failed.")
         raise

@@ -4,6 +4,7 @@ import logging
 from dataclasses import replace
 
 from app.combat.action_economy import is_available
+from app.content.arena_wall_spell_policy import is_arena_unavailable_wall_effect
 from app.combat.alternate_spell_casts import available_alternate_casts
 from app.combat.debuff_answers import failed_save_is_beneficial
 from app.combat.spell_choice import SpellChoice
@@ -100,6 +101,8 @@ def choose_spell(
             for member in [*setup.heroes, *setup.monsters]
         }
         for index, action in enumerate(caster.state.template.spell_save_actions):
+            if is_arena_unavailable_wall_effect(action.id):
+                continue
             if (
                 action.action_cost == "reaction"
                 or action.cast_rounds > 1

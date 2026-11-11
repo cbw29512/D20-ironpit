@@ -29,6 +29,22 @@ _ILLUSION = re.compile(
 )
 
 
+# The second full source grammar is also a cosmetic/humanoid visual disguise.
+# Both variants compile to the SAME universal action/check/dismissal schema.
+_OTHER_VISUAL_ILLUSION = re.compile(
+    r"The hag covers herself and anything she is wearing or carrying with a "
+    r"magical illusion that makes her look like another creature of her general "
+    r"size and humanoid shape\. The illusion ends if the hag takes a bonus "
+    r"action to end it or if she dies\. The changes wrought by this effect fail "
+    r"to hold up to physical inspection\. For example, the hag could appear "
+    r"to have smooth skin, but someone touching her would feel her rough flesh\. "
+    r"Otherwise, a creature must take an action to visually inspect the illusion "
+    r"and succeed on a DC (?P<dc>\d+) Intelligence \(Investigation\) check "
+    r"to discern that the hag is disguised\.",
+    flags=re.IGNORECASE,
+)
+
+
 @dataclass(frozen=True)
 class VisualDisguiseSourceFacts:
     source_name: str
@@ -58,7 +74,7 @@ def source_proven_visual_disguise_2014(
             monster.source_actions, include_continuations=True,
         ).get(name, "")
         printed = " ".join(printed.replace("’", "'").split())
-        match = _ILLUSION.fullmatch(printed)
+        match = _ILLUSION.fullmatch(printed) or _OTHER_VISUAL_ILLUSION.fullmatch(printed)
         if match is None:
             return None
         dc = int(match["dc"])

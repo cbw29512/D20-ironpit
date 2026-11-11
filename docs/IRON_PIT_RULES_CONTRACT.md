@@ -1,5 +1,35 @@
 # Iron Pit Rules Contract
 
+## No wall-creation Actions — locked arena rule (2026-11-11)
+
+**Wall creation is arena-unavailable.** Iron Pit is an automated offensive
+matchup, not a fortification, terrain-control, or wall-placement simulator.
+
+- Neither heroes nor monsters may choose or cast a spell, Recharge Action,
+  ability, or other feature whose effect constructs a wall, dome, barrier,
+  or wall-shaped damaging zone. Applies across the 2014 and 2024 rulesets.
+  The source-verified project examples are Wall of Ice, Wall of Fire, and
+  Wall of Stone. A newly encountered wall must be reviewed from printed
+  source before being marked unavailable; never classify by name alone.
+- Keep the full printed effect on immutable reference cards and preserve
+  prior low-level barrier code/tests as inactive infrastructure. No wall,
+  broken section, frigid air, wall-based movement restriction, Concentration,
+  spell slot, Recharge roll, or other wall state is created by automated
+  Iron Pit combat.
+- Combatants must choose another *legal* attack, offensive spell, or ability
+  through the ordinary shared AI, or Dodge if no legal Action remains.
+  Do not convert wall damage to an immediate blast or invent a replacement.
+- The fully verified 2014 Ice Devil Wall of Ice (Recharge 6) is excluded in
+  its entirety. Its printed Dexterity and Constitution damage saves are
+  inseparable from the prohibited wall and are not separately cast.
+  Its wall-only Recharge does not block admission, but all remaining
+  source combat mechanics still must pass normal certification.
+- Exclusion is an **arena rule**, not a statement that source D&D walls
+  cannot be cast in tabletop play. The Python/browser automated selectors
+  must agree. Blocker reports may admit a monster only after source proof,
+  both-engine testing and generated-artifact checks pass.
+
+
 ## Automated Burning decisions and dousing (2026-11-11)
 
 **Locked arena AI policy:** Automated combatants do not spend Actions dousing Burning, whether the afflicted combatant itself or a helper. Select legal offensive/other normal combat behavior instead; never substitute an unsupported helper douse, guess a 5-foot or unlimited range, or remove Burning for free. The source-printed ability and its textual dousing option remain on immutable cards but are unavailable to the automated combat action selector. This is one source-neutral AI/action-selection policy shared by monsters and pregens, not a source-name resolver. Continue to apply each source-defined typed Burning tick, duration, damage defenses and death lifecycle in Python and browser. An omitted dousing reach cannot block a monster solely for an Action that the arena AI never offers. Any separately supported non-dousing expiration still applies. Changed source effects must fail closed; the report and tests must establish parity before admission.
