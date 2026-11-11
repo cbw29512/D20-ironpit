@@ -12119,8 +12119,7 @@
             "escape_dc": 12,
             "max_target_size": "medium",
             "restrains": true,
-            "requires_source_free": false,
-            "check_save_disadvantage_abilities": []
+            "requires_source_free": false
           }
         ],
         "forbid_target_grappled_by_self": false,
@@ -12291,8 +12290,7 @@
             "escape_dc": 11,
             "max_target_size": "medium",
             "restrains": false,
-            "requires_source_free": false,
-            "check_save_disadvantage_abilities": []
+            "requires_source_free": false
           }
         ],
         "forbid_target_grappled_by_self": false,
@@ -12496,8 +12494,7 @@
           "escape_dc": 12,
           "max_target_size": "medium",
           "restrains": false,
-          "requires_source_free": false,
-          "check_save_disadvantage_abilities": []
+          "requires_source_free": false
         },
         "opening_initiative_only": false,
         "resource_cost": 1,
@@ -12664,8 +12661,7 @@
             "escape_dc": 13,
             "max_target_size": "large",
             "restrains": false,
-            "requires_source_free": false,
-            "check_save_disadvantage_abilities": []
+            "requires_source_free": false
           }
         ],
         "forbid_target_grappled_by_self": false,
@@ -12933,8 +12929,7 @@
             "escape_dc": 12,
             "max_target_size": "medium",
             "restrains": false,
-            "requires_source_free": false,
-            "check_save_disadvantage_abilities": []
+            "requires_source_free": false
           }
         ],
         "forbid_target_grappled_by_self": false,
@@ -13127,8 +13122,7 @@
             "escape_dc": 14,
             "max_target_size": "medium",
             "restrains": false,
-            "requires_source_free": false,
-            "check_save_disadvantage_abilities": []
+            "requires_source_free": false
           }
         ],
         "forbid_target_grappled_by_self": false,
@@ -15166,8 +15160,7 @@
             "escape_dc": 15,
             "max_target_size": "large",
             "restrains": true,
-            "requires_source_free": false,
-            "check_save_disadvantage_abilities": []
+            "requires_source_free": false
           }
         ],
         "forbid_target_grappled_by_self": false,
@@ -15449,8 +15442,7 @@
           "escape_dc": 14,
           "max_target_size": "large",
           "restrains": false,
-          "requires_source_free": false,
-          "check_save_disadvantage_abilities": []
+          "requires_source_free": false
         },
         "opening_initiative_only": false,
         "resource_cost": 1,
@@ -15618,8 +15610,7 @@
             "escape_dc": 17,
             "max_target_size": "large",
             "restrains": true,
-            "requires_source_free": false,
-            "check_save_disadvantage_abilities": []
+            "requires_source_free": false
           }
         ],
         "forbid_target_grappled_by_self": false,
