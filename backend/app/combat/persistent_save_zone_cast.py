@@ -151,6 +151,7 @@ def cast_save_zone(
             failed_save_action_bonus_exclusive=action.failed_save_action_bonus_exclusive,
             failed_save_expiry_timing=action.failed_save_expiry_timing,
             concentration=action.concentration,
+            lightly_obscured=action.lightly_obscured,
             animation=action.animation,
         )
         setup.save_zones.append(zone)
