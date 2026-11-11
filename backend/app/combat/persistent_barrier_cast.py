@@ -96,6 +96,10 @@ def cast_persistent_barrier(
                 armor_class=action.armor_class,
                 damage_immunities=list(action.damage_immunities),
                 damage_vulnerabilities=list(action.damage_vulnerabilities),
+                destroyed_section_crossing_save=(
+                    action.destroyed_section_crossing_save.model_copy(deep=True)
+                    if action.destroyed_section_crossing_save else None
+                ),
             )
             for index, edges in enumerate(section_edges, start=1)
         ]
