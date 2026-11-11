@@ -811,6 +811,7 @@ jobs:
           node frontend/browser-bronze-repulsion-breath.test.cjs
           node frontend/browser-gorgon-petrifying-breath.test.cjs
           node frontend/browser-persistent-barriers.test.cjs
+          node frontend/browser-persistent-barrier-resource-lifecycle.test.cjs
           node frontend/browser-damage-triggered-reactions.test.cjs
           node frontend/browser-any-source-damage-repeat-save.test.cjs
           node frontend/browser-damaging-terrain-repeat-save.test.cjs
