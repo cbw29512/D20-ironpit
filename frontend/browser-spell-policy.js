@@ -8,11 +8,10 @@
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
 
   const H = () => window.IRON_PIT_BROWSER_SPELL_POLICY_SUPPORT;
-  const ARENA_WALLS = new Set(["wall-of-fire", "wall-of-stone", "wall-of-ice"]);
 
   function chooseActionAtSlot(caster, setup, action, castLevel, protectedAllyIds = [], alternateCast = null) {
     try {
-      if (!action || ARENA_WALLS.has(action.id) || action.actionCost === "reaction" || (action.castRounds || 1) > 1
+      if (!action || action.actionCost === "reaction" || (action.castRounds || 1) > 1
         || !E().available(caster.state, action.actionCost)
         || window.IRON_PIT_BROWSER_TEMPORARY_TERRAIN?.spellTerrainSupported?.(action) === false) return null;
       const scaled = H().scaledSpell(action, castLevel);
@@ -71,8 +70,6 @@
     try {
       const candidates = [], members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
       for (const [index, action] of (caster.state.template.spell_save_actions || []).entries()) {
-        // No wall creation, even from named/always-prepared save spells.
-        if (ARENA_WALLS.has(action.id)) continue;
         if (action.actionCost === "reaction" || (action.castRounds || 1) > 1
           || action.repeatOnly
           || (action.concentration && caster.state.concentration)
@@ -147,7 +144,7 @@
   function chooseById(caster, setup, turnKey, spellId, protectedAllyIds = []) {
     try {
       const action = (caster.state.template.spell_save_actions || []).find((item) => item.id === spellId);
-      if (!action || ARENA_WALLS.has(action.id)) return null;
+      if (!action) return null;
       const options = H().castOptions(caster, action, turnKey);
       if (!options.length) return null;
       const selected = options.sort((a, b) =>

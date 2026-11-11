@@ -6,6 +6,13 @@
 - **Certification:** Target 2014 source-admission and real compiled combat action regressions in Python plus browser/roster/hero/generated artifacts. Do not mark done until all exact-head workflows pass and it merges.
 - **Stacking:** Deva draft follows wall-creation-policy PR #1256. Ice Devil is 283/327 only on that branch until merged; Deva has not been counted as admitted.
 
+## [ ] 2014 Green Hag — existing universal disguise, invisibility, and spell
+
+- **Only existing combat primitives:** Claws is the already compiled melee hit; Vicious Mockery is the shared 2014 ranged save spell using printed DC 12. The hag receives one free pre-initiative opening buff, Invisible Passage, through the standard round-0 timed-self-buff path; it ends on an attack, spellcast, or lost Concentration. No first-turn Action/Bonus Action is spent and no second free buff is allowed. Illusory Appearance uses the same visual inspection and death/dismissal rules as Sea Hag, but is not selected as the opening tactic when no visual-dependent combat trigger exists.
+- **Source-only context:** Amphibious and Mimicry do not change standard Pit math; Dancing Lights and Minor Illusion remain printed but are arena-neutral in the standard Pit. No monster-name combat resolver.
+- **Proof:** Whole printed Illusory Appearance/Invisible Passage paragraphs, DC 20 Investigation and action cost, source mutation failure, renamed identity, generic Invisibility owner-spellcast expiration, and all 327 source cards remain part of certification.
+- **Gate:** Rebuild generated 2014 admitted/blocked report, run Python/browser + roster/hero/paired-edition workflows, and merge only after exact-head pass. Do not mark Green Hag admitted early.
+
 ## [ ] 2014 Ice Devil — certify LOCKED no-wall-creation arena exclusion
 
 - **New governing rule:** No 2014 or 2024 combatant may choose or cast wall-creating spells or abilities in automated Iron Pit battles. Walls, domes, broken-wall frigid air, wall movement blockers, wall-slot costs and wall Recharge are absent from the fight. Preserve complete printed source/card references.
