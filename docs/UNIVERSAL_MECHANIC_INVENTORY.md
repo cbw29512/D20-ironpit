@@ -428,18 +428,15 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **49**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **48**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
 | Aberrant Ground | Gibbering Mouther | 1 |
-| Adhesive (Object Form Only) | Mimic | 1 |
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
-| False Appearance (Object Form Only) | Mimic | 1 |
 | Fire Form | Fire Elemental | 1 |
 | Freedom of Movement | Kraken | 1 |
 | Gibbering | Gibbering Mouther | 1 |
-| Grappler | Mimic | 1 |
 | Grasping Tendrils | Roper | 1 |
 | Innate Spellcasting | Cloud Giant, Couatl, Deva, Djinni, Drider, Drow, Dryad, Efreeti, Glabrezu, Green Hag, Ice Mephit, Lamia, Magma Mephit, Oni, Planetar, Rakshasa, Solar, Storm Giant | 18 |
 | Light Sensitivity | Cloaker | 1 |
@@ -457,10 +454,10 @@ Blocked monsters: **49**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 41 |
+| `source:trait` | 40 |
 | `mechanic:spellcasting` | 30 |
 | `source:extra-action` | 22 |
-| `attack:incomplete` | 12 |
+| `attack:incomplete` | 11 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
 | `multiattack:complex` | 3 |
