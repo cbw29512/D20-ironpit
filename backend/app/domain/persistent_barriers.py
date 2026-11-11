@@ -59,6 +59,7 @@ class PersistentBarrierAction(BaseModel):
     sections_must_be_contiguous: bool = False
     section_length_ft: int = Field(ge=5)
     section_height_ft: int = Field(ge=0)
+    max_dome_diameter_ft: int | None = Field(default=None, ge=5)
     section_thickness_inches: int = Field(ge=1)
     armor_class: int = Field(ge=1, le=40)
     hit_points_per_section: int = Field(ge=1)
@@ -78,6 +79,8 @@ class PersistentBarrierAction(BaseModel):
         try:
             if self.min_sections > self.max_sections:
                 raise ValueError("Barrier minimum sections cannot exceed maximum sections.")
+            if self.max_dome_diameter_ft is not None and self.max_dome_diameter_ft % 5:
+                raise ValueError("Dome diameter must use 5-foot grid increments.")
             if self.section_length_ft % 5:
                 raise ValueError("Barrier section length must use 5-foot grid increments.")
             if self.permanent_after_full_duration and not self.concentration:
