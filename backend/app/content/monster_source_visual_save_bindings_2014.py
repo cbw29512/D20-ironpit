@@ -27,6 +27,26 @@ _VISUAL_FEAR_SOURCE = re.compile(
 )
 
 
+# A second printed visual fear variant adds an aging rider for failure by 5.
+# Aging has no score/HP/combat turn change in this source clause. Preserve
+# that source clause by exact validation; do not invent an aging combat debuff.
+_GHOST_VISAGE_SOURCE = re.compile(
+    r"Each non-undead creature within (?P<radius>\d+) feet of the ghost "
+    r"that can see it must succeed on a DC (?P<dc>\d+) Wisdom saving throw "
+    r"or be frightened for (?P<duration>\d+) minute\. "
+    r"If the save fails by (?P<aging_margin>\d+) or more, the target also "
+    r"ages (?P<age_dice>\d+)d(?P<age_sides>\d+) × (?P<age_factor>\d+) years\. "
+    r"A frightened target can repeat the saving throw at the end of each "
+    r"of its turns, ending the frightened condition on itself on a success\. "
+    r"If a target's saving throw is successful or the effect ends for it, "
+    r"the target is immune to this ghost's Horrifying Visage for the next "
+    r"(?P<immunity>\d+) hours\. "
+    r"The aging effect can be reversed with a greater restoration spell, "
+    r"but only within (?P<restoration>\d+) hours of it occurring\.",
+    flags=re.IGNORECASE,
+)
+
+
 def source_proven_visual_saves_2014(monster: SourceMonster2014) -> list[SaveCapabilityDefinition]:
     """Only adapt the full pinned Action when its printed clauses all match."""
     try:
@@ -38,7 +58,15 @@ def source_proven_visual_saves_2014(monster: SourceMonster2014) -> list[SaveCapa
             return []
         normalized = " ".join(printed.replace("’", "'").split())
         match = _VISUAL_FEAR_SOURCE.fullmatch(normalized)
+        ghost = False
+        if match is None:
+            match = _GHOST_VISAGE_SOURCE.fullmatch(normalized)
+            ghost = match is not None
         if match is None or int(match["duration"]) != 1 or int(match["immunity"]) != 24:
+            return []
+        if ghost and (int(match["aging_margin"]) != 5 or int(match["age_dice"]) != 1
+                      or int(match["age_sides"]) != 4 or int(match["age_factor"]) != 10
+                      or int(match["restoration"]) != 24):
             return []
         radius, dc = int(match["radius"]), int(match["dc"])
         if radius <= 0 or radius % 5:
@@ -57,7 +85,7 @@ def source_proven_visual_saves_2014(monster: SourceMonster2014) -> list[SaveCapa
                 expiry_timing="target_turn_end",
                 repeat_save_ability="wisdom", repeat_save_dc=dc,
                 repeat_save_timing="target_turn_end",
-                repeat_save_disadvantage_while_source_visible=True,
+                repeat_save_disadvantage_while_source_visible=not ghost,
                 source_effect_immunity_on_end=True,
             ),
             animation="fear",
