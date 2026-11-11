@@ -640,6 +640,10 @@ def persistent_barrier_row(action: Any) -> dict[str, Any]:
             "sectionThicknessInches": action.section_thickness_inches,
             "armorClass": action.armor_class, "hitPointsPerSection": action.hit_points_per_section,
             "damageImmunities": list(action.damage_immunities),
+            **({"onCreationSave": _save(action.on_creation_save)}
+               if action.on_creation_save else {}),
+            **({"destroyedSectionCrossingSave": _save(action.destroyed_section_crossing_save)}
+               if action.destroyed_section_crossing_save else {}),
             **({"damageVulnerabilities": list(action.damage_vulnerabilities)}
                if action.damage_vulnerabilities else {}),
             "blocksMovement": action.blocks_movement,
