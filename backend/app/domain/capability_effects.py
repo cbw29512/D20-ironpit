@@ -103,6 +103,8 @@ class GrappleEffectDefinition(BaseModel):
     restrains: bool = False
     requires_source_free: bool = False
     max_active_grapples: int | None = Field(default=None, ge=1, le=20)
+    # Applies only to checks and saves while the corresponding Grapple exists.
+    check_save_disadvantage_abilities: list[AbilityName] = Field(default_factory=list)
     # Legacy max_target_size limits the entire save. Only a source with a
     # separately printed damage-versus-grapple size rule sets this true.
     size_only_applies_to_grapple: bool = Field(
