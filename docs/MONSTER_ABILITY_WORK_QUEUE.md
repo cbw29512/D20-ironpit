@@ -4,6 +4,13 @@
 - **Required reuse:** Build on the merged persistent-barrier engine and PR #1251's source-declared section vulnerabilities. Preserve the complete printed action, immutable 2014 values, fight-local barrier state, Python/browser parity, and fail-closed source changes. Do not mark Ice Devil admitted until the complete action passes exact-head gates.
 - **Current authoritative baseline:** **282/327 source-admitted, 45 blocked**. Ice Devil remains blocked by `mechanic:recharge` and `source:extra-action`; production Netlify remains locked.
 
+## [x] Universal non-spell barrier resource and owner-expiry groundwork (PR #1252)
+
+- **Shared mechanic:** Persistent barriers can now consume a finite source Action resource without pretending to be spells, and opt into fight-local removal when their source dies or becomes Incapacitated. Python and browser share the same resource spending, ten-round expiry, owner lookup, serializer fields and cleanup rules; ordinary spell-slot and alternate-cast barriers remain covered.
+- **2014 semantic scan:** A fail-closed audit scans all 327 immutable source cards and accepts only the complete printed Ice Devil Wall of Ice declaration, including Recharge 6, geometry, section AC/HP, Fire vulnerability, immunities, both printed saves/dice and owner-driven expiry. Identity renaming preserves parameters and source mutations reject the binding. This source proof does not install the Action or claim admission.
+- **Merged and tested:** [PR #1252](https://github.com/cbw29512/D20-ironpit/pull/1252) passed all five exact-head workflows on `12f8b85f57b765254f3a556cfa07a72e8ee74c02`—CI with full Python/browser combat certification, 2014 Basic Roster, 2014 Hero Certification, Paired Edition Monster Report and generated-artifact synchronization—and squash-merged as `73f6ad92b4869f157a6d6d420915d29eed241bc3`. Focused local parity also passed 9 Python tests and both browser barrier suites.
+- **Still pending:** Automatic wall placement/action selection, occupied-space DC 17 Dexterity Cold resolution, destroyed-section frigid-air traversal DC 17 Constitution Cold resolution and complete fight integration remain in the active Ice Devil item above. Baseline stays **282/327 admitted, 45 blocked**; no webpage-fight certification or production deploy is claimed.
+
 ## [x] Universal persistent-barrier damage vulnerability groundwork (PR #1251)
 
 - **Shared mechanic:** Added optional source-declared `damage_vulnerabilities` to immutable persistent-barrier actions and independent fight-local barrier sections. Python and browser apply immunity precedence, double vulnerable damage, cap applied damage at remaining section HP, and preserve ordinary damage.
