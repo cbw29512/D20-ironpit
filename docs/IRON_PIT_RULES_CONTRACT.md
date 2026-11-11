@@ -1,5 +1,10 @@
 # Iron Pit Rules Contract
 
+## Automated Burning decisions and dousing (2026-11-11)
+
+**Locked arena AI policy:** Automated combatants do not spend Actions dousing Burning, whether the afflicted combatant itself or a helper. Select legal offensive/other normal combat behavior instead; never substitute an unsupported helper douse, guess a 5-foot or unlimited range, or remove Burning for free. The source-printed ability and its textual dousing option remain on immutable cards but are unavailable to the automated combat action selector. This is one source-neutral AI/action-selection policy shared by monsters and pregens, not a source-name resolver. Continue to apply each source-defined typed Burning tick, duration, damage defenses and death lifecycle in Python and browser. An omitted dousing reach cannot block a monster solely for an Action that the arena AI never offers. Any separately supported non-dousing expiration still applies. Changed source effects must fail closed; the report and tests must establish parity before admission.
+
+
 Chris-locked product decisions are indexed in `docs/IRON_PIT_LOCKED_RULES.md`. This file remains the detailed combat/product contract those locks cite. Do not copy the index into a second spec.
 
 This is the authoritative product/rules contract for Iron Pit. It describes the intended combat model. Repository code, generated certification manifests, and exact-head permanent tests prove implementation status; they do not override this contract by silently changing a rule.
