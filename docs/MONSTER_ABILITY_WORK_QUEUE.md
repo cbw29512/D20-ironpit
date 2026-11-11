@@ -1,10 +1,15 @@
-## [ ] 2014 Ice Devil — Wall of Ice action remains incomplete
+## [ ] 2014 Ice Devil — complete Wall of Ice (Recharge 6) binding
 
-- **[x] Shared barrier vulnerability (#1251):** Merged after the applicable exact-head CI and source/hero/artifact checks as `c5c5d0f8f8ed3e1d4f0e89cba849588cbcb17536`. The shared Python/browser barrier resolves Fire vulnerability, immunity precedence, section HP and destruction; no Ice Devil admission implied.
-- **[ ] Shared non-spell resource and owner expiry (#1252):** Draft on main. Adds finite Recharge resource spending and 10-round/owner-incapacitation/death cleanup through the universal wall engine, plus Python/browser regressions. CI/merge pending.
-- **[ ] Printed 2014 Wall of Ice source and card (#1254):** Draft stacked on #1252. Exact full-text, mutation-safe source proof and generic barrier card model carry 60-ft placement, 1–3 flat sections, AC 5, 30 HP, Fire vulnerability, five immunities, and 10-round end conditions. A source-backed resource definition is created without name dispatch. No dome or on-create/breached-air saves are runnable yet.
-- **Remaining outcomes:** Wall appearance must trigger source-legal DC 17 Dexterity 10d6 Cold/half on creatures in its space, and moving through a destroyed section's frigid air must trigger DC 17 Constitution 5d6 Cold/half. Automatic AI selection, placement legality, dome option, live zero-HP handling, crossing timing and Python/browser fight parity remain. Don't clear `mechanic:recharge` or `source:extra-action` until full engine wiring passes exact-head CI.
-- **Authoritative count:** **282/327 source-admitted, 45 blocked.** Ice Devil stays blocked. Netlify production remains locked.
+- **Exact unresolved source action:** Bind the printed 60-foot placement, 30-foot wall or 20-foot dome geometry, occupied-space DC 17 Dexterity save for 10d6 Cold/half, Pit-ignored displacement logging, 10-round/owner-incapacitated/death expiry, AC 5 and 30 HP per 10-foot section, printed immunities, destroyed-section frigid-air traversal DC 17 Constitution save for 5d6 Cold/half, and Recharge 6 lifecycle.
+- **Required reuse:** Build on the merged persistent-barrier engine and PR #1251's source-declared section vulnerabilities. Preserve the complete printed action, immutable 2014 values, fight-local barrier state, Python/browser parity, and fail-closed source changes. Do not mark Ice Devil admitted until the complete action passes exact-head gates.
+- **Current authoritative baseline:** **282/327 source-admitted, 45 blocked**. Ice Devil remains blocked by `mechanic:recharge` and `source:extra-action`; production Netlify remains locked.
+
+## [x] Universal persistent-barrier damage vulnerability groundwork (PR #1251)
+
+- **Shared mechanic:** Added optional source-declared `damage_vulnerabilities` to immutable persistent-barrier actions and independent fight-local barrier sections. Python and browser apply immunity precedence, double vulnerable damage, cap applied damage at remaining section HP, and preserve ordinary damage.
+- **Reuse and source scope:** The complete 2014 Ice Devil Wall of Ice paragraph supplies Fire vulnerability for each destructible section. The existing 2024 pregen Wall of Stone implementation proves the shared action/state/serializer path and remains unchanged when the field is empty. No monster-name or ability-name runtime dispatch was introduced.
+- **Merged and tested:** [PR #1251](https://github.com/cbw29512/D20-ironpit/pull/1251) passed exact-head CI (full Python/browser certification), 2014 Hero Certification, and generated-artifact synchronization on `fff9e143ea72fe445b3fca675380220a93a493e1`; it squash-merged as `c5c5d0f8f8ed3e1d4f0e89cba849588cbcb17536`. The 2014 Basic Roster and Paired Edition workflows were not applicable to this non-admitting primitive-only diff.
+- **No false admission:** This prerequisite resolves the reusable barrier-damage vulnerability issue but does not complete Wall of Ice. The authoritative baseline remains **282/327 admitted, 45 blocked**; independent webpage-fight certification is not claimed.
 
 ## [x] 2014 Vampire Weaknesses — live sunlight and inactive environmental clauses (PR #1250)
 
