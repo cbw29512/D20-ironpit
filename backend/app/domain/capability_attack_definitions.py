@@ -6,6 +6,7 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.recurring_damage import OnHitRecurringDamage
+from app.domain.on_hit_typed_drain import OnHitTypedDrain, AttackTargetQualification
 
 from app.domain.actions import AbilityName, ConditionName
 from app.domain.capability_effects import AttackEffectDefinition, DiceSpec
@@ -90,6 +91,8 @@ class AttackCapabilityDefinition(BaseModel):
     grapple_target_policy: Literal["normal", "own_grapple_only", "auto_hit_own_grapple"] = "normal"
     damage_source_qualifiers: list[DamageSourceQualifier] = Field(default_factory=list)
     on_hit_recurring_damage: OnHitRecurringDamage | None = None
+    on_hit_typed_drain: OnHitTypedDrain | None = None
+    target_qualification: AttackTargetQualification | None = None
 
     @model_validator(mode="after")
     def validate_attack_shape(self) -> "AttackCapabilityDefinition":

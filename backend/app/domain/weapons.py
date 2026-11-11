@@ -12,6 +12,7 @@ from app.domain.charge import AttackChargeProfile, ChargeDamage
 from app.domain.damage_sources import DamageSourceQualifier
 from app.domain.hit_modifiers import HitModifierEffect
 from app.domain.size import CreatureSize
+from app.domain.on_hit_typed_drain import OnHitTypedDrain, AttackTargetQualification
 from app.domain.weapons_base import DamageType, WeaponAttackKind
 from app.domain.zero_hp_effects import ZeroHpSaveDamageRider
 from app.domain.on_hit_conditions import OnHitConditionSave, OnHitOngoingHpLoss
@@ -173,6 +174,8 @@ class WeaponAttack(BaseModel):
     on_hit_recurring_damage: OnHitRecurringDamage | None = None
     on_hit_attachment: OnHitAttachment | None = None
     on_hit_maximum_hp_save: OnHitMaximumHpSave | None = None
+    on_hit_typed_drain: OnHitTypedDrain | None = None
+    target_qualification: AttackTargetQualification | None = None
     on_hit_ability_score_reduction: OnHitAbilityScoreReduction | None = None
     on_hit_contested_movement: OnHitContestedMovement | None = None
     on_hit_modifier_effects: list[HitModifierEffect] = Field(default_factory=list)

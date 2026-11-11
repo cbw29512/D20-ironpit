@@ -75,7 +75,7 @@ def test_only_printed_damage_or_grapple_family_reuses_shared_engine():
             assert runtime.regeneration.amount == regen
             assert runtime.regeneration.requires_positive_hp
             assert "radiant" in [x.value for x in runtime.regeneration.suppressed_by_damage_types]
-            assert "attack:incomplete" in basic_blockers_2014(source)
+            assert "attack:incomplete" not in basic_blockers_2014(source)
             assert source.model_dump_json() == before
     except Exception:
         logger.exception("Vampire family shared Grapple parameter parity failed.")

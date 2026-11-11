@@ -65,6 +65,7 @@ from app.content.monster_source_enlarge_2014 import (
 from app.content.monster_source_ranged_save_only_hit_2014 import source_ranged_save_only_hit_attacks_2014
 from app.content.monster_source_damage_free_grapple_2014 import source_proven_damage_free_grapple_attacks_2014
 from app.content.monster_source_damage_or_grapple_2014 import source_proven_damage_or_grapple_2014
+from app.content.monster_source_necrotic_drain_2014 import source_proven_typed_drain_2014
 from app.content.monster_innate_support_2014 import (
     innate_alternate_spell_casts_2014,
     innate_condition_removal_2014,
@@ -134,6 +135,7 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         ),
         "control_effect": printed_attack.control_effect,
     })
+    drain = source_proven_typed_drain_2014(monster, attack)
     charge_source = corrected_charge_profile_2014(monster, attack)
     normal_range_ft, long_range_ft = corrected_attack_range_2014(monster, attack)
     # A proven ongoing hit is compiled through the same universal timed effect,
@@ -193,6 +195,8 @@ def _attack(monster: SourceMonster2014, attack: SourceAttack2014) -> AttackCapab
         "unavailable_reason": attack_unavailable_reason_2014(monster, attack),
         "damage_source_qualifiers": weapon_damage_source_qualifiers_2014(monster),
         "on_hit_recurring_damage": recurring_damage,
+        "target_qualification": drain[0] if drain is not None else None,
+        "on_hit_typed_drain": drain[1] if drain is not None else None,
     }
     if printed_attack.damage_dice_count:
         kwargs["damage"] = DiceSpec(
