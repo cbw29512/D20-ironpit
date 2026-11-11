@@ -1,3 +1,10 @@
+## [ ] 2014 Vampire Weaknesses — live sunlight and inactive environmental clauses (PR #1250)
+
+- **Printed source proof:** Both Vampire and Vampire Spawn source paragraphs are validated in full; every changed damage amount, sunlight/ability-check clause, and environmental restriction fails closed. The source card keeps Forbiddance, Harmed by Running Water, Stake to the Heart, and Sunlight Hypersensitivity. No residence, water or resting-place trigger exists in the standard arena.
+- **Live context cannot be skipped:** 2014 Devotion Paladin's Holy Nimbus emits typed `sunlight`; Vampire Weaknesses therefore binds to the generic environment-context reaction: disadvantage on attack rolls and all ability checks plus **20 Radiant damage at start of the vampire's turn while in sunlight**. Source-verified Regeneration (Vampire 20 / Spawn 10) is suppressed in sunlight without inventing water exposure. Python/browser use existing damage, healing, turn and context state.
+- **Branch dependency:** This is a separate trait PR; Bite attack completion is on [PR #1249](https://github.com/cbw29512/D20-ironpit/pull/1249). Neither branch alone source-admits Vampire Spawn. Require both merged and exact-head certified, reconcile on main and regenerate the blocker report before checking the monster off.
+- **Certification status:** Code and source-level tests submitted; final-head CI/merge are pending. Standard arena policy never implies production Netlify publishing or full in-webpage fight certification.
+
 ## [x] 2014 Fire Elemental — Fire Form and arena-inactive Water Susceptibility (PR #1248)
 
 - **Owner-locked arena rule:** Preserve both printed permanent traits. Fire Form remains a live passive buff: melee/contact retaliation and creature-space entry ignition must execute in combat. Water Susceptibility is a grey/inactive permanent weakness because standard Iron Pit has no legal water-exposure source; future water-enabled contexts remain fail-closed.
