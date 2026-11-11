@@ -87,6 +87,7 @@ def test_offensive_wall_uses_existing_save_and_resource_event_chain():
 def test_offensive_barrier_boundary_and_empty_resource_fail_closed():
     try:
         _, owner, victim, setup = _setup(target_x=23, target_y=15)
+        owner.state.position = GridPosition(x=20, y=13)
         assert choose_offensive_barrier(owner, setup) is not None
         resource = next(r for r in owner.state.resources if r.id == "wall-of-ice")
         resource.current_uses = 0
