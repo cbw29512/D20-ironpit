@@ -48,6 +48,7 @@ def source_completed_mixed_attack_2014(
     attack = source_completed_save_pull_attack_2014(monster, attack)
     attack = source_completed_limited_grapple_2014(monster, attack)
     attack = source_completed_natural_form_attack_2014(monster, attack)
+    attack = source_completed_end_turn_ignition_attack_2014(monster, attack)
     attack = source_completed_healing_block_2014(monster, attack)
     attack = source_completed_magic_cured_condition_2014(monster, attack)
     attack = source_completed_persistent_save_2014(monster, attack)
