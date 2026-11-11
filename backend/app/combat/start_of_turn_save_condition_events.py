@@ -8,6 +8,7 @@ from app.combat.friendly_recovery_aura_windows import (
     resolve_zero_hp_ally_recovery,
 )
 from app.combat.regeneration import resolve_start_of_turn_regeneration
+from app.combat.environment_start_turn_damage import resolve_environment_start_turn_damage
 from app.combat.post_hit_save_condition_lifecycle import start_of_turn_save_condition_damage
 from app.combat.start_of_turn_timed_burn import start_of_turn_timed_burns
 from app.combat.grapple_periodic_damage import grapple_turn_start_damage
@@ -32,7 +33,13 @@ def resolve_start_of_turn_save_condition_damage_events(
     """Apply printed start-of-turn save-condition damage and emit one event per packet."""
     try:
         events: list[BattleEvent] = []
-        regen_events, sequence = resolve_start_of_turn_regeneration(sequence, round_number, member)
+        environment_events, sequence = resolve_environment_start_turn_damage(
+            sequence, round_number, member, setup, dice,
+        )
+        events.extend(environment_events)
+        regen_events, sequence = resolve_start_of_turn_regeneration(
+            sequence, round_number, member, setup,
+        )
         events.extend(regen_events)
         attached, sequence = resolve_attachment_turn_start_events(
             sequence, round_number, member, setup, dice,
