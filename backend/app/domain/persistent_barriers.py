@@ -46,6 +46,10 @@ class PersistentBarrierAction(BaseModel):
     name: str = Field(min_length=1)
     level: int = Field(ge=0, le=9)
     action_cost: ActionCost = "action"
+    resource_id: str | None = None
+    resource_cost: int = Field(default=1, ge=1)
+    ends_on_source_incapacitated: bool = False
+    ends_on_source_death: bool = False
     cast_range_ft: int = Field(ge=0)
     concentration: bool = False
     duration_rounds: int = Field(ge=1)
@@ -105,6 +109,8 @@ class PersistentBarrierState(BaseModel):
     action_id: str = Field(min_length=1)
     action_name: str = Field(min_length=1)
     concentration: bool = False
+    ends_on_source_incapacitated: bool = False
+    ends_on_source_death: bool = False
     applied_round: int = Field(ge=1)
     expires_round: int = Field(ge=2)
     permanent_after_full_duration: bool = False
