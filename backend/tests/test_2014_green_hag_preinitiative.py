@@ -95,7 +95,7 @@ def test_source_claws_are_melee_and_vicious_mockery_is_ranged_offense():
         assert ranged is not None and ranged.action.id == "vicious-mockery"
         assert ranged.action.range_ft == 60
         assert ranged.action.dc == 12
-        assert ranged.action.damage_type.value == "psychic"
+        assert ranged.action.damage_type == "psychic"
         assert ranged.target_ids == ("target",)
     except Exception:
         logger.exception("Green Hag melee/ranged attack selection regression failed.")
