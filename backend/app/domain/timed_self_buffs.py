@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field, model_validator
 from app.domain.actions import AbilityName, ActionCost, ConditionName, ConditionTiming
 from app.domain.debuffs import DebuffCounter
 from app.domain.environment_contexts import EmittedEnvironmentContext
+from app.domain.hostile_space_entry_damage import HostileSpaceEntryDamage
 from app.domain.friendly_combat_auras import (
     TimedFriendlyRecoveryAura,
     TimedFriendlyWeaponDamageAura,
@@ -61,6 +62,7 @@ class TimedSelfBuffAction(BaseModel):
     ends_on_owner_action_ids: list[str] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
     melee_hit_retaliation: MeleeHitRetaliation | None = None
+    hostile_space_entry_damage: HostileSpaceEntryDamage | None = None
     debuff_counters: list[DebuffCounter] = Field(default_factory=list)
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
     movement_mode_grants: list[MovementModeGrant] = Field(default_factory=list)
@@ -95,11 +97,12 @@ class TimedSelfBuffAction(BaseModel):
                 )
                 passive_count = sum(aura is not None for aura in (
                     self.hostile_start_turn_condition_aura, self.friendly_save_advantage_aura,
-                    self.melee_hit_retaliation,
+                    self.melee_hit_retaliation, self.hostile_space_entry_damage,
                 )) + int(source_turn_damage)
-                if passive_count != 1 and not (
-                    passive_count == 2 and source_turn_damage and self.melee_hit_retaliation is not None
-                ):
+                valid_pair = (self.melee_hit_retaliation is not None and (
+                    source_turn_damage or self.hostile_space_entry_damage is not None
+                ))
+                if passive_count != 1 and not (passive_count == 2 and valid_pair):
                     raise ValueError("Passive activation requires a supported passive aura composition.")
                 if self.resource_id or self.concentration or self.duration_rounds is not None or self.ends_if_source_incapacitated:
                     raise ValueError("Passive condition auras cannot own activation resources or a source timer.")
@@ -172,6 +175,7 @@ class TimedSelfBuffAction(BaseModel):
                 or self.start_turn_emanation_damage is not None
                 or self.emitted_environment_contexts
                 or self.melee_hit_retaliation is not None
+                or self.hostile_space_entry_damage is not None
                 or self.spell_save_dc_bonus
                 or self.spell_attack_advantage
                 or self.modifier_effects
