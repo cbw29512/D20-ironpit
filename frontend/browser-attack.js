@@ -96,6 +96,7 @@
     const outcome = O().create();
     let { damageRoll, damageComponents, damageOutcome, hitSave, saveDamage, topple, sapApplied, vexApplied, studiedApplied, deferredEffectArmed, exileApplied } = outcome;
     let maximumHpSave = null;
+    let typedDrain = null;
     let abilityReduction = null;
     let contestedMovement = null;
     let attachedOnHit = false;
@@ -106,6 +107,11 @@
         extra.turnKey || `${round}:${attacker.combatant_id}`, { bonusDamage: extra.bonusDamage || null,
           targetId: actualTarget.combatant_id, sneakAttackAllyAvailable: window.IRON_PIT_BROWSER_SNEAK_ATTACK?.allyAvailable(attacker, extra.setup) || false, affectedStates, setup: extra.setup || null, naturalRoll: natural });
       damageComponents = damage.damageComponents; damageRoll = damage.damageRoll; damageOutcome = damage.damageOutcome; saveDamage = damage.saveDamage; outcome.damageReductionReaction = damage.damageReductionReactionUsed ? damage : null;
+      if (attack.onHitTypedDrain) {
+        const transfer = window.IRON_PIT_BROWSER_MAXIMUM_HP?.resolveTypedDrain;
+        if (!transfer) throw new Error("Typed damage drain requires shared maximum-HP runtime.");
+        typedDrain = transfer(attacker, actualTarget, attack, damageComponents);
+      }
       if (attack.onHitAbilityScoreReduction && !actualTarget.state.is_dead) {
         const score = window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION;
         if (!score?.applyOnHit) throw new Error("On-hit ability reduction requires its shared browser runtime.");
@@ -222,6 +228,7 @@
       description += ` ${abilityReduction.source || attack.name} reduces ${actualTarget.state.template.name}'s ${abilityReduction.ability} by ${abilityReduction.applied} (${abilityReduction.scoreBefore} to ${abilityReduction.scoreAfter}).`;
       if (abilityReduction.deathOutcome === "dead") description += ` ${actualTarget.state.template.name} dies at ${abilityReduction.ability} 0.`;
     }
+    if (typedDrain?.damageTaken) description += ` ${attack.name} reduces ${actualTarget.state.template.name}'s maximum HP by ${typedDrain.maximumReduced} and heals ${attacker.state.template.name} for ${typedDrain.healed} HP.`;
     if (maximumHpSave?.reductionApplied) description += ` ${actualTarget.state.template.name}'s hit point maximum is reduced by ${maximumHpSave.reductionApplied}.`;
     if (maximumHpSave?.killedByZeroMaximum) description += ` ${actualTarget.state.template.name} dies as its hit point maximum reaches 0.`;
     if (contestedMovement?.targetRoll) {
