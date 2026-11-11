@@ -25,6 +25,12 @@ def test_roper_tendril_grapple_penalty_follows_existing_state_lifecycle():
         template = adapt_monster_mechanics_2014(roper)
         attack = compile_attack(next(a for a in template.attacks if a.name == "Tendril"))
         assert attack.control_effect.grapple_check_save_disadvantage_abilities == ["strength"]
+        # Browser serialization must carry the same source-only parameter.
+        from scripts.browser_template_serializer import template_row
+        from app.content.capability_compiler import compile_combatant
+        browser_card = template_row(compile_combatant(template))
+        browser_attack = next(row for row in browser_card["attacks"] if row["id"] == "2014-roper-tendril")
+        assert browser_attack["controlEffect"]["grappleCheckSaveDisadvantageAbilities"] == ["strength"]
         victim = build_combatant_state(build_commoner())
         owner = EncounterCombatant(
             combatant_id="owner", side="monsters", position_ft=5,
