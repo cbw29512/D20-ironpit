@@ -583,7 +583,6 @@ jobs:
           node frontend/browser-hit-point-pool.test.cjs
           node frontend/browser-hp-pool-spell-combat.test.cjs
           node frontend/browser-save-maximum-hp-on-damage.test.cjs
-          node frontend/browser-typed-hit-drain.test.cjs
           node frontend/browser-owned-condition-save-targets.test.cjs
           node frontend/browser-source-target-capacity.test.cjs
           node frontend/browser-event-only-repeat-save.test.cjs
@@ -800,6 +799,8 @@ jobs:
           node frontend/browser-condition-removal.test.cjs
           node frontend/browser-timed-self-buffs.test.cjs
           node frontend/browser-environment-contexts.test.cjs
+          node frontend/browser-typed-hit-drain.test.cjs
+          node frontend/browser-vampire-sunlight.test.cjs
           node frontend/browser-movement-mode-grants.test.cjs
           node frontend/browser-reactions.test.cjs
           node frontend/browser-parry-effective-ac.test.cjs

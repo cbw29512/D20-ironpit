@@ -8,6 +8,7 @@ from app.content.environment_context_reactions import (
     verified_sunlight_weakness_2014,
 )
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_source_sunlight_hypersensitivity_2014 import source_proven_sunlight_hypersensitivity_2014
 from app.domain.environment_contexts import EnvironmentContextReaction
 
 logger = logging.getLogger(__name__)
@@ -23,6 +24,9 @@ def environment_context_reactions_2014(
             reactions.append(sunlight_sensitivity_2014())
         if verified_sunlight_weakness_2014(monster):
             reactions.append(sunlight_weakness_2014())
+        vampire_weakness = source_proven_sunlight_hypersensitivity_2014(monster)
+        if vampire_weakness is not None:
+            reactions.append(vampire_weakness)
         return reactions
     except Exception:
         logger.exception(

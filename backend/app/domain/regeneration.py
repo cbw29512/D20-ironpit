@@ -5,6 +5,7 @@ import logging
 from pydantic import BaseModel, Field
 
 from app.domain.weapons_base import DamageType
+from app.domain.environment_contexts import EnvironmentContextId
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +16,9 @@ class RegenerationTrait(BaseModel):
     amount: int = Field(ge=1, le=200)
     requires_positive_hp: bool = False
     suppressed_by_damage_types: list[DamageType] = Field(default_factory=list)
+    suppressed_by_environment_contexts: list[EnvironmentContextId] = Field(
+        default_factory=list, exclude_if=lambda values: not values,
+    )
     survives_zero_until_turn: bool = False
     source_name: str = "Regeneration"
 

@@ -428,7 +428,7 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **46**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **45**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
@@ -446,13 +446,12 @@ Blocked monsters: **46**. These are grouped by printed ability name so the roste
 | Shapechanger | Vampire | 1 |
 | Spellcasting | Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Priest, Spirit Naga | 12 |
 | Transparent | Gelatinous Cube | 1 |
-| Vampire Weaknesses | Vampire, Vampire Spawn | 2 |
 
 ## Monster blocker categories
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 39 |
+| `source:trait` | 38 |
 | `mechanic:spellcasting` | 30 |
 | `source:extra-action` | 22 |
 | `mechanic:legendary` | 9 |

@@ -4,6 +4,7 @@ import logging
 from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
+from app.domain.weapons_base import DamageType
 
 logger = logging.getLogger(__name__)
 
@@ -37,13 +38,19 @@ class EnvironmentContextReaction(BaseModel):
     source_id: str = Field(min_length=1)
     source_name: str = Field(min_length=1)
     context_id: EnvironmentContextId
-    disadvantage_on: list[EnvironmentContextRollKind] = Field(min_length=1)
+    disadvantage_on: list[EnvironmentContextRollKind] = Field(default_factory=list)
+    start_turn_damage_amount: int = Field(default=0, ge=0, le=200, exclude_if=lambda amount: amount == 0)
+    start_turn_damage_type: DamageType | None = Field(default=None, exclude_if=lambda kind: kind is None)
 
     @model_validator(mode="after")
     def validate_reaction(self) -> "EnvironmentContextReaction":
         try:
             if any(not item.strip() for item in (self.source_id, self.source_name)):
                 raise ValueError("Environment context reactions require a source id and name.")
+            if bool(self.start_turn_damage_amount) != bool(self.start_turn_damage_type):
+                raise ValueError("Environment-triggered damage requires both amount and type.")
+            if not self.disadvantage_on and not self.start_turn_damage_amount:
+                raise ValueError("Environment context reaction requires a roll penalty or damage.")
             if len(set(self.disadvantage_on)) != len(self.disadvantage_on):
                 raise ValueError("Environment context reaction roll kinds must be unique.")
             return self
