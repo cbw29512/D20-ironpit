@@ -5,6 +5,7 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.alternate_spell_casts import spend_alternate_cast
 from app.combat.concentration import start_concentration
+from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.persistent_barrier_geometry import validate_barrier_layout
 from app.combat.persistent_barrier_lifecycle import cleanup_persistent_barriers
 from app.combat.spellcasting import mark_slot_spell_cast
@@ -47,11 +48,20 @@ def cast_persistent_barrier(
         if not is_available(caster.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")
 
+        if action.resource_id is not None and action.level != 0:
+            raise ValueError("A resource-backed non-spell barrier must have spell level zero.")
+        if action.resource_id is not None and alternate_cast is not None:
+            raise ValueError("Resource-backed barrier cannot consume an alternate spell cast.")
+        if not action_resource_available(caster.state, action):
+            raise ValueError(f"No resource remains for {action.name}.")
+
         remaining = None
         if alternate_cast is not None:
             if alternate_cast.spell_id != action.id or alternate_cast.cast_level != action.level:
                 raise ValueError("Alternate barrier cast does not match the barrier spell.")
             remaining = spend_alternate_cast(caster.state, alternate_cast)
+        elif action.resource_id is not None:
+            remaining = spend_action_resource(caster.state, action)
         elif action.level > 0:
             resource = _slot_resource(caster, action.level)
             if resource is None or resource.current_uses < 1:
@@ -96,6 +106,8 @@ def cast_persistent_barrier(
             action_id=action.id,
             action_name=action.name,
             concentration=action.concentration,
+            ends_on_source_incapacitated=action.ends_on_source_incapacitated,
+            ends_on_source_death=action.ends_on_source_death,
             applied_round=round_number,
             expires_round=round_number + action.duration_rounds,
             permanent_after_full_duration=action.permanent_after_full_duration,
