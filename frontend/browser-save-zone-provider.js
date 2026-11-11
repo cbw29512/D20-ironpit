@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  const ARENA_WALLS = new Set(["wall-of-fire", "wall-of-stone", "wall-of-ice"]);
+
   function coverage(center, enemies, radiusFt) {
     const G = window.IRON_PIT_BROWSER_GRID_GEOMETRY;
     return enemies.filter((enemy) => enemy.state.position && G.footprintDistanceFt(
@@ -18,6 +20,8 @@
     if (!enemies.length) return null;
     let best = null;
     for (const action of caster.state.template.persistent_save_zone_actions || []) {
+      // Source-card walls stay for reference; never choose them in the Pit.
+      if (ARENA_WALLS.has(action.id)) continue;
       if (!action.damageDiceCount || !E.available(caster.state, action.actionCost)) continue;
       if (action.saveContext !== "nonmagical" && Z?.verbalBlocked(caster, setup)) continue;
       if (action.concentration && caster.state.concentration) continue;
