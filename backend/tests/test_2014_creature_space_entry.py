@@ -6,7 +6,7 @@ import logging
 from app.combat.creature_space_entry import resolve_creature_space_entry
 from app.combat.dice import FixedDiceProvider
 from app.combat.grid_reaction_movement import move_toward_on_grid
-from app.combat.state import build_combatant_state
+from app.combat.state import begin_turn, build_combatant_state
 from app.content.capability_compiler import compile_combatant
 from app.content.demo import build_goblin_warrior
 from app.content.monster_basic_candidates_2014 import unsupported_traits_2014
@@ -36,8 +36,16 @@ def _scene(target_side: str = "heroes"):
         )
         owner.state.position = GridPosition(x=0, y=0)
         target.state.position = GridPosition(x=1, y=1)
+        # EncounterSetup requires a nonempty opposing roster. An out-of-range
+        # observer keeps ally-entry tests structurally valid without touching
+        # the Fire Form target or its damage roll.
+        observer = EncounterCombatant(
+            combatant_id="observer", side="heroes", position_ft=0,
+            state=build_combatant_state(build_goblin_warrior()),
+        )
+        observer.state.position = GridPosition(x=7, y=7)
         setup = EncounterSetup(
-            heroes=[target] if target_side == "heroes" else [],
+            heroes=[target] if target_side == "heroes" else [observer],
             monsters=[owner, *([target] if target_side == "monsters" else [])],
             ruleset="2014", hero_total_levels=2, monster_total_cr="5",
             map_definition=BattleMapDefinition(
@@ -116,6 +124,9 @@ def test_entering_allied_square_still_triggers_the_printed_creature_clause():
 def test_real_grid_step_enters_enemy_square_and_triggers_fire_form():
     try:
         _, _, owner, target, setup = _scene()
+        # A newly constructed combatant has zero movement until its turn starts.
+        # Use the normal turn initializer, not a synthetic movement budget.
+        begin_turn(owner.state)
         events, _, moved = move_toward_on_grid(
             1, 1, owner, target, setup, 0, FixedDiceProvider([7]), turn_key="1:owner",
         )
