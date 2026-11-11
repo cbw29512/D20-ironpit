@@ -1,5 +1,6 @@
 from __future__ import annotations
 from app.content.monster_visual_turn_start_2014 import visual_turn_start_rule_2014
+from app.content.monster_barrier_bindings_2014 import source_barrier_actions_2014
 from app.content.monster_visual_disguise_2014 import visual_disguise_action_2014
 from app.content.monster_variable_heads_2014 import variable_head_profile_2014
 from app.content.monster_grapple_swallow_source_2014 import source_grapple_swallow_2014
@@ -222,6 +223,9 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
 def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinition:
     """Compile modeled mechanics without claiming full basic-roster admission."""
     core = monster_core_fields_2014(monster.id)
+    # Source-verified barrier parameters compile as a shared immutable Action.
+    # Admission remains blocked until both printed saves run in live combat.
+    barrier_actions = source_barrier_actions_2014(monster)
     scores = AbilityScores(**ability_values_2014(monster))
     movement = movement_modes_2014(monster)
     attacks = [
@@ -251,6 +255,13 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
     resources.extend(healing_resources_2014(monster))
     resources.extend(innate_spell_resources_2014(monster))
     resources.extend(monster_spell_slot_resources_2014(monster))
+    known_resource_ids = {item.id for item in resources}
+    for barrier in barrier_actions:
+        if barrier.resource_id and barrier.resource_id not in known_resource_ids:
+            resources.append(ResourceDefinition(
+                id=barrier.resource_id, name=barrier.name, max_uses=1,
+            ))
+            known_resource_ids.add(barrier.resource_id)
     resources.extend(zero_hp_prevention_resources_2014(monster))
     resources.extend(recharge_self_buff_resources_2014(monster))
     resources.extend(source_invisibility_resources_2014(monster))
@@ -316,6 +327,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *prepared_auto_hit_spell_actions_2014(monster),
         ],
         defensive_spell_actions=tier1_cleric_defensive_spells_2014(monster),
+        persistent_barrier_actions=barrier_actions,
         persistent_save_zone_actions=[
             *[zone for zone in [fetid_cloud_zone_2014(monster)] if zone is not None],
             *innate_persistent_save_zone_actions_2014(monster),
