@@ -12,6 +12,9 @@ logger = logging.getLogger(__name__)
 ARENA_NEUTRAL_INNATE_SPELLS_2014 = frozenset({
     "detect-evil-and-good",
     "druidcraft",
+    # Dancing Lights changes lighting, not a supported standard Pit outcome;
+    # keep its source on the card without inventing an Attack or buff.
+    "dancing-lights",
     "pass-without-trace",
     "disguise-self",
     "scrying",
