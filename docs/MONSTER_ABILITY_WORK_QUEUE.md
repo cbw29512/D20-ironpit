@@ -1,9 +1,15 @@
-## [ ] 2014 Ice Devil — generic destructible barrier Fire vulnerability groundwork (PR #1251)
+## [ ] 2014 Ice Devil — complete Wall of Ice (Recharge 6) binding
 
-- **Source and engine reuse:** The printed 2014 `Wall of Ice (Recharge 6)` uses destructible 10-foot sections with 30 HP and Fire vulnerability. Reuse existing Python/browser `PersistentBarrierAction` section state, damage immunity, and destruction path, not an Ice Devil-specific damage resolver.
-- **Submitted in draft PR #1251:** Optional source-declared `damage_vulnerabilities` copies onto independent combat-state sections. Immune types take zero; otherwise a vulnerable damage type doubles damage before the remaining-HP cap. Existing stone-wall source cards retain their original values, and browser serialization omits empty vulnerability metadata. Python/browser integration regressions added.
-- **Still blocked:** The exact Ice Devil wall requires its Action/Recharge 6 pool, valid 30-ft straight wall or 20-ft dome geometry, occupied-space onset push (position ignored under Pit forced-movement rule) plus DC 17 Dexterity 10d6 Cold/half, 10-round expiration or owner incapacitation/death, AC 5 and printed immunity types, destroyed-section frigid air and DC 17 Constitution 5d6 Cold/half on traversal. No arena-neutral shortcut for damage or effects; source admission stays **282/327, 45 blocked** until a separate complete binding passes exact-head CI.
-- **Status:** PR #1251 is draft; source-check, Python/browser parity CI and review are still required. Do not mark Ice Devil admitted or publish production Netlify.
+- **Exact unresolved source action:** Bind the printed 60-foot placement, 30-foot wall or 20-foot dome geometry, occupied-space DC 17 Dexterity save for 10d6 Cold/half, Pit-ignored displacement logging, 10-round/owner-incapacitated/death expiry, AC 5 and 30 HP per 10-foot section, printed immunities, destroyed-section frigid-air traversal DC 17 Constitution save for 5d6 Cold/half, and Recharge 6 lifecycle.
+- **Required reuse:** Build on the merged persistent-barrier engine and PR #1251's source-declared section vulnerabilities. Preserve the complete printed action, immutable 2014 values, fight-local barrier state, Python/browser parity, and fail-closed source changes. Do not mark Ice Devil admitted until the complete action passes exact-head gates.
+- **Current authoritative baseline:** **282/327 source-admitted, 45 blocked**. Ice Devil remains blocked by `mechanic:recharge` and `source:extra-action`; production Netlify remains locked.
+
+## [x] Universal persistent-barrier damage vulnerability groundwork (PR #1251)
+
+- **Shared mechanic:** Added optional source-declared `damage_vulnerabilities` to immutable persistent-barrier actions and independent fight-local barrier sections. Python and browser apply immunity precedence, double vulnerable damage, cap applied damage at remaining section HP, and preserve ordinary damage.
+- **Reuse and source scope:** The complete 2014 Ice Devil Wall of Ice paragraph supplies Fire vulnerability for each destructible section. The existing 2024 pregen Wall of Stone implementation proves the shared action/state/serializer path and remains unchanged when the field is empty. No monster-name or ability-name runtime dispatch was introduced.
+- **Merged and tested:** [PR #1251](https://github.com/cbw29512/D20-ironpit/pull/1251) passed exact-head CI (full Python/browser certification), 2014 Hero Certification, and generated-artifact synchronization on `fff9e143ea72fe445b3fca675380220a93a493e1`; it squash-merged as `c5c5d0f8f8ed3e1d4f0e89cba849588cbcb17536`. The 2014 Basic Roster and Paired Edition workflows were not applicable to this non-admitting primitive-only diff.
+- **No false admission:** This prerequisite resolves the reusable barrier-damage vulnerability issue but does not complete Wall of Ice. The authoritative baseline remains **282/327 admitted, 45 blocked**; independent webpage-fight certification is not claimed.
 
 ## [x] 2014 Vampire Weaknesses — live sunlight and inactive environmental clauses (PR #1250)
 
