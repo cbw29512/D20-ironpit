@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 from app.content.monster_source_2014 import SourceMonster2014
+import logging
+import re
+
+logger = logging.getLogger(__name__)
 
 # Combat cannot use these actions. Printed abilities remain unchanged on the source card.
 # Excluded actions do not acquire resources, recharge rolls, or subordinate attacks.
@@ -31,7 +35,15 @@ def source_proven_ethereal_shift_action_2014(
     from app.content.monster_source_sections_2014 import source_sections_2014
     printed = source_sections_2014(monster.source_actions).get(action_name, "")
     normalized = " ".join(printed.casefold().replace("’", "'").split())
-    return normalized == (
+    # These actions leave the playable plane without any damage, save, or
+    # condition. They cannot be selected under the locked planar ban.
+    # Full-string grammar prevents new combat riders from being discarded.
+    complete_shift = re.fullmatch(
+        r"the [a-z][a-z-]* magically enters the ethereal plane from the "
+        r"material plane, or vice versa\\.",
+        normalized,
+    )
+    return bool(complete_shift) or normalized == (
         "the nightmare and up to three willing creatures within 5 feet of it "
         "magically enter the ethereal plane from the material plane, or vice versa."
     )
