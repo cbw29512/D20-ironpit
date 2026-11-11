@@ -5,6 +5,7 @@ import logging
 
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
+from app.content.monster_multiattack_variants_2014 import source_variants_2014
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_damage_or_grapple_2014 import (
@@ -46,6 +47,11 @@ def test_only_printed_damage_or_grapple_family_reuses_shared_engine():
             assert len(alternative.effects) == 1
             assert alternative.effects[0].kind == "grapple"
             assert alternative.effects[0].escape_dc == dc
+            # Reuse the normal ordered Multiattack variant executor; a
+            # non-damaging Grapple replaces its original melee hit in a slot.
+            variants = source_variants_2014(source)
+            assert any(alternative.id in slot.attack_ids
+                       for variant in variants for slot in variant.slots)
             definition = adapt_monster_mechanics_2014(source)
             runtime = compile_combatant(definition)
             binding = next(item for item in runtime.alternate_weapon_attacks
