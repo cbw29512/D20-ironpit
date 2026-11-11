@@ -45,12 +45,24 @@ _LIGHT_INVISIBILITY = re.compile(
     re.IGNORECASE,
 )
 
+# Full printed non-spell passage clause. Tracking absence and gear visibility
+# have no independent arena combat selection effect; Invisible and the exact
+# attack/spell/concentration exits reuse the universal self-buff resolver.
+_PRINTED_INVISIBLE_PASSAGE = (
+    "The hag magically turns invisible until she attacks or casts a spell, "
+    "or until her concentration ends (as if concentrating on a spell). "
+    "While invisible, she leaves no physical evidence of her passage, "
+    "so she can be tracked only by magic. "
+    "Any equipment she wears or carries is invisible with her."
+)
+
+
 
 def source_invisibility_action_2014(monster: SourceMonster2014) -> list[TimedSelfBuffAction]:
     """Admit only the full, unaltered 2014 action as a shared self-buff."""
     try:
         headings = tuple(name for name in monster.action_names
-                         if name in {"Invisibility", _REST_HEADING})
+                         if name in {"Invisibility", "Invisible Passage", _REST_HEADING})
         if len(headings) != 1:
             return []
         heading = headings[0]
@@ -61,11 +73,11 @@ def source_invisibility_action_2014(monster: SourceMonster2014) -> list[TimedSel
         match = _PRINTED_INVISIBILITY.fullmatch(normalized) if heading == "Invisibility" else None
         light_match = _LIGHT_INVISIBILITY.fullmatch(normalized) if heading == "Invisibility" else None
         rest_match = _REST_INVISIBILITY.fullmatch(normalized) if heading == _REST_HEADING else None
-        if match is None and light_match is None and rest_match is None:
+        passage_match = heading == "Invisible Passage" and normalized == _PRINTED_INVISIBLE_PASSAGE
+        if match is None and light_match is None and rest_match is None and not passage_match:
             return []
         named = match or light_match or rest_match
-        assert named is not None
-        named_action = named.group("action")
+        named_action = named.group("action") if named is not None else None
         if rest_match is not None:
             if int(rest_match.group("hours")) != 1 or not named_action:
                 return []
@@ -78,10 +90,11 @@ def source_invisibility_action_2014(monster: SourceMonster2014) -> list[TimedSel
             if named_action else []
         )
         return [TimedSelfBuffAction(
-            id="invisibility", name="Invisibility", action_cost="action",
+            id="invisible-passage" if passage_match else "invisibility",
+            name=heading.split(" (", 1)[0], action_cost="action",
             condition_ids=["invisible"], magical_effect=True,
             concentration=True, ends_on_owner_attack=True,
-            ends_on_owner_spell_cast=(rest_match is not None or
+            ends_on_owner_spell_cast=(passage_match or rest_match is not None or
                 (match is not None and match.group("spell") == " or casts a spell")),
             ends_on_owner_action_ids=action_ids, priority=70,
             resource_id="invisibility" if rest_match is not None else None,
