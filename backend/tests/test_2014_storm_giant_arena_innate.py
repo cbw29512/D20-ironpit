@@ -5,6 +5,7 @@ import logging
 
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_environmental_spell_proofs_2014 import (
     source_proven_arena_inert_innate_spells_2014,
@@ -48,10 +49,18 @@ def test_storm_giant_fights_with_existing_melee_ranged_and_lightning_actions():
         assert {(attack.weapon.name, attack.attack_bonus) for attack in attacks} == {
             ("Greatsword", 14), ("Rock", 14),
         }
-        assert all(attack.id in {"greatsword", "rock"} for attack in attacks)
+        # Source attack IDs are edition/card-qualified in the universal compiler.
+        expected_ids = {
+            attack_id_2014(source, "greatsword"),
+            attack_id_2014(source, "rock"),
+        }
+        assert {attack.id for attack in attacks} == expected_ids
         assert template.attack_action is not None
         assert len(template.attack_action.slots) == 2
-        assert all(slot.attack_ids == ["greatsword"] for slot in template.attack_action.slots)
+        assert all(
+            slot.attack_ids == [attack_id_2014(source, "greatsword")]
+            for slot in template.attack_action.slots
+        )
         lightning = next(
             action for action in template.saving_throw_actions
             if action.id == "lightning-strike"
