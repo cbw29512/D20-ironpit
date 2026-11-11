@@ -5,7 +5,7 @@ import logging
 
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_barrier_2014 import source_barrier_parameters_2014
-from app.content.monster_basic_candidates_2014 import monster_blockers_2014
+from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +48,7 @@ def test_printed_barrier_is_exact_unique_and_mutation_safe() -> None:
             assert altered.source_actions != source.source_actions
             assert source_barrier_parameters_2014(altered) is None
         assert any(
-            blocker in monster_blockers_2014(source)
+            blocker in basic_blockers_2014(source)
             for blocker in ("mechanic:recharge", "source:extra-action")
         )
     except Exception:
