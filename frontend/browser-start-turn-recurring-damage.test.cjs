@@ -103,8 +103,8 @@ try {
   assert.match(start.events[0].description, /deals 7 fire damage/);
   assert.equal(target.state.current_hp, before - 7);
 
-  // Source authorizes self douse, not an invented helper range.
-  assert.equal(Douse.choose(target, setup), target);
+  // Source text retains optional removal, but automated AI never selects dousing.
+  assert.equal(Douse.choose(target, setup), null);
   assert.throws(() => Douse.resolve(5, 2, source, target), /Helper dousing/);
   const removal = Douse.resolve(6, 2, target, target);
   assert.equal(removal.feature_id, "douse-fire");

@@ -35,7 +35,7 @@ try {
   assert.ok(D && P, "Production Douse and Support modules must be loaded");
   {
     const { victim, helper, setup } = scene();
-    assert.equal(D.choose(victim, setup), victim);
+    assert.equal(D.choose(victim, setup), null);
     const oldHp = victim.state.current_hp;
     const event = D.resolve(1, 1, victim, victim);
     assert.equal(event.feature_id, "douse-fire");
@@ -48,12 +48,17 @@ try {
     assert.throws(() => D.resolve(3, 1, helper, victim), /Helper dousing/);
   }
   {
-    const { victim, helper, setup } = scene();
-    assert.equal(D.choose(victim, setup), victim);
+    const { victim, setup } = scene();
+    const hp = victim.state.current_hp;
+    assert.equal(D.choose(victim, setup), null);
     const result = P.resolve(1, 1, victim, setup, "1:burned");
-    assert.ok(result.events.some(event => event.feature_id === "douse-fire"));
-    assert.deepEqual(victim.state.timed_effects, []);
-    assert.equal(E.available(victim.state, "action"), false);
+    assert.equal(result.events.some(event => event.feature_id === "douse-fire"), false);
+    assert.equal(victim.state.timed_effects.length, 1);
+    assert.equal(E.available(victim.state, "action"), true);
+    const tick = End.resolve(2, 1, victim, setup);
+    assert.ok(tick.events.length > 0, "Burning must still damage without dousing");
+    assert.ok(victim.state.current_hp < hp);
+    assert.equal(victim.state.timed_effects.length, 1);
   }
   {
     const { victim, helper, setup } = scene();

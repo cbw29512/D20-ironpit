@@ -13,6 +13,9 @@ DEFAULT_OUTPUT = ROOT / "docs" / "generated" / "END_TURN_RECURRING_DAMAGE_BINDIN
 
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_sections_2014 import source_sections_2014
+from app.content.monster_source_end_turn_recurring_2014 import (
+    source_completed_end_turn_ignition_attack_2014,
+)
 
 _PATTERN = re.compile(
     r"if the target is a creature(?: or a flammable object)?, it ignites\. "
@@ -27,6 +30,7 @@ def report() -> dict:
     applicable: list[str] = []
     parameters: list[dict] = []
     exceptions: list[dict] = []
+    wired: list[str] = []
     for card in cards:
         for action_name, text in source_sections_2014(card.source_actions).items():
             match = _PATTERN.search(text)
@@ -40,26 +44,32 @@ def report() -> dict:
                 "dice_size": int(dice_size), "damage_type": damage_type.casefold(),
                 "tick_timing": "target_turn_end", "removal_action_cost": "action",
             })
-            exceptions.append({
-                "monster": card.id,
-                "reason": (
-                    "source permits a creature to douse the fire but omits the grid range "
-                    "for a different creature performing that Action"
-                ),
-                "missing_fields": ["removal_action_range_ft"],
-            })
+            # Source text includes an Action to douse, but locked arena AI
+            # never chooses it; prove complete hit and Burning data instead.
+            attack = next((a for a in card.attacks if a.name == action_name), None)
+            if (attack is not None
+                    and source_completed_end_turn_ignition_attack_2014(
+                        card, attack,
+                    ).source_complete):
+                wired.append(card.id)
+            else:
+                exceptions.append({
+                    "monster": card.id,
+                    "reason": "incomplete printed hit or recurring damage source",
+                    "missing_fields": ["complete_source_hit"],
+                })
     applicable = sorted(set(applicable))
     return {
         "source_cards_scanned": len(cards),
         "applicable_card_count": len(applicable),
         "applicable_cards": applicable,
         "source_declared_parameters": parameters,
-        "wired_python_card_count": 0,
-        "wired_browser_card_count": 0,
-        "wired_cards": [],
-        "remaining_card_count": len(applicable),
+        "wired_python_card_count": len(wired),
+        "wired_browser_card_count": len(wired),
+        "wired_cards": sorted(set(wired)),
+        "remaining_card_count": len(applicable) - len(set(wired)),
         "exceptions": exceptions,
-        "status": "blocked: source omits another-creature douse Action range",
+        "status": "complete" if not exceptions else "blocked: incomplete recurring attack",
     }
 
 

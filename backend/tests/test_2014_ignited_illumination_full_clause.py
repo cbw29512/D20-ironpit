@@ -28,7 +28,8 @@ def test_327_cards_have_one_full_light_only_source_match():
         assert verified_arena_inert_trait_2014(card, "Ignited Illumination")
         assert "Ignited Illumination" not in unsupported_traits_2014(card)
         assert "source:trait" not in basic_blockers_2014(card)
-        assert "attack:incomplete" in basic_blockers_2014(card)
+        # Full Touch source proof and no-douse AI now admit Magmin.
+        assert basic_blockers_2014(card) == ()
         assert card.model_dump_json() == original
         assert source_proves_ignited_illumination_2014(
             card.model_copy(update={"id": "renamed-homebrew", "name": "Renamed Light Creature"})

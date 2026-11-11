@@ -9,6 +9,7 @@ from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_end_turn_recurring_2014 import (
     source_end_turn_recurring_damage_2014,
+    source_completed_end_turn_ignition_attack_2014,
 )
 from scripts.browser_template_serializer import template_row
 
@@ -70,8 +71,11 @@ def test_327_card_source_proof_renames_and_unknown_clauses() -> None:
                 "source_actions": card.source_actions.replace(before, after),
             })
             assert source_end_turn_recurring_damage_2014(modified, source_attack) is None
-        # The source lacks another-creature douse range. Do not falsely admit.
-        assert "attack:incomplete" in basic_blockers_2014(card)
+        # Locked no-douse AI removes irrelevant helper-range requirement.
+        completed = source_completed_end_turn_ignition_attack_2014(card, source_attack)
+        assert completed.source_complete
+        assert "attack:incomplete" not in basic_blockers_2014(card)
+        assert basic_blockers_2014(card) == ()
         assert card.model_dump_json() == original
     except Exception:
         logger.exception("2014 end-turn source scan or fail-closed test failed.")
@@ -96,6 +100,7 @@ def test_generic_magmin_attack_compiles_and_exports_typed_tick() -> None:
             "stacking": "nonstacking", "endsIfSourceDead": False,
             "removalActionIds": ["douse-fire"],
         }
+        assert "attack:incomplete" not in basic_blockers_2014(card)
         assert card.source_actions == magmin_source().source_actions
     except Exception:
         logger.exception("2014 recurring-damage template serialization failed.")

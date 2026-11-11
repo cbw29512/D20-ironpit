@@ -1,5 +1,13 @@
 # Iron Pit locked rules
 
+## Burning and dousing — locked automated-combat decision (2026-11-11)
+
+- **Automated Iron Pit combatants never spend an Action to douse ongoing Burning**, on themselves or another combatant. Their combat decisions prioritize their normal attacks, damaging abilities, or otherwise legal combat choices over extinguishing flames. This is a universal AI/action-selection rule for monsters and pregens, not a Magmin-specific exception.
+- Source-defined Burning still applies and deals its normal typed recurring damage at its declared turn timing until the encounter ends or another already-supported, non-dousing expiry applies. Do not silently delete the damage, invent a range, or grant a free douse.
+- Retain the original printed dousing text as source/card metadata, but **do not expose or choose a dousing Action in automated Iron Pit fights**. Because no such Action can be selected, a source-omitted helper-dousing range is not a blocker for automated combat admission. This policy applies to all matching source-verified ongoing Burning effects and both combat engines.
+- Certification must prove no automated dousing choice, continued typed Burning ticks, original card immutability, source-text mutation rejection, and Python/browser parity; admission counts change only after generated reports and exact-head tests pass.
+
+
 This is the single index of **Chris-locked** Iron Pit rules. It exists so those locks are not lost in chat.
 
 It does **not** replace `docs/IRON_PIT_RULES_CONTRACT.md`. That file remains the detailed product/combat contract. Architecture, battlefield UI, and pregen construction stay in their existing docs. If this index and a cited file disagree, stop and reconcile in the cited file. Do not write a third copy of the same rule.

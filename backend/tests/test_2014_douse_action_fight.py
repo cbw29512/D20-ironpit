@@ -50,7 +50,7 @@ def _scene():
 def test_self_douse_uses_action_and_prevents_turn_end_damage():
     try:
         burned, helper, _, scene = _scene()
-        assert choose_douse_target(burned, scene) is burned
+        assert choose_douse_target(burned, scene) is None
         before = burned.state.current_hp
         event = resolve_douse_action(5, 2, burned, burned)
         assert event.feature_id == "douse-fire"
@@ -69,19 +69,24 @@ def test_self_douse_uses_action_and_prevents_turn_end_damage():
         raise
 
 
-def test_self_douse_is_wired_into_ordinary_turn_support():
+def test_auto_turn_never_chooses_douse_and_burning_persists():
     try:
         burned, helper, _, scene = _scene()
-        assert choose_douse_target(burned, scene) is burned
+        assert choose_douse_target(burned, scene) is None
+        before = burned.state.current_hp
         more, sequence = resolve_support_actions(
             1, 1, burned, scene, FixedDiceProvider([10]), "1:burned",
         )
-        assert sequence > 1
-        assert any(event.feature_id == "douse-fire" for event in more)
-        assert burned.state.timed_effects == []
-        assert not burned.state.action_available
+        assert not any(event.feature_id == "douse-fire" for event in more)
+        assert burned.state.action_available
+        assert burned.state.timed_effects
+        events, _ = resolve_end_turn_recurring_damage(
+            sequence, 1, burned, scene, FixedDiceProvider([4]),
+        )
+        assert events and burned.state.current_hp == before - 4
+        assert burned.state.timed_effects
     except Exception:
-        logger.exception("Self-douse support integration failed")
+        logger.exception("Locked no-douse AI regression failed")
         raise
 
 
@@ -96,7 +101,7 @@ def test_no_douse_permission_or_no_action_fails_closed():
         assert helper.state.action_available
         burned.state.timed_effects[0].allowed_removal_action_ids = ["douse-fire"]
         helper.state.action_available = False
-        assert choose_douse_target(burned, scene) is burned
+        assert choose_douse_target(burned, scene) is None
         burned.state.action_available = False
         assert choose_douse_target(burned, scene) is None
         with pytest.raises(ValueError, match="available Action"):

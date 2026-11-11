@@ -30,11 +30,11 @@ def douseable_effects(target: EncounterCombatant):
 
 
 def choose_douse_target(actor: EncounterCombatant, setup: EncounterSetup):
-    """The affected creature may spend its own Action without a range assumption."""
+    """Locked arena AI: never select dousing instead of fighting."""
     try:
-        if not is_available(actor.state, "action"):
-            return None
-        return actor if actor.state.is_alive and not actor.state.is_dead and douseable_effects(actor) else None
+        # Source-owned dousing metadata remains intact for exact source proof.
+        # Automated monsters and pregens never select this Action.
+        return None
     except Exception:
         logger.exception("Douse target selection failed for %s", actor.combatant_id)
         raise

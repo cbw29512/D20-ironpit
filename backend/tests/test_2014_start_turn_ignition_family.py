@@ -89,10 +89,9 @@ def test_full_source_proof_compiles_generic_attack_and_keeps_other_blockers():
             "stacking": "nonstacking", "endsIfSourceDead": False,
             "removalActionIds": ["douse-fire"],
         }
-        # Source is still *not* admitted: compound Fire Form and water exposure
-        # remain independently unimplemented, as does unspecified helper dousing.
+        # Fire Elemental is still blocked by its independently unsupported
+        # Fire Form and Water Susceptibility, not helper-douse geometry.
         assert "source:trait" in basic_blockers_2014(card)
-        assert "attack:incomplete" in basic_blockers_2014(card)  # helper-Douse reach unspecified
         assert card.model_dump_json() == original
     except Exception:
         logger.exception("2014 Fire Elemental Touch source and serializer parity failed.")
@@ -157,7 +156,7 @@ def test_hit_start_turn_tick_typed_damage_self_douse_and_fight_reset():
         )
         assert any("fire damage" in x.description and "start of the turn" in x.description for x in started)
         assert hero.state.current_hp == before - 7
-        assert choose_douse_target(hero, scene) is hero
+        assert choose_douse_target(hero, scene) is None
         action = resolve_douse_action(4, 2, hero, hero)
         assert "burning" in action.removed_condition_ids
         assert not hero.state.action_available
