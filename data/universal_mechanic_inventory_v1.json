@@ -5864,19 +5864,19 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 45,
+    "blocked_monster_count": 44,
     "blocker_categories": {
       "arena:neutral": 1,
       "attack:incomplete": 7,
       "attack:none": 1,
       "mechanic:legendary": 9,
       "mechanic:recharge": 2,
-      "mechanic:spellcasting": 30,
+      "mechanic:spellcasting": 29,
       "multiattack:complex": 3,
       "source:extra-action": 22,
       "source:legendary": 9,
       "source:reaction": 1,
-      "source:trait": 38
+      "source:trait": 37
     },
     "unresolved_printed_abilities": [
       {
@@ -5916,7 +5916,7 @@
         "printed_name": "Grasping Tendrils"
       },
       {
-        "demand_count": 18,
+        "demand_count": 17,
         "monsters": [
           "Cloud Giant",
           "Couatl",
@@ -5934,8 +5934,7 @@
           "Oni",
           "Planetar",
           "Rakshasa",
-          "Solar",
-          "Storm Giant"
+          "Solar"
         ],
         "printed_name": "Innate Spellcasting"
       },
