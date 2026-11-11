@@ -149,7 +149,8 @@
       sections: sectionEdges.map((edges, index) => ({
         section_id: `${barrierId}:section-${index + 1}`, edges: edges.map((edge) => ({ first: {...edge.first}, second: {...edge.second} })),
         current_hp: action.hitPointsPerSection, armor_class: action.armorClass,
-        damage_immunities: [...(action.damageImmunities || [])], destroyed: false,
+        damage_immunities: [...(action.damageImmunities || [])],
+        damage_vulnerabilities: [...(action.damageVulnerabilities || [])], destroyed: false,
       })),
       animation: action.animation || "persistent-barrier",
     });
@@ -171,10 +172,12 @@
     const section = barrier?.sections?.find((item) => item.section_id === sectionId);
     if (!section) throw new Error("Unknown barrier section.");
     const before = section.current_hp, immune = (section.damage_immunities || []).includes(damageType);
-    const applied = immune || section.destroyed ? 0 : Math.min(amount, section.current_hp);
+    const vulnerable = !immune && (section.damage_vulnerabilities || []).includes(damageType);
+    const scaled = vulnerable ? amount * 2 : amount;
+    const applied = immune || section.destroyed ? 0 : Math.min(scaled, section.current_hp);
     section.current_hp = Math.max(0, section.current_hp - applied);
     if (section.current_hp === 0) section.destroyed = true;
-    return { hpBefore: before, hpAfter: section.current_hp, appliedDamage: applied, immune, destroyed: section.destroyed };
+    return { hpBefore: before, hpAfter: section.current_hp, appliedDamage: applied, immune, vulnerable, destroyed: section.destroyed };
   }
 
   window.IRON_PIT_BROWSER_PERSISTENT_BARRIERS = { cast, damage, validate };
