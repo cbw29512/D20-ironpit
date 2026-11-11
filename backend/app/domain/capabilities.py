@@ -27,6 +27,7 @@ from app.domain.effect_removal import EffectRemovalAction, EffectTagConditionGra
 from app.domain.environment_contexts import EnvironmentContextReaction
 from app.domain.passive_modifiers import PassiveModifierGrant
 from app.domain.persistent_save_zones import PersistentSaveZoneAction
+from app.domain.persistent_barriers import PersistentBarrierAction
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.recharge import RechargeRule
@@ -93,6 +94,7 @@ class CombatantDefinition(BaseModel):
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     hit_point_pool_spell_actions: list[HitPointPoolSpellAction] = Field(default_factory=list)
     persistent_save_zone_actions: list[PersistentSaveZoneAction] = Field(default_factory=list)
+    persistent_barrier_actions: list[PersistentBarrierAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list, exclude_if=lambda items: not items)
     auto_hit_spell_actions: list[AutoHitSpellAction] = Field(default_factory=list, exclude_if=lambda items: not items)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
