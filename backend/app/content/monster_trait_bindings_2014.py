@@ -130,7 +130,7 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         bound.update(action.name for action in fire_aura_action_2014(monster))
         bound.update(action.name for action in corrosive_form_retaliation_2014(monster))
         bound.update(action.name for action in fire_form_contact_retaliation_2014(monster)
-                     if action.hostile_space_entry_damage is not None)
+                     if action.creature_space_entry_damage is not None)
         bound.update(rule.source_name for rule in damage_absorptions_from_source(
             monster.source_traits, {item.lower() for item in monster.damage_immunities},
         ))
