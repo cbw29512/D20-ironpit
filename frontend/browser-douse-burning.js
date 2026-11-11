@@ -13,8 +13,8 @@
   }
   function choose(actor, setup) {
     try {
-      if (!E().available(actor.state, "action")) return null;
-      return actor.state.is_alive && !actor.state.is_dead && effects(actor).length ? actor : null;
+      // Locked arena AI: retain printed source, but never choose a dousing Action.
+      return null;
     } catch (error) { console.error("Douse choice failed", error); throw error; }
   }
   function resolve(sequence, round, actor, target) {
