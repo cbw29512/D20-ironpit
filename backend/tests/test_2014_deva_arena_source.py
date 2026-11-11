@@ -52,8 +52,8 @@ def test_deva_keeps_melee_and_healing_without_noncombat_spells():
         # Source Mace is a normal melee weapon attack; Multiattack reuses it
         # in two universal attack slots, with no Deva-only resolver.
         assert template.weapon_attack is not None
-        assert template.weapon_attack.name == "Mace"
-        assert template.weapon_attack.attack_kind.value == "melee"
+        assert template.weapon_attack.weapon.name == "Mace"
+        assert template.weapon_attack.weapon.attack_kind.value == "melee"
         assert template.attack_action is not None
         assert len(template.attack_action.slots) == 2
         assert all(
