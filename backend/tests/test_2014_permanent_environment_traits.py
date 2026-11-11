@@ -41,7 +41,7 @@ def test_2014_environment_inert_trait_proof_fails_closed_on_source_mutation() ->
     try:
         monster = _monster("fire-elemental")
         accepted = arena_inactive_environment_traits_2014(monster)
-        assert accepted == frozenset({"Fire Form", "Water Susceptibility"})
+        assert accepted == frozenset({"Water Susceptibility"})
         assert not basic_blockers_2014(monster)
         renamed = monster.model_copy(update={"id": "renamed-element", "name": "Renamed Element"})
         assert arena_inactive_environment_traits_2014(renamed) == accepted
