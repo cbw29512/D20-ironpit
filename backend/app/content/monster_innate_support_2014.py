@@ -55,7 +55,9 @@ def innate_timed_self_buffs_2014(monster) -> list[TimedSelfBuffAction]:
                     id="invisibility",
                     name="Invisibility",
                     action_cost="action",
-                    resource_id="invisibility",
+                    # At-will Innate Spellcasting is never a finite resource.
+                    # Keep the printed daily pool only when actually per-day.
+                    resource_id="invisibility" if spell.get("usage") == "per_day" else None,
                     resource_cost=1,
                     duration_rounds=600,
                     expiry_timing="source_turn_end",
