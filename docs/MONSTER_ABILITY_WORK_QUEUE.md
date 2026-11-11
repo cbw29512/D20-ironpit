@@ -1,3 +1,11 @@
+## [ ] 2014 Deva — source-verified arena-inert spells and Change Shape
+
+- **Existing combat mechanics:** Preserve printed Mace damage, two-attack Multiattack, Healing Touch (3/day), Angelic Weapons and Magic Resistance. No replacement attacks or new creature-form subsystem.
+- **Innate spells:** The pinned source has Detect Evil and Good, Commune and Raise Dead. The two latter spells require casting outside the standard automated battle window (1 minute and 1 hour); classify only those source spells as arena-neutral, retaining the card metadata.
+- **Change Shape:** Locked arena excludes voluntary transformations. Reuse the existing source-verified Change Shape classifier with a complete two-paragraph print proof for the Deva; source mutations fail closed and renamed cards retain the same effect.
+- **Certification:** Target 2014 source-admission and real compiled combat action regressions in Python plus browser/roster/hero/generated artifacts. Do not mark done until all exact-head workflows pass and it merges.
+- **Stacking:** Deva draft follows wall-creation-policy PR #1256. Ice Devil is 283/327 only on that branch until merged; Deva has not been counted as admitted.
+
 ## [ ] 2014 Ice Devil — certify LOCKED no-wall-creation arena exclusion
 
 - **New governing rule:** No 2014 or 2024 combatant may choose or cast wall-creating spells or abilities in automated Iron Pit battles. Walls, domes, broken-wall frigid air, wall movement blockers, wall-slot costs and wall Recharge are absent from the fight. Preserve complete printed source/card references.
