@@ -10,6 +10,8 @@ from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.capability_compiler import compile_combatant
 from scripts.browser_template_serializer import persistent_barrier_row
 from app.combat.persistent_barrier_cast import cast_persistent_barrier
+from app.combat.recharge import resolve_recharge_checks
+from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.content.arena_map import build_standard_iron_pit_map
 from app.content.demo import build_goblin_warrior
@@ -62,7 +64,7 @@ def test_2014_source_barrier_compiles_with_real_recharge_resource_but_is_still_b
         # Resource/action bindings are only a partial mechanic: the creation
         # and broken-section saving throws still block complete admission.
         blockers = basic_blockers_2014(source)
-        assert "mechanic:recharge" in blockers
+        assert "mechanic:recharge" not in blockers
         assert "source:extra-action" in blockers
     except Exception:
         logger.exception("2014 barrier card binding regression failed.")
@@ -112,6 +114,17 @@ def test_source_ice_devil_wall_can_be_cast_via_generic_barrier_engine() -> None:
         assert section.destroyed_section_crossing_save.dc == 17
         assert owner.state.resources and any(
             r.id == "wall-of-ice" and r.current_uses == 0
+            for r in owner.state.resources
+        )
+        assert len(template.recharge_rules) == 1
+        assert template.recharge_rules[0].resource_id == "wall-of-ice"
+        assert template.recharge_rules[0].minimum_roll == 6
+        failed = resolve_recharge_checks(owner.state, FixedDiceProvider([5]))
+        assert len(failed) == 1 and failed[0].restored is False
+        restored = resolve_recharge_checks(owner.state, FixedDiceProvider([6]))
+        assert len(restored) == 1 and restored[0].restored is True
+        assert any(
+            r.id == "wall-of-ice" and r.current_uses == 1
             for r in owner.state.resources
         )
         assert goblin_state.current_hp == goblin_state.template.max_hp
