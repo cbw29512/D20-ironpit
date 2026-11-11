@@ -103,6 +103,12 @@
             : `${mover.state.template.name} moves 5 feet, spending ${stepCost} feet of movement.`,
         };
         events.push(lastMovement); sequence += 1;
+        const entryResolver = window.IRON_PIT_BROWSER_CREATURE_SPACE_ENTRY;
+        if (!entryResolver?.resolve) throw new Error("Grid movement requires the space-entry runtime.");
+        const entry = entryResolver.resolve(
+          sequence, round, mover, setup, options.turnKey || `${round}:${mover.combatant_id}`,
+        );
+        events.push(...entry.events); sequence = entry.sequence;
         if (H()) {
           const triggered = H().resolveEntries(
             sequence, round, mover, setup, options.turnKey || `${round}:${mover.combatant_id}`,
