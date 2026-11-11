@@ -64,7 +64,7 @@ def test_ghost_extra_aging_and_fear_clauses_are_source_exact():
             ("1d4 × 10 years", "2d4 × 10 years"),
             ("ending the frightened condition on itself", "ending the paralysis on itself"),
             ("within 24 hours of it occurring", "within 12 hours of it occurring"),
-            ("immunity to this ghost's Horrifying Visage", "immunity to fear"),
+            ("immune to this ghost's Horrifying Visage", "immune to fear"),
         ):
             assert old in monster.source_actions
             altered = monster.model_copy(update={
