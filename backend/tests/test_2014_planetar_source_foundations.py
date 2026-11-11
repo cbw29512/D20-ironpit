@@ -96,10 +96,10 @@ def test_blade_wall_exclusion_requires_full_innate_clause():
         assert source_proven_angelic_arena_exclusions_2014(renamed) == {
             "blade-barrier", "control-weather",
         }
-        # No invented spell binding: Insect Plague's remaining zone and
-        # terrain mechanics have not been source-certified in this tranche.
-        assert not supports_innate_spellcasting_2014(card)
-        assert "mechanic:spellcasting" in basic_blockers_2014(card)
+        # Insect Plague now composes the existing placed-save and temporary-
+        # terrain primitives; no Planetar-named runtime effect is introduced.
+        assert supports_innate_spellcasting_2014(card)
+        assert basic_blockers_2014(card) == ()
         assert card.model_dump_json() == before
     except Exception:
         logger.exception("Planetar source wall/utility exclusion test failed.")
