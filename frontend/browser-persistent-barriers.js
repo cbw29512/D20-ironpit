@@ -117,6 +117,17 @@
   function cast(sequence, round, caster, setup, action, sectionEdges, turnKey, useAlternate = false) {
     validate(action, sectionEdges, caster, setup);
     if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.actionCost} unavailable.`);
+    const resourceId = action.resourceId || null;
+    if (resourceId && (action.level !== 0 || useAlternate)) {
+      throw new Error("Resource-backed non-spell barrier requires level zero and no alternate cast.");
+    }
+    const resourceCost = action.resourceCost ?? 1;
+    if (resourceId && (!Number.isInteger(resourceCost) || resourceCost < 1)) {
+      throw new Error("Barrier resource cost must be a positive integer.");
+    }
+    if (resourceId && (caster.state.resources?.[resourceId] ?? 0) < resourceCost) {
+      throw new Error(`${action.name} resource unavailable.`);
+    }
     let resourceRemaining = null;
     if (useAlternate) {
       const grant = alternateGrant(caster, action);
@@ -124,7 +135,10 @@
       const cost = grant.resource_cost || 1;
       caster.state.resources[grant.resource_id] -= cost;
       resourceRemaining = caster.state.resources[grant.resource_id];
-    } else {
+    } else if (resourceId) {
+      caster.state.resources[resourceId] -= resourceCost;
+      resourceRemaining = caster.state.resources[resourceId];
+    } else if (action.level > 0) {
       const resourceId = `spell-slot-${action.level}`;
       if ((caster.state.resources?.[resourceId] || 0) < 1) throw new Error(`No level ${action.level} spell slot remains.`);
       S().markSlotSpellCast(caster.state, turnKey);
@@ -142,6 +156,8 @@
     setup.persistent_barriers.push({
       barrier_id: barrierId, source_id: caster.combatant_id, source_side: caster.side,
       action_id: action.id, action_name: action.name, concentration: Boolean(action.concentration),
+      ends_on_source_incapacitated: Boolean(action.endsOnSourceIncapacitated),
+      ends_on_source_death: Boolean(action.endsOnSourceDeath),
       applied_round: round, expires_round: round + action.durationRounds,
       permanent_after_full_duration: Boolean(action.permanentAfterFullDuration),
       blocks_movement: action.blocksMovement !== false,
