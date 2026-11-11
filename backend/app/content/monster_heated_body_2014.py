@@ -4,6 +4,7 @@ import logging
 import re
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_fire_form_entry_2014 import fire_form_space_entry_2014
 from app.domain.timed_self_buffs import MeleeHitRetaliation, TimedSelfBuffAction
 from app.domain.weapons_base import DamageType
 
@@ -91,7 +92,9 @@ def fire_form_contact_retaliation_2014(monster: SourceMonster2014) -> list[Timed
         )
         if not all(text in body for text in required):
             return []
-        return _source_retaliation_2014(monster, "Fire Form", DamageType.FIRE)
+        actions = _source_retaliation_2014(monster, "Fire Form", DamageType.FIRE)
+        entry = fire_form_space_entry_2014(monster)
+        return [action.model_copy(update={"hostile_space_entry_damage": entry}) for action in actions]
     except Exception:
         logger.exception("Failed generic 2014 Fire Form contact-damage binding.")
         raise
