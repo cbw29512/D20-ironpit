@@ -51,7 +51,7 @@ def test_green_hag_reuses_damage_and_complete_action_capabilities():
         template = compile_combatant(adapt_basic_monster_2014(card))
         assert template.name == "Green Hag"
         assert template.weapon_attack is not None
-        assert template.weapon_attack.weapon.attack_bonus == 6
+        assert template.weapon_attack.attack_bonus == 6
         assert template.visual_disguise_action.inspection_dc == 20
         assert not template.visual_disguise_action.opening_eligible
         assert not template.visual_disguise_action.dismiss_on_first_turn
