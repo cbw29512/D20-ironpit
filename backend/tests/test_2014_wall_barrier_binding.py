@@ -9,6 +9,13 @@ from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.capability_compiler import compile_combatant
 from scripts.browser_template_serializer import persistent_barrier_row
+from app.combat.persistent_barrier_cast import cast_persistent_barrier
+from app.combat.state import build_combatant_state
+from app.content.arena_map import build_standard_iron_pit_map
+from app.content.demo import build_goblin_warrior
+from app.domain.encounters import EncounterCombatant, EncounterSetup
+from app.domain.grid import GridPosition
+from app.domain.persistent_barriers import GridBarrierEdge
 
 logger = logging.getLogger(__name__)
 
@@ -59,4 +66,57 @@ def test_2014_source_barrier_compiles_with_real_recharge_resource_but_is_still_b
         assert "source:extra-action" in blockers
     except Exception:
         logger.exception("2014 barrier card binding regression failed.")
+        raise
+
+
+def test_source_ice_devil_wall_can_be_cast_via_generic_barrier_engine() -> None:
+    """Exercise actual source card and finite resource; live saves remain separate."""
+    try:
+        source = next(card for card in load_monster_source_2014() if card.id == "ice-devil")
+        template = compile_combatant(adapt_monster_mechanics_2014(source))
+        owner_state = build_combatant_state(template)
+        owner_state.position = GridPosition(x=2, y=7)
+        owner = EncounterCombatant(
+            combatant_id="ice-owner", side="monsters", position_ft=10,
+            state=owner_state,
+        )
+        goblin_state = build_combatant_state(build_goblin_warrior())
+        goblin_state.position = GridPosition(x=8, y=5)
+        enemy = EncounterCombatant(
+            combatant_id="enemy", side="heroes", position_ft=40,
+            state=goblin_state,
+        )
+        setup = EncounterSetup(
+            heroes=[enemy], monsters=[owner], hero_total_levels=1,
+            monster_total_cr="14", ruleset="2014",
+            map_definition=build_standard_iron_pit_map(),
+        )
+        panel = [[
+            GridBarrierEdge(
+                first=GridPosition(x=x, y=4),
+                second=GridPosition(x=x, y=5),
+            )
+            for x in (7, 8)
+        ]]
+        event, next_sequence = cast_persistent_barrier(
+            1, 1, owner, setup, template.persistent_barrier_actions[0],
+            panel, "1:ice-owner",
+        )
+        assert (event.feature_id, event.resource_remaining, next_sequence) == (
+            "wall-of-ice", 0, 2,
+        )
+        assert len(setup.persistent_barriers) == 1
+        section = setup.persistent_barriers[0].sections[0]
+        assert section.current_hp == 30
+        assert section.damage_vulnerabilities == ["fire"]
+        assert section.destroyed_section_crossing_save.dc == 17
+        assert owner.state.resources and any(
+            r.id == "wall-of-ice" and r.current_uses == 0
+            for r in owner.state.resources
+        )
+        assert goblin_state.current_hp == goblin_state.template.max_hp
+        # Casting and save damage are separate universal primitives; this
+        # proves the cast, not a nonexistent automatic save invocation.
+    except Exception:
+        logger.exception("Source 2014 barrier live-cast regression failed.")
         raise
