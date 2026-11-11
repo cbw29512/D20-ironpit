@@ -33,6 +33,11 @@ global.window = {
 };
 require("./browser-temporary-terrain.js");
 require("./browser-save-zones.js");
+window.IRON_PIT_BROWSER_ROLLS = {
+  modeFromSources: (advantage, disadvantage) =>
+    disadvantage > advantage ? "disadvantage" : advantage > disadvantage ? "advantage" : "normal",
+};
+require("./browser-ability-checks.js");
 
 function member(id, side, x) {
   return {
@@ -73,6 +78,12 @@ test("generic persistent damage zone creates matching terrain and clears on lost
   assert.equal(target.state.current_hp, 98);
   assert.equal(caster.state.resources["once-a-day"], 0);
   assert.equal(setup.save_zones[0].lightlyObscured, true);
+  const modeOptions = { member: target, setup, skill: "perception",
+    reliesOnSight: true, ability: "wisdom" };
+  assert.equal(window.IRON_PIT_BROWSER_ABILITY_CHECKS.mode(target.state, 0, 0, modeOptions),
+    "disadvantage");
+  assert.equal(window.IRON_PIT_BROWSER_ABILITY_CHECKS.mode(target.state, 0, 0,
+    { ...modeOptions, reliesOnSight: false }), "normal");
   assert.equal(setup.temporary_terrain_zones.length, 1);
   assert.equal(setup.temporary_terrain_zones[0].persistent_zone_id, setup.save_zones[0].zone_id);
   assert.equal(setup.temporary_terrain_zones[0].expires_round, 101);
@@ -85,6 +96,8 @@ test("generic persistent damage zone creates matching terrain and clears on lost
   );
   assert.equal(setup.save_zones.length, 0);
   assert.equal(setup.temporary_terrain_zones.length, 0);
+  assert.equal(window.IRON_PIT_BROWSER_ABILITY_CHECKS.mode(target.state, 0, 0, modeOptions),
+    "normal");
   assert.equal(action.id, "renamed-source-zone");
 });
 
