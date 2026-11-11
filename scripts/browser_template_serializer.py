@@ -628,6 +628,10 @@ def persistent_barrier_row(action: Any) -> dict[str, Any]:
         return {
             "id": action.id, "name": action.name, "level": action.level,
             "actionCost": action.action_cost, "castRangeFt": action.cast_range_ft,
+            **({"resourceId": action.resource_id, "resourceCost": action.resource_cost}
+                if action.resource_id else {}),
+            **({"endsOnSourceIncapacitated": True} if action.ends_on_source_incapacitated else {}),
+            **({"endsOnSourceDeath": True} if action.ends_on_source_death else {}),
             "concentration": action.concentration, "durationRounds": action.duration_rounds,
             "permanentAfterFullDuration": action.permanent_after_full_duration,
             "minSections": action.min_sections, "maxSections": action.max_sections,
