@@ -14,6 +14,7 @@ from app.content.monster_innate_conditions_2014 import innate_condition_ids_2014
 from app.content.monster_senses_2014 import bounded_blindsight_2014
 from app.content.monster_grappler_damage_2014 import source_turn_grappler_damage_2014
 from app.content.monster_definition_adapter_support_2014 import attack_id_2014
+from app.content.monster_source_grapple_attack_advantage_2014 import source_grapple_attack_advantage_2014
 from app.content.monster_legendary_resistance_2014 import legendary_resistance_trait_name_2014
 from app.content.monster_passive_grants_2014 import bound_passive_trait_names_2014, saving_throw_advantage_grants_2014
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
@@ -150,6 +151,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         if "Evasion" in monster.trait_names and progression_features_2014(monster).evasion:
             bound.add("Evasion")
         bound.update(bound_passive_trait_names_2014(monster))
+        if source_grapple_attack_advantage_2014(monster):
+            bound.add("Grappler")
         bound.update(source_proven_hostile_overlap_traits_2014(monster))
         bound.update(action.name for action in source_proven_zero_hp_finisher_2014(monster))
         bound.update(rule.source_name for rule in source_turn_grappler_damage_2014(monster))
@@ -204,9 +207,12 @@ def conditional_attack_advantage_2014(
 ) -> list[ConditionalAttackAdvantage]:
     """Bind Blood Frenzy to the shared target-not-full-HP Advantage primitive."""
     try:
-        if _BLOOD_FRENZY not in bound_trait_names_2014(monster) or attack.kind != "melee":
+        extras = source_grapple_attack_advantage_2014(monster)
+        if attack.kind != "melee":
             return []
-        return [ConditionalAttackAdvantage(trigger="target_not_full_hp")]
+        if _BLOOD_FRENZY in bound_trait_names_2014(monster):
+            extras.append(ConditionalAttackAdvantage(trigger="target_not_full_hp"))
+        return extras
     except Exception:
         logger.exception(
             "Failed to bind conditional attack Advantage for %s / %s.",

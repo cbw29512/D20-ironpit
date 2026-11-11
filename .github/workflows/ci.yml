@@ -240,6 +240,9 @@ jobs:
       - name: Validate universal source-owned body-control state
         working-directory: backend
         run: PYTHONPATH=.:.. pytest -q tests/test_2014_body_control_source_contract.py tests/test_universal_body_control_link.py
+      - name: Verify 2014 Mimic natural-form admission
+        working-directory: backend
+        run: PYTHONPATH=.:.. pytest -q tests/test_2014_mimic_natural_form_admission.py
       - name: Certify Python rules reference
         working-directory: backend
         run: timeout 20m pytest -vv --durations=25
