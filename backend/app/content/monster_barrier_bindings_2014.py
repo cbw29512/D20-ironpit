@@ -11,6 +11,7 @@ import logging
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_barrier_2014 import source_barrier_parameters_2014
 from app.domain.persistent_barriers import PersistentBarrierAction
+from app.domain.actions import SavingThrowAction
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +43,22 @@ def source_barrier_actions_2014(monster: SourceMonster2014) -> list[PersistentBa
             hit_points_per_section=verified.section_hp,
             damage_immunities=list(verified.damage_immunities),
             damage_vulnerabilities=["fire"] if verified.fire_vulnerable else [],
+            on_creation_save=SavingThrowAction(
+                id=verified.action_id, name=verified.source_name,
+                save_ability=verified.creation_save_ability,
+                dc=verified.creation_save_dc, range_ft=verified.cast_range_ft,
+                damage_dice_count=10, damage_dice_size=6,
+                damage_type="cold", success_damage="half", magical_effect=True,
+                target_scope="all-other-creatures", max_targets=12,
+            ),
+            destroyed_section_crossing_save=SavingThrowAction(
+                id=verified.action_id, name=verified.source_name,
+                save_ability=verified.cross_destroyed_section_save_ability,
+                dc=verified.cross_destroyed_section_dc, range_ft=0,
+                damage_dice_count=5, damage_dice_size=6,
+                damage_type="cold", success_damage="half", magical_effect=True,
+                target_scope="all-other-creatures", max_targets=12,
+            ),
             blocks_movement=True,
             blocks_line_of_sight=True,
             ends_on_source_incapacitated=verified.ends_when_source_incapacitated,
