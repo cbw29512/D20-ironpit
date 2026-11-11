@@ -72,13 +72,17 @@
         return sum + (type === spec.damageType ? value : 0);
       }, 0);
       if (!amount) return { damageTaken: 0, maximumReduced: 0, healed: 0, killedByZeroMaximum: false };
+      const wasDead = Boolean(target.state.is_dead);
+      const rawMaximumAfter = target.state.template.max_hp + (target.state.max_hp_bonus || 0)
+        - (target.state.hit_point_maximum_reduction || 0) - amount;
       const maximumReduced = spec.reduceTargetMaximumHp
         ? applyReduction(target.state, amount, { zeroMaxHpKills: spec.zeroMaximumHpKills === true }) : 0;
       const heal = window.IRON_PIT_BROWSER_HEALING?.restore;
       if (spec.healAttacker && !heal) throw new Error("Typed damage self-healing requires shared healing runtime.");
       const healed = spec.healAttacker ? heal(attacker.state, amount) : 0;
       return { damageTaken: amount, maximumReduced, healed,
-        killedByZeroMaximum: maximumReduced > 0 && target.state.is_dead };
+        killedByZeroMaximum: Boolean(spec.zeroMaximumHpKills && !wasDead
+          && maximumReduced > 0 && rawMaximumAfter <= 0 && target.state.is_dead) };
     } catch (error) {
       console.error("Typed on-hit HP transfer failed.", { attack: attack?.id, error });
       throw error;
