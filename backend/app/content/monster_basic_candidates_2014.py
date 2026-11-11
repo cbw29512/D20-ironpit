@@ -10,6 +10,7 @@ from app.content.monster_charge_source_corrections_2014 import corrected_charge_
 from app.content.monster_form_qualified_charge_2014 import source_proven_form_qualified_charge_traits_2014
 from app.content.monster_legendary_bindings_2014 import supports_legendary_actions_2014
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_source_natural_form_only_2014 import proven_natural_form_only_traits_2014
 from app.content.monster_mechanic_family_blockers_2014 import attack_blockers_2014, mechanic_family_blockers_2014
 from app.content.monster_rock_catching_2014 import supports_rock_catching_reaction_2014
 from app.content.monster_reactive_2014 import supports_reaction_each_turn_2014
@@ -41,6 +42,7 @@ def unsupported_traits_2014(monster: SourceMonster2014) -> tuple[str, ...]:
     try:
         certified = set(ARENA_NEUTRAL_TRAITS_2014) | set(_MODELED_2014_TRAITS)
         certified.update(bound_trait_names_2014(monster))
+        certified.update(proven_natural_form_only_traits_2014(monster))
         certified.update(source_proven_form_qualified_charge_traits_2014(monster))
         certified.update(variable_head_trait_names_2014(monster))
         if supports_death_triggers_2014(monster):
