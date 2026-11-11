@@ -19,6 +19,7 @@ def compile_attack_control(
                 restrains_while_grappled=effect.restrains,
                 grapple_requires_source_free=effect.requires_source_free,
                 grapple_max_active_grapples=effect.max_active_grapples,
+                grapple_check_save_disadvantage_abilities=list(effect.check_save_disadvantage_abilities),
                 grapple_periodic_damage=effect.periodic_damage,
             )
         return HitControlEffect(
