@@ -36,13 +36,22 @@ def apply_on_hit_typed_drain(
         )
         if not amount:
             return TypedDrainResult(0, 0, 0, False)
+        was_dead = defender.is_dead
+        raw_maximum_after = (
+            defender.template.max_hp + defender.max_hp_bonus
+            - defender.hit_point_maximum_reduction - amount
+        )
         reduction = (
             apply_hit_point_maximum_reduction_state(
                 defender, amount, zero_max_hp_kills=spec.zero_maximum_hp_kills,
             ) if spec.reduce_target_maximum_hp else 0
         )
         healed = restore_hit_points(attacker, amount) if spec.heal_attacker else 0
-        return TypedDrainResult(amount, reduction, healed, defender.is_dead and bool(reduction))
+        killed = bool(
+            spec.zero_maximum_hp_kills and not was_dead and reduction
+            and raw_maximum_after <= 0 and defender.is_dead
+        )
+        return TypedDrainResult(amount, reduction, healed, killed)
     except Exception:
         logger.exception("On-hit typed damage transfer failed for %s.", attack.id)
         raise
