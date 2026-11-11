@@ -71,5 +71,53 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS = { disadvantageSources, inside };
+  function resolveStartTurnDamage(sequence, round, member, setup) {
+    try {
+      const list = reactions(member).filter((reaction) =>
+        (reaction.start_turn_damage_amount || 0) > 0);
+      if (!list.length || member.state.is_dead || !member.state.is_alive) {
+        return { events: [], sequence };
+      }
+      const defense = window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES;
+      const attack = window.IRON_PIT_BROWSER_ATTACK;
+      if (!defense?.resolveDamage || !attack?.applyDamage) {
+        throw new Error("Environment-context damage requires shared defenses and HP rules.");
+      }
+      const affected = [...(setup?.heroes || []), ...(setup?.monsters || [])]
+        .map((other) => other.state);
+      const events = [];
+      for (const rule of list) {
+        if (!inside(member, setup, rule.context_id || rule.contextId)) continue;
+        const type = rule.start_turn_damage_type || rule.startTurnDamageType;
+        const amount = rule.start_turn_damage_amount || rule.startTurnDamageAmount;
+        if (!type || !Number.isInteger(amount) || amount < 1) {
+          throw new Error("Environment damage requires a positive typed amount.");
+        }
+        const hpBefore = member.state.current_hp;
+        const result = defense.resolveDamage(member.state, amount, type);
+        attack.applyDamage(member.state, result.applied, false, [type], affected,
+          setup, [], member.combatant_id);
+        events.push({
+          sequence: sequence++, round_number: round, event_type: "feature",
+          actor_id: member.combatant_id, actor_name: member.state.template.name,
+          target_id: member.combatant_id, target_name: member.state.template.name,
+          feature_id: rule.source_name || rule.sourceName,
+          hp_before: hpBefore, hp_after: member.state.current_hp,
+          is_dead: member.state.is_dead, animation: "feature",
+          description: `${rule.source_name || rule.sourceName}: ${member.state.template.name} takes ${result.applied} ${type} damage at the start of its turn in ${rule.context_id || rule.contextId}.`,
+        });
+        if (member.state.is_dead) break;
+      }
+      return { events, sequence };
+    } catch (error) {
+      console.error("Live environment-context start-turn damage failed.", {
+        member: member?.combatant_id, error,
+      });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS = {
+    disadvantageSources, inside, resolveStartTurnDamage,
+  };
 })();
