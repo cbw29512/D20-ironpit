@@ -60,5 +60,30 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_MAXIMUM_HP = { applyReduction, resolve };
+  function resolveTypedDrain(attacker, target, attack, components) {
+    try {
+      const spec = attack.onHitTypedDrain;
+      if (!spec) return null;
+      if (!spec.damageType) throw new Error("Typed drain must name a damage component.");
+      const amount = (components || []).reduce((sum, part) => {
+        const type = part.damageType || part.damage_type;
+        const value = part.appliedTotal ?? part.applied_total ?? 0;
+        if (!Number.isInteger(value) || value < 0) throw new Error("Invalid typed-damage component.");
+        return sum + (type === spec.damageType ? value : 0);
+      }, 0);
+      if (!amount) return { damageTaken: 0, maximumReduced: 0, healed: 0, killedByZeroMaximum: false };
+      const maximumReduced = spec.reduceTargetMaximumHp
+        ? applyReduction(target.state, amount, { zeroMaxHpKills: spec.zeroMaximumHpKills === true }) : 0;
+      const heal = window.IRON_PIT_BROWSER_HEALING?.restore;
+      if (spec.healAttacker && !heal) throw new Error("Typed damage self-healing requires shared healing runtime.");
+      const healed = spec.healAttacker ? heal(attacker.state, amount) : 0;
+      return { damageTaken: amount, maximumReduced, healed,
+        killedByZeroMaximum: maximumReduced > 0 && target.state.is_dead };
+    } catch (error) {
+      console.error("Typed on-hit HP transfer failed.", { attack: attack?.id, error });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_MAXIMUM_HP = { applyReduction, resolve, resolveTypedDrain };
 })();
