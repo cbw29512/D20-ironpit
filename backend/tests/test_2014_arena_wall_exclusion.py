@@ -14,6 +14,7 @@ from app.content.monster_arena_action_policy_2014 import (
 )
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_barrier_2014 import source_barrier_parameters_2014
@@ -61,14 +62,18 @@ def test_ice_devil_keeps_three_melee_attacks_without_creating_wall_state():
         untouched = ice.model_dump_json()
         template = compile_combatant(adapt_basic_monster_2014(ice))
         assert template.attack_action is not None
+        # Compiled attack IDs are universally namespaced by edition and source card.
+        expected_ids = {
+            name: attack_id_2014(ice, name) for name in ("bite", "claws", "tail")
+        }
         assert [slot.attack_ids for slot in template.attack_action.slots] == [
-            ["bite"], ["claws"], ["tail"],
+            [expected_ids["bite"]], [expected_ids["claws"]], [expected_ids["tail"]],
         ]
         attacks = [
             item for item in [template.weapon_attack, *template.alternate_weapon_attacks]
             if item is not None
         ]
-        assert {attack.id for attack in attacks} == {"bite", "claws", "tail"}
+        assert {attack.id for attack in attacks} == set(expected_ids.values())
         assert all(attack.weapon.attack_kind.value == "melee" for attack in attacks)
         assert all(attack.attack_bonus == 10 for attack in attacks)
         # The wall-only Recharge is not a selectable Action or fight resource.
