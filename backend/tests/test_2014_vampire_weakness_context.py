@@ -79,7 +79,7 @@ def test_full_printed_weakness_proof_is_family_scoped_and_mutation_safe():
             for before, after in (
                 ("20 radiant damage", "10 radiant damage"),
                 ("ability checks", "saving throws"),
-                ("running water", "still water"),
+                ("its turn in running water.", "its turn in still water."),
             ):
                 changed = card.model_copy(update={
                     "source_traits": card.source_traits.replace(before, after),
@@ -116,6 +116,13 @@ def test_source_sunlight_punishes_and_suppresses_regeneration():
         assert victim.state.current_hp == before - 20
         victim.position_ft = 35
         assert not actor_inside_environment_context(victim, setup, "sunlight")
+        # Damage taken at the previous turn start must suppress the next
+        # Regeneration, even after moving out of the sunlight emitter.
+        assert "radiant" in victim.state.damage_types_taken_since_regen
+        healed, died, suppressed = apply_start_of_turn_regeneration(
+            victim.state, member=victim, setup=setup,
+        )
+        assert (healed, died, suppressed) == (0, False, True)
         events, _ = resolve_environment_start_turn_damage(2, 2, victim, setup, FixedDiceProvider([5]))
         assert events == []
     except Exception:
