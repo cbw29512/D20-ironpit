@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ARENA_WALLS = new Set(["wall-of-fire", "wall-of-stone", "wall-of-ice"]);
+  const ARENA_WALLS = new Set(["wall-of-fire", "wall-of-stone", "wall-of-ice", "blade-barrier"]);
 
   function coverage(center, enemies, radiusFt) {
     const G = window.IRON_PIT_BROWSER_GRID_GEOMETRY;
