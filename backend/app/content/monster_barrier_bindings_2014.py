@@ -38,6 +38,7 @@ def source_barrier_actions_2014(monster: SourceMonster2014) -> list[PersistentBa
             sections_must_be_contiguous=True,
             section_length_ft=verified.section_length_ft,
             section_height_ft=verified.wall_height_ft,
+            max_dome_diameter_ft=verified.dome_diameter_ft,
             section_thickness_inches=12,
             armor_class=verified.section_ac,
             hit_points_per_section=verified.section_hp,
