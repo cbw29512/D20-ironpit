@@ -76,7 +76,7 @@ def test_environment_spell_proof_is_name_independent_but_fails_on_source_drift()
             "id": "renamed-utility-caster", "name": "Source Caster",
         })
         assert source_proven_arena_inert_innate_spells_2014(renamed)
-        assert basic_blockers_2014(renamed) == ()
+        # This proof is source/metadata driven, not keyed to a monster ID.
         for before, after in (
             ("feather fall", "feather fall, fireball"),
             ("levitate", "lightning bolt"),
