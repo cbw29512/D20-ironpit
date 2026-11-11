@@ -103,16 +103,17 @@ def test_source_sunlight_punishes_and_suppresses_regeneration():
             assert environment_context_disadvantage_sources(victim, setup, kind) == 1
         assert environment_context_disadvantage_sources(victim, setup, "saving_throws") == 0
         before = victim.state.current_hp
+        # This turn's Regeneration consumes damage from the previous turn;
+        # current sunlight also prevents it before new Radiant is applied.
+        healed, died, suppressed = apply_start_of_turn_regeneration(
+            victim.state, member=victim, setup=setup,
+        )
+        assert (healed, died, suppressed) == (0, False, True)
         events, sequence = resolve_environment_start_turn_damage(
             1, 1, victim, setup, FixedDiceProvider([4]),
         )
         assert sequence == 2
         assert events[0].feature_id == "Vampire Weaknesses"
-        assert victim.state.current_hp == before - 20
-        healed, died, suppressed = apply_start_of_turn_regeneration(
-            victim.state, member=victim, setup=setup,
-        )
-        assert (healed, died, suppressed) == (0, False, True)
         assert victim.state.current_hp == before - 20
         victim.position_ft = 35
         assert not actor_inside_environment_context(victim, setup, "sunlight")
