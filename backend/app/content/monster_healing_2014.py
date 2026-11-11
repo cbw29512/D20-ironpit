@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_source_healing_touch_2014 import source_proven_missing_healing_touch_2014
 from app.domain.combatants import ResourceDefinition
 from app.domain.healing_actions import HealingAction
 
@@ -29,6 +30,11 @@ def healing_actions_2014(monster: SourceMonster2014) -> list[HealingAction]:
                 resource_cost=int(raw.get("resource_cost") or 1),
                 animation=str(raw.get("animation") or "healing"),
             ))
+        # An imported card can omit a printed Healing Touch from its parsed
+        # Action list. Source-verify before reusing the universal healer.
+        missing_touch = source_proven_missing_healing_touch_2014(monster)
+        if missing_touch is not None:
+            actions.append(missing_touch[0])
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 healing actions for %s.", monster.name)
@@ -42,6 +48,10 @@ def healing_resources_2014(monster: SourceMonster2014) -> list[ResourceDefinitio
             if not action.resource_id:
                 continue
             uses = int(monster.limited_action_uses.get(action.resource_id, 0) or 0)
+            if uses <= 0:
+                proven = source_proven_missing_healing_touch_2014(monster)
+                if proven is not None and proven[0].id == action.id:
+                    uses = proven[1]
             if uses <= 0:
                 raise ValueError(f"{monster.name} healing action {action.id} lacks a use count.")
             resources.append(ResourceDefinition(
@@ -57,7 +67,7 @@ def healing_resources_2014(monster: SourceMonster2014) -> list[ResourceDefinitio
 
 def supports_healing_2014(monster: SourceMonster2014) -> bool:
     try:
-        if not monster.healing_actions:
+        if not monster.healing_actions and source_proven_missing_healing_touch_2014(monster) is None:
             return True
         return bool(healing_actions_2014(monster)) and bool(healing_resources_2014(monster))
     except Exception:
