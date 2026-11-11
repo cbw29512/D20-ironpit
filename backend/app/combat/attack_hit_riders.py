@@ -14,6 +14,7 @@ from app.combat.on_hit_ongoing_hp_loss import resolve_on_hit_ongoing_hp_loss
 from app.combat.on_hit_recurring_damage import apply_on_hit_recurring_damage
 from app.combat.on_hit_contested_movement import resolve_on_hit_contested_movement
 from app.combat.on_hit_maximum_hp_save import resolve_on_hit_maximum_hp_save
+from app.combat.on_hit_typed_drain import apply_on_hit_typed_drain
 from app.combat.post_hit_spell_riders import resolve_paid_post_hit_spell_riders
 from app.combat.sap import apply_weapon_sap
 from app.combat.slow import apply_weapon_slow
@@ -115,6 +116,9 @@ def resolve_attack_hit_riders(
         result.applied_conditions.append(recurring)
     damage_taken = sum(
         component.applied_total or 0 for component in result.damage_components
+    )
+    result.typed_drain = apply_on_hit_typed_drain(
+        attacker, defender, attack, result.damage_components,
     )
     result.on_hit_maximum_hp_save = resolve_on_hit_maximum_hp_save(
         defender, attack, dice, damage_taken

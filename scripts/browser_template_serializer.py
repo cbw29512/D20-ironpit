@@ -121,6 +121,16 @@ def attack_row(attack: WeaponAttack, traits: set[str]) -> dict[str, Any]:
             row["forbidSelfGrappledTarget"] = True
         if attack.grapple_target_policy != "normal":
             row["grappleTargetPolicy"] = attack.grapple_target_policy
+        if attack.target_qualification is not None:
+            row["targetQualification"] = {"anyOf": list(attack.target_qualification.any_of)}
+        if attack.on_hit_typed_drain is not None:
+            drain = attack.on_hit_typed_drain
+            row["onHitTypedDrain"] = {
+                "damageType": drain.damage_type.value,
+                "reduceTargetMaximumHp": drain.reduce_target_maximum_hp,
+                "healAttacker": drain.heal_attacker,
+                "zeroMaximumHpKills": drain.zero_maximum_hp_kills,
+            }
         if attack.conditional_attack_advantage:
             row["conditionalAttackAdvantage"] = [
                 {"trigger": spec.trigger} for spec in attack.conditional_attack_advantage

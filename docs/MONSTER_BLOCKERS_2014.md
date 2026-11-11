@@ -15,7 +15,7 @@ Blocker categories overlap: a monster may require several fixes.
 | `source:extra-action` | 22 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
-| `attack:incomplete` | 9 |
+| `attack:incomplete` | 7 |
 | `multiattack:complex` | 3 |
 | `mechanic:recharge` | 2 |
 | `arena:neutral` | 1 |
@@ -27,12 +27,13 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**2** monsters have exactly one remaining blocker category.
+**3** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
 | `arena:neutral` | Frog | 1 |
 | `source:extra-action` | Succubus/Incubus | 1 |
+| `source:trait` | Vampire Spawn | 1 |
 
 ## Every blocked monster
 
@@ -82,5 +83,5 @@ the underlying ability is already implemented or trivial.
 | Storm Giant | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Succubus/Incubus | source:extra-action | — |
 | Tarrasque | mechanic:legendary, source:legendary, source:trait | Reflective Carapace |
-| Vampire | attack:incomplete, mechanic:legendary, source:extra-action, source:legendary, source:trait | Shapechanger, Misty Escape, Vampire Weaknesses |
-| Vampire Spawn | attack:incomplete, source:trait | Vampire Weaknesses |
+| Vampire | mechanic:legendary, source:extra-action, source:legendary, source:trait | Shapechanger, Misty Escape, Vampire Weaknesses |
+| Vampire Spawn | source:trait | Vampire Weaknesses |

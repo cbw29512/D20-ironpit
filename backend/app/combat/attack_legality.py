@@ -6,6 +6,7 @@ from collections.abc import Iterable
 
 from app.domain.models import CombatantState, WeaponAttack
 from app.domain.size import size_at_most
+from app.combat.condition_rules import is_incapacitated
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +27,15 @@ def attack_allowed_against(
         defender_owned = any(source.source_id == attacker_event_id for source in defender.grapple_sources)
         if attack.forbid_target_grappled_by_self and defender_owned:
             return False
+        if attack.target_qualification is not None:
+            allowed = set(attack.target_qualification.any_of)
+            if not (
+                ("source_grappled" in allowed and defender_owned)
+                or ("incapacitated" in allowed and is_incapacitated(defender))
+                or ("restrained" in allowed and "restrained" in defender.active_effect_ids)
+                or ("willing" in allowed and attacker_event_id in defender.willing_attack_source_ids)
+            ):
+                return False
         if attack.grapple_target_policy == "normal":
             return True
         if attack.grapple_target_policy not in {"own_grapple_only", "auto_hit_own_grapple"}:

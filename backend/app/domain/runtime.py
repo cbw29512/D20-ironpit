@@ -90,6 +90,7 @@ class CombatantState(BaseModel):
     active_buff_effect_ids: list[str] = Field(default_factory=list)
     opening_buff_id: str | None = None
     grapple_sources: list[GrappleSource] = Field(default_factory=list)
+    willing_attack_source_ids: list[str] = Field(default_factory=list)
     # Fight-local 2014 breathing countdown; None means not yet deprived of air.
     breath_hold_rounds_remaining: int | None = Field(default=None, ge=0)
     breath_survival_rounds_remaining: int | None = Field(default=None, ge=0)

@@ -95,6 +95,16 @@
         (source) => source.source_id === member.combatant_id,
       );
       if (attack.forbidSelfGrappledTarget && ownsTarget) return false;
+      if (attack.targetQualification) {
+        const allowed = new Set(attack.targetQualification.anyOf || []);
+        const state = target.state;
+        const incapacitated = window.IRON_PIT_BROWSER_CONDITION_RULES?.incapacitated;
+        if (!incapacitated) throw new Error("Qualified attacks require universal condition rules.");
+        if (!(allowed.has("source_grappled") && ownsTarget
+          || allowed.has("incapacitated") && incapacitated(state)
+          || allowed.has("restrained") && (state.active_effect_ids || []).includes("restrained")
+          || allowed.has("willing") && (state.willing_attack_source_ids || []).includes(member.combatant_id))) return false;
+      }
       const policy = attack.grappleTargetPolicy || "normal";
       if (policy === "normal") return true;
       if (!["own_grapple_only", "auto_hit_own_grapple"].includes(policy)) throw new Error(`Unsupported grapple target policy: ${policy}`);
