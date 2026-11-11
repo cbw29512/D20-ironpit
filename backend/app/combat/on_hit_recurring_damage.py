@@ -8,10 +8,10 @@ from app.domain.timed_effects import TimedEffect
 logger = logging.getLogger(__name__)
 
 
-def apply_on_hit_recurring_damage(target, attack, *, source_id: str) -> str | None:
-    """Use fight-local timed state; never mutate the weapon/monster card."""
+def apply_recurring_damage_effect(target, spec, *, source_id: str,
+                                  source_effect_id: str, source_name: str) -> str | None:
+    """Attach an immutable source-owned recurring effect to fight-local state."""
     try:
-        spec = attack.on_hit_recurring_damage
         if spec is None or target.is_dead or not target.is_alive:
             return None
         if spec.tick_timing not in {"target_turn_start", "target_turn_end"} or spec.stacking != "nonstacking":
@@ -20,7 +20,7 @@ def apply_on_hit_recurring_damage(target, attack, *, source_id: str) -> str | No
             return None
         target.timed_effects.append(TimedEffect(
             effect_id=spec.effect_id, source_id=source_id,
-            source_effect_id=attack.id, source_name=attack.weapon.name,
+            source_effect_id=source_effect_id, source_name=source_name,
             ends_if_source_dead=spec.ends_if_source_dead,
             allowed_removal_action_ids=list(spec.removal_action_ids),
             expires_at_start_of_source_turn=False,
@@ -35,5 +35,20 @@ def apply_on_hit_recurring_damage(target, attack, *, source_id: str) -> str | No
             target.active_effect_ids.append(spec.effect_id)
         return spec.effect_id
     except Exception:
-        logger.exception("Failed to apply recurring on-hit damage from %s.", attack.id)
+        logger.exception("Failed to apply recurring damage from %s.", source_effect_id)
+        raise
+
+
+def apply_on_hit_recurring_damage(target, attack, *, source_id: str) -> str | None:
+    """Existing weapon-hit trigger reuses the generic recurring-effect lifecycle."""
+    try:
+        spec = attack.on_hit_recurring_damage
+        if spec is None:
+            return None
+        return apply_recurring_damage_effect(
+            target, spec, source_id=source_id,
+            source_effect_id=attack.id, source_name=attack.weapon.name,
+        )
+    except Exception:
+        logger.exception("Failed on-hit recurring damage from %s.", attack.id)
         raise
