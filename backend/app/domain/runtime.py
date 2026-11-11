@@ -4,6 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 from app.domain.swallowed_state import SwallowedState
+from app.domain.body_control import BodyControlLink
 
 from app.domain.actions import GrappleSource
 from app.domain.combatants import CombatantTemplate, DamageType
@@ -95,6 +96,9 @@ class CombatantState(BaseModel):
     suffocating_at_zero: bool = False
     swallowed: SwallowedState | None = None
     swallowed_target_ids: list[str] = Field(default_factory=list)
+    # Per-fight external body-control ownership; never alters source cards.
+    controlled_by: BodyControlLink | None = None
+    controlling_target_ids: list[str] = Field(default_factory=list)
     timed_effects: list[TimedEffect] = Field(default_factory=list)
     deferred_effects: list[DeferredEffectState] = Field(default_factory=list)
     delayed_resource_refills: list[DelayedResourceRefillState] = Field(default_factory=list)
