@@ -73,6 +73,7 @@ def test_wall_of_stone_2024_source_data_and_slot_cast_are_exact() -> None:
     assert action.armor_class == 15
     assert action.hit_points_per_section == 180
     assert action.damage_immunities == ["poison", "psychic"]
+    assert action.damage_vulnerabilities == []
     assert action.required_support_material == "stone"
 
     event, sequence = cast_persistent_barrier(
@@ -113,6 +114,32 @@ def test_wall_section_immunity_and_destruction_reopen_its_edges() -> None:
     assert destroyed.destroyed is True
     assert destroyed.hp_after == 0
     assert not barrier_blocks_transition(edge.first, edge.second, setup.persistent_barriers)
+
+
+def test_generic_section_vulnerability_doubles_damage_after_immunity() -> None:
+    # Exercise the live cast, not just a stand-alone damage helper.
+    setup, caster = _setup()
+    source = caster.state.template.persistent_barrier_actions[0]
+    action = source.model_copy(update={"damage_vulnerabilities": ["fire"]})
+    assert source.damage_vulnerabilities == []  # Source card is immutable.
+    cast_persistent_barrier(1, 1, caster, setup, action, _ten_panel_wall(), "1:thalen")
+    barrier = setup.persistent_barriers[0]
+    section = barrier.sections[0]
+    assert section.damage_vulnerabilities == ["fire"]
+
+    immune = apply_barrier_section_damage(
+        setup, barrier.barrier_id, section.section_id, 900, "poison",
+    )
+    assert immune.immune and not immune.vulnerable and immune.applied_damage == 0
+    fire = apply_barrier_section_damage(
+        setup, barrier.barrier_id, section.section_id, 6, "fire",
+    )
+    assert fire.vulnerable and not fire.immune and fire.applied_damage == 12
+    ordinary = apply_barrier_section_damage(
+        setup, barrier.barrier_id, section.section_id, 6, "slashing",
+    )
+    assert not ordinary.vulnerable and ordinary.applied_damage == 6
+    assert section.current_hp == 162
 
 
 def test_wall_supports_natural_recovery_drop_and_full_duration_permanence() -> None:
