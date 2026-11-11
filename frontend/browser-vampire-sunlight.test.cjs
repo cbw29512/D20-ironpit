@@ -80,16 +80,26 @@ assert.equal(E.disadvantageSources(victim, setup, "saving_throws"), 0);
 const phase = window.IRON_PIT_BROWSER_POST_HIT_SAVE_CONDITION.resolveStartOfTurn(
   1, 1, victim, setup,
 );
-assert.equal(phase.events[0].feature_id, "Vampire Weaknesses");
+assert.equal(phase.events.at(-1).feature_id, "Vampire Weaknesses");
 assert.equal(victim.state.current_hp, 25, "Sunlight deals 20, without a subsequent regen heal");
 assert.equal(phase.events.some((x) => x.description?.includes("does not function")), true);
 victim.position_ft = 35;
-victim.state.damage_types_taken_since_regen = [];
+assert.deepEqual(victim.state.damage_types_taken_since_regen, ["radiant"],
+  "Sunlight Radiant is retained for the next Regeneration check.");
 const noSun = window.IRON_PIT_BROWSER_POST_HIT_SAVE_CONDITION.resolveStartOfTurn(
   3, 2, victim, setup,
 );
 assert.equal(noSun.events.some((x) => x.feature_id === "Vampire Weaknesses"), false);
-assert.equal(victim.state.current_hp, 35, "Outside sunlight, Regeneration heals 10");
+assert.equal(victim.state.current_hp, 25,
+  "Moving out of sunlight does not undo the prior turn Radiant suppression.");
+assert.deepEqual(victim.state.damage_types_taken_since_regen, [],
+  "Next-turn Regeneration consumes the prior Radiant ledger once.");
+const recovered = window.IRON_PIT_BROWSER_POST_HIT_SAVE_CONDITION.resolveStartOfTurn(
+  noSun.sequence, 3, victim, setup,
+);
+assert.equal(victim.state.current_hp, 35,
+  "Regeneration resumes on the later turn without a new Radiant trigger.");
+assert.ok(recovered.events.some((x) => x.description?.includes("regains 10")));
 assert.equal(victim.state.template.environment_context_reactions[0].source_name, "Vampire Weaknesses");
 
 console.log("Generic source-owned sunlight damage, disadvantage and Regeneration parity passed.");
