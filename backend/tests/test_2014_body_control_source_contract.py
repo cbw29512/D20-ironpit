@@ -48,7 +48,6 @@ def test_new_control_riders_fail_closed_and_identity_is_not_the_dispatch_key():
     try:
         card = _ghost()
         for old, new in (
-            ("DC 13 Charisma", "DC 17 Charisma"),
             ("One humanoid", "One beast"),
             ("within 5 feet", "within 30 feet"),
             ("the target is incapacitated", "the target is stunned"),
@@ -63,6 +62,14 @@ def test_new_control_riders_fail_closed_and_identity_is_not_the_dispatch_key():
                 "source_actions": card.source_actions.replace(old, new),
             })
             assert source_proven_body_control_2014(edited) == []
+        # Numeric source parameters are data, not a name-locked resolver.
+        changed_dc = card.model_copy(update={
+            "source_actions": card.source_actions.replace(
+                "DC 13 Charisma", "DC 17 Charisma",
+            ),
+        })
+        (scaled,) = source_proven_body_control_2014(changed_dc)
+        assert scaled.save_dc == 17
         renamed = card.model_copy(update={"id": "unrelated-controller", "name": "Other"})
         assert len(source_proven_body_control_2014(renamed)) == 1
     except Exception:
