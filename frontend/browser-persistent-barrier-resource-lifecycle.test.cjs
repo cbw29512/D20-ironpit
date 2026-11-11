@@ -49,6 +49,10 @@ const action = {
   sectionHeightFt: 10, sectionThicknessInches: 12,
   armorClass: 5, hitPointsPerSection: 30,
   damageImmunities: ["cold"], damageVulnerabilities: ["fire"],
+  onCreationSave: { id: "test", name: "Test Wall", saveAbility: "dexterity",
+    dc: 17, damageDiceCount: 10, damageDiceSize: 6, damageType: "cold", successDamage: "half" },
+  destroyedSectionCrossingSave: { id: "test", name: "Test Wall", saveAbility: "constitution",
+    dc: 17, damageDiceCount: 5, damageDiceSize: 6, damageType: "cold", successDamage: "half" },
   blocksMovement: true, blocksLineOfSight: true,
 };
 const panels = [2, 4, 6].map((x) => ([
@@ -62,6 +66,10 @@ assert.equal(first.event.resource_remaining, 0);
 assert.equal(owner.state.resources["wall-of-ice"], 0);
 assert.equal(setup.persistent_barriers[0].ends_on_source_incapacitated, true);
 assert.equal(setup.persistent_barriers[0].ends_on_source_death, true);
+const storedSave = setup.persistent_barriers[0].sections[0].destroyed_section_crossing_save;
+assert.equal(storedSave.damageDiceCount, 5);
+storedSave.dc = 13; // Fight-state copy cannot mutate the source card.
+assert.equal(action.destroyedSectionCrossingSave.dc, 17);
 owner.state.action_available = true;
 assert.throws(() => window.IRON_PIT_BROWSER_PERSISTENT_BARRIERS.cast(
   2, 2, owner, setup, action, panels, "2:owner",
