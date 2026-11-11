@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from app.combat.timed_ability_d20 import timed_ability_d20_disadvantage_sources
+from app.combat.grapple_check_save_disadvantage import grapple_check_save_disadvantage_sources
 from app.domain.models import CombatantState
 
 
@@ -16,6 +17,7 @@ def ability_check_disadvantage_sources(state: CombatantState, ability: str | Non
     return (
         int(state.template.ruleset == "2014" and state.exhaustion_level >= 1)
         + timed_ability_d20_disadvantage_sources(state, ability)
+        + grapple_check_save_disadvantage_sources(state, ability)
     )
 
 
