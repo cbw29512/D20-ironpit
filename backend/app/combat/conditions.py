@@ -110,6 +110,7 @@ def apply_hit_conditions(
                 control.grapple_escape_dc,
                 attack.weapon.reach_ft,
                 restrains=control.restrains_while_grappled,
+                check_save_disadvantage_abilities=control.grapple_check_save_disadvantage_abilities,
                 periodic_damage=control.grapple_periodic_damage,
             ))
     if (control is not None and control.condition_id is not None
