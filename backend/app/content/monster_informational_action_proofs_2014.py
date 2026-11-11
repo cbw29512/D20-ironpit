@@ -12,6 +12,7 @@ from app.content.monster_equipment_only_action_2014 import (
     verified_arena_inert_equipment_action_2014,
 )
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_arena_action_policy_2014 import source_proven_ethereal_shift_action_2014
 from app.content.monster_source_sections_2014 import source_sections_2014
 from app.content.monster_read_thoughts_neutral_2014 import (
     source_proven_noncombat_read_thoughts_2014,
@@ -63,6 +64,9 @@ def verified_nonactionable_action_2014(monster: SourceMonster2014, action_name: 
         if action_name not in monster.action_names:
             return False
         if verified_arena_inert_equipment_action_2014(monster, action_name):
+            return True
+        # Same source-proof gate as the existing Nightmare planar transition.
+        if source_proven_ethereal_shift_action_2014(monster, action_name):
             return True
         if source_proven_noncombat_read_thoughts_2014(monster, action_name):
             return True
