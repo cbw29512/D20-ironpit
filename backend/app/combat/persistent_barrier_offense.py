@@ -11,9 +11,6 @@ from dataclasses import dataclass
 import logging
 
 from app.combat.action_economy import is_available
-from app.combat.damage_reaction_wrappers import resolve_save_event_chain
-from app.combat.encounter_targeting import combatant_distance
-from app.combat.persistent_barrier_cast import cast_persistent_barrier
 from app.combat.persistent_barrier_geometry import validate_barrier_layout
 from app.combat.resources import action_resource_available
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -39,22 +36,26 @@ def _layouts(action, center, width, height):
             total = length * section_count
             for before in range(total):
                 for side in (-1, 1):
-                    first = []
-                    edges = []
+                    coordinates = []
                     for offset in range(total):
                         x = center.x + (offset - before if axis == "x" else 0)
                         y = center.y + (offset - before if axis == "y" else 0)
                         next_x = x if axis == "x" else x + side
                         next_y = y + side if axis == "x" else y
-                        first.append((x, y))
-                        edges.append(GridBarrierEdge(
-                            first=GridPosition(x=x, y=y),
-                            second=GridPosition(x=next_x, y=next_y),
-                        ))
-                    if not all(0 <= e.first.x < width and 0 <= e.first.y < height
-                               and 0 <= e.second.x < width and 0 <= e.second.y < height
-                               for e in edges):
+                        coordinates.append((x, y, next_x, next_y))
+                    # Validate coordinates BEFORE constructing bounded GridPosition.
+                    if not all(0 <= x < width and 0 <= y < height
+                               and 0 <= nx < width and 0 <= ny < height
+                               for x, y, nx, ny in coordinates):
                         continue
+                    first = [(x, y) for x, y, _, _ in coordinates]
+                    edges = [
+                        GridBarrierEdge(
+                            first=GridPosition(x=x, y=y),
+                            second=GridPosition(x=nx, y=ny),
+                        )
+                        for x, y, nx, ny in coordinates
+                    ]
                     yield (
                         tuple(tuple(edges[n:n + length]) for n in range(0, total, length)),
                         set(first),
@@ -111,9 +112,6 @@ def choose_offensive_barrier(actor: EncounterCombatant, setup: EncounterSetup):
                     if not enemies_hit:
                         continue
                     allies_hit = len(hit) - enemies_hit
-                    if (actor.state.position.x, actor.state.position.y) in occupied:
-                        allies_hit += 1
-                        hit = (*hit, actor.combatant_id)
                     average = save.damage_dice_count * (save.damage_dice_size + 1) / 2
                     score = average * (enemies_hit - 2 * allies_hit)
                     if score <= 0:
@@ -128,29 +126,3 @@ def choose_offensive_barrier(actor: EncounterCombatant, setup: EncounterSetup):
         logger.exception("Offensive barrier choice failed for %s", actor.combatant_id)
         raise
 
-
-def resolve_offensive_barrier(sequence, round_number, actor, setup, dice, turn_key, choice):
-    """Reuse ordinary barrier cast and save-event/reaction chains, no special damage."""
-    try:
-        event, sequence = cast_persistent_barrier(
-            sequence, round_number, actor, setup, choice.action,
-            [list(panel) for panel in choice.sections], turn_key,
-        )
-        event.description += " Arena forced displacement is logged without moving targets."
-        events = [event]
-        index = {member.combatant_id: member for member in [*setup.heroes, *setup.monsters]}
-        for target_id in choice.affected_ids:
-            target = index[target_id]
-            if target.state.is_dead or not target.state.is_alive:
-                continue
-            damage, sequence = resolve_save_event_chain(
-                sequence, round_number, actor, target, choice.action.on_creation_save,
-                combatant_distance(actor, target), dice, setup, turn_key=turn_key,
-                spend_action=False, check_resource=False, spend_resource=False,
-                affected_states=[member.state for member in index.values()],
-            )
-            events.extend(damage)
-        return events, sequence
-    except Exception:
-        logger.exception("Offensive barrier cast failed for %s", actor.combatant_id)
-        raise
