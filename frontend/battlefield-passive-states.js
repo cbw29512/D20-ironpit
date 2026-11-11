@@ -51,17 +51,24 @@
           explanation: "Source-owned permanent environmental weakness.",
         });
       }
-      // Every printed source trait appears as a permanent buff for completeness,
-      // even when arena-neutral. Active only if already projected above.
+      // Card data, not trait-name guessing, determines harmful passive lane.
+      // Environmental weaknesses stay grey when their context cannot occur.
+      const sourceTraits = member.state.template.source_trait_names || [];
+      const sourceWeaknesses = new Set(member.state.template.source_weakness_trait_names || []);
+      for (const name of sourceWeaknesses) {
+        if (!sourceTraits.includes(name)) throw new Error("Weakness display metadata must match printed source traits.");
+      }
       const seen = new Set(result.map((item) => item.label || item.id));
       for (const name of member.state.template.source_trait_names || []) {
         if (!name || seen.has(name)) continue;
         result.push({
           id: name,
           label: name,
-          lane: "buff",
+          lane: sourceWeaknesses.has(name) ? "debuff" : "buff",
           active: false,
-          explanation: "Source-owned permanent trait (arena-neutral or inactive).",
+          explanation: sourceWeaknesses.has(name)
+            ? "Source-owned permanent weakness (arena trigger inactive)."
+            : "Source-owned permanent trait (arena-neutral or inactive).",
         });
         seen.add(name);
       }

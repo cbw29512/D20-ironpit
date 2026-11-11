@@ -105,6 +105,6 @@ const fireForm = passives.find((p) => (p.label || p.id) === "Fire Form");
 const water = passives.find((p) => (p.label || p.id) === "Water Susceptibility");
 assert.ok(fireForm && fireForm.active, "Fire Form is an always-active permanent buff.");
 assert.ok(water && !water.active, "Water Susceptibility stays grey in the dry arena.");
-assert.equal(water.lane, "buff", "Printed source traits remain visible in the buff lane.");
+assert.equal(water.lane, "debuff", "Inactive environmental weakness belongs in DEBUFFS.");
 
 console.log("Universal creature-space entry and recurring Burning parity passed.");

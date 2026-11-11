@@ -69,6 +69,7 @@ for (const ruleset of ["2014", "2024"]) {
       template: {
         ruleset,
         source_trait_names: ["Flame Guard", "Water Exposure Weakness"],
+        source_weakness_trait_names: ["Water Exposure Weakness"],
         timed_self_buff_actions: [
           { id: "flame-guard", name: "Flame Guard", activation_timing: "passive" },
           { id: "temporary-barrier", name: "Temporary Barrier", activation_timing: "action" },
@@ -82,6 +83,7 @@ for (const ruleset of ["2014", "2024"]) {
     ["Flame Guard", true], ["Water Exposure Weakness", false],
   ]);
   assert.equal(statuses.some(x => x.id === "Temporary Barrier"), false);
+  assert.equal(statuses[1].lane, "debuff", "Source-declared weaknesses must not appear under BUFFS.");
 }
 
 let sunlightPresent = false;

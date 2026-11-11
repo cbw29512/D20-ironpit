@@ -75,6 +75,8 @@ def test_source_bound_passive_compiles_hostile_space_ability_without_mutation():
         passive = next(a for a in row["timed_self_buff_actions"] if a["name"] == "Fire Form")
         assert passive["creatureSpaceEntryDamage"]["recurringDamage"]["effectId"] == "burning"
         assert row["source_allows_hostile_overlap"] is True
+        assert template.source_weakness_trait_names == ["Water Susceptibility"]
+        assert row["source_weakness_trait_names"] == ["Water Susceptibility"]
         assert card.model_dump_json() == before
     except Exception:
         logger.exception("Fire Form source and browser schema binding failed.")

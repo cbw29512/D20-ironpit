@@ -1260,6 +1260,8 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
         if template.kind == "monster":
             row["creature_type"] = template.creature_type
             row["source_trait_names"] = list(template.source_trait_names)
+            if template.source_weakness_trait_names:
+                row["source_weakness_trait_names"] = list(template.source_weakness_trait_names)
             row["source_reaction_names"] = list(template.source_reaction_names)
             row["source_bonus_action_names"] = list(template.source_bonus_action_names)
             row["source_limited_use_names"] = list(template.source_limited_use_names)
