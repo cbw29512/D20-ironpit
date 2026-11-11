@@ -100,6 +100,7 @@ assert.equal(JSON.stringify(action),unchanged);
 
 actor.state.action_available = true;
 target.state.position = {x:23,y:15};
+actor.state.position = {x:20,y:13};
 actor.state.resources["wall-of-ice"] = 1;
 assert.ok(window.IRON_PIT_BROWSER_BARRIER_OFFENSE.choose(actor,setup));
 actor.state.resources["wall-of-ice"] = 0;
