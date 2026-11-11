@@ -75,6 +75,33 @@ def test_entire_327_catalog_uses_same_source_proven_typed_drain():
         raise
 
 
+def test_maximum_hp_zero_kill_is_distinct_from_ordinary_hp_death():
+    try:
+        card = _source()["vampire-spawn"]
+        _, template, attack = _bite(card)
+        caster = build_combatant_state(template)
+        recipient = build_combatant_state(build_goblin_warrior())
+        recipient.hit_point_maximum_reduction = recipient.template.max_hp - 1
+        necrotic = [DamageRollComponent(
+            source="renamed-bite", notation="2d6", rolls=[2, 3],
+            damage_type=DamageType.NECROTIC, total=5, applied_total=5,
+        )]
+        transferred = apply_on_hit_typed_drain(caster, recipient, attack, necrotic)
+        assert transferred.killed_by_zero_maximum
+        assert recipient.is_dead
+        assert recipient.current_hp == 0
+        already_dead = build_combatant_state(build_goblin_warrior())
+        already_dead.is_dead = True
+        already_dead.is_alive = False
+        already_dead.current_hp = 0
+        already_dead.hit_point_maximum_reduction = already_dead.template.max_hp - 1
+        transferred_dead = apply_on_hit_typed_drain(caster, already_dead, attack, necrotic)
+        assert transferred_dead.killed_by_zero_maximum is False
+    except Exception:
+        logger.exception("Failed maximum-HP-specific terminal outcome regression.")
+        raise
+
+
 def test_damage_components_target_legality_renaming_and_source_mutation():
     try:
         card = _source()["vampire-spawn"]
