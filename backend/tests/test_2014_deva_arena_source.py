@@ -49,10 +49,30 @@ def test_deva_keeps_melee_and_healing_without_noncombat_spells():
         template = compile_combatant(adapt_monster_mechanics_2014(card))
         assert template.name == "Deva"
         assert template.max_hp == card.max_hp
+        # Source Mace is a normal melee weapon attack; Multiattack reuses it
+        # in two universal attack slots, with no Deva-only resolver.
         assert template.weapon_attack is not None
         assert template.weapon_attack.name == "Mace"
-        assert template.healing_actions
-        assert any(item.name == "Healing Touch" for item in template.healing_actions)
+        assert template.weapon_attack.attack_kind.value == "melee"
+        assert template.attack_action is not None
+        assert len(template.attack_action.slots) == 2
+        assert all(
+            len(slot.attack_ids) == 1
+            and slot.attack_ids[0] == template.attack_action.slots[0].attack_ids[0]
+            for slot in template.attack_action.slots
+        )
+
+        # Printed Healing Touch is 4d8 + 2, three uses/day, targeting another
+        # creature; the shared healing system owns costs, dice, and conditions.
+        assert len(template.healing_actions) == 1
+        heal = template.healing_actions[0]
+        assert (heal.name, heal.dice_count, heal.dice_size, heal.healing_bonus) == (
+            "Healing Touch", 4, 8, 2,
+        )
+        assert heal.target_mode == "other"
+        assert heal.resource_id == "healing-touch"
+        assert any(resource.id == "healing-touch" and resource.max_uses == 3
+                   for resource in template.resources)
         assert not template.persistent_barrier_actions
         assert not template.spell_save_actions
         assert not template.timed_self_buff_actions
