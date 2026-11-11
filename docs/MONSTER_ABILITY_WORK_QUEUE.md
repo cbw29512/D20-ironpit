@@ -1,3 +1,9 @@
+## [ ] 2014 Fire Elemental — complete Fire Form and arena-inactive Water Susceptibility (PR #1248)
+
+- **Owner-locked arena rule:** Preserve both printed permanent traits. Fire Form remains a live passive buff: melee/contact retaliation and creature-space entry ignition must execute in combat. Water Susceptibility is a grey/inactive permanent weakness because standard Iron Pit has no legal water-exposure source; future water-enabled contexts remain fail-closed.
+- **Universal implementation submitted:** A source-verified compound Fire Form carries generic 1d10 Fire on first entry to each occupied creature square per turn (including allies), plus the existing target-turn-start nonstacking 1d10 Burning lifecycle and douse Action. Source-owned hostile overlap is enabled through existing grid movement; the generic Python/browser movement hook runs without dispatch on the printed monster or trait name. Contact retaliation and Touch burning remain intact.
+- **Certification gate:** Proposed source admission is **281/327** with **46 blocked** on the feature branch. The synced static artifact, exact-head Python/browser/roster/hero/paired-report checks, and merge are required before checking this off. Independent webpage fight certification and production publishing remain separate.
+
 ## [x] 2014 Ghost — Horrifying Visage shared visual-fear binding (PR #1242)
 
 - **Merged and certified:** [PR #1242](https://github.com/cbw29512/D20-ironpit/pull/1242) passed CI, 2014 Basic Roster, 2014 Hero Certification, Paired Edition Monster Report, and generated-artifact synchronization on exact head `a65c0da53f5991ac3a6b7efa76159857b4955779`; squash-merged as `8f3afc5ac59bd73ec69fad49839976cb4e83356a`.
