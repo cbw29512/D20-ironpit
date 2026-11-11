@@ -637,6 +637,8 @@ def persistent_barrier_row(action: Any) -> dict[str, Any]:
             "minSections": action.min_sections, "maxSections": action.max_sections,
             "sectionsMustBeContiguous": action.sections_must_be_contiguous, "sectionLengthFt": action.section_length_ft,
             "sectionHeightFt": action.section_height_ft,
+            **({"maxDomeDiameterFt": action.max_dome_diameter_ft}
+               if action.max_dome_diameter_ft is not None else {}),
             "sectionThicknessInches": action.section_thickness_inches,
             "armorClass": action.armor_class, "hitPointsPerSection": action.hit_points_per_section,
             "damageImmunities": list(action.damage_immunities),
