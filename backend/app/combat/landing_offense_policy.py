@@ -16,6 +16,7 @@ from app.combat.intimidating_presence_2014 import can_use_presence
 from app.combat.multi_target_save_actions import choose_multi_target_save_action
 from app.combat.pit_policy import choose_limited_breakable_control_attack, choose_standard_attack, save_distance, target_order
 from app.combat.printed_damage import weapon_mean_damage, save_mean_damage as _save_mean_damage, save_action_impact
+from app.combat.persistent_barrier_offense import choose_offensive_barrier
 from app.combat.resources import resource_available
 from app.combat.saving_throws import legal_save_action
 from app.combat.spell_attack_policy import choose_spell_attack
@@ -94,6 +95,9 @@ def decide_post_move_offense(
         spell_score = _spell_offense_score(attacker, setup, turn_key)
         if spell_score != float("-inf"):
             picks.append(OffensePick("spell", max(0.0, spell_score)))
+        barrier = choose_offensive_barrier(attacker, setup)
+        if barrier is not None:
+            picks.append(OffensePick("barrier", barrier.expected_damage, barrier))
         area_save = choose_area_save(attacker, setup, action_cost="action")
         if area_save is not None:
             action, placement = area_save
