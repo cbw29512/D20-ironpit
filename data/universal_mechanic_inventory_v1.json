@@ -5867,7 +5867,7 @@
     "blocked_monster_count": 46,
     "blocker_categories": {
       "arena:neutral": 1,
-      "attack:incomplete": 9,
+      "attack:incomplete": 7,
       "attack:none": 1,
       "mechanic:legendary": 9,
       "mechanic:recharge": 2,
