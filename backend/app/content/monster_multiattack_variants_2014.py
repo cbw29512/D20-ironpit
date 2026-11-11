@@ -1,6 +1,6 @@
 """Source-proven complete alternatives; runtime never dispatches on creature names."""
 from __future__ import annotations
-from itertools import permutations
+from itertools import permutations, product
 import logging
 import re
 from app.content.monster_source_sections_2014 import source_sections_2014, requires_two_hands_2014
@@ -8,6 +8,7 @@ from app.content.monster_random_sequence_2014 import random_sequence_variants_20
 from app.content.monster_hit_followup_2014 import hit_followup_variants_2014
 from app.content.monster_offhand_loadout_2014 import offhand_variants_2014, offhand_unavailable_reason_2014
 from app.content.monster_definition_adapter_support_2014 import attack_id_2014
+from app.content.monster_source_damage_or_grapple_2014 import source_proven_damage_or_grapple_2014
 from app.domain.attack_action_definitions import AttackActionSlot, AttackActionVariant
 logger = logging.getLogger(__name__)
 _NUMBERS = {"one": 1, "two": 2, "three": 3}
@@ -148,6 +149,31 @@ def source_variants_2014(monster):
                         and _same_attack_source_proven(text, [attacks[i] for i in slots[0]])):
                     for attack_id in slots[0]:
                         branches.append((attacks[attack_id].kind, [[attack_id], [attack_id]]))
+        # A printed "instead of damage, Grapple" is an alternative to that
+        # attack in the same universal Multiattack slot, not a new Action.
+        grapple_variants = {
+            alternative.id for alternative in source_proven_damage_or_grapple_2014(monster)
+        }
+        if grapple_variants:
+            additional = []
+            for mode, ordered_slots in branches:
+                replacements_by_slot = []
+                for choices in ordered_slots:
+                    alternates = [
+                        source_id + "-grapple"
+                        for source_id in choices
+                        if attack_id_2014(monster, source_id + "-grapple") in grapple_variants
+                    ]
+                    replacements_by_slot.append([None, *alternates])
+                for replacements in product(*replacements_by_slot):
+                    if not any(replacements):
+                        continue
+                    replacement = [list(slot) for slot in ordered_slots]
+                    for slot_index, alternate in enumerate(replacements):
+                        if alternate is not None:
+                            replacement[slot_index] = [alternate]
+                    additional.append((mode, replacement))
+            branches.extend(additional)
         return [AttackActionVariant(
             id=f"2014-{monster.id}-multiattack-{mode or 'mixed'}-{index}", attack_kind=mode,
             slots=[AttackActionSlot(attack_ids=[attack_id_2014(monster, i) for i in slot]) for slot in branch],
