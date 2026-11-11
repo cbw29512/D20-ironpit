@@ -846,6 +846,8 @@ def _save_zone(action: Any) -> dict[str, Any]:
         }
         if action.creates_difficult_terrain:
             row["createsDifficultTerrain"] = True
+        if action.lightly_obscured:
+            row["lightlyObscured"] = True
         if action.target_policy != "enemies":
             row["targetPolicy"] = action.target_policy
         if action.save_context != "spell":
