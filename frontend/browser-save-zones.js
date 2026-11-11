@@ -186,7 +186,8 @@
       failedSaveSuppressReactions: Boolean(action.failedSaveSuppressReactions),
       failedSaveActionBonusExclusive: Boolean(action.failedSaveActionBonusExclusive),
       failedSaveExpiryTiming: action.failedSaveExpiryTiming || "target_turn_end",
-      concentration: Boolean(action.concentration), animation: action.animation || "save-zone",
+      concentration: Boolean(action.concentration), lightlyObscured: Boolean(action.lightlyObscured),
+      animation: action.animation || "save-zone",
       triggered_turn_keys: {},
     };
     setup.save_zones.push(zone);
