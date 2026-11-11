@@ -636,6 +636,8 @@ def persistent_barrier_row(action: Any) -> dict[str, Any]:
             "sectionThicknessInches": action.section_thickness_inches,
             "armorClass": action.armor_class, "hitPointsPerSection": action.hit_points_per_section,
             "damageImmunities": list(action.damage_immunities),
+            **({"damageVulnerabilities": list(action.damage_vulnerabilities)}
+               if action.damage_vulnerabilities else {}),
             "blocksMovement": action.blocks_movement,
             "blocksLineOfSight": action.blocks_line_of_sight,
             "material": action.material, "requiredSupportMaterial": action.required_support_material,
