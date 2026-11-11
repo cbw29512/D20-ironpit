@@ -60,7 +60,6 @@ def test_ghost_extra_aging_and_fear_clauses_are_source_exact():
     try:
         monster = _ghost()
         for old, new in (
-            ("DC 13 Wisdom", "DC 18 Wisdom"),
             ("fails by 5 or more", "fails by 3 or more"),
             ("1d4 × 10 years", "2d4 × 10 years"),
             ("ending the frightened condition on itself", "ending the paralysis on itself"),
@@ -72,6 +71,14 @@ def test_ghost_extra_aging_and_fear_clauses_are_source_exact():
                 "source_actions": monster.source_actions.replace(old, new),
             })
             assert source_proven_visual_saves_2014(altered) == []
+        # Source-defined numeric DC is allowed to vary: all runtime copies
+        # must use the new parameter rather than hard-code the Ghost's 13.
+        raised_dc = monster.model_copy(update={
+            "source_actions": monster.source_actions.replace("DC 13 Wisdom", "DC 18 Wisdom"),
+        })
+        (scaled,) = source_proven_visual_saves_2014(raised_dc)
+        assert scaled.dc == 18
+        assert scaled.failed_save_timed_effect.repeat_save_dc == 18
         renamed = monster.model_copy(update={"id": "synthetic-visual-fear", "name": "Other"})
         assert len(source_proven_visual_saves_2014(renamed)) == 1
     except Exception:
