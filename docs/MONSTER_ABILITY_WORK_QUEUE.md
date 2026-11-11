@@ -1,9 +1,9 @@
-## [ ] 2014 Fire Elemental — complete Fire Form and arena-inactive Water Susceptibility (PR #1248)
+## [x] 2014 Fire Elemental — Fire Form and arena-inactive Water Susceptibility (PR #1248)
 
 - **Owner-locked arena rule:** Preserve both printed permanent traits. Fire Form remains a live passive buff: melee/contact retaliation and creature-space entry ignition must execute in combat. Water Susceptibility is a grey/inactive permanent weakness because standard Iron Pit has no legal water-exposure source; future water-enabled contexts remain fail-closed.
 - **Universal implementation submitted:** A source-verified compound Fire Form carries generic 1d10 Fire on first entry to each occupied creature square per turn (including allies), plus the existing target-turn-start nonstacking 1d10 Burning lifecycle and douse Action. Source-owned hostile overlap is enabled through existing grid movement; the generic Python/browser movement hook runs without dispatch on the printed monster or trait name. Contact retaliation and Touch burning remain intact.
 - **Regression safeguards:** Preserved the previously merged Vampire/Vampire Spawn Grapple alternative compiler and its Python/CI tests after a stale-branch merge was detected. Added source-derived permanent-weakness metadata so Water Susceptibility appears grey in **DEBUFFS**, while Fire Form appears active under **BUFFS**, without a monster-name UI resolver.
-- **Certification gate:** Proposed source admission is **281/327** with **46 blocked** on the feature branch. The synced static artifact, exact-head Python/browser/roster/hero/paired-report checks, and merge are required before checking this off. Independent webpage fight certification and production publishing remain separate.
+- **Merged and certified:** [PR #1248](https://github.com/cbw29512/D20-ironpit/pull/1248) passed all five required exact-head workflows (CI, 2014 roster, 2014 heroes, paired-edition report, and generated-artifact sync) on `e41647b9b54d4a9137e4fa799c0b5ae5467f94ff` and squash-merged into `main` as `5ba711d4115793ce995ca492efd544061d3db6e5`. Fire Elemental is off the authoritative blocked list; **281/327** admitted, **46** blocked. Independent webpage fight certification and production publishing remain separate.
 
 ## [x] 2014 Vampire family — printed damage-or-Grapple attack alternatives (PR #1245)
 
