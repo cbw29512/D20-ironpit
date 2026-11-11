@@ -34,8 +34,11 @@ def test_full_327_card_source_audit_is_parameter_driven(cards):
             for card in cards.values()
             if source_invisibility_action_2014(card)
         }
-        assert set(matches) == {"sprite", "imp", "quasit", "will-o-wisp", "duergar"}
+        assert set(matches) == {"sprite", "imp", "quasit", "will-o-wisp", "duergar", "green-hag"}
         sprite, imp = matches["sprite"][0], matches["imp"][0]
+        passage = matches["green-hag"][0]
+        assert passage.opening_eligible and passage.name == "Invisible Passage"
+        assert passage.ends_on_owner_attack and passage.ends_on_owner_spell_cast
         assert sprite.ends_on_owner_attack and sprite.ends_on_owner_spell_cast
         assert imp.ends_on_owner_attack and not imp.ends_on_owner_spell_cast
         for action in (sprite, imp):
