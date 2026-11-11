@@ -5,11 +5,13 @@
 - **Proof:** Whole printed Illusory Appearance/Invisible Passage paragraphs, DC 20 Investigation and action cost, source mutation failure, renamed identity, generic Invisibility owner-spellcast expiration, and all 327 source cards remain part of certification.
 - **Gate:** Rebuild generated 2014 admitted/blocked report, run Python/browser + roster/hero/paired-edition workflows, and merge only after exact-head pass. Do not mark Green Hag admitted early.
 
-## [ ] 2014 Ice Devil — complete Wall of Ice (Recharge 6) binding
+## [ ] 2014 Ice Devil — certify LOCKED no-wall-creation arena exclusion
 
-- **Exact unresolved source action:** Bind the printed 60-foot placement, 30-foot wall or 20-foot dome geometry, occupied-space DC 17 Dexterity save for 10d6 Cold/half, Pit-ignored displacement logging, 10-round/owner-incapacitated/death expiry, AC 5 and 30 HP per 10-foot section, printed immunities, destroyed-section frigid-air traversal DC 17 Constitution save for 5d6 Cold/half, and Recharge 6 lifecycle.
-- **Required reuse:** Build on the merged persistent-barrier engine and PR #1251's source-declared section vulnerabilities. Preserve the complete printed action, immutable 2014 values, fight-local barrier state, Python/browser parity, and fail-closed source changes. Do not mark Ice Devil admitted until the complete action passes exact-head gates.
-- **Current authoritative baseline:** **282/327 source-admitted, 45 blocked**. Ice Devil remains blocked by `mechanic:recharge` and `source:extra-action`; production Netlify remains locked.
+- **New governing rule:** No 2014 or 2024 combatant may choose or cast wall-creating spells or abilities in automated Iron Pit battles. Walls, domes, broken-wall frigid air, wall movement blockers, wall-slot costs and wall Recharge are absent from the fight. Preserve complete printed source/card references.
+- **Source-exact Ice Devil:** `source_barrier_parameters_2014` verifies the complete printed Wall of Ice (Recharge 6). The generic arena exclusion suppresses that printed Action and its recharge together; altered source loses the exclusion and remains blocked. No extra attack, free Cold damage or substitute Action is invented.
+- **Python/browser execution:** Wall of Fire is excluded from persistent save-zone offense in both engines, and source-labeled wall save spells are skipped in Python. 2024 Wall of Stone remains source metadata and is not in automatic Action selection. Other legal damage abilities still execute normally.
+- **Replaced draft:** Old [PR #1254](https://github.com/cbw29512/D20-ironpit/pull/1254) attempted a complete combat Wall of Ice. Its mechanical work is superseded by the locked wall ban and must not merge.
+- **Certification gate:** Run the full Python/browser suite and generated blocker reports; only then mark this item done and update the count from the existing **282/327 admitted, 45 blocked** baseline. Netlify remains locked.
 
 ## [x] Universal non-spell barrier resource and owner-expiry groundwork (PR #1252)
 
