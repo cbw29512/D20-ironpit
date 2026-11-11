@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 from app.combat import persistent_save_zone_resolution as zone_resolver
+from app.combat.ability_checks import ability_check_roll_mode
 from app.combat.concentration import end_concentration
 from app.combat.dice import FixedDiceProvider
 from app.combat.persistent_save_zone_cast import cast_save_zone
@@ -20,6 +21,7 @@ from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monsters import build_commoner
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
+from app.domain.models import RollMode
 
 logger = logging.getLogger(__name__)
 SCRIPTS = Path(__file__).resolve().parents[2] / "scripts"
@@ -83,11 +85,23 @@ def test_2014_planetar_composes_damage_zone_and_healing_without_special_resolver
         assert terrain[0].persistent_zone_id == setup.save_zones[0].zone_id
         assert destination_is_difficult_terrain(terrain, target, target.state.position)
         assert setup.save_zones[0].lightly_obscured
+        assert ability_check_roll_mode(
+            target.state, ability="wisdom", member=target, setup=setup,
+            skill="perception", relies_on_sight=True,
+        ) == RollMode.DISADVANTAGE
+        assert ability_check_roll_mode(
+            target.state, ability="wisdom", member=target, setup=setup,
+            skill="perception", relies_on_sight=False,
+        ) == RollMode.NORMAL
         assert any(x.id == "insect-plague" and x.current_uses == 0
                    for x in caster.state.resources)
         assert end_concentration(caster.state, [caster.state, target.state])
         expire_save_zones(setup, 2)
         assert not setup.save_zones and not setup.temporary_terrain_zones
+        assert ability_check_roll_mode(
+            target.state, ability="wisdom", member=target, setup=setup,
+            skill="perception", relies_on_sight=True,
+        ) == RollMode.NORMAL
         assert source.model_dump_json() == before
     except Exception:
         logger.exception("Planetar shared 2014 zone lifecycle certification failed.")
