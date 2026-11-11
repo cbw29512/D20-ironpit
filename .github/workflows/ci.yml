@@ -799,6 +799,7 @@ jobs:
           node frontend/browser-condition-removal.test.cjs
           node frontend/browser-timed-self-buffs.test.cjs
           node frontend/browser-environment-contexts.test.cjs
+          node frontend/browser-vampire-sunlight.test.cjs
           node frontend/browser-movement-mode-grants.test.cjs
           node frontend/browser-reactions.test.cjs
           node frontend/browser-parry-effective-ac.test.cjs
