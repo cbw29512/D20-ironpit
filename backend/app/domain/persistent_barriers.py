@@ -5,7 +5,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from app.domain.actions import ActionCost, DamageTypeName
+from app.domain.actions import ActionCost, DamageTypeName, SavingThrowAction
 from app.domain.grid import GridPosition
 
 logger = logging.getLogger(__name__)
@@ -64,6 +64,8 @@ class PersistentBarrierAction(BaseModel):
     hit_points_per_section: int = Field(ge=1)
     damage_immunities: list[DamageTypeName] = Field(default_factory=list)
     damage_vulnerabilities: list[DamageTypeName] = Field(default_factory=list)
+    on_creation_save: SavingThrowAction | None = None
+    destroyed_section_crossing_save: SavingThrowAction | None = None
     blocks_movement: bool = True
     blocks_line_of_sight: bool = True
     material: str | None = None
@@ -98,6 +100,7 @@ class PersistentBarrierSectionState(BaseModel):
     damage_immunities: list[DamageTypeName] = Field(default_factory=list)
     damage_vulnerabilities: list[DamageTypeName] = Field(default_factory=list)
     destroyed: bool = False
+    destroyed_section_crossing_save: SavingThrowAction | None = None
 
 
 class PersistentBarrierState(BaseModel):
