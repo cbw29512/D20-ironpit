@@ -53,9 +53,9 @@ def source_end_turn_recurring_damage_2014(
 
 # Match the *entire* base hit paragraph before the independently proven burn.
 _BASE_HIT = re.compile(
-    r"Melee Weapon Attack: \\+(?P<bonus>\\d+) to hit, reach (?P<reach>\\d+) ft\\., "
-    r"one target\\. Hit: (?P<average>\\d+) \\((?P<count>\\d+)d(?P<sides>\\d+)\\) "
-    r"(?P<type>[a-z]+) damage\\. ",
+    r"Melee Weapon Attack: \+(?P<bonus>\d+) to hit, reach (?P<reach>\d+) ft\., "
+    r"one target\. Hit: (?P<average>\d+) \((?P<count>\d+)d(?P<sides>\d+)\) "
+    r"(?P<type>[a-z]+) damage\. ",
     re.IGNORECASE,
 )
 
