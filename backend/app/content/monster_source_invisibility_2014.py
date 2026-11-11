@@ -97,6 +97,9 @@ def source_invisibility_action_2014(monster: SourceMonster2014) -> list[TimedSel
             ends_on_owner_spell_cast=(passage_match or rest_match is not None or
                 (match is not None and match.group("spell") == " or casts a spell")),
             ends_on_owner_action_ids=action_ids, priority=70,
+            # Source-declared Invisible effects may consume the standard one
+            # free pre-fight buff. Green Hag uses this for Invisible Passage.
+            opening_eligible=True,
             resource_id="invisibility" if rest_match is not None else None,
             duration_rounds=600 if rest_match is not None else None,
             expiry_timing="source_turn_end" if rest_match is not None else None,
