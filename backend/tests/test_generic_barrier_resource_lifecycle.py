@@ -43,7 +43,7 @@ def _cast():
         spell = owner.state.template.persistent_barrier_actions[0]
         # This is a generic non-spell Action configured from source fields.
         action = spell.model_copy(update={
-            "level": 0, "concentration": False,
+            "level": 0, "concentration": False, "duration_rounds": 10,
             "permanent_after_full_duration": False,
             "resource_id": "spell-slot-5", "resource_cost": 1,
             "ends_on_source_incapacitated": True,
