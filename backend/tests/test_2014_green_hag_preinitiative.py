@@ -14,6 +14,7 @@ from app.content.capability_compiler import compile_combatant
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.domain.encounters import EncounterCombatant, EncounterSetup
+from scripts.browser_template_serializer import template_row
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +63,13 @@ def test_invisible_passage_is_the_single_free_preinitiative_buff():
         assert "Precombat preparation" in events[0].description
         assert hag.state.opening_buff_id == "invisible-passage"
         assert "invisible" in hag.state.active_effect_ids
+        # The browser receives the same typed buff and does not need a hag-specific pre-fight resolver.
+        row = next(item for item in template_row(hag.state.template)["timed_self_buff_actions"]
+                   if item["id"] == "invisible-passage")
+        assert row["name"] == "Invisible Passage"
+        assert row.get("openingEligible", True) is True
+        assert row["conditionIds"] == ["invisible"]
+        assert row["endsOnOwnerAttack"] and row["endsOnOwnerSpellCast"]
         assert hag.state.concentration is not None
         assert hag.state.concentration.effect_id == "invisible-passage"
         # A preparation choice costs no first-turn Action, Bonus Action or Reaction.
