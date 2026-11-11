@@ -162,6 +162,8 @@ def resolve_attack(
                 f"by {drain.max_hp_reduced} and heals {attacker.template.name} "
                 f"for {drain.attacker_healed} HP."
             )
+            if drain.killed_by_zero_maximum:
+                description += f" {actual_defender.template.name} dies as maximum HP reaches 0."
         if effects.ability_reduction is not None:
             reduction = effects.ability_reduction
             description += (
