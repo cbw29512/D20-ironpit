@@ -103,6 +103,18 @@
             : `${mover.state.template.name} moves 5 feet, spending ${stepCost} feet of movement.`,
         };
         events.push(lastMovement); sequence += 1;
+        const air = window.IRON_PIT_BROWSER_BARRIER_AIR_CROSSING;
+        if ((setup.persistent_barriers || []).some((wall) =>
+          (wall.sections || []).some((section) => section.destroyed && section.destroyed_section_crossing_save))
+          && !air?.resolveCrossing) {
+          throw new Error("Destroyed wall crossing runtime is missing.");
+        }
+        const crossing = air?.resolveCrossing(
+          sequence, round, mover, setup, beforePosition, mover.state.position,
+          options.turnKey || `${round}:${mover.combatant_id}`,
+        );
+        if (crossing) { events.push(...crossing.events); sequence = crossing.sequence; }
+        if (mover.state.is_dead || mover.state.is_unconscious) return {events,sequence,movement:lastMovement};
         const entryResolver = window.IRON_PIT_BROWSER_CREATURE_SPACE_ENTRY;
         if (!entryResolver?.resolve) throw new Error("Grid movement requires the space-entry runtime.");
         const entry = entryResolver.resolve(
