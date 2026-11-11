@@ -24,6 +24,7 @@ def test_2014_source_barrier_compiles_with_real_recharge_resource_but_is_still_b
         assert (action.id, action.name, action.level) == ("wall-of-ice", "Wall of Ice", 0)
         assert (action.cast_range_ft, action.duration_rounds) == (60, 10)
         assert (action.min_sections, action.max_sections, action.section_length_ft) == (1, 3, 10)
+        assert action.max_dome_diameter_ft == 20
         assert (action.armor_class, action.hit_points_per_section) == (5, 30)
         assert action.damage_vulnerabilities == ["fire"]
         assert set(action.damage_immunities) == {
@@ -46,6 +47,7 @@ def test_2014_source_barrier_compiles_with_real_recharge_resource_but_is_still_b
         browser = persistent_barrier_row(template.persistent_barrier_actions[0])
         assert browser["resourceId"] == "wall-of-ice"
         assert browser["armorClass"] == 5
+        assert browser["maxDomeDiameterFt"] == 20
         assert browser["damageVulnerabilities"] == ["fire"]
         assert browser["onCreationSave"]["damageDiceCount"] == 10
         assert browser["destroyedSectionCrossingSave"]["damageDiceCount"] == 5
