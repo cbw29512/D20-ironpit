@@ -9,7 +9,7 @@ import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_sections_2014 import source_sections_2014
-from app.domain.hostile_space_entry_damage import HostileSpaceEntryDamage
+from app.domain.creature_space_entry_damage import CreatureSpaceEntryDamage
 from app.domain.recurring_damage import OnHitRecurringDamage
 from app.domain.weapons_base import DamageType
 
@@ -26,7 +26,7 @@ _PRINTED_FIRE_FORM = (
 )
 
 
-def fire_form_space_entry_2014(monster: SourceMonster2014) -> HostileSpaceEntryDamage | None:
+def fire_form_space_entry_2014(monster: SourceMonster2014) -> CreatureSpaceEntryDamage | None:
     """Return generic parameters only when every Fire Form source clause agrees."""
     try:
         if "Fire Form" not in monster.trait_names:
@@ -37,7 +37,7 @@ def fire_form_space_entry_2014(monster: SourceMonster2014) -> HostileSpaceEntryD
         normalized = " ".join(printed.casefold().replace("’", "'").split())
         if normalized != _PRINTED_FIRE_FORM:
             return None
-        return HostileSpaceEntryDamage(
+        return CreatureSpaceEntryDamage(
             dice_count=1, dice_size=10, damage_type=DamageType.FIRE,
             recurring_damage=OnHitRecurringDamage(
                 effect_id="burning", dice_count=1, dice_size=10,
