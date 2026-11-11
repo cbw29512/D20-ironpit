@@ -1,3 +1,10 @@
+## [ ] 2014 typed Bite/maximum-HP-drain family — Vampire and Vampire Spawn (PR #1249)
+
+- **Source coverage:** Full 327-card printed-source scan proves exactly two attacks that transfer Necrotic damage taken into target maximum-HP reduction and self-healing. Both share the same target qualification: source-owned Grappled, Incapacitated, Restrained, or explicitly Willing. Source damage dice and hit bonuses remain per-card (Vampire 3d6, +9; Vampire Spawn 2d6, +6).
+- **Shared mechanics submitted:** Immutable target and damage-transfer parameters compile through the existing Python/browser attack path. Universal legality checks reject an ordinary unwilling target; only post-defense Necrotic components reduce maximum HP and heal the source; zero maximum HP is terminal. Previously certified alternate Grapple hits and normal Multiattack variants remain intact.
+- **Admission scope:** This resolves two `attack:incomplete` obligations, reducing that category from 9 to 7 on the generated PR branch. **Vampire Spawn is still source-blocked by Vampire Weaknesses**; Vampire remains additionally blocked. Source-admitted baseline remains **281/327**, **46 blocked**; no independent webpage fight certification claimed. Exact-head CI and merge pending.
+- **Next separate semantic family:** Vampire Weaknesses: Forbiddance, running water, and stake/resting-place clauses are unreachable in the standard Pit, but typed sunlight can be produced by legal abilities. Real Sunlight Hypersensitivity damage/disadvantage requires shared environment-context behavior; do not mark the entire trait neutral.
+
 ## [x] 2014 Fire Elemental — Fire Form and arena-inactive Water Susceptibility (PR #1248)
 
 - **Owner-locked arena rule:** Preserve both printed permanent traits. Fire Form remains a live passive buff: melee/contact retaliation and creature-space entry ignition must execute in combat. Water Susceptibility is a grey/inactive permanent weakness because standard Iron Pit has no legal water-exposure source; future water-enabled contexts remain fail-closed.
