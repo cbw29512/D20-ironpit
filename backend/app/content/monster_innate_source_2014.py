@@ -18,6 +18,10 @@ ARENA_NEUTRAL_INNATE_SPELLS_2014 = frozenset({
     "pass-without-trace",
     "disguise-self",
     "scrying",
+    # Commune (1 minute) and Raise Dead (1 hour) cannot finish during Pit combat.
+    # Preserve their printed source spell metadata; exclude only Action choice.
+    "commune",
+    "raise-dead",
     "detect-thoughts",
     "detect-magic",
     "mage-hand",
