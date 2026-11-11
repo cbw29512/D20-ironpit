@@ -21,6 +21,7 @@ from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_grapple_rescue_2014 import source_grapple_rescue_rules_2014
 from app.content.monster_source_held_turn_damage_2014 import source_held_turn_damage_2014
 from app.content.monster_source_shared_space_held_save_2014 import source_proven_shared_space_held_saves_2014
+from app.content.monster_source_shared_space_impact_save_2014 import source_proven_shared_space_impact_saves_2014
 from app.content.monster_source_etherealness_2014 import verified_unavailable_etherealness_2014
 from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014
 from app.content.monster_source_enlarge_2014 import source_enlarge_action_2014
@@ -106,6 +107,13 @@ def source_supported_extra_action_labels_2014(monster: SourceMonster2014) -> set
             | ({"change shape"} if approved_inert_change_shape_2014(monster) else set())
             | leadership_labels_2014(monster)
             | _fully_bound_held_save_labels_2014(monster)
+            | {
+                _label(action.name) for action in source_proven_shared_space_impact_saves_2014(monster)
+                # The verified complete source describes only position-dependent
+                # fling/collision riders beyond the already compiled damage,
+                # Strength save, Prone, and Recharge. Iron Pit does not relocate
+                # thrown targets; secondary collisions cannot occur.
+            }
             | {
                 _label(zone.name)
                 for zone in (fetid_cloud_zone_2014(monster),)
