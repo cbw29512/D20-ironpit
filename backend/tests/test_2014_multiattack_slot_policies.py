@@ -7,6 +7,7 @@ from app.content.capability_compiler import compile_combatant
 from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
 from app.content.monster_multiattack_2014 import multiattack_blockers_2014
 from app.content.monster_multiattack_variants_2014 import source_variants_2014
+from app.content.monster_source_damage_or_grapple_2014 import source_proven_damage_or_grapple_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 
 
@@ -40,7 +41,17 @@ def test_at_most_once_variants_preserve_both_orders_and_two_nonlimited_attacks(c
     before = card.model_dump()
     variants = source_variants_2014(card)
     limited = {f"2014-{card.id}-{item}" for item in card.multiattack_policy["at_most_once_attack_ids"]}
-    assert len(variants) == 3
+    # Three printed base orders remain; a source-verified alternate Grapple
+    # adds four legal replacements for the two non-limited hit slots.
+    grapple_alternatives = source_proven_damage_or_grapple_2014(card)
+    assert len(variants) == (7 if grapple_alternatives else 3)
+    if grapple_alternatives:
+        assert len(grapple_alternatives) == 1
+        grapple_id = grapple_alternatives[0].id
+        assert sum(
+            any(grapple_id in slot.attack_ids for slot in variant.slots)
+            for variant in variants
+        ) == 4
     assert all(variant.attack_kind is None for variant in variants)
     assert all(len(variant.slots) == 2 for variant in variants)
     assert all(
