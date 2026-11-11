@@ -100,11 +100,9 @@ def attack_blockers_2014(monster: SourceMonster2014) -> list[str]:
             on_hit_swallow = bool(swallow is not None and swallow.attack_id == attack.id
                                   and swallow.delivery_mode == "attack_hit"
                                   and swallow.on_hit_save_dc is not None)
-            # The ongoing Fire tick is runnable, but its printed helper Douse
-            # Action has no source-defined reach. Until a generic helper-target
-            # policy is approved/proven, keep this attack source-incomplete.
-            if start_burn is not None and "douse-fire" in start_burn.removal_action_ids:
-                blockers.append("attack:incomplete")
+            # Locked arena AI never selects a dousing Action (self or helper).
+            # Its undefined helper range therefore cannot block this attack.
+            # Preserve source-verified recurring fire and all other blockers.
             if not attack.source_complete or not source_proves_ability_score_reduction_2014(monster, attack):
                 blockers.append("attack:incomplete")
             # A zero-damage restraint has no printed damage type. Its hit is
