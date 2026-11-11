@@ -60,6 +60,30 @@ passiveMember.state.template.ruleset = "2014";
 assert.equal(replay.permanentPassiveStates(passiveMember, {})[0].active, false, "Edition does not change passive display semantics.");
 
 
+// Passive action schema drives permanent buff visibility without monster-name
+// dispatch. An unrelated source-only environment trait remains inert and grey.
+for (const ruleset of ["2014", "2024"]) {
+  const card = {
+    combatant_id: "source-passive-" + ruleset,
+    state: {
+      template: {
+        ruleset,
+        source_trait_names: ["Flame Guard", "Water Exposure Weakness"],
+        timed_self_buff_actions: [
+          { id: "flame-guard", name: "Flame Guard", activation_timing: "passive" },
+          { id: "temporary-barrier", name: "Temporary Barrier", activation_timing: "action" },
+        ],
+      },
+      active_modifiers: [],
+    },
+  };
+  const statuses = replay.permanentPassiveStates(card, {});
+  assert.deepEqual(statuses.map(x => [x.label || x.id, x.active]), [
+    ["Flame Guard", true], ["Water Exposure Weakness", false],
+  ]);
+  assert.equal(statuses.some(x => x.id === "Temporary Barrier"), false);
+}
+
 let sunlightPresent = false;
 window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS = {
   inside: (member, setup, contextId) =>
