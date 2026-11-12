@@ -297,10 +297,10 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 
 ### 033. Cloud Giant
 
-- [ ] **SOURCE REVIEW / BIND / TEST / CERTIFY / MERGE** — not yet individually verified by this worksheet.
-- **Recorded blockers:** `mechanic:spellcasting`, `source:trait`.
-- **Unbound printed traits:** Innate Spellcasting
-- **Fix notes:** Map only arena-legal printed spells to the correct 2014 spell primitives and slot/at-will resource model; document each unsupported spell separately. Read each unbound trait verbatim; decompose trigger, effect, qualifiers, duration and exit; reuse existing passive/buff/condition primitives. Do not equate printed names with mechanics.
+- [ ] **SOURCE REVIEW COMPLETE / BIND IMPLEMENTED / TESTING / CERTIFY / MERGE** — implementation is in PR #1265; do not mark admitted before exact-head Python/browser and source-artifact certification.
+- **Recorded blockers:** `mechanic:spellcasting`, `source:trait` — expected to clear only after regenerated certification artifacts confirm the exact head.
+- **Printed spell dispositions:** Detect Magic — informational/source-neutral; Fog Cloud — existing heavy-obscuration zone with tactical-benefit gate; Light, Feather Fall and Control Weather — source-proven arena-inert; Fly, Telekinesis and Gaseous Form — source-preserved, source-proven standard-AI exclusions; Misty Step — Bonus Action, 3/day, in-place escape from active teleport-cancelable holds/snare effects.
+- **Fix notes:** All nine source rows and their printed frequencies are checked by the complete source proof. The card remains immutable. Only Misty Step has a fight resource because it is the only limited-use spell exposed as a combat Action; excluded/inert spell frequencies remain on the source card.
 
 ### 034. Cult Fanatic
 
