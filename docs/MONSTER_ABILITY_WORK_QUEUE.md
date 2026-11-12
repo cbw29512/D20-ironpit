@@ -1,11 +1,39 @@
-## [ ] 2014 Storm Giant — source-exact arena-inert innate utility magic
+## [x] 2014 Planetar — source-exact shared combat binding
+
+- **Merged evidence:** [PR #1260](https://github.com/cbw29512/D20-ironpit/pull/1260) passed all five exact-final-head workflows on `a941a9470669a42e5d8f399040d5603ed594939e` and squash-merged as `7da132644635b3921c84e964917fa2a6fe386add`. Planetar is absent from the generated blocker report.
+- **Universal combat binding:** Printed Greatsword/Radiant Multiattack, Insect Plague persistent save-zone timing and temporary Difficult Terrain, and Invisibility reuse shared Python/browser actions and fight state. Blade Barrier follows the locked no-wall policy; Control Weather, Commune, and Raise Dead remain source-preserved arena-unavailable clauses.
+- **Healing Touch correction:** The shared healing-action schema now carries source-owned disease and curse removal riders. Python/browser Healing Touch uses the existing timed-effect lifecycle to clear disease-tagged effects and all source-owned curses without monster-name dispatch; the printed per-day resource remains card-owned.
+- **Verified generated result:** Main is **287/327 source-admitted, 40 blocked** after the merge. This is source admission and automated exact-head certification, not an independent deployed webpage-fight certification. Production Netlify remains locked.
+
+## [x] 2014 Cloud Giant — complete source-owned innate spell dispositions
+
+- **Merged evidence:** [PR #1265](https://github.com/cbw29512/D20-ironpit/pull/1265) passed all five exact-final-head workflows on `69bcbdd271241318b1ab889c5ec1ddda9db947b0` and merged as `27cf6c65344da701396d93457a55f200196c408b`. Cloud Giant is absent from the generated blocker report.
+- **Shared behavior:** The complete nine-spell source list is retained. Fog Cloud uses the universal physical-obscuration zone and tactical gate; Misty Step uses the shared in-place teleport escape with its printed Bonus Action and 3/day resource. Detect Magic, Light, Feather Fall, and Control Weather are arena-inert; Fly, Telekinesis, and Gaseous Form remain printed but are excluded from this source's AI without disabling those mechanics for other legal users.
+- **Fail-closed parity:** Source mutation, compiled teleport data, exhausted/no-op resource handling, Python/browser serialization, and immutable source-card tests passed. This admission does not claim a deployed webpage fight; production Netlify remains locked.
+
+## [x] 2014 Fog Cloud — Ice Mephit and Cloud Giant shared physical obscuration
+
+- **Merged evidence:** [PR #1264](https://github.com/cbw29512/D20-ironpit/pull/1264) passed all five exact-final-head workflows on `749fc3f432ce2d709bca9ccf61a8dbc5ea541f35` and merged as `cf17b72d01463c5b1adeb6b93258b7e5b9c8c13e`. Ice Mephit is absent from the generated blocker report; Cloud Giant was completed by the later full-list PR #1265.
+- **Universal mechanic:** Python/browser share source Concentration, zone placement, physical sight obstruction, Blindsight range handling, expiry/reset, printed range/radius, and the Ice Mephit's 1/day resource. AI casts only for measurable sight-dependent advantage, not mutual concealment alone.
+
+## [x] 2014 Drow and Drider — source-owned Faerie Fire and Darkness
+
+- **Merged evidence:** [PR #1262](https://github.com/cbw29512/D20-ironpit/pull/1262) passed all five exact-final-head workflows on `e16fde93df8edcebdb248c13291f9b59d4809207` and merged as `4d86e3eae6af14e8e7b81845bbc3e603b6ac3d41`; [PR #1263](https://github.com/cbw29512/D20-ironpit/pull/1263) passed all five on `10546c27dbebe4253e010f33a57165659a656bae` and merged as `767e80a70db680a9202d0409346fce522e91f9e3`. Both monsters are absent from the generated blocker report.
+- **Universal mechanics:** Faerie Fire reuses the printed Dexterity save, Advantage/invisibility suppression, Concentration, resource, and expiry path. Darkness is a fight-local magical-obscuration zone—not global Blinded—with shared geometry, sight-required eligibility, Blindsight/Truesight/Devil's Sight distinctions, Concentration teardown, and Python/browser parity.
+- **Current generated result:** After these spell admissions and Cloud Giant, main is **291/327 source-admitted, 36 blocked**. This is source classification plus exact-head automated certification, not an independent deployed webpage-fight certification.
+
+## [x] 2014 Storm Giant — source-exact arena-inert innate utility magic
+
+- **Merged evidence:** [PR #1259](https://github.com/cbw29512/D20-ironpit/pull/1259) passed all five exact-head workflows on `74f9f93ba6ff2137af2bdb0310ee4e37ab0c1100` and squash-merged as `6176908a7acb69c09a63c873486dcaa0de20d296`. Storm Giant is absent from the generated blocker report.
 
 - **Universal combat retained:** two Greatsword melee attacks through Multiattack, Rock as an ordinary ranged attack, Lightning Strike as the existing Recharge 5–6 DC 17 Dexterity 12d8 Lightning area save. No special Storm Giant combat branches or fake attacks.
 - **Source-verified utility:** Detect Magic already stays arena-neutral. The complete printed innate source additionally verifies Feather Fall (no falling event), Levitate (vertical displacement not modeled under the locked horizontal-flight Pit), Light (no standard light obstruction), Control Weather (10-minute casting and no weather battlefield), and Water Breathing (no underwater arena). Preserve their full printed metadata but do not grant combat buffs, movement, saves or actions.
 - **Fail-closed:** Source text, exact six spell IDs, per-day/at-will uses, spell ability/DC, and source completeness must all match. Changed source, an extra future combat spell or altered frequency restores the spellcasting blocker. A renamed card with the same source proves independently of monster identity.
 - **Gate:** Rebuild the entire 327-card blocker report, run Python/browser/source/roster/hero checks, and confirm the Storm Giant row clears before merging. No production Netlify deployment.
 
-## [ ] 2014 Deva — source-verified arena-inert spells and Change Shape
+## [x] 2014 Deva — source-verified arena-inert spells and Change Shape
+
+- **Merged evidence:** [PR #1257](https://github.com/cbw29512/D20-ironpit/pull/1257) passed all five exact-head workflows on `6dd4f73746beb1a1f4b078b5ac34c058da2b638c` and squash-merged as `56324c41b5e373ec7bc57e528309e24f5741c463`. Deva is absent from the generated blocker report.
 
 - **Existing combat mechanics:** Preserve printed Mace damage, two-attack Multiattack, Healing Touch (3/day), Angelic Weapons and Magic Resistance. No replacement attacks or new creature-form subsystem.
 - **Innate spells:** The pinned source has Detect Evil and Good, Commune and Raise Dead. The two latter spells require casting outside the standard automated battle window (1 minute and 1 hour); classify only those source spells as arena-neutral, retaining the card metadata.
@@ -13,14 +41,18 @@
 - **Certification:** Target 2014 source-admission and real compiled combat action regressions in Python plus browser/roster/hero/generated artifacts. Do not mark done until all exact-head workflows pass and it merges.
 - **Stacking:** Deva draft follows wall-creation-policy PR #1256. Ice Devil is 283/327 only on that branch until merged; Deva has not been counted as admitted.
 
-## [ ] 2014 Green Hag — existing universal disguise, invisibility, and spell
+## [x] 2014 Green Hag — existing universal disguise, invisibility, and spell
+
+- **Merged evidence:** [PR #1258](https://github.com/cbw29512/D20-ironpit/pull/1258) passed all five exact-head workflows on `6bfb825d4390ae86ddae3a9033008d9158dd2829` and squash-merged as `8ca5ee7804b416aa9379442713803639957acb8f`. Green Hag is absent from the generated blocker report.
 
 - **Only existing combat primitives:** Claws is the already compiled melee hit; Vicious Mockery is the shared 2014 ranged save spell using printed DC 12. The hag receives one free pre-initiative opening buff, Invisible Passage, through the standard round-0 timed-self-buff path; it ends on an attack, spellcast, or lost Concentration. No first-turn Action/Bonus Action is spent and no second free buff is allowed. Illusory Appearance uses the same visual inspection and death/dismissal rules as Sea Hag, but is not selected as the opening tactic when no visual-dependent combat trigger exists.
 - **Source-only context:** Amphibious and Mimicry do not change standard Pit math; Dancing Lights and Minor Illusion remain printed but are arena-neutral in the standard Pit. No monster-name combat resolver.
 - **Proof:** Whole printed Illusory Appearance/Invisible Passage paragraphs, DC 20 Investigation and action cost, source mutation failure, renamed identity, generic Invisibility owner-spellcast expiration, and all 327 source cards remain part of certification.
 - **Gate:** Rebuild generated 2014 admitted/blocked report, run Python/browser + roster/hero/paired-edition workflows, and merge only after exact-head pass. Do not mark Green Hag admitted early.
 
-## [ ] 2014 Ice Devil — certify LOCKED no-wall-creation arena exclusion
+## [x] 2014 Ice Devil — certify LOCKED no-wall-creation arena exclusion
+
+- **Merged evidence:** [PR #1256](https://github.com/cbw29512/D20-ironpit/pull/1256) passed all five exact-head workflows on `7fa8138b120e6a98976cd4e006715835f595140f` and squash-merged as `f2c843d047db1e6b966cc9047b5e5779983fb943`. Ice Devil is absent from the generated blocker report; superseded Wall of Ice runtime draft #1254 must not merge.
 
 - **New governing rule:** No 2014 or 2024 combatant may choose or cast wall-creating spells or abilities in automated Iron Pit battles. Walls, domes, broken-wall frigid air, wall movement blockers, wall-slot costs and wall Recharge are absent from the fight. Preserve complete printed source/card references.
 - **Source-exact Ice Devil:** `source_barrier_parameters_2014` verifies the complete printed Wall of Ice (Recharge 6). The generic arena exclusion suppresses that printed Action and its recharge together; altered source loses the exclusion and remains blocked. No extra attack, free Cold damage or substitute Action is invented.
