@@ -1,3 +1,5 @@
+import pytest
+
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
 from app.combat.damage_defenses import adjusted_damage_amount
 from app.combat.dice import FixedDiceProvider
@@ -294,7 +296,7 @@ def test_2014_magic_weapon_adds_plus_one_attack_and_weapon_damage() -> None:
     assert weapon_damage_flat_bonus(caster.state, weapon_id) == 1
 
 
-def test_2014_dimension_door_stays_in_place_under_pit_teleport_ban() -> None:
+def test_2014_dimension_door_noop_is_rejected_without_spending():
     caster = _member(build_karnok_stoneward().model_copy(update={
         "teleport_actions": [dimension_door_2014()],
         "resources": [ResourceDefinition(id="spell-slot-4", name="4th-level Slot", max_uses=1)],
@@ -303,33 +305,19 @@ def test_2014_dimension_door_stays_in_place_under_pit_teleport_ban() -> None:
     enemy = _member(build_commoner(), "enemy", "monsters", 8, 2)
     setup = _setup([caster], [enemy])
     origin = GridPosition(x=1, y=2)
-    events, _ = resolve_teleport(
-        1, 1, caster, setup, dimension_door_2014(), GridPosition(x=7, y=2),
-        FixedDiceProvider([1, 1, 1, 1]), "1:caster",
-    )
-    assert caster.state.position == origin
-    assert events[0].feature_id == "dimension-door"
-    assert events[0].event_type == "feature"
-    assert events[0].grid_position_before == origin
-    assert events[0].grid_position_after == origin
-    assert "Dimension Door" in events[0].description
-    assert "without leaving its spot" in events[0].description
+    slot = next(item for item in caster.state.resources if item.id == "spell-slot-4")
 
-    blocker = _member(build_commoner(), "blocker", "monsters", 6, 2)
-    setup = _setup([caster], [enemy, blocker])
-    caster.state.action_available = True
-    next(item for item in caster.state.resources if item.id == "spell-slot-4").current_uses = 1
-    before = caster.state.current_hp
-    still_in_place, _ = resolve_teleport(
-        2, 1, caster, setup, dimension_door_2014(), GridPosition(x=6, y=2),
-        FixedDiceProvider([6, 6, 6, 6]), "1:caster-b",
-    )
+    assert choose_teleport_action(caster, setup, "1:caster") is None
+    with pytest.raises(ValueError, match="no active teleport-cancelable effect"):
+        resolve_teleport(
+            1, 1, caster, setup, dimension_door_2014(), GridPosition(x=7, y=2),
+            FixedDiceProvider([1, 1, 1, 1]), "1:caster",
+        )
+
     assert caster.state.position == origin
-    assert caster.state.current_hp == before
-    assert still_in_place[0].feature_id == "dimension-door"
-    assert "Dimension Door" in still_in_place[0].description
-    assert "fails in an occupied space" not in still_in_place[0].description
-    assert choose_teleport_action(caster, setup, "1:caster-c") is None
+    assert caster.state.current_hp == 40
+    assert caster.state.action_available is True
+    assert slot.current_uses == 1
 
 
 def test_compiled_save_action_applies_distant_spell_range() -> None:
