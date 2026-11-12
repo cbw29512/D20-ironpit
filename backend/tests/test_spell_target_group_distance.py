@@ -100,3 +100,47 @@ def test_spell_effect_direct_resolution_rejects_illegal_group_without_state_muta
     except Exception:
         logger.exception("Illegal direct spell target group mutated fight state.")
         raise
+
+
+def test_full_spell_cast_refuses_invalid_target_group_before_slot_spend() -> None:
+    try:
+        from app.combat.spell_choice import SpellChoice
+        from app.combat.spell_resolution import resolve_spell
+        from app.combat.state import build_combatant_state
+        from app.content.capability_compiler import compile_combatant
+        from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
+        from app.content.monster_source_2014 import load_monster_source_2014
+        from app.content.audited_fighter import build_karnok_stoneward
+        from app.domain.encounters import EncounterCombatant, EncounterSetup
+
+        source = next(row for row in load_monster_source_2014() if row.id == "cult-fanatic")
+        caster = EncounterCombatant(
+            combatant_id="caster", side="monsters", position_ft=15,
+            state=build_combatant_state(
+                compile_combatant(adapt_monster_mechanics_2014(source)),
+            ),
+        )
+        target_card = build_karnok_stoneward()
+        victims = [
+            EncounterCombatant(
+                combatant_id=f"target-{i}", side="heroes", position_ft=pos,
+                state=build_combatant_state(target_card),
+            )
+            for i, pos in enumerate((0, 40))
+        ]
+        setup = EncounterSetup(
+            heroes=victims, monsters=[caster],
+            hero_total_levels=1, monster_total_cr="2", ruleset="2014",
+        )
+        action = command_grovel_2014(11)
+        choice = SpellChoice(
+            action=action, slot_level=2,
+            target_ids=tuple(target.combatant_id for target in victims),
+        )
+        before = [item.state.model_dump() for item in [caster, *victims]]
+        with pytest.raises(ValueError, match="pairwise distance"):
+            resolve_spell(1, 1, caster, setup, choice, "1:caster", object())
+        assert [item.state.model_dump() for item in [caster, *victims]] == before
+    except Exception:
+        logger.exception("Invalid Command target group spent resources before eligibility.")
+        raise
