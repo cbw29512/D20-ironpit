@@ -1239,6 +1239,14 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        # Preserve immutable speaker/target language evidence only when explicit.
+        profile = template.language_profile
+        if profile.spoken or profile.understood or profile.speaks_all or profile.understands_all:
+            row["languageProfile"] = {
+                "spoken": list(profile.spoken), "understood": list(profile.understood),
+                "speaksAll": profile.speaks_all, "understandsAll": profile.understands_all,
+                "unspecified": profile.unspecified,
+            }
         if template.death_trigger_actions:
             row["death_trigger_effect_ids"] = list(template.death_trigger_effect_ids)
             row["death_trigger_actions"] = [_save(item) for item in template.death_trigger_actions]
