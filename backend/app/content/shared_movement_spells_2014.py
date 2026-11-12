@@ -31,7 +31,9 @@ def freedom_of_movement_debuff_counters_2014(
             ),
         ]
         if prevents_magical_paralysis:
-            counters.insert(3, DebuffCounter(debuff_id="paralyzed", source_scope="magical"))
+            # Preserve the certified spell serialization order while allowing
+            # source traits that omit the paralysis clause to reuse the rest.
+            counters.insert(2, DebuffCounter(debuff_id="paralyzed", source_scope="magical"))
         return counters
     except Exception:
         logger.exception("Failed to compose shared 2014 Freedom of Movement counters.")
