@@ -6,6 +6,7 @@ from app.content.monster_hp_pool_spell_bindings_2014 import innate_hp_pool_spell
 from app.content.monster_environmental_spell_proofs_2014 import source_proven_arena_inert_innate_spells_2014
 from app.content.monster_source_angelic_innate_2014 import source_proven_angelic_arena_exclusions_2014
 from app.content.monster_innate_darkness_2014 import source_proven_innate_darkness_2014
+from app.content.monster_innate_enlarge_2014 import source_proven_innate_enlarge_2014
 from app.content.monster_innate_fog_cloud_2014 import source_proven_innate_fog_cloud_2014
 from app.content.monster_innate_ai_exclusions_2014 import (
     source_proven_arena_ai_excluded_innate_spells_2014,
@@ -109,6 +110,9 @@ def innate_timed_self_buffs_2014(monster) -> list[TimedSelfBuffAction]:
                     priority=70,
                     animation="blur",
                 ))
+        # Use the same generic timed buff for source-proven self Enlarge.
+        # An unverified spell package must not gain this damage bonus.
+        actions.extend(source_proven_innate_enlarge_2014(monster))
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 innate timed self-buffs for %s.", monster.name)
