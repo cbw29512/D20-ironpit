@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 AreaShape = Literal["radius", "cone", "line", "cube", "emanation", "square", "shared-space"]
 AreaOrigin = Literal["point", "self"]
@@ -44,3 +44,15 @@ class AreaTargeting(BaseModel):
             return self
         except Exception:
             raise
+
+
+TargetQualificationKind = Literal[
+    "source_grappled", "incapacitated", "restrained", "willing", "source_charmed",
+]
+
+
+class TargetQualification(BaseModel):
+    """Any declared target predicate suffices; source ownership is evaluated at runtime."""
+
+    model_config = ConfigDict(extra="forbid")
+    any_of: list[TargetQualificationKind] = Field(min_length=1)
