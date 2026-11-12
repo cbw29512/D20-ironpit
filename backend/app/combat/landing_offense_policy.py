@@ -14,7 +14,7 @@ from app.combat.concentration_repeat_saves import choose_concentration_repeat_sa
 from app.combat.encounter_targeting import living_opponents
 from app.combat.intimidating_presence_2014 import can_use_presence
 from app.combat.multi_target_save_actions import choose_multi_target_save_action
-from app.combat.pit_policy import choose_limited_breakable_control_attack, choose_standard_attack, save_distance, target_order
+from app.combat.pit_policy import choose_limited_breakable_control_attack, choose_standard_attack, save_distance
 from app.combat.save_action_targeting import save_action_target_order
 from app.combat.printed_damage import weapon_mean_damage, save_mean_damage as _save_mean_damage, save_action_impact
 from app.combat.resources import resource_available
