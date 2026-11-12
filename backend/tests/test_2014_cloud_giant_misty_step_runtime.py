@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import logging
 
+import pytest
+
 from app.combat.dice import FixedDiceProvider
 from app.combat.grapple import apply_grapple
 from app.combat.state import begin_turn, build_combatant_state
@@ -71,4 +73,42 @@ def test_cloud_giant_misty_step_only_clears_active_holds_without_moving():
         assert state.bonus_action_available is False
     except Exception:
         logger.exception("Cloud Giant Misty Step in-place AI escape failed.")
+        raise
+
+
+def test_cloud_giant_misty_step_noop_resolution_spends_nothing():
+    try:
+        source = next(m for m in load_monster_source_2014() if m.id == "cloud-giant")
+        template = compile_combatant(adapt_monster_mechanics_2014(source))
+        state = build_combatant_state(template)
+        origin = GridPosition(x=6, y=6)
+        state.position = origin
+        cloud = EncounterCombatant(
+            combatant_id="cloud-giant", side="monsters", position_ft=30, state=state,
+        )
+        hero_state = build_combatant_state(build_goblin_warrior())
+        hero_state.position = GridPosition(x=7, y=6)
+        hero = EncounterCombatant(
+            combatant_id="hero", side="heroes", position_ft=35, state=hero_state,
+        )
+        setup = EncounterSetup(
+            heroes=[hero], monsters=[cloud], hero_total_levels=1,
+            monster_total_cr="9", ruleset="2014",
+            map_definition=build_standard_iron_pit_map(),
+        )
+        begin_turn(state)
+        action = template.teleport_actions[0]
+        resource = next(r for r in state.resources if r.id == "misty-step")
+
+        with pytest.raises(ValueError, match="no active teleport-cancelable effect"):
+            resolve_teleport(
+                1, 1, cloud, setup, action, origin,
+                FixedDiceProvider([1]), "1:cloud-giant",
+            )
+
+        assert state.position == origin
+        assert resource.current_uses == 3
+        assert state.bonus_action_available is True
+    except Exception:
+        logger.exception("Cloud Giant Misty Step no-op guard failed.")
         raise
