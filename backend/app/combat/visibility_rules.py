@@ -80,7 +80,16 @@ def can_see(
         if observer.template.blind_beyond_blindsight:
             return False
         truesight = _sense_reaches(observer, SENSE_TRUESIGHT, resolved_distance)
-        if sight_line_is_obscured(observer, target, truesight_reaches=truesight):
+        # Printed Devil's Sight only counters magical Darkness within its
+        # darkvision range: it neither sees Invisible nor penetrates fog.
+        darkness_sight = (
+            resolved_distance is not None
+            and observer.template.magical_darkness_sight_ft >= resolved_distance
+            and observer.template.magical_darkness_sight_ft > 0
+        )
+        if sight_line_is_obscured(
+            observer, target, truesight_reaches=truesight or darkness_sight,
+        ):
             return False
         if target_hidden:
             return truesight
