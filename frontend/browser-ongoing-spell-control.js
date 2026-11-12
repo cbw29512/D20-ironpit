@@ -23,7 +23,7 @@
       window.IRON_PIT_BROWSER_STATE.terminateTurn(state, "compelled-fall-prone-end-turn");
       const effect = effects[0];
       const id = effect.source_effect_id || effect.effect_id;
-      const label = String(id).replace(/-/g, " ").replace(/\\b\\w/g, (letter) => letter.toUpperCase());
+      const label = String(id).split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ");
       return {
         sequence, round_number: round, event_type: "feature",
         actor_id: member.combatant_id, actor_name: state.template.name,
