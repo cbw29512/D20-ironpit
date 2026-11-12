@@ -72,6 +72,11 @@
       }
       if (action.requiresTargetHearing
         && target.state.active_effect_ids.includes("deafened")) return false;
+      if (action.requiresSharedSpokenLanguage) {
+        const shared = window.IRON_PIT_BROWSER_SPOKEN_LANGUAGE;
+        if (!shared?.understands) throw new Error("Spoken-language eligibility module is unavailable.");
+        if (!actor || !shared.understands(actor.state.template, target.state.template)) return false;
+      }
       const type = String(target.state.template.creature_type || "")
         .split(" (")[0].trim().toLowerCase();
       if ((action.requiredTargetCreatureTypes || []).length
