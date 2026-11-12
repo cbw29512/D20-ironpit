@@ -39,9 +39,11 @@ const state = {
 const caster = { combatant_id: "cloud-giant", state };
 const TP = window.IRON_PIT_BROWSER_TELEPORT;
 
+const activeHold = state.timed_effects[0];
+state.timed_effects = [];
 assert.equal(TP.choose(caster, {}, "1:cloud-giant"), null,
   "no eligible hold means no Misty Step cast");
-state.resources["misty-step"] = 0;
+state.timed_effects = [activeHold];
 assert.equal(TP.choose(caster, {}, "1:cloud-giant"), null,
   "an active hold cannot select an exhausted Misty Step");
 state.resources["misty-step"] = 3;
