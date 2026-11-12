@@ -34,8 +34,13 @@
       if (!caster.state.position) return null;
       const cancel = window.IRON_PIT_BROWSER_TELEPORT_CANCEL;
       if (!cancel?.cancelableIds(caster.state).length) return null;
-      const actions = (caster.state.template.teleport_actions || []).filter((action) =>
-        E().available(caster.state, action.actionCost || action.action_cost));
+      const actions = (caster.state.template.teleport_actions || []).filter((action) => {
+        const resourceId = action.resourceId || action.resource_id;
+        const resourceCost = action.resourceCost ?? action.resource_cost ?? 1;
+        const resourceAvailable = !resourceId
+          || Number(caster.state.resources?.[resourceId] || 0) >= Number(resourceCost);
+        return resourceAvailable && E().available(caster.state, action.actionCost || action.action_cost);
+      });
       if (!actions.length) return null;
       const action = actions.slice().sort((a, b) => (a.level - b.level) || String(a.id).localeCompare(b.id))[0];
       return { action, destination: { ...caster.state.position } };
