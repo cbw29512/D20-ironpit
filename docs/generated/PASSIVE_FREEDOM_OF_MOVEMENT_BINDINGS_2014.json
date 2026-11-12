@@ -1,0 +1,63 @@
+{
+  "applicable_card_count": 1,
+  "applicable_cards": [
+    "kraken"
+  ],
+  "bindings": [
+    {
+      "browser_wired": true,
+      "card_id": "kraken",
+      "card_name": "Kraken",
+      "parameters": [
+        {
+          "debuff_id": "difficult-terrain",
+          "mode": "prevent",
+          "movement_cost_ft": 0,
+          "source_scope": "any"
+        },
+        {
+          "debuff_id": "speed-reduction",
+          "mode": "prevent",
+          "movement_cost_ft": 0,
+          "source_scope": "magical"
+        },
+        {
+          "debuff_id": "restrained",
+          "mode": "prevent",
+          "movement_cost_ft": 0,
+          "source_scope": "magical"
+        },
+        {
+          "debuff_id": "grappled",
+          "mode": "remove-with-movement",
+          "movement_cost_ft": 5,
+          "source_scope": "nonmagical"
+        },
+        {
+          "debuff_id": "restrained",
+          "mode": "remove-with-movement",
+          "movement_cost_ft": 5,
+          "source_scope": "nonmagical"
+        }
+      ],
+      "python_wired": true,
+      "source_sections": {
+        "Freedom of Movement": "The kraken ignores difficult terrain, and magical effects can't reduce its speed or cause it to be restrained. It can spend 5 feet of movement to escape from nonmagical restraints or being grappled."
+      }
+    }
+  ],
+  "exceptions": [],
+  "paired_2024_reuse": {
+    "applicable_card_count": 0,
+    "applicable_cards": [],
+    "note": "No 2014 parameters are copied when the pinned 2024 source omits the declaration.",
+    "source_cards_scanned": 330
+  },
+  "remaining_card_count": 0,
+  "source_cards_scanned": 327,
+  "wired_browser_card_count": 1,
+  "wired_cards": [
+    "kraken"
+  ],
+  "wired_python_card_count": 1
+}

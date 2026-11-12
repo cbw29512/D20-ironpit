@@ -434,7 +434,6 @@ Blocked monsters: **36**. These are grouped by printed ability name so the roste
 |---|---|---:|
 | Aberrant Ground | Gibbering Mouther | 1 |
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
-| Freedom of Movement | Kraken | 1 |
 | Gibbering | Gibbering Mouther | 1 |
 | Grasping Tendrils | Roper | 1 |
 | Innate Spellcasting | Couatl, Djinni, Dryad, Efreeti, Glabrezu, Lamia, Magma Mephit, Oni, Rakshasa, Solar | 10 |
@@ -451,7 +450,7 @@ Blocked monsters: **36**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 30 |
+| `source:trait` | 29 |
 | `mechanic:spellcasting` | 22 |
 | `source:extra-action` | 18 |
 | `mechanic:legendary` | 9 |

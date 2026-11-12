@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 30 |
+| `source:trait` | 29 |
 | `mechanic:spellcasting` | 22 |
 | `source:extra-action` | 18 |
 | `mechanic:legendary` | 9 |
@@ -57,7 +57,7 @@ the underlying ability is already implemented or trivial.
 | Glabrezu | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Guardian Naga | mechanic:spellcasting, source:trait | Spellcasting |
 | Gynosphinx | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
-| Kraken | mechanic:legendary, multiattack:complex, source:extra-action, source:legendary, source:trait | Freedom of Movement |
+| Kraken | mechanic:legendary, multiattack:complex, source:extra-action, source:legendary | — |
 | Lamia | attack:incomplete, mechanic:spellcasting, multiattack:complex, source:extra-action, source:trait | Innate Spellcasting |
 | Lich | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Mage | mechanic:spellcasting, source:trait | Spellcasting |

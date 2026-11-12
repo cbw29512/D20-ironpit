@@ -75,6 +75,8 @@ jobs:
         run: python scripts/report_read_thoughts_classification_2014.py --check
       - name: Audit 327-card surprise-opening source coverage
         run: python scripts/report_surprise_opening_bindings_2014.py --check
+      - name: Audit 327-card passive Freedom of Movement coverage
+        run: python scripts/report_passive_freedom_of_movement_2014.py --check
       - name: Audit 327-card audible maintained control coverage
         run: python scripts/report_audible_maintained_control_bindings_2014.py
       - name: Audit 327-card non-offensive Dodge coverage
@@ -739,6 +741,7 @@ jobs:
           node frontend/browser-duergar-resilience.test.cjs
           node frontend/browser-condition-immunity.test.cjs
           node frontend/browser-debuff-counters.test.cjs
+          node frontend/browser-passive-freedom-of-movement.test.cjs
           node frontend/browser-pit-engagement-flight-teleport.test.cjs
           node frontend/browser-teleport-resource-availability.test.cjs
           node frontend/browser-bonus-damage-modifiers.test.cjs

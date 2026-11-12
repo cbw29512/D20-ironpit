@@ -5876,7 +5876,7 @@
       "source:extra-action": 18,
       "source:legendary": 9,
       "source:reaction": 1,
-      "source:trait": 30
+      "source:trait": 29
     },
     "unresolved_printed_abilities": [
       {
@@ -5893,13 +5893,6 @@
           "Rug of Smothering"
         ],
         "printed_name": "Damage Transfer"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Kraken"
-        ],
-        "printed_name": "Freedom of Movement"
       },
       {
         "demand_count": 1,

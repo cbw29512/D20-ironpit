@@ -19,6 +19,10 @@ from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.content.monster_source_grapple_attack_advantage_2014 import source_grapple_attack_advantage_2014
 from app.content.monster_legendary_resistance_2014 import legendary_resistance_trait_name_2014
 from app.content.monster_passive_grants_2014 import bound_passive_trait_names_2014, saving_throw_advantage_grants_2014
+from app.content.monster_source_freedom_of_movement_2014 import (
+    bound_passive_freedom_of_movement_traits_2014,
+    passive_freedom_of_movement_grants_2014,
+)
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_slot_melee_weapon_bonus_2014 import bound_slot_melee_weapon_bonus_traits_2014
 from app.content.monster_reactive_2014 import supports_reaction_each_turn_2014
@@ -98,6 +102,7 @@ def progression_features_2014(monster: SourceMonster2014) -> ProgressionCombatFe
             evasion="Evasion" in monster.trait_names,
             evasion_disabled_while_incapacitated="Evasion" in monster.trait_names,
             saving_throw_advantage_grants=saving_throw_advantage_grants_2014(monster),
+            passive_debuff_counter_grants=passive_freedom_of_movement_grants_2014(monster),
             once_per_turn_weapon_hit_damage_rider=martial_advantage_rider_2014(monster),
         )
     except Exception:
@@ -155,6 +160,7 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         if "Evasion" in monster.trait_names and progression_features_2014(monster).evasion:
             bound.add("Evasion")
         bound.update(bound_passive_trait_names_2014(monster))
+        bound.update(bound_passive_freedom_of_movement_traits_2014(monster))
         if source_grapple_attack_advantage_2014(monster):
             bound.add("Grappler")
         bound.update(source_proven_hostile_overlap_traits_2014(monster))
