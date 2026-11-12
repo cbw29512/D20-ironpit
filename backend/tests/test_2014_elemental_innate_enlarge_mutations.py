@@ -6,6 +6,8 @@ import logging
 import pytest
 
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+from app.content.monster_innate_ai_exclusions_2014 import source_proven_arena_ai_excluded_innate_spells_2014
 from app.content.monster_innate_enlarge_2014 import source_proven_innate_enlarge_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 
@@ -42,14 +44,28 @@ def test_mutations_fail_closed(changes):
         raise
 
 
-def test_other_spells_still_block_entire_efreeti_admission():
+def test_efreeti_source_admits_only_with_all_spells_disposed():
     try:
         card = _source()
-        assert "mechanic:spellcasting" in basic_blockers_2014(card)
-        # No fabricated Major Image effects or premature monster admission.
+        before = card.model_dump_json()
+        # Major Image is still on the reference card, while the arena
+        # AI declines its nondamaging illusion Action rather than fabricating
+        # an illusion-belief combat resolver.
         assert "major-image" in {
             x["id"] for x in card.innate_spellcasting["spells"]
         }
+        assert "major-image" in source_proven_arena_ai_excluded_innate_spells_2014(card)
+        assert basic_blockers_2014(card) == ()
+        adapted = adapt_basic_monster_2014(card)
+        assert adapted.id == "2014-efreeti"
+        assert card.model_dump_json() == before
+        # Changed printed effects fail closed, even if structured rows remain.
+        altered = card.model_copy(update={
+            "source_traits": card.source_traits.replace(
+                "major image, plane shift", "major image, fireball, plane shift"
+            )
+        })
+        assert "mechanic:spellcasting" in basic_blockers_2014(altered)
     except Exception:
-        logger.exception("Efreeti admission was incorrectly forced.")
+        logger.exception("2014 Efreeti full source classification failed.")
         raise
