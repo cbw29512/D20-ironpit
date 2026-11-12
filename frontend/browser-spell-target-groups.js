@@ -50,5 +50,26 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_SPELL_TARGET_GROUPS = { legalGroup, chooseGroup };
+  function validateChoice(setup, targetIds, maximumPairDistanceFt) {
+    try {
+      if (maximumPairDistanceFt == null) return;
+      if (!Array.isArray(targetIds) || new Set(targetIds).size !== targetIds.length) {
+        throw new Error("A spell target group cannot repeat a target.");
+      }
+      const lookup = new Map([...setup.heroes, ...setup.monsters]
+        .map((member) => [member.combatant_id, member]));
+      const targets = targetIds.map((id) => {
+        if (!lookup.has(id)) throw new Error("A spell target group contains an unknown target.");
+        return lookup.get(id);
+      });
+      if (!legalGroup(targets, maximumPairDistanceFt)) {
+        throw new Error("Spell targets exceed their declared pairwise distance.");
+      }
+    } catch (error) {
+      console.error("Source-owned spell target group is invalid.", { error });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_SPELL_TARGET_GROUPS = { legalGroup, chooseGroup, validateChoice };
 })();
