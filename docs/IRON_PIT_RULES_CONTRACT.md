@@ -1,5 +1,20 @@
 # Iron Pit Rules Contract
 
+## Natural innate casting and spell-equivalent effects — locked 2026-11-12
+
+**Same outcome, same universal mechanic.** In automated Iron Pit combat, a source-proven innate ability that casts a named spell uses the same effect/action resolver as that edition's ordinary casting of the spell. A natural ability that produces an equivalent save, damage, Charmed, Frightened, healing, buff, debuff or other spell-like outcome also composes those same universal primitives. Do not add a separate monster-specific resolver merely because the effect is innate, componentless, or called an ability instead of a spell.
+
+- **No component bookkeeping:** The standard Iron Pit does not require consumable materials, components, focuses, gestures or spoken incantations as inventory/activation steps. Lack of components does not create different hit, save, damage, concentration, condition or expiration logic. This rule does **not** silently rewrite separate existing source-verified anti-magic, reaction, Silence or spell-interruption rules; review those interactions against the actual printed source and their own locked decisions.
+- **Keep casting provenance:** An innate **spell cast** remains a spell for rules that genuinely care whether the source is casting a spell. A **nonspell ability** sharing a spell's effect is not automatically relabeled as a spell for Counterspell, slot expenditure, verbal-component suppression, or spell-only triggers. The source/card declares the difference; the effect resolver is still shared. Do not infer casting identity from the printed ability name.
+- **Immutable card owns parameters:** Edition, displayed source name, whether the action counts as casting a spell, action/bonus action/reaction cost, target eligibility, DC, ability, attack bonus, range, damage, duration, Concentration, recharge, at-will or per-day use limits and resource cost remain source-owned. Natural/innate uses do not consume spell slots unless the source explicitly specifies slots. Fight-local limits and timed state reset between fights.
+- **Reuse and proof:** Search existing monster, pregen and browser/Python spell/condition implementations first. Compose the existing typed effects, prove the printed source and test source-name/ID renaming, negative eligibility, Python/browser parity, immutable cards and fight reset. If an effect differs materially, parameterize the difference or keep the card blocked; never suppress a combat consequence merely to increase admission.
+
+## Succubus/Incubus Charm — no command scripting in automated Iron Pit (2026-11-12)
+
+**Approved arena simplification:** Treat the source-proven Charm Action as the universal Charmed debuff with its printed Wisdom DC 15, sight/Humanoid/range gate, owner scope, duration, immunity and damage-triggered repeat-save rules. The standard automated Iron Pit AI issues **no verbal, telepathic or suicidal commands**, so no command-obedience/control-of-actions subsystem and no suicidal-command repeat save are invoked by this arena. The creature retains its ordinary side and action scheduler subject to Charmed targeting restrictions, rather than becoming a possession host or an allied puppet. A Charmed target cannot attack its own charmer. Draining Kiss remains legal only against an enemy Charmed by that particular source; no enemy voluntarily consents.
+
+Preserve the full printed command wording and all original source parameters on immutable cards; this is only an AI decision not to issue commands, **not** a claim about unrestricted tabletop RAW or future homebrew that explicitly executes commands. A changed printed source must fail closed. No admission may be claimed until the source classifier, both combat engines, regenerated artifacts and exact-final-head CI prove the constrained ability works.
+
 ## No wall-creation Actions — locked arena rule (2026-11-11)
 
 **Wall creation is arena-unavailable.** Iron Pit is an automated offensive
