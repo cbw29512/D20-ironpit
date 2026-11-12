@@ -5871,12 +5871,12 @@
       "attack:none": 1,
       "mechanic:legendary": 9,
       "mechanic:recharge": 1,
-      "mechanic:spellcasting": 20,
+      "mechanic:spellcasting": 21,
       "multiattack:complex": 3,
-      "source:extra-action": 18,
+      "source:extra-action": 17,
       "source:legendary": 9,
       "source:reaction": 1,
-      "source:trait": 27
+      "source:trait": 28
     },
     "unresolved_printed_abilities": [
       {
@@ -5966,7 +5966,7 @@
         "printed_name": "Shapechanger"
       },
       {
-        "demand_count": 11,
+        "demand_count": 12,
         "monsters": [
           "Androsphinx",
           "Archmage",
@@ -5978,6 +5978,7 @@
           "Lich",
           "Mage",
           "Mummy Lord",
+          "Priest",
           "Spirit Naga"
         ],
         "printed_name": "Spellcasting"

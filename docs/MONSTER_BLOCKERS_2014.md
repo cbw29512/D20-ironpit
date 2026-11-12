@@ -10,9 +10,9 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 27 |
-| `mechanic:spellcasting` | 20 |
-| `source:extra-action` | 18 |
+| `source:trait` | 28 |
+| `mechanic:spellcasting` | 21 |
+| `source:extra-action` | 17 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
 | `attack:incomplete` | 7 |
@@ -27,12 +27,11 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**2** monsters have exactly one remaining blocker category.
+**1** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
 | `arena:neutral` | Frog | 1 |
-| `source:extra-action` | Succubus/Incubus | 1 |
 
 ## Every blocked monster
 
@@ -63,12 +62,12 @@ the underlying ability is already implemented or trivial.
 | Magma Mephit | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Mummy Lord | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |
 | Oni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
+| Priest | mechanic:spellcasting, source:trait | Spellcasting |
 | Rakshasa | mechanic:spellcasting, source:trait | Limited Magic Immunity, Innate Spellcasting |
 | Roper | source:extra-action, source:trait | Grasping Tendrils |
 | Rug of Smothering | attack:none, source:extra-action, source:trait | Damage Transfer |
 | Solar | attack:incomplete, mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Innate Spellcasting |
 | Spectator | source:extra-action, source:reaction | — |
 | Spirit Naga | mechanic:spellcasting, source:trait | Spellcasting |
-| Succubus/Incubus | source:extra-action | — |
 | Tarrasque | mechanic:legendary, source:legendary, source:trait | Reflective Carapace |
 | Vampire | mechanic:legendary, source:extra-action, source:legendary, source:trait | Shapechanger, Misty Escape |

@@ -1,5 +1,11 @@
 # Iron Pit locked rules
 
+## Natural innate casting and Charm AI — 2026-11-12
+
+- Source-proven innate spellcasts and equivalent spell-like outcomes use the **same universal spell/condition/effect primitives** as ordinary casting; the standard Pit does not track spell components as action prerequisites. Source-owned action economy, per-day/recharge resources, duration, concentration, printed names, edition and true spell/nonspell provenance remain intact. No innate-only resolver or fabricated spell slots.
+- Succubus/Incubus Charm is a standard source-owned **Charmed debuff** in automated fights. The AI issues no verbal/telepathic/suicidal commands, so command-control machinery is not executed. Preserve source text, harm-triggered repeat saves, source immunity, and source-Charmed-only Draining Kiss. A source-classification/engine/parity gate still applies before admission.
+- Authority: [Iron Pit Rules Contract — Natural innate casting and spell-equivalent effects](IRON_PIT_RULES_CONTRACT.md#natural-innate-casting-and-spell-equivalent-effects--locked-2026-11-12) and [Succubus/Incubus Charm](IRON_PIT_RULES_CONTRACT.md#succubusincubus-charm--no-command-scripting-in-automated-iron-pit-2026-11-12). This index does not replace that source.
+
 ## Misty Step — in-place escape (2026-11-11)
 
 - Misty Step is never a repositioning option in the standard Iron Pit. The combatant remains on the same authoritative grid square.
