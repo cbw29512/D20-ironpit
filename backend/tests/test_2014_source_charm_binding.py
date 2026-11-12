@@ -6,6 +6,7 @@ import logging
 import pytest
 
 from app.content.monster_basic_candidates_2014 import basic_blockers_2014
+from app.content.monster_supported_extra_actions_2014 import source_supported_extra_action_labels_2014
 from app.content.monster_save_capabilities_2014 import save_capabilities_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_charm_control_2014 import source_proven_charm_control_2014
@@ -58,8 +59,10 @@ def test_charm_compiles_to_source_named_universal_save_and_browser_fields():
         assert browser["repeatSaveTiming"] is None
         assert "Charm" in [x.name for x in save_capabilities_2014(card)]
         assert card.model_dump_json() == before
-        # Source command obedience and suicidal command handling remain open.
-        assert "source:extra-action" in basic_blockers_2014(card)
+        # No scripted verbal/telepathic/suicidal commands in automated Pit:
+        # the existing Charmed debuff is the full executable arena decision.
+        assert "charm" in source_supported_extra_action_labels_2014(card)
+        assert basic_blockers_2014(card) == ()
     except Exception:
         logger.exception("2014 source Charm definition, serializer or blocker failed.")
         raise
@@ -85,6 +88,8 @@ def test_charm_source_mutations_fail_closed(old, new):
             "source_actions": card.source_actions.replace(old, new),
         })
         assert not source_proven_charm_control_2014(edited)
+        assert "charm" not in source_supported_extra_action_labels_2014(edited)
+        assert "source:extra-action" in basic_blockers_2014(edited)
     except Exception:
         logger.exception("Charm source mutation failed for %s.", old)
         raise
