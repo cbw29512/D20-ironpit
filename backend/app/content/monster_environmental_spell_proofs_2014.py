@@ -49,8 +49,11 @@ def source_proven_arena_inert_innate_spells_2014(
         # arena Action or visibility effect under the locked Pit policy.
         if source_proven_innate_fog_cloud_2014(monster):
             printed_ids = {row.get("id") for row in innate_spells_2014(monster)}
-            if "light" in printed_ids:
-                return frozenset({"light"})
+            # Cloud Giant's complete source clause is validated by the Fog
+            # Cloud proof. Feather Fall has no falling trigger in the flat Pit;
+            # Control Weather cannot alter the Pit's fixed environment.
+            if {"light", "feather-fall", "control-weather"} <= printed_ids:
+                return frozenset({"light", "feather-fall", "control-weather"})
         if card.get("ability") != "charisma" or card.get("save_dc") != 17:
             return frozenset()
         printed = source_sections_2014(
