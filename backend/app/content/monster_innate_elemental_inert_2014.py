@@ -46,9 +46,15 @@ _FIELDS = ("id", "name", "usage", "uses_per_day", "shared_pool", "qualifier")
 
 # No creature is summoned into the Pit; Tongues only communicates; and a
 # voluntary Gaseous Form loses the normal violence-first combat action.
-# Enlarge/Reduce and Major Image still have real combat semantics and MUST
-# remain blocked until they gain independently certified tactical handling.
-_ARENA_AI_EXCLUDED = frozenset({"tongues", "conjure-elemental", "gaseous-form"})
+# Major Image retains its complete printed illusion. The standard automated
+# ring has no illusion-belief, decoy, or objective interaction for the AI to
+# exploit, so the caster declines that non-damaging Action rather than gaining
+# invented obscuration/debuff mechanics. This is AI exclusion, NOT a claim
+# that Major Image lacks 2014 tabletop combat effects. Enlarge/Reduce is
+# separately bound as an actual combat buff, never excluded.
+_ARENA_AI_EXCLUDED = frozenset({
+    "tongues", "conjure-elemental", "gaseous-form", "major-image",
+})
 
 
 def source_proven_elemental_inert_spells_2014(
