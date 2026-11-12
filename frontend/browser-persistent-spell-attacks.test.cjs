@@ -75,6 +75,7 @@ const spiritualWeapon = {
   moveFt: 20,
   attackReachFt: 5,
   upcastIntervalLevels: 2,
+  spatialMode: "nonspatial",
   attack: {
     id: "spiritual-weapon",
     name: "Spiritual Weapon",
@@ -147,7 +148,9 @@ const setup = {
   assert.equal(cleric.state.persistent_spell_attacks.length, 1);
   assert.equal(cleric.state.persistent_spell_attacks[0].slot_level, 2);
   assert.equal(cleric.state.persistent_spell_attacks[0].expires_round, 11);
-  assert.ok(event.movement_ft <= 60);
+  assert.equal(event.movement_ft ?? null, null);
+  assert.equal(event.grid_position_after ?? null, null);
+  assert.equal(cleric.state.persistent_spell_attacks[0].position, null);
 }
 
 {
@@ -163,7 +166,9 @@ const setup = {
   assert.equal(cleric.state.spell_slot_expended_turn_key, "1:cleric");
   assert.equal(cleric.state.bonus_action_available, false);
   assert.equal(cleric.state.action_available, true);
-  assert.ok(event.movement_ft <= 20);
+  assert.equal(event.movement_ft ?? null, null);
+  assert.equal(event.grid_position_after ?? null, null);
+  assert.equal(cleric.state.persistent_spell_attacks[0].position, null);
 }
 
 {
@@ -174,6 +179,7 @@ const setup = {
   assert.deepEqual(cleric.state.persistent_spell_attacks, []);
 }
 
+assert.equal(PS.attackForSlot(spiritualWeapon, 2, true).range, 60);
 assert.deepEqual(
   PS.attackForSlot(spiritualWeapon, 4, false).damageDiceCount,
   2,

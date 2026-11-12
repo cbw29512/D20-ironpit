@@ -33,21 +33,35 @@ def resolve_persistent_spell_attack(
             return None
         for action in member.state.template.persistent_spell_attack_actions:
             active = active_state(member, action, round_number)
-            origin = active.position if active is not None else member.state.position
-            origin_size = PERSISTENT_EFFECT_SIZE if active is not None else member.state.template.size
-            movement = action.move_ft if active is not None else action.attack.range_ft
             for target in target_order(member, setup):
-                placement = effect_position(
-                    origin,
-                    origin_size,
-                    target,
-                    setup,
-                    movement,
-                    action.attack_reach_ft,
-                )
-                if placement is None:
-                    continue
-                position, moved = placement
+                if target.state.position is None:
+                    raise ValueError("Persistent spell target needs an authoritative square.")
+                if action.spatial_mode == "nonspatial":
+                    # The spell is a timed attack, not a combatant or movable object.
+                    # Caster-to-target range is the sole spatial eligibility gate.
+                    position, moved = None, None
+                    distance = footprint_distance_ft(
+                        member.state.position, member.state.template.size,
+                        target.state.position, target.state.template.size,
+                    )
+                    if distance > action.attack.range_ft:
+                        continue
+                else:
+                    origin = active.position if active is not None else member.state.position
+                    if origin is None:
+                        raise ValueError("Positioned spell effect lost its grid square.")
+                    origin_size = PERSISTENT_EFFECT_SIZE if active is not None else member.state.template.size
+                    movement = action.move_ft if active is not None else action.attack.range_ft
+                    placement = effect_position(
+                        origin, origin_size, target, setup, movement, action.attack_reach_ft,
+                    )
+                    if placement is None:
+                        continue
+                    position, moved = placement
+                    distance = footprint_distance_ft(
+                        position, PERSISTENT_EFFECT_SIZE,
+                        target.state.position, target.state.template.size,
+                    )
                 slot_level = (
                     active.slot_level
                     if active is not None
@@ -56,12 +70,6 @@ def resolve_persistent_spell_attack(
                 if slot_level is None:
                     continue
                 attack = attack_for_slot(action, slot_level, repeat=active is not None)
-                distance = footprint_distance_ft(
-                    position,
-                    PERSISTENT_EFFECT_SIZE,
-                    target.state.position,
-                    target.state.template.size,
-                )
                 event = resolve_spell_attack(
                     sequence,
                     round_number,
@@ -88,10 +96,12 @@ def resolve_persistent_spell_attack(
                             expires_round=round_number + action.duration_rounds,
                         )
                     )
-                else:
+                elif position is not None:
                     active.position = position
-                event.movement_ft = moved
-                event.grid_position_after = position
+                # A nonspatial spell never reports movement or an effect square.
+                if position is not None:
+                    event.movement_ft = moved
+                    event.grid_position_after = position
                 return event
         return None
     except ValueError:

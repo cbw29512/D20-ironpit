@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import logging
 
+from typing import Literal
+
 from pydantic import BaseModel, Field, model_validator
 
 from app.domain.grid import GridPosition
@@ -20,6 +22,8 @@ class PersistentSpellAttackAction(BaseModel):
     move_ft: int = Field(ge=0)
     attack_reach_ft: int = Field(default=5, ge=0)
     upcast_interval_levels: int = Field(default=1, ge=1, le=9)
+    # A nonspatial spell uses the ordinary attack resolver without creating a token.
+    spatial_mode: Literal["positioned", "nonspatial"] = "positioned"
 
     @model_validator(mode="after")
     def validate_action(self) -> "PersistentSpellAttackAction":
@@ -43,6 +47,7 @@ class PersistentSpellAttackState(BaseModel):
 
     action_id: str
     slot_level: int = Field(ge=1, le=9)
-    position: GridPosition
+    # Nonspatial effects deliberately have no grid square or footprint.
+    position: GridPosition | None = None
     applied_round: int = Field(ge=1)
     expires_round: int = Field(ge=2)

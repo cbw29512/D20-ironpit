@@ -82,7 +82,9 @@
       return {
         ...action.attack,
         level: repeat ? 0 : slotLevel,
-        range: repeat ? action.attackReachFt : action.attack.range,
+        // Nonspatial repeats still use caster-to-target spell range.
+        range: repeat && (action.spatialMode || "positioned") === "positioned"
+          ? action.attackReachFt : action.attack.range,
         damageDiceCount: action.attack.damageDiceCount + extraDice,
       };
     } catch (error) {

@@ -99,7 +99,8 @@ def test_level_three_runtime_and_fingerprint_match_persistent_progression() -> N
     assert [item.id for item in hero.persistent_spell_attack_actions] == ["spiritual-weapon"]
     spiritual = hero.persistent_spell_attack_actions[0]
     assert spiritual.duration_rounds == 10
-    assert spiritual.move_ft == 20
+    assert spiritual.move_ft == 20  # Printed movement retained as inert card metadata.
+    assert spiritual.spatial_mode == "nonspatial"
     assert spiritual.attack_reach_ft == 5
     assert spiritual.attack.damage_dice_count == 1
     assert spiritual.attack.damage_dice_size == 8
@@ -111,7 +112,7 @@ def test_level_three_runtime_and_fingerprint_match_persistent_progression() -> N
     assert_character_resources_raw_ready(hero, profile, combat)
 
 
-def test_spiritual_weapon_cast_repeat_move_and_expiry_use_shared_runtime() -> None:
+def test_spiritual_weapon_cast_repeat_without_token_position_or_movement() -> None:
     cleric = _member(build_seraphine_dawnshield_2014(3), "cleric", "heroes", 0, 6)
     goblin = _member(_monster_template("2014-skeleton"), "goblin", "monsters", 8, 6)
     setup = EncounterSetup(
@@ -131,7 +132,8 @@ def test_spiritual_weapon_cast_repeat_move_and_expiry_use_shared_runtime() -> No
     assert cast.feature_id == "spiritual-weapon"
     assert cast.hit is True
     assert cast.damage_roll is not None and cast.damage_roll.total == 7
-    assert cast.movement_ft is not None and cast.movement_ft <= 60
+    assert cast.movement_ft is None
+    assert cast.grid_position_after is None
     assert cleric.state.action_available is True
     assert cleric.state.bonus_action_available is False
     assert _resource(cleric, "spell-slot-2") == 1
@@ -139,6 +141,7 @@ def test_spiritual_weapon_cast_repeat_move_and_expiry_use_shared_runtime() -> No
     assert len(cleric.state.persistent_spell_attacks) == 1
     active = cleric.state.persistent_spell_attacks[0]
     assert active.slot_level == 2
+    assert active.position is None  # No summon square or occupied footprint.
     assert active.expires_round == 11
 
     goblin.state.position = GridPosition(x=12, y=6)
@@ -150,7 +153,9 @@ def test_spiritual_weapon_cast_repeat_move_and_expiry_use_shared_runtime() -> No
     )
     assert repeated is not None
     assert repeated.feature_id == "spiritual-weapon"
-    assert repeated.movement_ft is not None and repeated.movement_ft <= 20
+    assert repeated.movement_ft is None
+    assert repeated.grid_position_after is None
+    assert active.position is None
     assert cleric.state.action_available is True
     assert cleric.state.bonus_action_available is False
     assert _resource(cleric, "spell-slot-2") == slot_before

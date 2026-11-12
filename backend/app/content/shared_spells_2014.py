@@ -88,7 +88,7 @@ def spiritual_weapon_2014(
     spell_attack_bonus: int,
     spellcasting_ability_modifier: int,
 ) -> PersistentSpellAttackAction:
-    """Build 2014 Spiritual Weapon as one reusable mobile persistent spell attack."""
+    """Build 2014 Spiritual Weapon using a nonspatial persistent attack."""
     try:
         attack = SpellAttackAction(
             id="spiritual-weapon",
@@ -113,6 +113,7 @@ def spiritual_weapon_2014(
             move_ft=20,
             attack_reach_ft=5,
             upcast_interval_levels=2,
+            spatial_mode="nonspatial",
         )
     except Exception:
         logger.exception("Failed to build 2014 Spiritual Weapon.")
