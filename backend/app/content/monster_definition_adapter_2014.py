@@ -60,6 +60,7 @@ from app.content.monster_innate_spells_2014 import (
 from app.content.monster_command_spell_2014 import prepared_command_spell_actions_2014
 from app.content.monster_prepared_nature_spells_2014 import prepared_nature_spells_2014
 from app.content.monster_source_shillelagh_2014 import source_shillelagh_attacks_2014
+from app.content.monster_source_dryad_shillelagh_2014 import source_innate_club_shillelagh_attacks_2014
 from app.content.monster_prepared_spells_2014 import (
     prepared_auto_hit_spell_actions_2014,
     prepared_persistent_save_zone_actions_2014,
@@ -242,7 +243,9 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
     scores = AbilityScores(**ability_values_2014(monster))
     movement = movement_modes_2014(monster)
     attacks = [
-        *[_attack(monster, attack) for attack in source_shillelagh_attacks_2014(monster)],
+        *[_attack(monster, attack) for attack in source_innate_club_shillelagh_attacks_2014(
+            monster, source_shillelagh_attacks_2014(monster),
+        )],
         *source_ranged_save_only_hit_attacks_2014(monster),
         *source_proven_damage_free_grapple_attacks_2014(monster),
         *source_proven_damage_or_grapple_2014(monster),
