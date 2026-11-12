@@ -10,9 +10,9 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 25 |
-| `mechanic:spellcasting` | 18 |
+| `source:trait` | 24 |
 | `source:extra-action` | 17 |
+| `mechanic:spellcasting` | 17 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
 | `attack:incomplete` | 7 |
@@ -27,11 +27,12 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**1** monsters have exactly one remaining blocker category.
+**2** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
 | `arena:neutral` | Frog | 1 |
+| `source:extra-action` | Dryad | 1 |
 
 ## Every blocked monster
 
@@ -44,7 +45,7 @@ the underlying ability is already implemented or trivial.
 | Couatl | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Darkmantle | attack:incomplete, source:extra-action | — |
 | Djinni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
-| Dryad | mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
+| Dryad | source:extra-action | — |
 | Flameskull | mechanic:spellcasting, source:trait | Spellcasting |
 | Frog | arena:neutral | — |
 | Gelatinous Cube | source:extra-action, source:trait | Ooze Cube, Transparent |

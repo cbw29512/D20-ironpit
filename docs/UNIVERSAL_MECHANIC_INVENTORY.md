@@ -436,7 +436,7 @@ Blocked monsters: **31**. These are grouped by printed ability name so the roste
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
 | Gibbering | Gibbering Mouther | 1 |
 | Grasping Tendrils | Roper | 1 |
-| Innate Spellcasting | Couatl, Djinni, Dryad, Glabrezu, Lamia, Magma Mephit, Oni, Rakshasa, Solar | 9 |
+| Innate Spellcasting | Couatl, Djinni, Glabrezu, Lamia, Magma Mephit, Oni, Rakshasa, Solar | 8 |
 | Light Sensitivity | Cloaker | 1 |
 | Limited Magic Immunity | Rakshasa | 1 |
 | Misty Escape | Vampire | 1 |
@@ -450,8 +450,8 @@ Blocked monsters: **31**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 25 |
-| `mechanic:spellcasting` | 18 |
+| `source:trait` | 24 |
+| `mechanic:spellcasting` | 17 |
 | `source:extra-action` | 17 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
