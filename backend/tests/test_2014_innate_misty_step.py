@@ -82,6 +82,7 @@ def test_misty_step_proof_is_source_bound_and_fails_closed():
                    if item["id"] == "misty-step")
         row["uses_per_day"] = 2
         assert source_proven_innate_misty_step_2014(changed_uses) == []
+        assert not supports_innate_spellcasting_2014(changed_uses)
     except Exception:
         logger.exception("Cloud Giant Misty Step source-mutation proof failed.")
         raise
