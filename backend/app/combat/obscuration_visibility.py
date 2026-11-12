@@ -70,3 +70,34 @@ def sight_line_is_obscured(
     except Exception:
         logger.exception("Unable to calculate source-neutral sight obscuration.")
         raise
+
+
+def remove_concentration_obscuration_projections(
+    states: list[CombatantState], source_id: str, effect_id: str,
+) -> None:
+    """Immediately remove source-owned zone projections on Concentration loss."""
+    try:
+        for state in states:
+            state.visible_obscuration_zones = [
+                zone for zone in state.visible_obscuration_zones
+                if not (
+                    zone.concentration and zone.source_id == source_id
+                    and zone.action_id == effect_id
+                )
+            ]
+            in_dark = any(
+                zone.obscuration_kind == "magical-darkness"
+                and state.position is not None
+                and (zone.position.x - state.position.x) ** 2
+                    + (zone.position.y - state.position.y) ** 2
+                    <= (zone.radius_ft / 5) ** 2
+                for zone in state.visible_obscuration_zones
+            )
+            if not in_dark:
+                state.active_effect_ids = [
+                    item for item in state.active_effect_ids
+                    if item != "magical-darkness"
+                ]
+    except Exception:
+        logger.exception("Failed to clear Concentration-owned obscuration.")
+        raise
