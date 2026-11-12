@@ -46,6 +46,7 @@ from app.content.monster_hp_pool_spell_bindings_2014 import (
     innate_hp_pool_spells_2014, prepared_hp_pool_spells_2014,
 )
 from app.content.monster_innate_darkness_2014 import source_proven_innate_darkness_2014
+from app.content.monster_innate_fog_cloud_2014 import source_proven_innate_fog_cloud_2014
 from app.content.monster_source_darkness_sight_2014 import source_proven_magical_darkness_sight_ft_2014
 from app.content.monster_innate_spells_2014 import (
     innate_auto_hit_spell_actions_2014,
@@ -319,7 +320,10 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *prepared_auto_hit_spell_actions_2014(monster),
         ],
         defensive_spell_actions=tier1_cleric_defensive_spells_2014(monster),
-        suppression_zone_actions=source_proven_innate_darkness_2014(monster),
+        suppression_zone_actions=[
+            *source_proven_innate_darkness_2014(monster),
+            *source_proven_innate_fog_cloud_2014(monster),
+        ],
         persistent_save_zone_actions=[
             *[zone for zone in [fetid_cloud_zone_2014(monster)] if zone is not None],
             *innate_persistent_save_zone_actions_2014(monster),

@@ -7,6 +7,7 @@ from app.combat.concentration import start_concentration
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.spellcasting import mark_slot_spell_cast, slot_spell_available
 from app.combat.suppression_zone_effects import sync_suppression_zone_effects
+from app.combat.suppression_zone_tactics import heavy_obscuration_has_tactical_benefit
 from app.combat.suppression_zone_geometry import verbal_casting_blocked, zone_center_legal
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
@@ -65,7 +66,9 @@ def choose_suppression_zone_action(
             if action.resource_id and (resource is None or resource.current_uses < action.resource_cost):
                 continue
             center = choose_suppression_zone_center(caster, setup, action)
-            if center is not None:
+            if center is not None and heavy_obscuration_has_tactical_benefit(
+                caster, setup, action, center,
+            ):
                 return action, center
         return None
     except Exception:
