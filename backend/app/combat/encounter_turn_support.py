@@ -23,6 +23,7 @@ from app.combat.healing_support import resolve_healing_support
 from app.combat.monk_bonus_attacks_2014 import resolve_monk_bonus_attacks
 from app.combat.paladin_channel_divinity_2014 import resolve_paladin_channel_support
 from app.combat.pit_policy import save_distance, target_order
+from app.combat.save_action_targeting import save_action_target_order
 from app.combat.spell_resolution import resolve_spell
 from app.combat.encounter_turn_utility import resolve_control_support
 from app.combat.saving_throws import legal_save_action
@@ -184,7 +185,7 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
 
 def save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
     try:
-        for target in target_order(attacker, setup):
+        for target in save_action_target_order(attacker, setup, "all-other-creatures"):
             for action in attacker.state.template.saving_throw_actions:
                 if action.action_cost != "action":
                     continue
