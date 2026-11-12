@@ -19,7 +19,7 @@ from app.content.monster_source_2014 import load_monster_source_2014
 
 logger = logging.getLogger(__name__)
 
-_EXPECTED = frozenset({"tongues", "conjure-elemental", "gaseous-form"})
+_EXPECTED = frozenset({"tongues", "conjure-elemental", "gaseous-form", "major-image"})
 
 
 def _source():
@@ -42,16 +42,16 @@ def test_full_source_scan_and_real_shared_classifier():
         before = source.model_dump_json()
         assert source_proven_elemental_inert_spells_2014(source) == _EXPECTED
         assert source_proven_arena_ai_excluded_innate_spells_2014(source) == _EXPECTED
-        # No free magic: Invisibility remains executable and other offensive
-        # spell decisions are NOT silently waived or source-admitted.
+        # Invisibility and Enlarge remain executable; only the approved
+        # utility/illusion options are omitted by the automated AI.
         assert "invisibility" in {
             row.get("id") for row in source.innate_spellcasting["spells"]
         }
         assert "invisibility" in {
             spell.replace(" ", "-") for spell in innate_spell_names_2014(source)
         }
-        assert not supports_innate_spellcasting_2014(source)
-        assert "mechanic:spellcasting" in basic_blockers_2014(source)
+        assert supports_innate_spellcasting_2014(source)
+        assert basic_blockers_2014(source) == ()
         assert source.model_dump_json() == before
     except Exception:
         logger.exception("2014 elemental source classification parity failed.")
