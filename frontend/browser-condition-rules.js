@@ -94,8 +94,11 @@
       if (blinded) return false;
       if (observer?.template?.blind_beyond_blindsight) return false;
       const truesight = senseReaches(observer, "truesight", resolved);
+      const darknessSight = resolved != null
+        && Number(observer?.template?.magical_darkness_sight_ft || 0) > 0
+        && Number(observer.template.magical_darkness_sight_ft) >= Number(resolved);
       if (window.IRON_PIT_BROWSER_OBSCURATION_VISIBILITY?.blocked(observer, target,
-        { truesightReaches: truesight })) return false;
+        { truesightReaches: truesight || darknessSight })) return false;
       if (hidden) return truesight;
       return true;
     } catch (error) {
