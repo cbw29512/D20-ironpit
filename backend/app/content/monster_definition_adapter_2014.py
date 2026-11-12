@@ -86,6 +86,9 @@ from app.content.monster_leadership_2014 import leadership_actions_2014, leaders
 from app.content.monster_senses_2014 import special_senses_2014, bounded_blindsight_2014
 from app.content.monster_spell_slot_resources_2014 import monster_spell_slot_resources_2014
 from app.content.monster_priest_spells_2014 import priest_spell_actions_2014
+from app.content.monster_prepared_cleric_spells_2014 import (
+    prepared_cleric_spell_actions_2014, merge_unique_spell_actions,
+)
 from app.content.monster_tier1_cleric_actions_2014 import (
     tier1_cleric_defensive_spells_2014, tier1_cleric_healing_spells_2014,
 )
@@ -230,6 +233,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
     """Compile modeled mechanics without claiming full basic-roster admission."""
     core = monster_core_fields_2014(monster.id)
     priest_spells = priest_spell_actions_2014(monster)
+    shared_cleric_spells = prepared_cleric_spell_actions_2014(monster)
     scores = AbilityScores(**ability_values_2014(monster))
     movement = movement_modes_2014(monster)
     attacks = [
@@ -310,7 +314,10 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         save_actions=save_capabilities_2014(monster),
         spell_save_actions=[
             *innate_spell_save_actions_2014(monster),
-            *prepared_spell_save_actions_2014(monster),
+            *merge_unique_spell_actions(
+                prepared_spell_save_actions_2014(monster),
+                shared_cleric_spells.saves,
+            ),
         ],
         hit_point_pool_spell_actions=[
             *innate_hp_pool_spells_2014(monster),
@@ -318,17 +325,22 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         ],
         spell_attack_actions=[
             *innate_spell_attack_actions_2014(monster),
-            *prepared_spell_attack_actions_2014(monster),
+            *merge_unique_spell_actions(
+                prepared_spell_attack_actions_2014(monster),
+                shared_cleric_spells.attacks,
+            ),
         ],
         auto_hit_spell_actions=[
             *innate_auto_hit_spell_actions_2014(monster),
             *prepared_auto_hit_spell_actions_2014(monster),
         ],
-        defensive_spell_actions=[
-            *tier1_cleric_defensive_spells_2014(monster),
-            *priest_spells.defenses,
-        ],
-        persistent_spell_attack_actions=list(priest_spells.persistent_attacks),
+        defensive_spell_actions=merge_unique_spell_actions(
+            tier1_cleric_defensive_spells_2014(monster),
+            priest_spells.defenses, shared_cleric_spells.defenses,
+        ),
+        persistent_spell_attack_actions=merge_unique_spell_actions(
+            priest_spells.persistent_attacks, shared_cleric_spells.persistent_attacks,
+        ),
         suppression_zone_actions=[
             *source_proven_innate_darkness_2014(monster),
             *source_proven_innate_fog_cloud_2014(monster),
