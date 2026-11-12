@@ -41,9 +41,6 @@ def test_dimension_door_noop_is_rejected_without_spending():
     try:
         caster = _member(build_karnok_stoneward().model_copy(update={
             "teleport_actions": [dimension_door_2014()],
-            "resources": [ResourceDefinition(
-                id="spell-slot-4", name="4th-level Slot", max_uses=1,
-            )],
             "max_hp": 40,
         }), "caster", "heroes", 1, 2, {4: 1})
         enemy = _member(build_commoner(), "enemy", "monsters", 8, 2)
