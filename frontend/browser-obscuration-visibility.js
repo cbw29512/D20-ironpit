@@ -32,5 +32,27 @@
     }
   }
 
-  window.IRON_PIT_BROWSER_OBSCURATION_VISIBILITY = { blocked, lineCrosses };
+  function syncProjection(setup, zones) {
+    try {
+      const sightZones = zones.filter((zone) => zone.obscuration_kind !== "none");
+      for (const member of [...setup.heroes, ...setup.monsters]) {
+        member.state.visible_obscuration_zones = sightZones.map(
+          (zone) => ({ ...zone, position: { ...zone.position } }));
+        const inDark = sightZones.some((zone) => {
+          if (zone.obscuration_kind !== "magical-darkness" || !member.state.position) return false;
+          const dx = zone.position.x - member.state.position.x;
+          const dy = zone.position.y - member.state.position.y;
+          return dx * dx + dy * dy <= (zone.radius_ft / 5) ** 2;
+        });
+        member.state.active_effect_ids = member.state.active_effect_ids.filter(
+          (effect) => effect !== "magical-darkness");
+        if (inDark) member.state.active_effect_ids.push("magical-darkness");
+      }
+    } catch (error) {
+      console.error("Browser obscuration projection sync failed.", error);
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_OBSCURATION_VISIBILITY = { blocked, lineCrosses, syncProjection };
 })();
