@@ -86,6 +86,7 @@ from app.content.monster_leadership_2014 import leadership_actions_2014, leaders
 from app.content.monster_senses_2014 import special_senses_2014, bounded_blindsight_2014
 from app.content.monster_spell_slot_resources_2014 import monster_spell_slot_resources_2014
 from app.content.monster_priest_spells_2014 import priest_spell_actions_2014
+from app.content.monster_languages_2014 import source_languages_2014
 from app.content.monster_tier1_cleric_actions_2014 import (
     tier1_cleric_defensive_spells_2014, tier1_cleric_healing_spells_2014,
 )
@@ -230,6 +231,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
     """Compile modeled mechanics without claiming full basic-roster admission."""
     core = monster_core_fields_2014(monster.id)
     priest_spells = priest_spell_actions_2014(monster)
+    spoken_languages, understood_languages = source_languages_2014(monster)
     scores = AbilityScores(**ability_values_2014(monster))
     movement = movement_modes_2014(monster)
     attacks = [
@@ -293,6 +295,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         id=f"2014-{monster.id}", name=monster.name, archetype=f"2014 {monster.creature_type}",
         challenge_rating=monster.challenge_rating, kind="monster", ruleset="2014",
         creature_type=monster.creature_type,
+        spoken_languages=spoken_languages, understood_languages=understood_languages,
         size=CreatureSize(monster.size.lower()), ability_scores=scores,
         armor_class=core.armor_class, max_hp=core.max_hp, speed_ft=standard_arena_closing_speed_from_modes(movement),
         movement_modes=movement, initiative_bonus=core.initiative_bonus,
