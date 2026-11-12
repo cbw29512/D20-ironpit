@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -24,6 +25,8 @@ class PersistentSuppressionZoneAction(BaseModel):
     deafens: bool = True
     blocks_verbal_spells: bool = True
     thunder_immunity: bool = True
+    # Generic visibility suppression; magical darkness is not Blinded.
+    obscuration_kind: Literal["none", "magical-darkness", "heavy-physical"] = "none"
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
     expends_spell_slot: bool = False
@@ -38,7 +41,8 @@ class PersistentSuppressionZoneAction(BaseModel):
                 raise ValueError("Suppression-zone spell-slot resource and expends_spell_slot must agree.")
             if self.radius_ft % 5:
                 raise ValueError("Suppression zones must use 5-foot increments.")
-            if not (self.deafens or self.blocks_verbal_spells or self.thunder_immunity):
+            if not (self.deafens or self.blocks_verbal_spells or self.thunder_immunity
+                or self.obscuration_kind != "none"):
                 raise ValueError("Suppression zones require at least one suppression effect.")
             return self
         except Exception:
@@ -59,4 +63,5 @@ class PersistentSuppressionZoneState(BaseModel):
     deafens: bool = True
     blocks_verbal_spells: bool = True
     thunder_immunity: bool = True
+    obscuration_kind: Literal["none", "magical-darkness", "heavy-physical"] = "none"
     concentration: bool = False
