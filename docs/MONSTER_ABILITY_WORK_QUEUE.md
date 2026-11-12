@@ -1,3 +1,11 @@
+## [ ] 2014 Priest — full prepared spellcasting (PR #1276; pending final-head CI)
+
+- **Active branch:** [PR #1276](https://github.com/cbw29512/D20-ironpit/pull/1276) on `feat/2014-priest-complete-spellcasting`, based on Efreeti-merged main `d8e1722be80f5fff4b9cdce25d4f9b610595dc2b`. Owner scope: 2014 prepared Priest spell binding/source proof and generated artifacts; do not run an overlapping writer.
+- **Immutable source schema:** Ten exact printed spells, 5th-level Wisdom casting (DC 13, +5 spell attacks), spell slots 4/3/2; Divine Eminence separately bound already. **Universal fight state:** common slot depletion, buff/concentration, save/attack/healing/effect removal and per-fight reset.
+- **Wired existing spell primitives:** Sacred Flame, Guiding Bolt, Cure Wounds, Sanctuary, Lesser Restoration, Spiritual Weapon, Dispel Magic and Spirit Guardians. Light and Thaumaturgy remain source-preserved, arena-neutral; spell/slot/source mutations fail closed and renamed cards keep identical combat semantics.
+- **Unmerged branch evidence:** Owning report and generated artifacts on synchronization commit `4bc9b55c68fed4fd5194856331116747f56d2ecc` show **293/327 source-admitted, 34 blocked**, compared with **292/327, 35 blocked** on current `main`. This is **not** a merged admission, final-head CI pass, or actual webpage-battle certification. The automatic GitHub Actions bot update created `action_required` runs with zero jobs; rerun all required workflows on a new non-bot PR head before merging.
+- **Next action:** exact-head Python/browser/hero/roster/paired/sync gates, inspect failures, merge only when green, then verify current-main report and mark this queue entry complete. Production deployment stays locked.
+
 ## [x] 2014 Draining Kiss — source-Charmed enemies only (locked correction)
 
 - **Merged evidence:** [PR #1273](https://github.com/cbw29512/D20-ironpit/pull/1273) passed all five exact-head workflows (2014 Basic Roster, 2014 Hero Certification, Paired Edition Monster Report, generated-artifact sync, and Python/browser/combat CI) on `86e53edfe36f234585323e6845e4939c7f80cb53`; squash-merged as `7967119d70e333d578f225322fb64d1cbb5b5843`.
