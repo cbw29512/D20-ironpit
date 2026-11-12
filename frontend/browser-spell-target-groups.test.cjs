@@ -53,4 +53,22 @@ assert.throws(
   ),
   /pairwise distance/,
 );
-console.log("Browser universal spell-group selection and direct guard passed.");
+
+window.IRON_PIT_ACTION_ECONOMY = {
+  available: () => true,
+  spend: () => { throw new Error("Cast spent action before group validation."); },
+};
+load("browser-spell-resolution.js");
+caster.state.resources = { "spell-slot-1": 1 };
+const cast = {
+  ...choice,
+  action: { ...choice.action, actionCost: "action" },
+};
+assert.throws(
+  () => window.IRON_PIT_BROWSER_SPELL_RESOLUTION.resolve(
+    1, 1, caster, { heroes: victims, monsters: [caster] }, cast, "1:caster",
+  ),
+  /pairwise distance/,
+);
+assert.equal(caster.state.resources["spell-slot-1"], 1);
+console.log("Browser invalid spell cast leaves the spell slot untouched.");
