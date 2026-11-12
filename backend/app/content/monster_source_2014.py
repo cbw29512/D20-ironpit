@@ -64,6 +64,8 @@ class SourceMonster2014(BaseModel):
     speed: dict[str, int]
     abilities: dict[str, int]
     senses: str = ""
+    # Printed languages are retained before conservative combat semantics are derived.
+    languages: str = ""
     saving_throws: dict[str, int] = Field(default_factory=dict)
     skills: dict[str, int] = Field(default_factory=dict)
     damage_resistances: list[str] = Field(default_factory=list)
