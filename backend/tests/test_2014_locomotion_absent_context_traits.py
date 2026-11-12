@@ -10,7 +10,6 @@ _LOCOMOTION_OR_ABSENT_CONTEXT = {
     "xorn": "Treasure Sense",
     "purple-worm": "Tunneler",
     "sahuagin": "Limited Amphibiousness",
-    "lemure": "Devil's Sight",
 }
 
 
@@ -27,6 +26,11 @@ def test_locomotion_and_absent_context_traits_remain_on_cards_but_do_not_block()
     assert "Shark Telepathy" in sahuagin.trait_names
     assert "Shark Telepathy" in ARENA_NEUTRAL_TRAITS_2014
     assert "Shark Telepathy" not in unsupported_traits_2014(sahuagin)
+
+    # Source-proven darkvision now matters against castable magical Darkness.
+    lemure = source["lemure"]
+    assert "Devil's Sight" not in ARENA_NEUTRAL_TRAITS_2014
+    assert "Devil's Sight" not in unsupported_traits_2014(lemure)
 
     xorn = source["xorn"]
     assert "Earth Glide" in xorn.trait_names
