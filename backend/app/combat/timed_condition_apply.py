@@ -61,7 +61,9 @@ def apply_timed_condition(
     escape_check_ability: AbilityName | None = None, escape_check_dc: int | None = None,
     breakable_object: BreakableObjectSpec | None = None,
     ground_contact: bool = False, ends_on_teleport: bool = False,
-    source_effect_immunity_on_end: bool = False, control_limits=None,
+    source_effect_immunity_on_end: bool = False,
+    source_effect_immunity_on_repeat_save_success: bool = False,
+    control_limits=None,
     target_actor=None, setup=None,
 ) -> str | None:
     """Apply defenses and repeat-save context through one source-owned lifecycle."""
@@ -127,6 +129,7 @@ def apply_timed_condition(
             breakable_object=BreakableObjectState.from_spec(breakable_object) if breakable_object else None,
             ground_contact=ground_contact, ends_on_teleport=ends_on_teleport or ground_contact,
             source_effect_immunity_on_end=source_effect_immunity_on_end,
+            source_effect_immunity_on_repeat_save_success=source_effect_immunity_on_repeat_save_success,
             control_limits=control_limits,
         ))
         if effect_id not in state.active_effect_ids:

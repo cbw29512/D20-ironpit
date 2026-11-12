@@ -12,6 +12,7 @@ from app.combat.source_effect_immunity import (
     has_source_effect_immunity,
 )
 from app.combat.timed_condition_lifecycle import remove_effect_group
+from app.content.monster_creature_types import base_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
 logger = logging.getLogger(__name__)
@@ -24,9 +25,17 @@ def enforce_source_target_capacity(
     effect_id: str,
     maximum: int,
     setup: EncounterSetup | None,
+    type_limits: dict[str, int] | None = None,
 ) -> list[str]:
     """End excess oldest source-owned effects only after a new effect landed."""
     try:
+        if type_limits:
+            kind = base_creature_type(newest.state.template.creature_type)
+            if kind not in type_limits:
+                raise ValueError("Target creature type has no declared control capacity.")
+            maximum = type_limits[kind]
+        else:
+            kind = None
         if maximum < 1 or maximum > 20:
             raise ValueError("Source-target capacity must be between 1 and 20.")
         if setup is None:
@@ -36,6 +45,8 @@ def enforce_source_target_capacity(
             raise ValueError("Source-target capacity actor/target must belong to encounter.")
         active = []
         for member in members:
+            if kind is not None and base_creature_type(member.state.template.creature_type) != kind:
+                continue
             instance = next((
                 effect for effect in member.state.timed_effects
                 if effect.effect_id == effect_id

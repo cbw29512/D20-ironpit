@@ -72,7 +72,10 @@
       if (!target.state.timed_effects.includes(effect)) continue;
       if (repeatSaveDue(effect, round, timing)) {
         const save = repeatSave(target, effect, round, setup);
-        let removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
+        let removed = save.succeeded ? T().removeGroup(target.state, effect, {
+          grantSourceImmunity: Boolean(effect.source_effect_immunity_on_end
+            || effect.source_effect_immunity_on_repeat_save_success),
+        }) : [];
         if (save.succeeded) endMatchingSourceConcentration(effect, setup);
         const applied = [];
         if (!save.succeeded) {

@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.condition_rules import is_incapacitated
+from app.combat.source_damage_repeat_eligibility import damage_triggers_repeat_save
 from app.combat.timed_condition_saves import resolve_repeat_save
 from app.combat.timed_conditions import remove_effect_group
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -37,11 +38,14 @@ def resolve_damage_repeat_saves(
         if key in handled or effect.damage_repeat_save_trigger == "none":
             continue
         handled.add(key)
-        if (effect.damage_repeat_save_trigger == "other_than_effect_source"
-                and damage_source.combatant_id == effect.source_id):
+        if not damage_triggers_repeat_save(effect, damage_source, setup):
             continue
         roll, succeeded, buffs = resolve_repeat_save(target, effect, dice, round_number, setup)
-        removed = remove_effect_group(target.state, effect) if succeeded else []
+        removed = remove_effect_group(
+            target.state, effect,
+            grant_source_immunity=(effect.source_effect_immunity_on_end
+                                   or effect.source_effect_immunity_on_repeat_save_success),
+        ) if succeeded else []
         if not succeeded:
             effect.repeat_save_failure_count += 1
         events.append(_repeat_save_event(
@@ -76,7 +80,11 @@ def resolve_damaging_terrain_repeat_saves(
             roll, succeeded, buffs = resolve_repeat_save(
                 target, effect, dice, round_number, setup,
             )
-            removed = remove_effect_group(target.state, effect) if succeeded else []
+            removed = remove_effect_group(
+                target.state, effect,
+                grant_source_immunity=(effect.source_effect_immunity_on_end
+                                       or effect.source_effect_immunity_on_repeat_save_success),
+            ) if succeeded else []
             if succeeded and effect.turn_behavior == "forced_approach_source":
                 released = True
             if not succeeded:

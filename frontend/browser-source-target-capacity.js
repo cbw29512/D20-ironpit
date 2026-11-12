@@ -2,8 +2,14 @@
   "use strict";
 
   // Shared timed-condition capacity, not monster-specific Charm behavior.
-  function enforce(actor, newest, actionId, effectId, maximum, setup) {
+  function enforce(actor, newest, actionId, effectId, maximum, setup, typeLimits = null) {
     try {
+      const kind = typeLimits ? String(newest.state.template.creature_type || "")
+        .split(" (")[0].trim().toLowerCase() : null;
+      if (typeLimits) {
+        if (!Object.hasOwn(typeLimits, kind)) throw new Error("Creature type lacks printed source capacity.");
+        maximum = typeLimits[kind];
+      }
       if (!Number.isInteger(maximum) || maximum < 1 || maximum > 20) {
         throw new Error("Source-target capacity must be between 1 and 20.");
       }
@@ -16,7 +22,10 @@
         effect.effect_id === effectId && effect.source_id === actor.combatant_id
           && effect.source_effect_id === actionId,
       );
-      const active = members.map((member) => ({ member, effect: owned(member) }))
+      const active = members.filter((member) => !kind
+        || String(member.state.template.creature_type || "")
+          .split(" (")[0].trim().toLowerCase() === kind)
+        .map((member) => ({ member, effect: owned(member) }))
         .filter((item) => Boolean(item.effect));
       if (!owned(newest)) {
         throw new Error("Source-target capacity requires an applied effect.");
