@@ -32,6 +32,18 @@
     const all = affected(owner, states);
     M().removeSource(all, current.source_id, current.effect_id, true);
     removeTimed(all, current.source_id, current.effect_id);
+    for (const state of all) {
+      state.visible_obscuration_zones = (state.visible_obscuration_zones || []).filter(
+        (zone) => !(zone.concentration && zone.source_id === current.source_id
+          && zone.action_id === current.effect_id));
+      const inside = (state.visible_obscuration_zones || []).some((zone) => {
+        if (zone.obscuration_kind !== "magical-darkness" || !state.position) return false;
+        const x = zone.position.x - state.position.x, y = zone.position.y - state.position.y;
+        return x * x + y * y <= (zone.radius_ft / 5) ** 2;
+      });
+      if (!inside) state.active_effect_ids = state.active_effect_ids.filter(
+        (id) => id !== "magical-darkness");
+    }
     owner.concentration = null;
     return true;
   }
