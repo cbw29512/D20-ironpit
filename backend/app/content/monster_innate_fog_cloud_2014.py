@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 # Exact normalized 2014 source clauses, not monster-name exceptions.
 _ICE_CLAUSE = (
-    "the mephit can innately cast fog cloud, requiring no material "
+    "(1/day). the mephit can innately cast fog cloud, requiring no material "
     "components. its innate spellcasting ability is charisma."
 )
 _GIANT_CLAUSE = (
