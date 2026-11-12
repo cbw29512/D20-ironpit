@@ -15,11 +15,13 @@ try:
         _healing, _removal, _save_zone, _suppression_zone, _teleport,
         persistent_barrier_row, persistent_beneficial_zone_row,
     )
+    from scripts.browser_effect_removal_serializer import effect_removal_row
 except ModuleNotFoundError:
     from browser_template_serializer import (
         _healing, _removal, _save_zone, _suppression_zone, _teleport,
         persistent_barrier_row, persistent_beneficial_zone_row,
     )
+    from browser_effect_removal_serializer import effect_removal_row
 
 logger = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parents[1]
@@ -503,16 +505,12 @@ def _spell_choice(choice: Any) -> dict[str, Any]:
 
 
 def _effect_removal(action: Any) -> dict[str, Any]:
-    return {
-        "id": action.id, "name": action.name, "level": action.level,
-        "actionCost": action.action_cost, "range": action.range_ft,
-        "castingAbility": action.casting_ability, "targetMode": action.target_mode,
-        "autoRemoveMaxLevel": action.auto_remove_max_level,
-        "effectTags": list(action.effect_tags),
-        "resourceId": action.resource_id, "resourceCost": action.resource_cost,
-        "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
-    }
-
+    """Use the same effect-removal serialization for heroes and monsters."""
+    try:
+        return effect_removal_row(action)
+    except Exception:
+        logger.exception("Failed hero effect-removal serialization: %s.", getattr(action, "id", "unknown"))
+        raise
 
 def _resource_conversion(action: Any) -> dict[str, Any]:
     return {
