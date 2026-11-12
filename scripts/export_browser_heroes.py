@@ -100,6 +100,8 @@ def _save(action: Any) -> dict[str, Any]:
         row["effectTags"] = list(action.effect_tags)
     if action.automatic_failure_creature_types:
         row["automaticFailureCreatureTypes"] = list(action.automatic_failure_creature_types)
+    if action.requires_shared_spoken_language:
+        row["requiresSharedSpokenLanguage"] = True
     if action.failed_save_push_ft:
         row["failedSavePushFt"] = action.failed_save_push_ft
     if action.damage_components:
@@ -163,6 +165,7 @@ def _spell(action: Any) -> dict[str, Any]:
     }
     if action.effect_tags: row["effectTags"] = list(action.effect_tags)
     if action.requires_target_hearing: row["requiresTargetHearing"] = True
+    if action.requires_shared_spoken_language: row["requiresSharedSpokenLanguage"] = True
     if action.requires_target_sight: row["requiresTargetSight"] = True
     if action.automatic_failure_creature_types:
         row["automaticFailureCreatureTypes"] = list(action.automatic_failure_creature_types)
@@ -557,6 +560,8 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         "archetype": template.archetype, "level": template.level, "kind": template.kind,
         "ruleset": template.ruleset, "size": template.size.value,
         "creature_type": template.creature_type,
+        **({"spoken_languages": list(template.spoken_languages)} if template.spoken_languages else {}),
+        **({"understood_languages": list(template.understood_languages)} if template.understood_languages else {}),
         "ability_scores": template.ability_scores.model_dump() if template.ability_scores else None,
         "armor_class": template.armor_class, "max_hp": template.max_hp, "speed_ft": template.speed_ft,
         "initiative_bonus": template.initiative_bonus,
