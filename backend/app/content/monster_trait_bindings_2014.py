@@ -162,6 +162,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         bound.update(rule.source_name for rule in source_turn_grappler_damage_2014(monster))
         if bounded_blindsight_2014(monster) is not None:
             bound.add("Blind Senses")
+        if source_proven_magical_darkness_sight_ft_2014(monster) > 0:
+            bound.add("Devil's Sight")
         if "invisible" in innate_condition_ids_2014(monster):
             bound.add("Invisibility")
         bound.update(included_weapon_trait_names_2014(monster))
