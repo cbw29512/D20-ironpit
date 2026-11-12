@@ -40,3 +40,12 @@ Before calling this a fully accurate tabletop simulation, the broad phrase
 in the Iron Pit action engine. The above implementation covers harmful
 damage events. Do not silently claim that all non-damage hostile actions
 trigger extra repeat saves until that behavior is tested.
+
+## Exact-head generated-artifact reconciliation
+
+The source-generated 2014 blockers report on this branch admits Dryad
+(**297/327, 30 blocked**), while the earlier spell-only merge on `main`
+remains **296/327**. The sync workflow owns the four generated
+roster/inventory/browser files, which must be committed before the final
+CI and must not be manually edited. A source classifier result does not
+replace the Python/browser proof or the actual webpage fight gate.
