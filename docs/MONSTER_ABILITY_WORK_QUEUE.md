@@ -1,8 +1,9 @@
-## [ ] 2014 Planetar — complete existing shared combat binding (PR #1260)
+## [x] 2014 Planetar — source-exact shared combat binding
 
-- **Current owned implementation:** [Draft PR #1260](https://github.com/cbw29512/D20-ironpit/pull/1260) reuses printed Greatsword/Radiant Multiattack, shared Healing Touch, Invisibility, and a source-bound Insect Plague persistent save zone. Blade Barrier follows the locked no-wall policy; Control Weather, Commune, and Raise Dead remain source-preserved arena-unavailable clauses.
-- **Exact remaining gate:** Keep the PR draft until the exact final head has all applicable workflows green, source mutations fail closed, Python/browser zone timing and temporary Difficult Terrain agree, and the generated report removes Planetar. Do not merge pending or red CI; production Netlify remains locked.
-- **Baseline before merge:** Current main is **286/327 source-admitted, 41 blocked**. Planetar remains `mechanic:spellcasting`, `source:extra-action`, and `source:trait` on main.
+- **Merged evidence:** [PR #1260](https://github.com/cbw29512/D20-ironpit/pull/1260) passed all five exact-final-head workflows on `a941a9470669a42e5d8f399040d5603ed594939e` and squash-merged as `7da132644635b3921c84e964917fa2a6fe386add`. Planetar is absent from the generated blocker report.
+- **Universal combat binding:** Printed Greatsword/Radiant Multiattack, Insect Plague persistent save-zone timing and temporary Difficult Terrain, and Invisibility reuse shared Python/browser actions and fight state. Blade Barrier follows the locked no-wall policy; Control Weather, Commune, and Raise Dead remain source-preserved arena-unavailable clauses.
+- **Healing Touch correction:** The shared healing-action schema now carries source-owned disease and curse removal riders. Python/browser Healing Touch uses the existing timed-effect lifecycle to clear disease-tagged effects and all source-owned curses without monster-name dispatch; the printed per-day resource remains card-owned.
+- **Verified generated result:** Main is **287/327 source-admitted, 40 blocked** after the merge. This is source admission and automated exact-head certification, not an independent deployed webpage-fight certification. Production Netlify remains locked.
 
 ## [x] 2014 Storm Giant — source-exact arena-inert innate utility magic
 
