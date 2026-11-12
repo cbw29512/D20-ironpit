@@ -50,4 +50,14 @@ state.resources["misty-step"] = 3;
 const choice = TP.choose(caster, {}, "1:cloud-giant");
 assert.equal(choice.action.id, "misty-step");
 assert.deepEqual(choice.destination, state.position);
-console.log("Browser in-place teleport resource-availability regression passed.");
+
+// A direct no-op resolve must reject before spending the Bonus Action or use.
+state.timed_effects = [];
+const setup = { heroes: [caster], monsters: [] };
+assert.throws(
+  () => TP.resolve(1, 1, caster, setup, action, state.position, "1:cloud-giant"),
+  /no active teleport-cancelable effect to clear/,
+);
+assert.equal(state.resources["misty-step"], 3);
+assert.equal(state.bonus_action_available, true);
+console.log("Browser in-place teleport resource/no-op regressions passed.");
