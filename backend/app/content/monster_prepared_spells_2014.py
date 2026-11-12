@@ -6,6 +6,7 @@ from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_command_spell_2014 import prepared_command_spell_actions_2014
 from app.content.monster_source_tier1_cleric_2014 import source_proves_tier1_cleric_spells_2014
 from app.content.monster_prepared_cleric_spells_2014 import prepared_cleric_spell_actions_2014
+from app.content.monster_prepared_nature_spells_2014 import prepared_nature_spells_2014
 from app.content.monster_priest_spells_2014 import (
     priest_proven_spell_ids_2014, priest_spell_actions_2014,
 )
@@ -184,6 +185,7 @@ def supports_prepared_spellcasting_2014(monster: SourceMonster2014) -> bool:
         bound.update(priest_proven_spell_ids_2014(monster))
         bound.update(prepared_cleric_spell_actions_2014(monster).implemented_ids())
         bound.update(action.id for action in prepared_command_spell_actions_2014(monster))
+        bound.update(prepared_nature_spells_2014(monster).implemented_ids())
         return known <= bound
     except Exception:
         logger.exception("Failed to classify 2014 prepared spellcasting for %s.", monster.name)

@@ -134,6 +134,25 @@ Python and browser paths and source serialization. Report a monster as fully
 finished only after source completeness, exact-head CI, merge and actual
 webpage-fight evidence, per the [session continuity contract](IRON_PIT_SESSION_CONTINUITY.md).
 
+## Source-owned weapon enchantments as ordinary timed buffs
+
+Printed spells that temporarily change one weapon must use ordinary timed-buff
+state and the common weapon modifier stack. Source data declares the exact
+weapon IDs, attack-bonus delta, damage replacement, magic source qualifier,
+action cost, duration and spell/edition identity; the generic resolver applies
+them only while the buff's effect group is active. A printed powered attack
+variant must **not** remain independently selectable before casting.
+
+The existing `attacker_active_effect` conditional damage chooses a printed
+replacement weapon profile. The existing `attack-roll-flat` modifier may
+declare `weapon_id`; `damage-source-qualifier` may declare the same weapon ID
+and a source qualifier such as `magical`. These are universal parameters:
+no Druid/Shillelagh resolver or name-based branch belongs in combat code.
+The original monster card keeps all printed alternatives while the runtime
+attack options reflect current fight state. Removing the owner effect group
+must remove its attack bonus, replacement damage and magical designation in
+both Python and browser engines.
+
 ## Composable examples
 
 - **Petrifying Gaze:** active source passive → visibility/range/aversion predicate → Constitution saving throw → staged target debuff → Petrified terminal defeat (locked Iron Pit override).

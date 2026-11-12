@@ -514,6 +514,10 @@ def _modifier_effect(effect: Any) -> dict[str, Any]:
         row["requiredAttackAbility"] = effect.required_attack_ability
     if effect.required_weapon_attack_kind is not None:
         row["requiredWeaponAttackKind"] = effect.required_weapon_attack_kind
+    if effect.weapon_id is not None:
+        row["weaponId"] = effect.weapon_id
+    if effect.source_qualifier is not None:
+        row["sourceQualifier"] = effect.source_qualifier.value
     if effect.minimum_value:
         row["minimumValue"] = effect.minimum_value
     if effect.debuff_counter is not None:

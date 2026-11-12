@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ConditionName, DamageTypeName
 from app.domain.debuffs import DebuffCounter
+from app.domain.damage_sources import DamageSourceQualifier
 
 SpellModifierKind = Literal[
     "armor-class", "armor-class-minimum", "attack-roll-bonus-die", "attack-roll-flat",
@@ -13,7 +14,7 @@ SpellModifierKind = Literal[
     "saving-throw-disadvantage", "d20-test-advantage",
     "death-save-advantage", "healing-maximize", "condition-immunity", "attacks-against-advantage",
     "attacks-against-disadvantage", "targeting-save-gate", "bonus-damage", "weapon-damage-flat",
-    "speed", "debuff-counter",
+    "speed", "debuff-counter", "damage-source-qualifier",
     "weapon-attack-damage-multiplier",
     "zero-hp-replacement", "invisibility-benefits-suppressed",
 ]
@@ -27,6 +28,8 @@ class SpellModifierEffect(BaseModel):
     multiplier: float = Field(default=1.0, gt=0.0, le=4.0)
     required_attack_ability: AbilityName | None = None
     required_weapon_attack_kind: Literal["melee", "ranged"] | None = None
+    weapon_id: str | None = Field(default=None, min_length=1)
+    source_qualifier: DamageSourceQualifier | None = None
     minimum_value: int = Field(default=0, ge=0, le=100)
     dice_count: int = Field(default=0, ge=0, le=20)
     dice_size: int = Field(default=0, ge=0, le=100)
@@ -64,6 +67,12 @@ class SpellModifierEffect(BaseModel):
                 raise ValueError("Minimum AC effects require a positive minimum and no flat bonus.")
         elif self.minimum_value:
             raise ValueError(f"{self.kind} does not accept a minimum value.")
+        if self.weapon_id is not None and self.kind not in {"attack-roll-flat", "weapon-damage-flat", "damage-source-qualifier"}:
+            raise ValueError("Only weapon-scoped flat modifiers may declare a weapon ID.")
+        if self.kind == "damage-source-qualifier" and (not self.weapon_id or self.source_qualifier is None):
+            raise ValueError("Damage source qualifiers require a weapon ID and qualifier.")
+        if self.kind != "damage-source-qualifier" and self.source_qualifier is not None:
+            raise ValueError("Only damage source qualifier effects accept a qualifier.")
         if self.required_weapon_attack_kind is not None and self.kind != "bonus-damage":
             raise ValueError("Weapon-kind eligibility is only supported by bonus-damage effects.")
         if self.kind == "bonus-damage" and self.damage_type is None:
