@@ -10,7 +10,7 @@ from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modif
 from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_policy import spell_at_slot
-from app.combat.spell_target_groups import target_group_within_distance
+from app.combat.spell_target_groups import validate_spell_target_group
 from app.combat.spell_range_modifiers import spend_spell_range_modifier
 from app.combat.spell_save_effect_resolution import resolve_spell_save_effect
 from app.combat.spell_damage_maximizers import resolve_maximizer_after_cast
@@ -50,22 +50,8 @@ def resolve_spell(
         if getattr(spell, "verbal_component", True) and verbal_casting_blocked(caster, setup):
             raise ValueError(f"{spell.name} cannot be cast inside a Silence effect.")
 
-        # Reject an invalid source-owned multi-target group before consuming
-        # action economy, concentration, daily grants, or spell slots.
-        if spell.max_target_pair_distance_ft is not None:
-            lookup = {
-                member.combatant_id: member
-                for member in [*setup.heroes, *setup.monsters]
-            }
-            if len(set(choice.target_ids)) != len(choice.target_ids):
-                raise ValueError("A spell target group cannot repeat a target.")
-            if any(target_id not in lookup for target_id in choice.target_ids):
-                raise ValueError("A spell target group contains an unknown target.")
-            targets = [lookup[target_id] for target_id in choice.target_ids]
-            if not target_group_within_distance(
-                targets, spell.max_target_pair_distance_ft,
-            ):
-                raise ValueError("Spell targets exceed their declared pairwise distance.")
+        # Validate the entire source-owned group before spending slots or actions.
+        validate_spell_target_group(setup, choice.target_ids, spell.max_target_pair_distance_ft)
 
         remaining = None
         if choice.alternate_cast is not None:
