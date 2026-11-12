@@ -129,7 +129,18 @@
         });
       }
       const turnKey = `${round}:${member.combatant_id}`;
-      // A timed spell's one-turn command executes before voluntary actions.
+      const hooks = AH();
+      if (!hooks) throw new Error("Browser ability-hook runtime is not loaded.");
+      const start = hooks.runPhase(hooks.PHASES.TURN_START, {
+        sequence, round, member, setup, turnKey, initiative, events: [],
+      });
+      events.push(...start.events); sequence = start.sequence;
+      // Mandatory TURN_START hooks resolve before a compelled turn is ended.
+      // A lethal start effect takes precedence over the delayed command.
+      if (member.state.is_dead || member.state.current_hp === 0) {
+        return finalize(events, sequence, round, member, setup, turnKey, false);
+      }
+ before voluntary actions.
       // Its marker expires at turn end; the independent Prone condition remains.
       const proneCommand = O()?.resolveProneEndTurn?.(sequence, round, member);
       if (proneCommand) {
@@ -137,12 +148,6 @@
         sequence += 1;
         return finalize(events, sequence, round, member, setup, turnKey, false);
       }
-      const hooks = AH();
-      if (!hooks) throw new Error("Browser ability-hook runtime is not loaded.");
-      const start = hooks.runPhase(hooks.PHASES.TURN_START, {
-        sequence, round, member, setup, turnKey, initiative, events: [],
-      });
-      events.push(...start.events); sequence = start.sequence;
       const maintenance = resolveBonusActionCheckpoint(
         sequence, round, member, setup, turnKey, "sourceMaintenance", events,
       );
