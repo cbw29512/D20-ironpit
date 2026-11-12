@@ -18,6 +18,8 @@ class FailedSaveTimedEffect(BaseModel):
     additional_effect_ids: list[ConditionName] = Field(default_factory=list)
     failure_margin_escalation: FailureMarginEscalation | None = None
     duration_rounds: int | None = Field(default=None, ge=1, le=100800)
+    # Unlike round durations, this expires after N actual target turns.
+    duration_target_turns: int | None = Field(default=None, ge=1, le=100800, exclude_if=lambda v: v is None)
     # A source may control only N simultaneous targets of the same effect.
     source_target_limit: int | None = Field(default=None, ge=1, le=20)
     expiry_timing: SaveEffectTiming | None = "target_turn_end"
@@ -30,7 +32,7 @@ class FailedSaveTimedEffect(BaseModel):
     repeat_save_failure_condition_id: ConditionName | None = None
     allowed_removal_action_ids: list[str] = Field(default_factory=list)
     next_attack_disadvantage: bool = False
-    turn_behavior: Literal["normal", "forced_retreat", "single_activity", "forced_approach_source"] = "normal"
+    turn_behavior: Literal["normal", "forced_retreat", "single_activity", "forced_approach_source", "fall_prone_end_turn"] = "normal"
     ends_on_damage: bool = False
     ends_if_source_incapacitated: bool = False
     ends_if_source_dead: bool = False
@@ -106,6 +108,11 @@ class FailedSaveTimedEffect(BaseModel):
             if len(grouped_ids) != len(set(grouped_ids)):
                 raise ValueError("Grouped failed-save condition ids must be distinct.")
             require_escalation_duration(self.failure_margin_escalation, self.duration_rounds)
+            if self.duration_target_turns is not None:
+                if self.duration_rounds is not None or self.expiry_timing != "target_turn_end":
+                    raise ValueError("Target-turn durations require end-of-target-turn expiry and no round duration.")
+            if self.turn_behavior == "fall_prone_end_turn" and self.duration_target_turns is None:
+                raise ValueError("Forced Prone/end-turn requires an exact target-turn duration.")
             if self.duration_rounds is not None and self.expiry_timing is None:
                 raise ValueError("Timed failed-save duration requires an expiry timing.")
             if self.failure_margin_escalation is not None:

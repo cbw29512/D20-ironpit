@@ -5,6 +5,42 @@
   const R = () => window.IRON_PIT_BROWSER_REACTION_MOVEMENT;
   const FORCED_APPROACH_DISTANCE_FT = 5;
 
+  function resolveProneEndTurn(sequence, round, member) {
+    try {
+      const state = member.state;
+      const effects = (state.timed_effects || [])
+        .filter((effect) => effect.turn_behavior === "fall_prone_end_turn");
+      if (!effects.length || state.is_dead || state.is_unconscious) return null;
+      const immune = window.IRON_PIT_BROWSER_CONDITION_IMMUNITY?.immune;
+      if (!immune) throw new Error("Generic Prone immunity resolver is unavailable.");
+      const proneApplied = !immune(state, "prone");
+      if (proneApplied && !state.active_effect_ids.includes("prone")) {
+        state.active_effect_ids.push("prone");
+      }
+      if (!window.IRON_PIT_BROWSER_STATE?.terminateTurn) {
+        throw new Error("Generic turn-ending state resolver is unavailable.");
+      }
+      window.IRON_PIT_BROWSER_STATE.terminateTurn(state, "compelled-fall-prone-end-turn");
+      const effect = effects[0];
+      const id = effect.source_effect_id || effect.effect_id;
+      const label = String(id).split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ");
+      return {
+        sequence, round_number: round, event_type: "feature",
+        actor_id: member.combatant_id, actor_name: state.template.name,
+        target_id: member.combatant_id, target_name: state.template.name,
+        applied_condition_ids: proneApplied ? ["prone"] : [],
+        feature_id: effect.source_effect_id || "fall-prone-end-turn",
+        animation: proneApplied ? "prone" : "condition-ended",
+        description: proneApplied
+          ? `${state.template.name} obeys ${label}: falls Prone and ends the turn.`
+          : `${state.template.name} ends the turn under ${label}.`,
+      };
+    } catch (error) {
+      console.error("Generic Prone/end-turn resolution failed", { id: member?.combatant_id, error });
+      throw error;
+    }
+  }
+
   function forcedRetreatActive(state) {
     return (state.timed_effects || []).some((effect) => effect.turn_behavior === "forced_retreat");
   }
@@ -57,6 +93,6 @@
   }
 
   window.IRON_PIT_BROWSER_ONGOING_SPELL_CONTROL = {
-    apply, event, forcedApproachActive, forcedRetreatActive, resolveForcedApproach,
+    apply, event, forcedApproachActive, forcedRetreatActive, resolveForcedApproach, resolveProneEndTurn,
   };
 })();

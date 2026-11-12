@@ -23,6 +23,7 @@ from app.combat.ongoing_spell_control import (
     build_forced_retreat_event,
     forced_approach_active,
     forced_retreat_active,
+    resolve_fall_prone_end_turn,
     resolve_forced_approach,
 )
 from app.combat.offensive_movement_policy import move_to_enable_offense
@@ -67,6 +68,17 @@ def resolve_combat_turn(
             if attacker.state.is_dead or attacker.state.current_hp <= 0:
                 return finish_turn(events, sequence, round_number, attacker, setup, dice,
                                    f"{round_number}:{attacker.combatant_id}", allow_surge=False)
+        # Resolve forced turn loss after involuntary gaze but before any
+        # voluntary movement, maintenance Action, or Bonus Action.
+        # The marker ends this turn; actual Prone survives until normal standing.
+        compelled_prone = resolve_fall_prone_end_turn(sequence, round_number, attacker)
+        if compelled_prone is not None:
+            events.append(compelled_prone)
+            sequence += 1
+            return finish_turn(
+                events, sequence, round_number, attacker, setup, dice,
+                f"{round_number}:{attacker.combatant_id}", allow_surge=False,
+            )
         maintenance_events, sequence = resolve_source_maintenance(
             sequence, round_number, attacker, setup,
         )

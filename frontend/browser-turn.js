@@ -56,7 +56,10 @@
   function finalize(events, sequence, round, member, setup, turnKey, allowSurge = true) {
     const surge = allowSurge ? J()?.resolveAttack(sequence, round, member, setup, turnKey) : null;
     if (surge) { events.push(...surge.events); sequence = surge.sequence; }
-    const bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "postAction", events);
+    // A compelled or otherwise terminated turn must not reopen voluntary Bonus Actions.
+    const bonus = member.state.turn_terminated
+      ? { events: [], sequence }
+      : resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "postAction", events);
     events.push(...bonus.events); sequence = bonus.sequence;
     if (bonus.events.length) {
       sequence = appendFollowUps(
@@ -135,6 +138,18 @@
         sequence, round, member, setup, turnKey, initiative, events: [],
       });
       events.push(...start.events); sequence = start.sequence;
+      // Mandatory TURN_START hooks resolve before a compelled turn is ended.
+      // A lethal start effect takes precedence over the delayed command.
+      if (member.state.is_dead || member.state.current_hp === 0) {
+        return finalize(events, sequence, round, member, setup, turnKey, false);
+      }
+      // Its marker expires at turn end; the independent Prone condition remains.
+      const proneCommand = O()?.resolveProneEndTurn?.(sequence, round, member);
+      if (proneCommand) {
+        events.push(proneCommand);
+        sequence += 1;
+        return finalize(events, sequence, round, member, setup, turnKey, false);
+      }
       const maintenance = resolveBonusActionCheckpoint(
         sequence, round, member, setup, turnKey, "sourceMaintenance", events,
       );

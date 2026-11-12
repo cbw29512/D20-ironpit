@@ -56,6 +56,12 @@ def apply_failed_save_timed_effect(
                     if owns_lifecycle and rider.duration_rounds is not None
                     else None
                 ),
+                # The target's turns, not global rounds, own delayed commands.
+                expires_target_turn_count=(
+                    target.state.turns_started + rider.duration_target_turns
+                    if owns_lifecycle and rider.duration_target_turns is not None
+                    else None
+                ),
                 expires_at_start_of_source_turn=False,
                 expiry_timing=rider.expiry_timing if owns_lifecycle else None,
                 repeat_save_ability=rider.repeat_save_ability if owns_lifecycle else None,
