@@ -6,7 +6,6 @@ from app.combat.pit_policy import (
     choose_attack,
     flexible_slot_has_both,
     save_distance,
-    target_order,
 )
 from app.combat.save_action_targeting import save_action_target_order
 from app.combat.saving_throws import legal_save_action
