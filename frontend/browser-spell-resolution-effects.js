@@ -36,6 +36,7 @@
         reduceHitPointMaximumOnFailedSave: Boolean(spell.reduceHitPointMaximumOnFailedSave),
         requiresTargetHearing: Boolean(spell.requiresTargetHearing),
         requiresTargetSight: Boolean(spell.requiresTargetSight),
+        requiresSharedSpokenLanguage: Boolean(spell.requiresSharedSpokenLanguage),
         automaticFailureCreatureTypes: [...(spell.automaticFailureCreatureTypes || [])],
         magicalEffect: true, effectTags: [...(spell.effectTags || [])],
         area: spell.area || null,
@@ -69,6 +70,13 @@
       for (const targetId of choice.targetIds) {
         const target = members.get(targetId);
         if (!target) throw new Error(`Save-spell target ${targetId} is unavailable.`);
+        if (action.requiresSharedSpokenLanguage) {
+          const understands = window.IRON_PIT_BROWSER_SPOKEN_LANGUAGES?.understood;
+          if (!understands) throw new Error("Shared spoken-language runtime is missing.");
+          if (!understands(caster.state.template.languageProfile, target.state.template.languageProfile)) {
+            throw new Error("Spell target lacks proven comprehension of caster language.");
+          }
+        }
         const ward = (spell.areaRadius || spell.area)
           ? null
           : (window.IRON_PIT_BROWSER_TARGETING_WARDS?.check(caster, target) || null);
