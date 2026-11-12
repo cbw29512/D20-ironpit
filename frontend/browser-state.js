@@ -31,7 +31,7 @@
       current_round: null, turns_started: 0, visual_aversion_windows: [], active_d20_bonus_dice: [], targeting_gate_immunity_keys: [], concentration: null, replacement_form: null,
       survival_save_uses: {}, pending_survival_save_logs: [], pending_zero_hp_replacement_logs: [],
       feature_last_turn_keys: {}, feature_use_counts: {}, spell_slot_expended_turn_key: null,
-      temporary_damage_resistances: [], zone_damage_immunities: [], active_conditional_damage_defenses: [],
+      temporary_damage_resistances: [], zone_damage_immunities: [], visible_obscuration_zones: [], active_conditional_damage_defenses: [],
       hit_point_maximum_reduction: 0, ability_score_reductions: {}, active_curses: [],
       damage_share_source_id: null, damage_share_range_ft: 0, damage_share_effect_id: null, emanation_triggers_this_turn: {},
       rage_expires_round: null, rage_max_round: null,

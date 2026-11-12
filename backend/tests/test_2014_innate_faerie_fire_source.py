@@ -58,17 +58,18 @@ def test_innate_faerie_fire_reuses_2014_druid_spell(monster_id: str, dc: int):
         assert serialized["failedSaveModifierEffects"][1]["kind"] == (
             "invisibility-benefits-suppressed"
         )
-        assert [(r.id, r.max_uses) for r in innate_spell_resources_2014(card)] == [
-            ("faerie-fire", 1),
+        assert sorted((r.id, r.max_uses) for r in innate_spell_resources_2014(card)) == [
+            ("darkness", 1), ("faerie-fire", 1),
         ]
         grants = [g for g in innate_alternate_spell_casts_2014(card)
                   if g.spell_id == "faerie-fire"]
         assert len(grants) == 1
         assert (grants[0].cast_level, grants[0].resource_id,
                 grants[0].resource_cost) == (1, "faerie-fire", 1)
-        # The other combat spell is still unbound: no premature admission.
-        assert not supports_innate_spellcasting_2014(card)
-        assert "mechanic:spellcasting" in basic_blockers_2014(card)
+        # Darkness is independently attached through the generic obscuration
+        # zone. No source spellcasting blocker remains for either card.
+        assert supports_innate_spellcasting_2014(card)
+        assert "mechanic:spellcasting" not in basic_blockers_2014(card)
         assert card.model_dump_json() == original
         renamed = card.model_copy(update={
             "id": "anonymous-fiend", "name": "Synthetic Monster",

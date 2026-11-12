@@ -11,11 +11,17 @@
   const states = (setup) => setup ? [...setup.heroes, ...setup.monsters].map((member) => member.state) : [];
   function conditionSources(attacker, defender, distance, targetId, setup = null) {
     let advantage = M().attacksAgainstAdvantage(defender) + B2().attacksAgainstAdvantage(defender) + (M().d20TestAdvantage?.(attacker) || 0), disadvantage = X().attackDisadvantage(attacker) + (window.IRON_PIT_BROWSER_DEFENSIVE_MODIFIERS?.attacksAgainstDisadvantage(defender, attacker, distance) || 0); const ignoresUnseen = Boolean(attacker.template.ignore_unseen_target_attack_disadvantage);
-    if (Q().has(attacker, "blinded") && !ignoresUnseen) disadvantage += 1; if (Q().has(attacker, "invisible") && !Q().canSee(defender, attacker, distance)) advantage += 1;
+    if (Q().has(attacker, "blinded") && !ignoresUnseen) disadvantage += 1;
+    const obscured = window.IRON_PIT_BROWSER_OBSCURATION_VISIBILITY;
+    if ((Q().has(attacker, "invisible") || (obscured && obscured.blocked(defender, attacker)))
+      && !Q().canSee(defender, attacker, distance)) advantage += 1;
     if (Q().has(attacker, "frightened", setup)) disadvantage += 1;
     if (attacker.active_effect_ids.includes("prone")) disadvantage += 1; if (attacker.active_effect_ids.includes("restrained")) disadvantage += 1; if (attacker.active_effect_ids.includes("poisoned")) disadvantage += 1; disadvantage += G()?.attackDisadvantage(attacker, targetId) || 0;
     if (defender.active_effect_ids.includes("dodge") && !Q().incapacitated(defender) && M().effectiveSpeed(defender) > 0 && !G()?.speedIsZero(defender)) disadvantage += 1; if (Q().attackAdvantage(defender)) advantage += 1;
-    if (!ignoresUnseen && (Q().has(defender, "invisible") || attacker.template.blind_beyond_blindsight) && !Q().canSee(attacker, defender, distance)) disadvantage += 1; if (defender.active_effect_ids.includes("restrained")) advantage += 1; if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
+    if (!ignoresUnseen && (Q().has(defender, "invisible")
+      || attacker.template.blind_beyond_blindsight
+      || (obscured && obscured.blocked(attacker, defender)))
+      && !Q().canSee(attacker, defender, distance)) disadvantage += 1; if (defender.active_effect_ids.includes("restrained")) advantage += 1; if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
     return { advantage, disadvantage };
   }
   function rangedCloseThreat(attacker, target, distance, setup) {

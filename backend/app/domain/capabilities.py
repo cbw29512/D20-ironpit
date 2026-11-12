@@ -27,6 +27,7 @@ from app.domain.effect_removal import EffectRemovalAction, EffectTagConditionGra
 from app.domain.environment_contexts import EnvironmentContextReaction
 from app.domain.passive_modifiers import PassiveModifierGrant
 from app.domain.persistent_save_zones import PersistentSaveZoneAction
+from app.domain.suppression_zones import PersistentSuppressionZoneAction
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.recharge import RechargeRule
@@ -70,6 +71,7 @@ class CombatantDefinition(BaseModel):
     initiative_bonus: int
     blindsight_ft: int = Field(default=0, ge=0)
     truesight_ft: int = Field(default=0, ge=0)
+    magical_darkness_sight_ft: int = Field(default=0, ge=0)
     blindsight_deafened_ft: int | None = Field(default=None, ge=1)
     blind_beyond_blindsight: bool = False
     blindsight_requires_smell_when_deafened: bool = False
@@ -93,6 +95,9 @@ class CombatantDefinition(BaseModel):
     spell_save_actions: list[SpellSaveAction] = Field(default_factory=list)
     hit_point_pool_spell_actions: list[HitPointPoolSpellAction] = Field(default_factory=list)
     persistent_save_zone_actions: list[PersistentSaveZoneAction] = Field(default_factory=list)
+    # Generic Silence/Darkness-style environmental zone actions. The compiled
+    # card must preserve these typed capabilities rather than silently drop them.
+    suppression_zone_actions: list[PersistentSuppressionZoneAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list, exclude_if=lambda items: not items)
     auto_hit_spell_actions: list[AutoHitSpellAction] = Field(default_factory=list, exclude_if=lambda items: not items)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)

@@ -13,6 +13,7 @@ from app.content.monster_included_weapon_traits_2014 import included_weapon_trai
 from app.content.monster_condition_auras import condition_auras_from_source
 from app.content.monster_innate_conditions_2014 import innate_condition_ids_2014
 from app.content.monster_senses_2014 import bounded_blindsight_2014
+from app.content.monster_source_darkness_sight_2014 import source_proven_magical_darkness_sight_ft_2014
 from app.content.monster_grappler_damage_2014 import source_turn_grappler_damage_2014
 from app.content.monster_definition_adapter_support_2014 import attack_id_2014
 from app.content.monster_source_grapple_attack_advantage_2014 import source_grapple_attack_advantage_2014
@@ -161,6 +162,8 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
         bound.update(rule.source_name for rule in source_turn_grappler_damage_2014(monster))
         if bounded_blindsight_2014(monster) is not None:
             bound.add("Blind Senses")
+        if source_proven_magical_darkness_sight_ft_2014(monster) > 0:
+            bound.add("Devil's Sight")
         if "invisible" in innate_condition_ids_2014(monster):
             bound.add("Invisibility")
         bound.update(included_weapon_trait_names_2014(monster))

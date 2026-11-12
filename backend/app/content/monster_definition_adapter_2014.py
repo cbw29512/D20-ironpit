@@ -45,6 +45,8 @@ from app.content.monster_definition_adapter_support_2014 import (
 from app.content.monster_hp_pool_spell_bindings_2014 import (
     innate_hp_pool_spells_2014, prepared_hp_pool_spells_2014,
 )
+from app.content.monster_innate_darkness_2014 import source_proven_innate_darkness_2014
+from app.content.monster_source_darkness_sight_2014 import source_proven_magical_darkness_sight_ft_2014
 from app.content.monster_innate_spells_2014 import (
     innate_auto_hit_spell_actions_2014,
     innate_spell_attack_actions_2014,
@@ -289,6 +291,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         armor_class=core.armor_class, max_hp=core.max_hp, speed_ft=standard_arena_closing_speed_from_modes(movement),
         movement_modes=movement, initiative_bonus=core.initiative_bonus,
         blindsight_ft=blindsight_ft, truesight_ft=truesight_ft,
+        magical_darkness_sight_ft=source_proven_magical_darkness_sight_ft_2014(monster),
         blindsight_deafened_ft=bounded[1] if bounded else None,
         blind_beyond_blindsight=bounded is not None,
         blindsight_requires_smell_when_deafened=bounded is not None,
@@ -316,6 +319,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *prepared_auto_hit_spell_actions_2014(monster),
         ],
         defensive_spell_actions=tier1_cleric_defensive_spells_2014(monster),
+        suppression_zone_actions=source_proven_innate_darkness_2014(monster),
         persistent_save_zone_actions=[
             *[zone for zone in [fetid_cloud_zone_2014(monster)] if zone is not None],
             *innate_persistent_save_zone_actions_2014(monster),

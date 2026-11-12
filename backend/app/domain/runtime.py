@@ -15,6 +15,7 @@ from app.domain.modifiers import CombatModifier, ConcentrationState
 from app.domain.persistent_spell_attacks import PersistentSpellAttackState
 from app.domain.replacement_forms import ReplacementFormState
 from app.domain.timed_effects import TimedEffect, TimedTurnBehavior
+from app.domain.suppression_zones import PersistentSuppressionZoneState
 from app.domain.visual_aversion import VisualAversionWindow
 
 
@@ -117,6 +118,9 @@ class CombatantState(BaseModel):
     spell_slot_expended_turn_key: str | None = None
     temporary_damage_resistances: list[DamageType] = Field(default_factory=list)
     zone_damage_immunities: list[DamageType] = Field(default_factory=list)
+    # Fight-local read projection of authoritative encounter zones. Visibility
+    # computes from current positions, never writes back to immutable cards.
+    visible_obscuration_zones: list[PersistentSuppressionZoneState] = Field(default_factory=list)
     active_conditional_damage_defenses: list[ConditionalDamageDefense] = Field(default_factory=list)
     hit_point_maximum_reduction: int = Field(default=0, ge=0)
     ability_score_reductions: dict[str, int] = Field(default_factory=dict)

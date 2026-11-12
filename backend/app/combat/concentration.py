@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.modifier_stack import remove_source_modifiers
+from app.combat.obscuration_visibility import remove_concentration_obscuration_projections
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.domain.events import DiceRoll
 from app.domain.modifiers import ConcentrationState
@@ -59,6 +60,7 @@ def end_concentration(
     states = _affected(owner, affected_states)
     remove_source_modifiers(states, current.source_id, current.effect_id, concentration_only=True)
     _remove_source_timed_effects(states, current.source_id, current.effect_id)
+    remove_concentration_obscuration_projections(states, current.source_id, current.effect_id)
     owner.concentration = None
     return True
 

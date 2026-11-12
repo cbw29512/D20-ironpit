@@ -22,8 +22,20 @@
     return covering(member, setup).some((zone) => zone.blocks_verbal_spells || zone.blocksVerbalSpells);
   }
 
+  function liveZones(setup) {
+    const owners = new Map([...setup.heroes, ...setup.monsters].map(
+      (member) => [member.combatant_id, member.state]));
+    return (setup.suppression_zones || []).filter((zone) => {
+      if (!zone.concentration) return true;
+      const concentration = owners.get(zone.source_id)?.concentration;
+      return concentration && concentration.source_id === zone.source_id
+        && concentration.effect_id === zone.action_id;
+    });
+  }
+
   function expire(setup, round) {
-    setup.suppression_zones = (setup.suppression_zones || []).filter((zone) => zone.expires_round > round);
+    setup.suppression_zones = liveZones(setup).filter(
+      (zone) => zone.expires_round > round);
   }
 
   function syncDeafen(member, deafened, round) {
@@ -39,8 +51,10 @@
   }
 
   function sync(setup, round = 1) {
+    const live = liveZones(setup);
+    window.IRON_PIT_BROWSER_OBSCURATION_VISIBILITY?.syncProjection(setup, live);
     for (const member of [...setup.heroes, ...setup.monsters]) {
-      const zones = covering(member, setup);
+      const zones = live.filter((zone) => memberInZone(member, zone));
       syncDeafen(member, zones.some((zone) => zone.deafens !== false), round);
       const thunder = zones.some((zone) => zone.thunder_immunity !== false && zone.thunderImmunity !== false);
       const immunities = (member.state.zone_damage_immunities || []).filter((item) => item !== "thunder");
@@ -93,7 +107,8 @@
       source_id: caster.combatant_id, action_id: action.id, action_name: action.name,
       position: { ...position }, radius_ft: action.radiusFt, expires_round: round + action.durationRounds,
       deafens: action.deafens !== false, blocks_verbal_spells: action.blocksVerbalSpells !== false,
-      thunder_immunity: action.thunderImmunity !== false, concentration: Boolean(action.concentration),
+      thunder_immunity: action.thunderImmunity !== false, obscuration_kind: action.obscurationKind || "none",
+      concentration: Boolean(action.concentration),
     });
     sync(setup, round);
     return {

@@ -35,14 +35,12 @@ _EXPECTED = (
 )
 
 
-def source_proven_innate_faerie_fire_2014(
-    monster: SourceMonster2014,
-) -> list[SpellSaveAction]:
-    """Reuse the generic 2014 Faerie Fire save without card-name dispatch."""
+def source_proven_innate_trio_2014(monster: SourceMonster2014) -> int | None:
+    """Complete shared 2014 innate clause: DC and exactly three spell uses."""
     try:
         source = innate_spellcasting_source_2014(monster)
         if source is None or source.get("source_complete") is not True:
-            return []
+            return None
         printed = source_sections_2014(
             monster.source_traits, include_continuations=True,
         ).get("Innate Spellcasting", "")
@@ -50,13 +48,13 @@ def source_proven_innate_faerie_fire_2014(
             " ".join(printed.replace("’", "'").split()),
         )
         if match is None:
-            return []
+            return None
         save_dc = int(match["dc"])
         if not (1 <= save_dc <= 40):
-            return []
+            return None
         if (source.get("save_dc") != save_dc
                 or source.get("ability") != match["ability"].lower()):
-            return []
+            return None
         rows = tuple(
             (spell.get("id"), spell.get("name"), spell.get("usage"),
              spell.get("uses_per_day"), spell.get("shared_pool"),
@@ -64,8 +62,20 @@ def source_proven_innate_faerie_fire_2014(
             for spell in innate_spells_2014(monster)
         )
         if rows != _EXPECTED:
-            return []
-        return [faerie_fire_2014(save_dc)]
+            return None
+        return save_dc
+    except Exception:
+        logger.exception("2014 innate source trio proof failed for %s.", monster.id)
+        raise
+
+
+def source_proven_innate_faerie_fire_2014(
+    monster: SourceMonster2014,
+) -> list[SpellSaveAction]:
+    """Reuse the generic 2014 Faerie Fire save without card-name dispatch."""
+    try:
+        dc = source_proven_innate_trio_2014(monster)
+        return [faerie_fire_2014(dc)] if dc is not None else []
     except Exception:
         logger.exception("2014 innate Faerie Fire source proof failed for %s.", monster.id)
         raise
