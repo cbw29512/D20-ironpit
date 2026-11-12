@@ -80,6 +80,8 @@ class CombatantTemplate(BaseModel):
     kind: Literal["character", "monster"]
     ruleset: RulesetId = DEFAULT_RULESET
     creature_type: str | None = None
+    spoken_languages: list[str] = Field(default_factory=list, exclude_if=lambda v: not v)
+    understood_languages: list[str] = Field(default_factory=list, exclude_if=lambda v: not v)
     size: CreatureSize = CreatureSize.MEDIUM
     ability_scores: AbilityScores | None = None
     armor_class: int = Field(ge=0)
