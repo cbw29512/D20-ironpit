@@ -71,6 +71,7 @@ class CombatantDefinition(BaseModel):
     initiative_bonus: int
     blindsight_ft: int = Field(default=0, ge=0)
     truesight_ft: int = Field(default=0, ge=0)
+    magical_darkness_sight_ft: int = Field(default=0, ge=0)
     blindsight_deafened_ft: int | None = Field(default=None, ge=1)
     blind_beyond_blindsight: bool = False
     blindsight_requires_smell_when_deafened: bool = False
