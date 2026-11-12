@@ -12,6 +12,21 @@
     return !I().immune(state, id, null, { setup });
   }
 
+  function hasSourceOwnedCondition(state, id, sourceId, setup = null) {
+    try {
+      if (!sourceId || !has(state, id, setup)) return false;
+      return (state.timed_effects || []).some((effect) =>
+        effect.effect_id === id
+        && effect.source_id === sourceId
+        && !I().immune(state, id, null, {
+          sourceIsMagical: Boolean(effect.source_is_magical), setup,
+        }));
+    } catch (error) {
+      console.error("Failed source-owned condition check.", { id, sourceId, error });
+      throw error;
+    }
+  }
+
   const invisibilitySuppressed = (state) => Boolean(
     (state.active_modifiers || []).some((item) => item.kind === "invisibility-benefits-suppressed")
   );
@@ -122,7 +137,7 @@
     || (state.template.ruleset === "2014" && has(state, "stunned"));
 
   window.IRON_PIT_BROWSER_CONDITION_RULES = {
-    attackAdvantage, autoCritical, autoFailStrDex, canSee, effectiveSenseRangeFt, has,
+    attackAdvantage, autoCritical, autoFailStrDex, canSee, effectiveSenseRangeFt, has, hasSourceOwnedCondition,
     incapacitated, invisibilitySuppressed, senseIsSuppressed, sourceSenseRangeFt, speedZero,
     suppressAttackAdvantage, visibilityDistanceFt,
   };
