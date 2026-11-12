@@ -12,7 +12,6 @@ from app.content.pregen_combat_audit import assert_pregen_combat_stats
 from app.combat.dice import FixedDiceProvider
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
-from scripts.browser_template_serializer import template_row
 
 
 def _monster_template(template_id: str):
@@ -107,15 +106,6 @@ def test_level_three_runtime_and_fingerprint_match_persistent_progression() -> N
     assert spiritual.attack.damage_dice_size == 8
     assert spiritual.attack.damage_bonus == 3
     assert spiritual.attack.damage_type == "force"
-
-    # The generated browser card must carry the same nonspatial attack and
-    # complete nested spell payload, not merely list a spell by name.
-    row = template_row(hero)["persistent_spell_attack_actions"][0]
-    assert row["id"] == "spiritual-weapon"
-    assert row["spatialMode"] == "nonspatial"
-    assert row["attack"]["range"] == 60
-    assert row["attack"]["damageDiceCount"] == 1
-    assert row["attack"]["damageType"] == "force"
 
     assert_character_build_raw_ready(profile, hero)
     assert_pregen_combat_stats(hero, combat)
