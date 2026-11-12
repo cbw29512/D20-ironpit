@@ -11,6 +11,7 @@ from app.combat.source_effect_immunity import (
     has_source_effect_immunity,
 )
 from app.content.monster_creature_types import is_creature_type
+from app.combat.language_eligibility import target_understands_caster_language
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import SavingThrowAction
 from app.domain.size import size_at_most
@@ -101,6 +102,12 @@ def legal_save_action(
         if (
             action.requires_target_hearing
             and "deafened" in target.state.active_effect_ids
+        ):
+            return False
+        if action.requires_shared_spoken_language and (
+            actor is None or not target_understands_caster_language(
+                actor.state.template, target.state.template,
+            )
         ):
             return False
         if action.required_target_creature_types and not any(
