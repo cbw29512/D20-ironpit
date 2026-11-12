@@ -1443,6 +1443,21 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
         if template.spell_attack_actions:
             row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
+        if template.persistent_spell_attack_actions:
+            # The source card declares whether this timed attack has a square.
+            # Do not invent a grid position for nonspatial spell effects.
+            row["persistent_spell_attack_actions"] = [
+                {
+                    "id": action.id, "name": action.name,
+                    "durationRounds": action.duration_rounds,
+                    "moveFt": action.move_ft,
+                    "attackReachFt": action.attack_reach_ft,
+                    "upcastIntervalLevels": action.upcast_interval_levels,
+                    "spatialMode": action.spatial_mode,
+                    "attack": _spell_attack(action.attack),
+                }
+                for action in template.persistent_spell_attack_actions
+            ]
         if template.targeted_concentration_damage_actions:
             row["targeted_concentration_damage_actions"] = [
                 targeted_concentration_damage_row(item) for item in template.targeted_concentration_damage_actions
