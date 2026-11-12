@@ -1,5 +1,12 @@
 # Iron Pit locked rules
 
+## Command spell: always Grovel — 2026-11-12
+
+- In the automated Iron Pit, every creature and pregen choosing **Command** selects only the printed **Grovel** option. After a failed Wisdom save, its legal target **falls Prone on its next turn and then ends that turn**; nothing flees, approaches, drops an item or executes free-form orders. Prone and one-turn activity loss compose existing universal semantics; no monster-specific command resolver.
+- Preserve actual 2014 source gates (visible creature within 60 feet, undead unaffected, understands the caster's language, no directly harmful order), cast/slot cost, delayed turn, upcasting and normal persistent Prone recovery. Never infer that the target can understand a language without source evidence. Source text/card immutable; 2024 edition must be source-verified separately.
+- Existing `forced_retreat` means fleeing and is **not** a correct Grovel log/behavior. Any missing source-neutral skip-turn or delayed-Prone primitive must be implemented in both Python/browser and certified before claiming Cult Fanatic or another Command caster admitted.
+- Authority: [Iron Pit Rules Contract — Command spell, automated Grovel only](IRON_PIT_RULES_CONTRACT.md#command-spell--automated-grovel-only-locked-2026-11-12).
+
 ## Natural innate casting and Charm AI — 2026-11-12
 
 - Source-proven innate spellcasts and equivalent spell-like outcomes use the **same universal spell/condition/effect primitives** as ordinary casting; the standard Pit does not track spell components as action prerequisites. Source-owned action economy, per-day/recharge resources, duration, concentration, printed names, edition and true spell/nonspell provenance remain intact. No innate-only resolver or fabricated spell slots.
