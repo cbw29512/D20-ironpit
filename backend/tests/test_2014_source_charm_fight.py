@@ -71,6 +71,11 @@ def test_source_charm_timed_target_cap_damage_repeat_and_immunity():
         event = _cast(owner, first, setup, charm)
         assert event.feature_id == "charm" and "Charm" in event.description
         assert event.applied_condition_ids == ["charmed"]
+        # This is not Possession or a side swap: only the Charmed condition
+        # and its existing targeting gate affect the target in Iron Pit.
+        assert first.state.controlled_by is None
+        assert owner.state.controlling_target_ids == []
+        assert first.side == "heroes"
         instance = next(x for x in first.state.timed_effects
                         if x.effect_id == "charmed")
         assert instance.repeat_save_timing is None
