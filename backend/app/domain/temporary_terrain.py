@@ -14,6 +14,8 @@ class TemporaryTerrainZone(BaseModel):
     source_id: str = Field(min_length=1)
     action_id: str = Field(min_length=1)
     action_name: str = Field(min_length=1)
+    # Optional owner when this overlay belongs to a persistent save zone.
+    persistent_zone_id: str | None = None
     center: GridPosition
     radius_ft: int = Field(ge=5)
     source_is_magical: bool = True

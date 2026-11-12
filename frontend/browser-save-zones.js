@@ -22,7 +22,16 @@
   }
 
   function expire(setup, round) {
-    setup.save_zones = (setup.save_zones || []).filter((zone) => zone.expires_round > round);
+    const owners = new Map([...(setup.heroes || []), ...(setup.monsters || [])]
+      .map((member) => [member.combatant_id, member.state]));
+    setup.save_zones = (setup.save_zones || []).filter((zone) => {
+      if (zone.expires_round <= round) return false;
+      if (!zone.concentration) return true;
+      return owners.get(zone.source_id)?.concentration?.effect_id === zone.action_id;
+    });
+    const live = new Set(setup.save_zones.map((zone) => zone.zone_id));
+    setup.temporary_terrain_zones = (setup.temporary_terrain_zones || [])
+      .filter((terrain) => !terrain.persistent_zone_id || live.has(terrain.persistent_zone_id));
   }
 
   function chooseCenter(caster, setup, action) {
@@ -139,6 +148,8 @@
     if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.actionCost} is unavailable for ${action.name}.`);
     if (action.resourceId && (caster.state.resources?.[action.resourceId] ?? 0) < (action.resourceCost || 1))
       throw new Error(`Resource ${action.resourceId} is unavailable for ${action.name}.`);
+    if (action.createsDifficultTerrain && !window.IRON_PIT_BROWSER_TEMPORARY_TERRAIN?.applySpellTerrain)
+      throw new Error(`Difficult Terrain runtime is missing for ${action.name}.`);
     if (action.centerOnSource && (!caster.state.position || position.x !== caster.state.position.x || position.y !== caster.state.position.y)) {
       throw new Error(`${action.name} must be centered on its source.`);
     }
@@ -175,10 +186,18 @@
       failedSaveSuppressReactions: Boolean(action.failedSaveSuppressReactions),
       failedSaveActionBonusExclusive: Boolean(action.failedSaveActionBonusExclusive),
       failedSaveExpiryTiming: action.failedSaveExpiryTiming || "target_turn_end",
-      concentration: Boolean(action.concentration), animation: action.animation || "save-zone",
+      concentration: Boolean(action.concentration), lightlyObscured: Boolean(action.lightlyObscured),
+      animation: action.animation || "save-zone",
       triggered_turn_keys: {},
     };
     setup.save_zones.push(zone);
+    if (action.createsDifficultTerrain) {
+      const terrain = window.IRON_PIT_BROWSER_TEMPORARY_TERRAIN.applySpellTerrain(
+        setup, caster, action, position, round,
+      );
+      if (!terrain) throw new Error(`Difficult Terrain placement failed for ${action.name}.`);
+      terrain.persistent_zone_id = zone.zone_id;
+    }
     const events = [{
       sequence, round_number: round, event_type: "feature",
       actor_id: caster.combatant_id, actor_name: caster.state.template.name,
@@ -198,5 +217,26 @@
     return { events, sequence };
   }
 
-  window.IRON_PIT_BROWSER_SAVE_ZONES = { choose, cast, expire, resolveWindow, memberInZone };
+  function lightObscuresSightCheck(member, setup) {
+    try {
+      if (!member || !setup) return false;
+      const owners = new Map([...(setup.heroes || []), ...(setup.monsters || [])]
+        .map((actor) => [actor.combatant_id, actor.state]));
+      return (setup.save_zones || []).some((zone) => {
+        if (!zone.lightlyObscured) return false;
+        if (zone.concentration
+          && owners.get(zone.source_id)?.concentration?.effect_id !== zone.action_id) return false;
+        return memberInZone(member, zone, setup);
+      });
+    } catch (error) {
+      console.error("Could not evaluate generic save-zone light obscurity", {
+        actor: member?.combatant_id, error,
+      });
+      throw error;
+    }
+  }
+
+  window.IRON_PIT_BROWSER_SAVE_ZONES = {
+    choose, cast, expire, resolveWindow, memberInZone, lightObscuresSightCheck,
+  };
 })();

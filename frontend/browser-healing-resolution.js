@@ -55,6 +55,25 @@
         removed.push(id);
       }
     }
+    const tagged = new Set((target.state.timed_effects || [])
+      .filter((effect) => (action.removalEffectTags || []).includes(effect.removal_effect_tag))
+      .map((effect) => effect.effect_id));
+    for (const id of [...tagged].sort()) {
+      if ((target.state.active_effect_ids || []).includes(id)) {
+        R().removeCondition(target, id);
+        removed.push(id);
+      }
+    }
+    if (action.removesAllCurses && target.state.active_curses?.length) {
+      const curseIds = [...target.state.active_curses];
+      for (const effect of [...(target.state.timed_effects || [])]) {
+        if ((effect.owned_curse_ids || []).some((id) => curseIds.includes(id))) {
+          T().removeGroup(target.state, effect);
+        }
+      }
+      target.state.active_curses = target.state.active_curses.filter((id) => !curseIds.includes(id));
+      removed.push("curse");
+    }
     if (action.proneReactionStand
       && (target.state.active_effect_ids || []).includes("prone")
       && target.state.reaction_available) {

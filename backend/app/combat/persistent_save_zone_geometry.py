@@ -35,3 +35,36 @@ def member_in_save_zone(
     except Exception:
         logger.exception("Failed save-zone occupancy check for %s.", member.combatant_id)
         raise
+
+
+
+def sight_is_lightly_obscured(
+    observer: EncounterCombatant,
+    setup: EncounterSetup | None,
+) -> bool:
+    """Detect live zone-based light obscurity for ordinary sight Perception.
+
+    This is not Blindness or Heavy Obscurement: it does not prevent seeing a
+    target, and it never changes attack rolls.
+    """
+    try:
+        if setup is None:
+            return False
+        owners = {
+            actor.combatant_id: actor.state
+            for actor in [*setup.heroes, *setup.monsters]
+        }
+        for zone in setup.save_zones:
+            if not zone.lightly_obscured:
+                continue
+            if zone.concentration:
+                owner = owners.get(zone.source_id)
+                if (owner is None or owner.concentration is None
+                        or owner.concentration.effect_id != zone.action_id):
+                    continue
+            if member_in_save_zone(observer, zone, setup):
+                return True
+        return False
+    except Exception:
+        logger.exception("Failed light-obscurity geometry check for %s.", observer.combatant_id)
+        raise

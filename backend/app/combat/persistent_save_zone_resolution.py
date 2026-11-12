@@ -4,6 +4,7 @@ import logging
 
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.persistent_save_zone_geometry import member_in_save_zone
+from app.combat.persistent_save_zone_terrain import sync_persistent_zone_terrain
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.timed_conditions import apply_timed_condition
 from app.combat.zero_hp import apply_damage
@@ -18,7 +19,22 @@ logger = logging.getLogger(__name__)
 
 def expire_save_zones(setup: EncounterSetup, round_number: int) -> None:
     try:
-        setup.save_zones = [zone for zone in setup.save_zones if zone.expires_round > round_number]
+        participants = {
+            member.combatant_id: member.state
+            for member in [*setup.heroes, *setup.monsters]
+        }
+        live = []
+        for zone in setup.save_zones:
+            if zone.expires_round <= round_number:
+                continue
+            if zone.concentration:
+                source = participants.get(zone.source_id)
+                if (source is None or source.concentration is None
+                        or source.concentration.effect_id != zone.action_id):
+                    continue
+            live.append(zone)
+        setup.save_zones = live
+        sync_persistent_zone_terrain(setup)
     except Exception:
         logger.exception("Failed to expire save zones at round %s.", round_number)
         raise

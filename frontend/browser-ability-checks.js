@@ -30,11 +30,20 @@
               options.member, options.setup, "sight_based_perception_checks",
             ) || 0) : 0)
         : 0;
+      let zoneSight = 0;
+      if (options.member && options.skill === "perception" && options.reliesOnSight) {
+        const zones = options.setup?.save_zones || [];
+        const detector = window.IRON_PIT_BROWSER_SAVE_ZONES?.lightObscuresSightCheck;
+        if (zones.some((zone) => zone.lightlyObscured) && typeof detector !== "function") {
+          throw new Error("Sight-based Perception requires save-zone light-obscurity support.");
+        }
+        zoneSight = Number(Boolean(detector?.(options.member, options.setup)));
+      }
       const timed = (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(state, options.ability) || 0)
         + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityCheckDisadvantage(state) || 0);
       const held = window.IRON_PIT_BROWSER_GRAPPLE?.checkSaveDisadvantage?.(state, options.ability) || 0;
       return window.IRON_PIT_BROWSER_ROLLS.modeFromSources(
-        advantageSources + generic + sourceAdvantage, disadvantageSources + context + timed + held,
+        advantageSources + generic + sourceAdvantage, disadvantageSources + context + zoneSight + timed + held,
       );
     } catch (error) {
       console.error("Browser ability-check roll mode failed", { combatant: state?.template?.name, error });

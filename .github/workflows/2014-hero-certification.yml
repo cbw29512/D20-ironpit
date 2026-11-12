@@ -95,6 +95,7 @@ jobs:
           node frontend/browser-divine-intervention-2014.test.cjs
           node frontend/browser-cleric9-2014.test.cjs
           node frontend/browser-healing-creature-type-exclusions.test.cjs
+          node frontend/browser-healing-restoration-riders.test.cjs
           node frontend/browser-group-healing-area.test.cjs
           node frontend/browser-pooled-healing.test.cjs
           node frontend/browser-outgoing-healing-maximize.test.cjs
