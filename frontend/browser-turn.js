@@ -56,7 +56,10 @@
   function finalize(events, sequence, round, member, setup, turnKey, allowSurge = true) {
     const surge = allowSurge ? J()?.resolveAttack(sequence, round, member, setup, turnKey) : null;
     if (surge) { events.push(...surge.events); sequence = surge.sequence; }
-    const bonus = resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "postAction", events);
+    // A compelled or otherwise terminated turn must not reopen voluntary Bonus Actions.
+    const bonus = member.state.turn_terminated
+      ? { events: [], sequence }
+      : resolveBonusActionCheckpoint(sequence, round, member, setup, turnKey, "postAction", events);
     events.push(...bonus.events); sequence = bonus.sequence;
     if (bonus.events.length) {
       sequence = appendFollowUps(
