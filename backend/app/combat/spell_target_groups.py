@@ -50,3 +50,28 @@ def choose_spell_target_group(
     except Exception:
         logger.exception("Failed to choose a constrained spell target group.")
         raise
+
+
+def validate_spell_target_group(
+    setup,
+    target_ids: Sequence[str],
+    maximum_pair_distance_ft: int | None,
+) -> None:
+    """Fail closed on invalid groups before any resource/action mutation."""
+    try:
+        if maximum_pair_distance_ft is None:
+            return
+        if len(set(target_ids)) != len(target_ids):
+            raise ValueError("A spell target group cannot repeat a target.")
+        members = {
+            member.combatant_id: member
+            for member in [*setup.heroes, *setup.monsters]
+        }
+        if any(target_id not in members for target_id in target_ids):
+            raise ValueError("A spell target group contains an unknown target.")
+        targets = [members[target_id] for target_id in target_ids]
+        if not target_group_within_distance(targets, maximum_pair_distance_ft):
+            raise ValueError("Spell targets exceed their declared pairwise distance.")
+    except Exception:
+        logger.exception("Spell target group is invalid.")
+        raise
