@@ -11,7 +11,6 @@ def failed_save_timed_effect_row(rider: Any) -> dict[str, Any]:
         row = {
             "effectId": rider.effect_id,
             "durationRounds": rider.duration_rounds,
-            "durationTargetTurns": rider.duration_target_turns,
             "expiryTiming": rider.expiry_timing,
             "repeatSaveAbility": rider.repeat_save_ability,
             "repeatSaveDc": rider.repeat_save_dc,
@@ -54,6 +53,8 @@ def failed_save_timed_effect_row(rider: Any) -> dict[str, Any]:
             row["startOfTurnDamageDiceCount"] = rider.start_of_turn_damage_dice_count
             row["startOfTurnDamageDiceSize"] = rider.start_of_turn_damage_dice_size
             row["startOfTurnDamageType"] = rider.start_of_turn_damage_type.value
+        if rider.duration_target_turns is not None:
+            row["durationTargetTurns"] = rider.duration_target_turns
         return row
     except Exception:
         logger.exception("Failed to serialize failed-save timed rider %s.", getattr(rider, "effect_id", "?"))
