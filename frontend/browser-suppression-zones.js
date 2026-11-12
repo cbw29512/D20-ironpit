@@ -74,6 +74,26 @@
     return { ...target.state.position };
   }
 
+  function usefulPhysicalFog(caster, setup, action, center) {
+    try {
+      if (action.obscurationKind !== "heavy-physical") return true;
+      const allies = caster.side === "heroes" ? setup.heroes : setup.monsters;
+      const enemies = caster.side === "heroes" ? setup.monsters : setup.heroes;
+      const zone = { position: center, radius_ft: action.radiusFt };
+      const eligible = (source, target) => {
+        const C = window.IRON_PIT_BROWSER_CONDITION_RULES;
+        const distance = C.visibilityDistanceFt(source.state, target.state);
+        return source.state.is_alive && target.state.is_alive && distance != null
+          && C.canSee(source.state, target.state, distance)
+          && ["saving_throw_actions", "spell_save_actions", "hp_threshold_condition_actions",
+              "hp_threshold_instant_death_actions"].some((field) => (source.state.template[field] || [])
+              .some((item) => item.requiresTargetSight && Number(item.range || 0) >= distance))
+          && window.IRON_PIT_BROWSER_OBSCURATION_VISIBILITY.lineCrosses(source.state, target.state, zone);
+      };
+      const count = (sources, targets) => sources.reduce((n, s) => n + targets.filter((t) => eligible(s, t)).length, 0);
+      return count(enemies, allies) > count(allies, enemies);
+    } catch (error) { console.error("Physical-fog tactical valuation failed.", error); throw error; }
+  }
   function choose(caster, setup, turnKey) {
     if (verbalBlocked(caster, setup)) return null;
     for (const action of caster.state.template.suppression_zone_actions || []) {
@@ -83,7 +103,7 @@
       const resourceId = action.resourceId;
       if (resourceId && (caster.state.resources[resourceId] || 0) < (action.resourceCost || 1)) continue;
       const center = chooseCenter(caster, setup, action);
-      if (center) return { action, center };
+      if (center && usefulPhysicalFog(caster, setup, action, center)) return { action, center };
     }
     return null;
   }
