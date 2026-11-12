@@ -79,7 +79,7 @@ def test_aggressive_unlocks_orc_through_existing_offense_dash_grant() -> None:
     assert chosen.name == "Aggressive"
 
 
-def test_devils_sight_unlocks_lemure_as_arena_neutral() -> None:
+def test_devils_sight_unlocks_lemure_as_compiled_darkness_sense() -> None:
     source = _source_by_id()["lemure"]
     assert "Devil's Sight" in source.trait_names
     assert "Hellish Rejuvenation" in source.trait_names
@@ -88,6 +88,7 @@ def test_devils_sight_unlocks_lemure_as_arena_neutral() -> None:
     template = _compile("lemure")
     assert template.source_trait_names == source.trait_names
     assert template.id == "2014-lemure"
+    assert template.magical_darkness_sight_ft == 120
 
 
 def test_two_heads_unlocks_ettin_and_death_dog() -> None:
