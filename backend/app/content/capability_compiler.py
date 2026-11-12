@@ -49,6 +49,7 @@ def _compile_save(definition: SaveCapabilityDefinition) -> SavingThrowAction:
         requires_target_sight=definition.requires_target_sight,
         required_target_condition=definition.required_target_condition,
         required_target_source_condition=definition.required_target_source_condition,
+        target_qualification=definition.target_qualification,
         requires_target_grappled_by_source=definition.requires_target_grappled_by_source,
         required_target_creature_types=list(definition.required_target_creature_types),
         prohibited_target_source_effect_ids=list(definition.prohibited_target_source_effect_ids),

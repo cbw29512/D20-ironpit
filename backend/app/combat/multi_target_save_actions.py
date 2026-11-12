@@ -6,7 +6,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.condition_rules import can_see
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
 from app.combat.encounter_targeting import combatant_distance
-from app.combat.pit_policy import target_order
+from app.combat.save_action_targeting import save_action_target_order as target_order
 from app.combat.resources import action_resource_available, spend_action_resource
 from app.combat.saving_throws import legal_save_action
 from app.combat.save_targets import roll_shared_save_damage
@@ -30,13 +30,7 @@ def choose_multi_target_save_action(
             if not action_resource_available(actor.state, action):
                 continue
             legal_targets: list[EncounterCombatant] = []
-            ordered_targets = target_order(actor, setup)
-            if action.target_scope == "all-other-creatures":
-                allies = setup.heroes if actor.side == "heroes" else setup.monsters
-                ordered_targets = [*ordered_targets, *(
-                    member for member in allies if member.combatant_id != actor.combatant_id
-                    and member.state.is_alive and not member.state.is_dead
-                )]
+            ordered_targets = target_order(actor, setup, action.target_scope)
             for target in ordered_targets:
                 distance = combatant_distance(actor, target)
                 if not legal_save_action(action, target, distance, source_id=actor.combatant_id, actor=actor):

@@ -14,12 +14,12 @@ window.IRON_PIT_BROWSER_STATE = {
     return Math.max(1, state.template.max_hp + (state.max_hp_bonus || 0)
       - (state.hit_point_maximum_reduction || 0));
   },
+  sizeAtMost: () => true,
+  distance: () => 5,
 };
 window.IRON_PIT_BROWSER_HEALING_POLICY = { swarm: () => false };
-window.IRON_PIT_BROWSER_CONDITION_RULES = {
-  incapacitated: (state) => Boolean(state.is_unconscious
-    || (state.active_effect_ids || []).includes("incapacitated")),
-};
+window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
+load("browser-condition-rules.js");
 load("browser-healing.js");
 load("browser-maximum-hp.js");
 load("browser-formation.js");
@@ -39,7 +39,7 @@ function member(id, hp = 30) {
 const drainingAttack = {
   id: "renamed-source", name: "Renamed Attack", kind: "melee",
   targetQualification: {
-    anyOf: ["source_grappled", "incapacitated", "restrained", "willing"],
+    anyOf: ["source_grappled", "incapacitated", "restrained", "willing", "source_charmed"],
   },
   onHitTypedDrain: {
     damageType: "necrotic", reduceTargetMaximumHp: true,
@@ -61,10 +61,23 @@ const targetAllowed = window.IRON_PIT_BROWSER_FORMATION.targetAllowed;
   victim.state.grapple_sources.length = 0;
   victim.state.active_effect_ids.push("incapacitated");
   assert.equal(targetAllowed(actor, victim, drainingAttack), true);
+  victim.state.active_effect_ids.length = 0;
+  victim.state.active_effect_ids.push("charmed");
+  victim.state.timed_effects.push({
+    effect_id: "charmed", source_id: actor.combatant_id, source_is_magical: false,
+  });
+  assert.equal(targetAllowed(actor, victim, drainingAttack), true);
 }
 {
   const actor = member("renamed-monster", 40), victim = member("target", 30);
   actor.state.current_hp = 17;
+  const ally = member("willing-ally", 30);
+  ally.side = "monsters";
+  victim.side = "heroes";
+  const ordered = window.IRON_PIT_BROWSER_FORMATION.targetOrder(
+    actor, { heroes: [victim], monsters: [actor, ally] }, false, "all-other-creatures",
+  );
+  assert.deepEqual(ordered.map((target) => target.combatant_id), ["target", "willing-ally"]);
   const result = window.IRON_PIT_BROWSER_MAXIMUM_HP.resolveTypedDrain(
     actor, victim, drainingAttack, [
       { damageType: "piercing", appliedTotal: 8 },

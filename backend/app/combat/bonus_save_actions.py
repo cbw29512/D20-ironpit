@@ -6,7 +6,8 @@ from app.combat.action_economy import is_available
 from app.combat.area_save_actions import resolve_area_save
 from app.combat.area_save_targeting import legal_area_save_placements
 from app.combat.damage_reaction_wrappers import resolve_save_event_chain
-from app.combat.pit_policy import save_distance, target_order
+from app.combat.pit_policy import save_distance
+from app.combat.save_action_targeting import save_action_target_order
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.resource_conversion import restoration_conversion, resolve_resource_conversion
 from app.combat.resources import action_resource_available
@@ -62,7 +63,7 @@ def choose_bonus_save_action(
                 targets = sorted(others, key=lambda m: (m.side == actor.side,
                                   combatant_distance(actor, m), m.combatant_id))
             else:
-                targets = target_order(actor, setup)
+                targets = save_action_target_order(actor, setup, action.target_scope)
             for target in targets:
                 distance = save_distance(actor, target, action.range_ft)
                 if legal_save_action(action, target, distance, source_id=actor.combatant_id, actor=actor):

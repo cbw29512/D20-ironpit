@@ -2,10 +2,9 @@
 from __future__ import annotations
 
 import logging
-from typing import Literal
+from pydantic import BaseModel, ConfigDict
 
-from pydantic import BaseModel, ConfigDict, Field
-
+from app.domain.targeting import TargetQualification
 from app.domain.weapons_base import DamageType
 
 logger = logging.getLogger(__name__)
@@ -21,11 +20,6 @@ class OnHitTypedDrain(BaseModel):
     zero_maximum_hp_kills: bool = True
 
 
-class AttackTargetQualification(BaseModel):
-    """Any declared status suffices; an unproved willingness is never assumed."""
-
-    model_config = ConfigDict(extra="forbid")
-    any_of: list[Literal[
-        "source_grappled", "incapacitated", "restrained", "willing",
-    ]] = Field(min_length=1)
+# Compatibility alias: existing attack definitions use the historical name.
+AttackTargetQualification = TargetQualification
 

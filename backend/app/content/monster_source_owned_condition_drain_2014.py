@@ -1,8 +1,8 @@
 """Source-exact 2014 save damage against a condition owned by the acting source.
 
 This is an immutable-card adapter, not a monster/ability-name combat resolver.
-The currently supported hostile target is Charmed by the actor. The alternative
-printed willing-creature targeting remains separately unadmitted.
+Both printed eligibility branches are represented by shared target qualification:
+source-owned Charmed or explicit willingness.
 """
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_sections_2014 import source_sections_2014
 from app.domain.capability_effects import DiceSpec
 from app.domain.capability_save_definitions import SaveCapabilityDefinition
+from app.domain.targeting import TargetQualification
 from app.domain.weapons import DamageType
 
 logger = logging.getLogger(__name__)
@@ -64,7 +65,8 @@ def source_proven_owned_condition_drains_2014(
                 damage=DiceSpec(count=count, size=size, bonus=bonus),
                 damage_type=DamageType(match["type"].casefold()),
                 success_damage="half", magical_effect=True,
-                required_target_source_condition="charmed",
+                target_scope="all-other-creatures",
+                target_qualification=TargetQualification(any_of=["source_charmed", "willing"]),
                 reduce_hit_point_maximum_on_damage=True,
                 max_hp_zero_kills=True, animation="life-drain",
             ))

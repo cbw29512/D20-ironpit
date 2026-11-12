@@ -54,7 +54,7 @@ def close_ranged_threat_exists(attacker: EncounterCombatant, setup: EncounterSet
     )
 
 
-def _target_priority(member: EncounterCombatant) -> int | None:
+def target_priority(member: EncounterCombatant) -> int | None:
     """Iron Pit policy: active threats first, Incapacitated living enemies second, downed characters last."""
     state = member.state
     if not state.is_alive or state.is_dead or _removed_from_battlefield(state):
@@ -97,13 +97,13 @@ def living_opponents(attacker: EncounterCombatant, setup: EncounterSetup) -> lis
     """Return only the highest-priority eligible target class under deterministic Pit policy."""
     candidates = [
         member for member in _opponents(attacker, setup)
-        if _target_priority(member) is not None
+        if target_priority(member) is not None
         and not charmed_blocks_hostile_target(attacker.state, member.combatant_id)
     ]
     if not candidates:
         return []
-    priority = min(_target_priority(member) for member in candidates)
-    return [member for member in candidates if _target_priority(member) == priority]
+    priority = min(target_priority(member) for member in candidates)
+    return [member for member in candidates if target_priority(member) == priority]
 
 
 def living_targets(attacker: EncounterCombatant, setup: EncounterSetup) -> list[EncounterCombatant]:

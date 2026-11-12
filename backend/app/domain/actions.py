@@ -10,7 +10,7 @@ from app.domain.hp_threshold_actions import HpThresholdInstantDeathAction
 from app.domain.save_damage import DamageTypeName, SaveDamageComponent
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.size import CreatureSize
-from app.domain.targeting import AreaTargeting
+from app.domain.targeting import AreaTargeting, TargetQualification
 from app.domain.environment_contexts import EnvironmentContextId
 from app.domain.breakable_restraints import BreakableObjectSpec
 
@@ -185,6 +185,7 @@ class SavingThrowAction(BaseModel):
     requires_target_to_see_source: bool = Field(default=False, exclude_if=lambda value: not value)
     required_target_condition: ConditionName | None = Field(default=None, exclude_if=lambda value: value is None)
     required_target_source_condition: ConditionName | None = Field(default=None, exclude_if=lambda value: value is None)
+    target_qualification: TargetQualification | None = Field(default=None, exclude_if=lambda value: value is None)
     requires_target_grappled_by_source: bool = Field(default=False, exclude_if=lambda value: not value)
     prohibited_environment_context_id: EnvironmentContextId | None = Field(
         default=None, exclude_if=lambda value: value is None,

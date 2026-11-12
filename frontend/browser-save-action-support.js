@@ -11,6 +11,9 @@
       const timed = window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS;
       const shared = window.IRON_PIT_BROWSER_SAVE_IMMUNITY;
       const conditionImmunity = window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
+      if (actor && action.targetQualification && target.combatant_id === actor.combatant_id) return false;
+      if (actor && action.targetQualification && actor.side && target.side
+        && (action.targetScope || "enemies") === "enemies" && target.side === actor.side) return false;
       if (action.requiresTargetZeroHpAlive
         && !(target.state.current_hp === 0 && target.state.is_alive && !target.state.is_dead)) return false;
       if (action.requiredTargetCondition
@@ -28,6 +31,21 @@
           && !conditionImmunity.immune(target.state, effect.effect_id, null, {
             sourceIsMagical: Boolean(effect.source_is_magical),
           }))) return false;
+      }
+      if (action.targetQualification) {
+        const allowed = new Set(action.targetQualification.anyOf || []);
+        const state = target.state;
+        const qualifies = (
+          allowed.has("source_grappled") && sourceId
+            && (state.grapple_sources || []).some((grapple) => grapple.source_id === sourceId)
+          || allowed.has("incapacitated") && Q.incapacitated?.(state)
+          || allowed.has("restrained") && Q.has(state, "restrained")
+          || allowed.has("willing") && sourceId
+            && (state.willing_attack_source_ids || []).includes(sourceId)
+          || allowed.has("source_charmed") && sourceId
+            && Q.hasSourceOwnedCondition?.(state, "charmed", sourceId)
+        );
+        if (!qualifies) return false;
       }
       if (action.requiresTargetGrappledBySource) {
         if (!actor || !sourceId || sourceId !== actor.combatant_id

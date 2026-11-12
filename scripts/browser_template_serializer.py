@@ -392,6 +392,8 @@ def _save(action: Any) -> dict[str, Any]:
         row["requiredTargetCondition"] = action.required_target_condition
     if action.required_target_source_condition:
         row["requiredTargetSourceCondition"] = action.required_target_source_condition
+    if action.target_qualification is not None:
+        row["targetQualification"] = {"anyOf": list(action.target_qualification.any_of)}
     if action.requires_target_grappled_by_source:
         row["requiresTargetGrappledBySource"] = True
     if action.required_target_creature_types:

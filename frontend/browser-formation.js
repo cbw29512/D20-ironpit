@@ -41,8 +41,10 @@
     if (policies.size > 1) throw new Error(`Conflicting active target policies for ${member.combatant_id}.`);
     return policies.values().next().value || "normal";
   }
-  function livingTargets(member, setup) {
-    const pool = enemies(member, setup);
+  function livingTargets(member, setup, targetScope = "enemies") {
+    const pool = targetScope === "all-other-creatures"
+      ? [...setup.heroes, ...setup.monsters].filter((target) => target !== member)
+      : enemies(member, setup);
     if (member.state.swallowed) {
       const owner = pool.find(target => target.combatant_id === member.state.swallowed.source_id);
       return owner && alive(owner) ? [owner] : [];
@@ -53,6 +55,10 @@
       return [...setup.heroes, ...setup.monsters]
         .filter((target) => target !== member && alive(target) && target.state.swallowed == null)
         .filter((target) => conditions.canSee(member.state, target.state, S().distance(member, target)));
+    }
+    if (targetScope === "all-other-creatures") {
+      return pool.filter((target) => target.state.is_alive && !target.state.is_dead
+        && target.state.swallowed == null && !window.IRON_PIT_BROWSER_EXILE?.removed(target.state));
     }
     const active = pool.filter(target => alive(target) && target.state.swallowed == null);
     if (active.length) {
@@ -69,11 +75,26 @@
       && target.state.is_alive && !target.state.is_dead && target.state.current_hp === 0
       && target.state.swallowed == null);
   }
-  function targetOrder(member, setup, preferBackline = false) {
-    const targets = livingTargets(member, setup);
+  function targetOrder(member, setup, preferBackline = false, targetScope = "enemies") {
+    const targets = livingTargets(member, setup, targetScope);
     if (activeTargetPolicy(member) === "nearest_visible_creature") {
       return [...targets].sort((a, b) => S().distance(member, a) - S().distance(member, b)
         || a.combatant_id.localeCompare(b.combatant_id));
+    }
+    if (targetScope === "all-other-creatures") {
+      const sleeping = (target) => (target.state.timed_effects || []).some((effect) =>
+        effect.effect_id === "unconscious" && effect.ends_on_damage === true);
+      const incapacitated = window.IRON_PIT_BROWSER_CONDITION_RULES?.incapacitated;
+      if (!incapacitated) throw new Error("All-other-creatures targeting requires universal condition rules.");
+      const priority = (target) => target.state.current_hp > 0
+        ? (sleeping(target) ? 2 : incapacitated(target.state) ? 1 : 0) : 3;
+      return [...targets].sort((left, right) =>
+        priority(left) - priority(right)
+        || Number(left.side === member.side) - Number(right.side === member.side)
+        || (preferBackline
+          ? Number(isBackline(right)) - Number(isBackline(left))
+          : Number(isBackline(left)) - Number(isBackline(right)))
+        || left.combatant_id.localeCompare(right.combatant_id));
     }
     const front = targets.filter((target) => !isBackline(target));
     const back = targets.filter(isBackline);
@@ -103,7 +124,8 @@
         if (!(allowed.has("source_grappled") && ownsTarget
           || allowed.has("incapacitated") && incapacitated(state)
           || allowed.has("restrained") && (state.active_effect_ids || []).includes("restrained")
-          || allowed.has("willing") && (state.willing_attack_source_ids || []).includes(member.combatant_id))) return false;
+          || allowed.has("willing") && (state.willing_attack_source_ids || []).includes(member.combatant_id)
+          || allowed.has("source_charmed") && window.IRON_PIT_BROWSER_CONDITION_RULES?.hasSourceOwnedCondition?.(state, "charmed", member.combatant_id, setup))) return false;
       }
       const policy = attack.grappleTargetPolicy || "normal";
       if (policy === "normal") return true;

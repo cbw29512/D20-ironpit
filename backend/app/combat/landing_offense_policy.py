@@ -14,7 +14,8 @@ from app.combat.concentration_repeat_saves import choose_concentration_repeat_sa
 from app.combat.encounter_targeting import living_opponents
 from app.combat.intimidating_presence_2014 import can_use_presence
 from app.combat.multi_target_save_actions import choose_multi_target_save_action
-from app.combat.pit_policy import choose_limited_breakable_control_attack, choose_standard_attack, save_distance, target_order
+from app.combat.pit_policy import choose_limited_breakable_control_attack, choose_standard_attack, save_distance
+from app.combat.save_action_targeting import save_action_target_order
 from app.combat.printed_damage import weapon_mean_damage, save_mean_damage as _save_mean_damage, save_action_impact
 from app.combat.resources import resource_available
 from app.combat.saving_throws import legal_save_action
@@ -107,7 +108,7 @@ def decide_post_move_offense(
             action, targets = multi_save
             picks.append(OffensePick("multi-save", _save_mean_damage(action) * len(targets), multi_save))
         chosen_save = None
-        for target in target_order(attacker, setup):
+        for target in save_action_target_order(attacker, setup, "all-other-creatures"):
             for action in attacker.state.template.saving_throw_actions:
                 if action.area is not None:
                     continue
