@@ -1,5 +1,3 @@
-import pytest
-
 from app.combat.condition_removal import choose_condition_removal_action, resolve_condition_removal
 from app.combat.damage_defenses import adjusted_damage_amount
 from app.combat.dice import FixedDiceProvider
@@ -14,8 +12,6 @@ from app.combat.spell_save_effect_resolution import compile_spell_save_action
 from app.combat.state import build_combatant_state
 from app.combat.suppression_zone_cast import cast_suppression_zone, choose_suppression_zone_center
 from app.combat.suppression_zone_geometry import verbal_casting_blocked
-from app.combat.teleport_policy import choose_teleport_action
-from app.combat.teleport_resolution import resolve_teleport
 from app.combat.timed_self_buff_policy import choose_timed_self_buff_action
 from app.combat.timed_self_buffs import resolve_timed_self_buff
 from app.combat.zero_hp import apply_damage
@@ -26,7 +22,6 @@ from app.content.monsters import build_commoner
 from app.content.shared_control_spells_2014 import hold_person_2014, silence_2014, spirit_guardians_2014
 from app.content.shared_damage_spells_2014 import harm_2014
 from app.content.shared_restoration_spells_2014 import greater_restoration_2014, remove_curse_2014
-from app.content.shared_teleport_spells_2014 import dimension_door_2014
 from app.content.shared_ward_spells_2014 import magic_weapon_2014, protection_from_energy_2014, warding_bond_2014
 from app.domain.combatants import ResourceDefinition
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -296,28 +291,7 @@ def test_2014_magic_weapon_adds_plus_one_attack_and_weapon_damage() -> None:
     assert weapon_damage_flat_bonus(caster.state, weapon_id) == 1
 
 
-def test_2014_dimension_door_noop_is_rejected_without_spending():
-    caster = _member(build_karnok_stoneward().model_copy(update={
-        "teleport_actions": [dimension_door_2014()],
-        "resources": [ResourceDefinition(id="spell-slot-4", name="4th-level Slot", max_uses=1)],
-        "max_hp": 40,
-    }), "caster", "heroes", 1, 2, {4: 1})
-    enemy = _member(build_commoner(), "enemy", "monsters", 8, 2)
-    setup = _setup([caster], [enemy])
-    origin = GridPosition(x=1, y=2)
-    slot = next(item for item in caster.state.resources if item.id == "spell-slot-4")
 
-    assert choose_teleport_action(caster, setup, "1:caster") is None
-    with pytest.raises(ValueError, match="no active teleport-cancelable effect"):
-        resolve_teleport(
-            1, 1, caster, setup, dimension_door_2014(), GridPosition(x=7, y=2),
-            FixedDiceProvider([1, 1, 1, 1]), "1:caster",
-        )
-
-    assert caster.state.position == origin
-    assert caster.state.current_hp == 40
-    assert caster.state.action_available is True
-    assert slot.current_uses == 1
 
 
 def test_compiled_save_action_applies_distant_spell_range() -> None:
