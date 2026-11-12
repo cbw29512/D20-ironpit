@@ -9,6 +9,9 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_innate_fog_cloud_2014 import source_proven_innate_fog_cloud_2014
+from app.content.monster_innate_elemental_inert_2014 import (
+    source_proven_elemental_inert_spells_2014,
+)
 from app.content.monster_innate_source_2014 import innate_spells_2014
 from app.content.monster_source_2014 import SourceMonster2014
 
@@ -24,12 +27,13 @@ _CLOUD_GIANT_AI_EXCLUSIONS = {
 def source_proven_arena_ai_excluded_innate_spells_2014(
     monster: SourceMonster2014,
 ) -> frozenset[str]:
-    """Return only the approved Cloud Giant spell omissions after full source proof."""
+    """Return only source-proven, arena-excluded spell IDs without monster dispatch."""
     try:
+        elemental_excluded = source_proven_elemental_inert_spells_2014(monster)
         # This proof verifies the complete printed Cloud Giant innate paragraph
         # and every parsed spell/use row, not a monster ID or display name.
         if not source_proven_innate_fog_cloud_2014(monster):
-            return frozenset()
+            return elemental_excluded
         rows = {
             str(row.get("id") or ""): row
             for row in innate_spells_2014(monster)
@@ -44,8 +48,8 @@ def source_proven_arena_ai_excluded_innate_spells_2014(
                 or row.get("shared_pool") is not False
                 or row.get("qualifier") is not None
             ):
-                return frozenset()
-        return frozenset(_CLOUD_GIANT_AI_EXCLUSIONS)
+                return elemental_excluded
+        return elemental_excluded | frozenset(_CLOUD_GIANT_AI_EXCLUSIONS)
     except Exception:
         logger.exception(
             "2014 innate arena-AI exclusion proof failed for %s.", monster.id,
