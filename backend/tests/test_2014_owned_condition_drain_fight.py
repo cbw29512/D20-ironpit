@@ -161,8 +161,10 @@ def test_willing_creature_can_be_an_ally_but_not_the_source_itself():
         )
         setup.monsters.append(ally)
 
-        assert ally in save_action_target_order(source, setup, action.target_scope)
-        assert source not in save_action_target_order(source, setup, action.target_scope)
+        ordered = save_action_target_order(source, setup, action.target_scope)
+        assert ally in ordered
+        assert source not in ordered
+        assert ordered.index(target) < ordered.index(ally), "Eligible enemies stay ahead of willing allies."
         assert not legal_save_action(action, ally, 5, source.combatant_id, source)
 
         ally.state.willing_attack_source_ids.append(source.combatant_id)
