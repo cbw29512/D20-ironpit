@@ -166,6 +166,7 @@ class SpellSaveAction(BaseModel):
     allows_higher_slots: bool = False
     target_count: int = Field(default=1, ge=1, le=20)
     target_count_per_slot_above: int = Field(default=0, ge=0, le=20)
+    max_target_pair_distance_ft: int | None = Field(default=None, ge=5, exclude_if=lambda value: value is None)
     save_advantage_if_fighting: bool = False
     cast_rounds: int = Field(default=1, ge=1, le=100)
     creates_difficult_terrain: bool = False
@@ -176,6 +177,8 @@ class SpellSaveAction(BaseModel):
     def validate_spell(self) -> "SpellSaveAction":
         if self.area_radius_ft is not None and self.area_radius_ft % 5:
             raise ValueError("Iron Pit area spell radii must use 5-foot increments.")
+        if self.max_target_pair_distance_ft is not None and (self.area is not None or self.area_radius_ft is not None):
+            raise ValueError("Target-group distance applies only to individually selected spell targets.")
         if self.area_radius_ft is not None and self.area is not None:
             raise ValueError("Save spells must use either legacy radius geometry or universal area geometry, not both.")
         if self.concentration and self.duration_minutes is None:

@@ -55,6 +55,18 @@
       const members = new Map([...setup.heroes, ...setup.monsters]
         .map((member) => [member.combatant_id, member]));
       const action = saveAction(choice);
+      if (spell.maxTargetPairDistanceFt != null) {
+        const legal = window.IRON_PIT_BROWSER_SPELL_TARGET_GROUPS?.legalGroup;
+        if (typeof legal !== "function") throw new Error("Shared spell target-group runtime is missing.");
+        const targets = choice.targetIds.map((id) => {
+          const target = members.get(id);
+          if (!target) throw new Error(`Save-spell target ${id} is unavailable.`);
+          return target;
+        });
+        if (!legal(targets, spell.maxTargetPairDistanceFt)) {
+          throw new Error("Spell targets exceed their declared pairwise distance.");
+        }
+      }
       const dcBonus = window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS?.spellSaveDcBonus?.(caster.state) || 0;
       if (dcBonus) action.dc += dcBonus;
       const events = [];

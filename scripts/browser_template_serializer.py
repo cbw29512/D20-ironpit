@@ -463,6 +463,8 @@ def _spell(action: Any) -> dict[str, Any]:
         row["requiresTargetSight"] = True
     if action.requires_shared_spoken_language:
         row["requiresSharedSpokenLanguage"] = True
+    if action.max_target_pair_distance_ft is not None:
+        row["maxTargetPairDistanceFt"] = action.max_target_pair_distance_ft
     if action.failed_save_timed_effect is not None:
         row["failedSaveTimedEffect"] = _failed_save_timed_effect(action.failed_save_timed_effect)
     if action.required_target_creature_types:

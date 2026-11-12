@@ -148,6 +148,11 @@
         - window.IRON_PIT_BROWSER_OFFENSE_VALUE.saveSpell(a, scaled)
       || a.state.current_hp - b.state.current_hp
       || a.combatant_id.localeCompare(b.combatant_id));
+    if (scaled.maxTargetPairDistanceFt != null) {
+      const choose = window.IRON_PIT_BROWSER_SPELL_TARGET_GROUPS?.chooseGroup;
+      if (typeof choose !== "function") throw new Error("Shared spell target-group runtime is missing.");
+      return choose(ranked, spellSaveTargetCount(scaled, slotLevel), scaled.maxTargetPairDistanceFt);
+    }
     return ranked.slice(0, spellSaveTargetCount(scaled, slotLevel));
   }
 

@@ -8,6 +8,22 @@ Read alongside [SOUL.md](../SOUL.md). This applies to 2014 and 2024 monsters, pr
 
 A card declares: (1) triggers and action economy; (2) target, range, senses, visibility, area, and immunity eligibility; (3) attack/check/save/automatic resolution and exact DC, dice, modifiers; (4) damage, healing, buffs, debuffs, conditions, movement, transformations, and defeat; (5) stacking, duration, concentration, source dependency, exit rules, recharge, and fight reset. Printed ability names are retained for cards and logs only, never runtime dispatch.
 
+## Source-owned multi-target spacing
+
+When a spell permits individually selected additional targets, the immutable
+source card may declare `max_target_pair_distance_ft`. The universal
+selection policy must choose the largest legal group whose **every pair** is
+within that distance (not merely within casting range or near the first
+target), and direct effect resolution must reject an invalid target group
+before applying any effect or spending a target-specific resource. The
+browser serialization uses `maxTargetPairDistanceFt` and must agree with
+Python. Unspecified spacing imposes no additional pairwise constraint.
+
+2014 Command's additional targets are source-bound at **30 feet from each
+other**; this restriction is separate from the spell's **60-foot casting
+range** and remains true under higher-level slots. The spell's declared
+group limit is data, not a Command-specific targeting branch.
+
 ## Visual disguise contract: exact printed mechanics vs arena tactics
 
 - The compiled monster or pregen card declares `visual_disguise_action` with **required fields** for activation/dismissal economy, source visibility, magical vs nonmagical behavior, death expiry, physical inspection, inspection action/ability/skill/DC, and whether recognition actually reveals a true form. Do not hardcode a fixed Bonus Action, DC 16, or a Sea Hag/source name inside the universal resolver.
