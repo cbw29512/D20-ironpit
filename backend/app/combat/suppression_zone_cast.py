@@ -117,6 +117,7 @@ def cast_suppression_zone(
             deafens=action.deafens,
             blocks_verbal_spells=action.blocks_verbal_spells,
             thunder_immunity=action.thunder_immunity,
+            obscuration_kind=action.obscuration_kind,
             concentration=action.concentration,
         ))
         sync_suppression_zone_effects(setup, round_number)
