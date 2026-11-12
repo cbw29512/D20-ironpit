@@ -15,6 +15,7 @@ from app.content.monster_innate_misty_step_2014 import (
     source_proven_innate_misty_step_2014,
 )
 from app.content.monster_source_dryad_shillelagh_2014 import innate_club_shillelagh_buff_2014
+from app.content.monster_innate_nature_spells_2014 import innate_nature_barkskin_2014
 from app.content.monster_innate_spells_2014 import (
     ARENA_NEUTRAL_INNATE_SPELLS_2014,
     _PIT_BANNED_INNATE_SPELLS_2014,
@@ -114,6 +115,9 @@ def innate_timed_self_buffs_2014(monster) -> list[TimedSelfBuffAction]:
         # Use the same generic timed buff for source-proven self Enlarge.
         # An unverified spell package must not gain this damage bonus.
         actions.extend(source_proven_innate_enlarge_2014(monster))
+        barkskin = innate_nature_barkskin_2014(monster)
+        if barkskin is not None:
+            actions.append(barkskin)
         club_buff = innate_club_shillelagh_buff_2014(monster)
         if club_buff is not None:
             actions.append(club_buff)
