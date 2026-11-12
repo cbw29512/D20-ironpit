@@ -59,7 +59,7 @@ def test_2014_source_draining_save_is_compiled_without_inventing_control():
         assert runtime.reduce_hit_point_maximum_on_damage
         assert runtime.max_hp_zero_kills
         browser = _save(runtime)
-        assert browser["targetScope"] == "enemies"
+        assert browser.get("targetScope", "enemies") == "enemies"  # Serializer omits default scope.
         assert browser["targetQualification"]["anyOf"] == ["source_charmed"]
         assert "requiredTargetSourceCondition" not in browser
         assert browser["reduceHitPointMaximumOnDamage"] is True
