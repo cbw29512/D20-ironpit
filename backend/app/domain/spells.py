@@ -151,6 +151,7 @@ class SpellSaveAction(BaseModel):
     automatic_failure_creature_types: list[str] = Field(default_factory=list)
     requires_target_hearing: bool = False
     requires_target_sight: bool = False
+    requires_shared_spoken_language: bool = False
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
     failed_save_push_ft: int = Field(default=0, ge=0)
     failed_save_modifier_effects: list[SpellModifierEffect] = Field(default_factory=list)
