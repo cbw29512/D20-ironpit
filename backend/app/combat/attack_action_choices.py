@@ -7,7 +7,7 @@ from app.combat.pit_policy import (
     flexible_slot_has_both,
     save_distance,
 )
-from app.combat.save_action_targeting import save_action_target_order
+from app.combat.save_action_targeting import save_action_target_order as target_order
 from app.combat.saving_throws import legal_save_action
 from app.combat.resources import resource_available
 from app.domain.actions import AttackActionSlot
@@ -40,13 +40,25 @@ def save_choice(
 ):
     try:
         allowed = set(slot.save_action_ids)
-        for target in save_action_target_order(attacker, setup, "all-other-creatures"):
+        actions = [
+            action for action in attacker.state.template.saving_throw_actions
+            if action.id in allowed
+            and (getattr(action, "resource_id", None) is None or resource_available(
+                attacker.state, action.resource_id, action.resource_cost,
+            ))
+        ]
+        scope = "all-other-creatures" if any(
+            getattr(action, "target_scope", "enemies") == "all-other-creatures"
+            for action in actions
+        ) else "enemies"
+        for target in target_order(attacker, setup, scope):
             if slot.requires_source_grapple and not target_grappled_by_actor(attacker, target):
                 continue
-            for action in attacker.state.template.saving_throw_actions:
-                if action.id not in allowed:
-                    continue
-                if getattr(action, 'resource_id', None) is not None and not resource_available(attacker.state, action.resource_id, action.resource_cost):
+            for action in actions:
+                if (
+                    getattr(action, "target_scope", "enemies") == "enemies"
+                    and getattr(attacker, "side", None) == getattr(target, "side", object())
+                ):
                     continue
                 distance = save_distance(attacker, target, action.range_ft)
                 if legal_save_action(action, target, distance, source_id=attacker.combatant_id, actor=attacker):
