@@ -70,7 +70,6 @@ def resolve_combat_turn(
                                    f"{round_number}:{attacker.combatant_id}", allow_surge=False)
         # Resolve forced turn loss after involuntary gaze but before any
         # voluntary movement, maintenance Action, or Bonus Action.
- on this creature's next turn.
         # The marker ends this turn; actual Prone survives until normal standing.
         compelled_prone = resolve_fall_prone_end_turn(sequence, round_number, attacker)
         if compelled_prone is not None:
