@@ -5,6 +5,7 @@ import logging
 from app.combat.condition_rules import can_see, has_condition
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.encounter_targeting import combatant_distance
+from app.combat.target_qualification import target_qualifies
 from app.combat.source_effect_immunity import (
     has_shared_source_effect_immunity,
     has_source_effect_immunity,
@@ -26,6 +27,11 @@ def legal_save_action(
 ) -> bool:
     try:
         template = target.state.template
+        if actor is not None:
+            if target.combatant_id == actor.combatant_id:
+                return False
+            if action.target_scope == "enemies" and target.side == actor.side:
+                return False
         if action.requires_target_zero_hp_alive and not (
             target.state.current_hp == 0 and target.state.is_alive
             and not target.state.is_dead
@@ -60,6 +66,11 @@ def legal_save_action(
                 for effect in target.state.timed_effects
             ):
                 return False
+        qualification_source_id = source_id or (actor.combatant_id if actor is not None else None)
+        if action.target_qualification is not None and not target_qualifies(
+            qualification_source_id, target.state, action.target_qualification,
+        ):
+            return False
         if action.requires_target_grappled_by_source:
             if (actor is None or not source_id or source_id != actor.combatant_id
                     or not target.state.is_alive or target.state.is_dead
