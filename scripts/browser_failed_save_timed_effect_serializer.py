@@ -11,6 +11,7 @@ def failed_save_timed_effect_row(rider: Any) -> dict[str, Any]:
         row = {
             "effectId": rider.effect_id,
             "durationRounds": rider.duration_rounds,
+            "durationTargetTurns": rider.duration_target_turns,
             "expiryTiming": rider.expiry_timing,
             "repeatSaveAbility": rider.repeat_save_ability,
             "repeatSaveDc": rider.repeat_save_dc,
