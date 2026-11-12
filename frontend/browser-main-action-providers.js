@@ -41,7 +41,7 @@
       const selected = MS()?.choose(member, setup);
       if (selected) return selected;
     }
-    for (const target of F().targetOrder(member, setup)) {
+    for (const target of F().targetOrder(member, setup, false, "all-other-creatures")) {
       for (const action of actions) {
         if ((action.actionCost || "action") !== "action" || action.area || (action.maxTargets || 1) > 1) continue;
         if (action.resourceId && !R().available(member.state, action.resourceId, action.resourceCost || 1)) continue;
