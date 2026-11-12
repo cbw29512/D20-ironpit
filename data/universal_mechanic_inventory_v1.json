@@ -5871,12 +5871,12 @@
       "attack:none": 1,
       "mechanic:legendary": 9,
       "mechanic:recharge": 1,
-      "mechanic:spellcasting": 18,
+      "mechanic:spellcasting": 17,
       "multiattack:complex": 3,
       "source:extra-action": 17,
       "source:legendary": 9,
       "source:reaction": 1,
-      "source:trait": 25
+      "source:trait": 24
     },
     "unresolved_printed_abilities": [
       {
@@ -5909,11 +5909,10 @@
         "printed_name": "Grasping Tendrils"
       },
       {
-        "demand_count": 9,
+        "demand_count": 8,
         "monsters": [
           "Couatl",
           "Djinni",
-          "Dryad",
           "Glabrezu",
           "Lamia",
           "Magma Mephit",
