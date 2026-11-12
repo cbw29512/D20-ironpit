@@ -428,7 +428,7 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **33**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **32**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
@@ -443,15 +443,15 @@ Blocked monsters: **33**. These are grouped by printed ability name so the roste
 | Ooze Cube | Gelatinous Cube | 1 |
 | Reflective Carapace | Tarrasque | 1 |
 | Shapechanger | Vampire | 1 |
-| Spellcasting | Androsphinx, Archmage, Cult Fanatic, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Spirit Naga | 11 |
+| Spellcasting | Androsphinx, Archmage, Druid, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Spirit Naga | 10 |
 | Transparent | Gelatinous Cube | 1 |
 
 ## Monster blocker categories
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 27 |
-| `mechanic:spellcasting` | 20 |
+| `source:trait` | 26 |
+| `mechanic:spellcasting` | 19 |
 | `source:extra-action` | 17 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
