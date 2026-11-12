@@ -1,4 +1,4 @@
-"""2014 complete source proof for the hostile source-owned Charmed drain branch."""
+"""2014 source proof for both source-owned Charmed and willing drain targets."""
 from __future__ import annotations
 
 import logging
@@ -47,18 +47,24 @@ def test_2014_source_draining_save_is_compiled_without_inventing_control():
         assert (action.damage.count, action.damage.size, action.damage.bonus) == (5, 10, 5)
         assert action.damage_type.value == "psychic"
         assert action.success_damage == "half" and action.magical_effect
-        assert action.required_target_source_condition == "charmed"
+        assert action.required_target_source_condition is None
+        assert action.target_scope == "all-other-creatures"
+        assert action.target_qualification.any_of == ["source_charmed", "willing"]
         assert action.reduce_hit_point_maximum_on_damage and action.max_hp_zero_kills
         assert any(item.id == action.id for item in save_capabilities_2014(source))
         runtime = _compile_save(action)
-        assert runtime.required_target_source_condition == "charmed"
+        assert runtime.required_target_source_condition is None
+        assert runtime.target_scope == "all-other-creatures"
+        assert runtime.target_qualification.any_of == ["source_charmed", "willing"]
         assert runtime.reduce_hit_point_maximum_on_damage
         assert runtime.max_hp_zero_kills
         browser = _save(runtime)
-        assert browser["requiredTargetSourceCondition"] == "charmed"
+        assert browser["targetScope"] == "all-other-creatures"
+        assert browser["targetQualification"]["anyOf"] == ["source_charmed", "willing"]
+        assert "requiredTargetSourceCondition" not in browser
         assert browser["reduceHitPointMaximumOnDamage"] is True
         assert browser["maxHpZeroKills"] is True
-        # The complete Charm/voluntary-willing branch is still missing.
+        # Draining Kiss eligibility is complete; Charm command obedience remains blocked.
         assert "source:extra-action" in basic_blockers_2014(source)
         assert source.model_dump_json() == immutable
         renamed = source.model_copy(update={"id": "renamed-source", "name": "Unknown"})
