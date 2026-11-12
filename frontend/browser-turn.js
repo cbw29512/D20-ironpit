@@ -129,6 +129,14 @@
         });
       }
       const turnKey = `${round}:${member.combatant_id}`;
+      // A timed spell's one-turn command executes before voluntary actions.
+      // Its marker expires at turn end; the independent Prone condition remains.
+      const proneCommand = O()?.resolveProneEndTurn?.(sequence, round, member);
+      if (proneCommand) {
+        events.push(proneCommand);
+        sequence += 1;
+        return finalize(events, sequence, round, member, setup, turnKey, false);
+      }
       const hooks = AH();
       if (!hooks) throw new Error("Browser ability-hook runtime is not loaded.");
       const start = hooks.runPhase(hooks.PHASES.TURN_START, {
