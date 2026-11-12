@@ -93,7 +93,10 @@
       if (senseReaches(observer, "blindsight", resolved)) return true;
       if (blinded) return false;
       if (observer?.template?.blind_beyond_blindsight) return false;
-      if (hidden) return senseReaches(observer, "truesight", resolved);
+      const truesight = senseReaches(observer, "truesight", resolved);
+      if (window.IRON_PIT_BROWSER_OBSCURATION_VISIBILITY?.blocked(observer, target,
+        { truesightReaches: truesight })) return false;
+      if (hidden) return truesight;
       return true;
     } catch (error) {
       console.error("Failed to resolve browser visibility.", {
