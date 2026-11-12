@@ -31,6 +31,8 @@ def test_2014_language_source_preserves_known_unknown_and_speech_distinction() -
         assert source_languages_2014(_card("mummy-lord")) == ([], [])
         assert source_languages_2014(_card("couatl")) == (["all"], ["all"])
         assert source_languages_2014(_card("animated-armor")) == ([], [])
+        assert source_languages_2014(_card("shield-guardian")) == ([], ["all"])
+        assert source_languages_2014(_card("twig-blight")) == ([], ["common"])
 
         cult = _card("cult-fanatic")
         before = cult.model_dump_json()
