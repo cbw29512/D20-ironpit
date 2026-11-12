@@ -48,6 +48,10 @@ def test_cloud_giant_misty_step_only_clears_active_holds_without_moving():
             use_default_poison_recovery=False,
         ) == "restrained"
         apply_grapple(state, "hero", 12, 5, restrains=True)
+        resource = next(r for r in state.resources if r.id == "misty-step")
+        resource.current_uses = 0
+        assert choose_teleport_action(cloud, setup, "1:cloud-giant") is None
+        resource.current_uses = 3
         choice = choose_teleport_action(cloud, setup, "1:cloud-giant")
         assert choice is not None
         action, destination = choice
