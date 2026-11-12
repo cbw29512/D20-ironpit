@@ -18,7 +18,7 @@ from app.domain.breakable_restraints import BreakableObjectState
 
 logger = logging.getLogger(__name__)
 
-TimedTurnBehavior = Literal["normal", "forced_retreat", "single_activity", "forced_approach_source"]
+TimedTurnBehavior = Literal["normal", "forced_retreat", "single_activity", "forced_approach_source", "fall_prone_end_turn"]
 
 
 class TimedEffect(BaseModel):
