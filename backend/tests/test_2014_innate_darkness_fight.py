@@ -70,6 +70,15 @@ def test_darkness_cast_is_position_bound_debuff_and_expires_on_concentration(mon
         seeing = caster.state.model_copy(deep=True)
         seeing.template = template.model_copy(update={"truesight_ft": 60})
         assert can_see(seeing, enemy.state, 15)
+        devil_seeing = caster.state.model_copy(deep=True)
+        devil_seeing.template = template.model_copy(update={
+            "magical_darkness_sight_ft": 120,
+        })
+        assert can_see(devil_seeing, enemy.state, 15)
+        devil_seeing.template = template.model_copy(update={
+            "magical_darkness_sight_ft": 10,
+        })
+        assert not can_see(devil_seeing, enemy.state, 15)
         blind_seeing = caster.state.model_copy(deep=True)
         blind_seeing.template = template.model_copy(update={"blindsight_ft": 60})
         blind_seeing.active_effect_ids.append("blinded")
