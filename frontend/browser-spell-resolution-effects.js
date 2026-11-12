@@ -35,6 +35,7 @@
         minimumRemainingHp: spell.minimumRemainingHp || 0,
         reduceHitPointMaximumOnFailedSave: Boolean(spell.reduceHitPointMaximumOnFailedSave),
         requiresTargetHearing: Boolean(spell.requiresTargetHearing),
+        requiresSharedSpokenLanguage: Boolean(spell.requiresSharedSpokenLanguage),
         requiresTargetSight: Boolean(spell.requiresTargetSight),
         automaticFailureCreatureTypes: [...(spell.automaticFailureCreatureTypes || [])],
         magicalEffect: true, effectTags: [...(spell.effectTags || [])],
