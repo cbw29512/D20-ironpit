@@ -386,6 +386,8 @@ def _save(action: Any) -> dict[str, Any]:
         row["automaticFailureCreatureTypes"] = list(action.automatic_failure_creature_types)
     if action.requires_target_hearing:
         row["requiresTargetHearing"] = True
+    if action.requires_shared_spoken_language:
+        row["requiresSharedSpokenLanguage"] = True
     if action.requires_target_sight:
         row["requiresTargetSight"] = True
     if getattr(action, "requires_target_to_see_source", False):
@@ -459,6 +461,8 @@ def _spell(action: Any) -> dict[str, Any]:
         row["automaticFailureCreatureTypes"] = list(action.automatic_failure_creature_types)
     if action.requires_target_hearing:
         row["requiresTargetHearing"] = True
+    if action.requires_shared_spoken_language:
+        row["requiresSharedSpokenLanguage"] = True
     if action.requires_target_sight:
         row["requiresTargetSight"] = True
     if action.failed_save_timed_effect is not None:
