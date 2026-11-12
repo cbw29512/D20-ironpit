@@ -41,8 +41,11 @@ def test_fog_cloud_compiles_without_monster_specific_combat_mechanics(monster_id
             assert supports_innate_spellcasting_2014(monster)
             assert basic_blockers_2014(monster) == ()
         else:
-            # Cloud Giant has additional unbound innate spells: do not certify it.
-            assert not supports_innate_spellcasting_2014(monster)
+            # All nine Cloud Giant innate spells now have source-proven
+            # arena dispositions; Fog Cloud and Misty Step reach the template.
+            assert supports_innate_spellcasting_2014(monster)
+            assert basic_blockers_2014(monster) == ()
+            assert [item.id for item in template.teleport_actions] == ["misty-step"]
     except Exception:
         logger.exception("Fog Cloud immutable source check failed: %s", monster_id)
         raise
