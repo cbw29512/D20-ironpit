@@ -4,6 +4,9 @@ import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_tier1_cleric_2014 import source_proves_tier1_cleric_spells_2014
+from app.content.monster_priest_spells_2014 import (
+    priest_proven_spell_ids_2014, priest_spell_actions_2014,
+)
 from app.content.monster_tier1_cleric_actions_2014 import tier1_cleric_save_spells_2014
 from app.content.shared_control_spells_2014 import (
     blindness_deafness_2014,
@@ -90,6 +93,7 @@ def prepared_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSa
             elif spell_id == "vicious-mockery":
                 actions.append(vicious_mockery_action_2014(dc))
         actions.extend(tier1_cleric_save_spells_2014(monster))
+        actions.extend(priest_spell_actions_2014(monster).saves)
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 prepared save spells for %s.", monster.name)
@@ -111,6 +115,7 @@ def prepared_spell_attack_actions_2014(monster: SourceMonster2014) -> list[Spell
                 actions.append(ray_of_frost_2014(int(attack_bonus), _MONSTER_CANTRIP_LEVEL))
             elif spell_id == "shocking-grasp":
                 actions.append(shocking_grasp_2014(int(attack_bonus), _MONSTER_CANTRIP_LEVEL))
+        actions.extend(priest_spell_actions_2014(monster).attacks)
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 prepared attack spells for %s.", monster.name)
@@ -170,6 +175,7 @@ def supports_prepared_spellcasting_2014(monster: SourceMonster2014) -> bool:
         # Other unrecognized spells continue blocking their entire caster.
         if source_proves_tier1_cleric_spells_2014(monster):
             bound.update({"light", "thaumaturgy", "bless", "cure-wounds", "sanctuary"})
+        bound.update(priest_proven_spell_ids_2014(monster))
         return known <= bound
     except Exception:
         logger.exception("Failed to classify 2014 prepared spellcasting for %s.", monster.name)
