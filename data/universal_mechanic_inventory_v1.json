@@ -5864,19 +5864,19 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 35,
+    "blocked_monster_count": 34,
     "blocker_categories": {
       "arena:neutral": 1,
       "attack:incomplete": 7,
       "attack:none": 1,
       "mechanic:legendary": 9,
       "mechanic:recharge": 1,
-      "mechanic:spellcasting": 21,
+      "mechanic:spellcasting": 20,
       "multiattack:complex": 3,
       "source:extra-action": 18,
       "source:legendary": 9,
       "source:reaction": 1,
-      "source:trait": 28
+      "source:trait": 27
     },
     "unresolved_printed_abilities": [
       {
@@ -5966,7 +5966,7 @@
         "printed_name": "Shapechanger"
       },
       {
-        "demand_count": 12,
+        "demand_count": 11,
         "monsters": [
           "Androsphinx",
           "Archmage",
@@ -5978,7 +5978,6 @@
           "Lich",
           "Mage",
           "Mummy Lord",
-          "Priest",
           "Spirit Naga"
         ],
         "printed_name": "Spellcasting"
