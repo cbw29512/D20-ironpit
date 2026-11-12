@@ -56,9 +56,9 @@ def test_cloud_giant_misty_step_binds_to_shared_in_place_escape():
         assert browser["resourceCost"] == 1
         assert not browser["expendsSpellSlot"]
 
-        # The teleport spell is now bound, but Cloud Giant remains blocked
-        # until its other printed innate spells are individually resolved.
-        assert not supports_innate_spellcasting_2014(source)
+        # All nine printed Cloud Giant innate spells now have a verified
+        # arena disposition; the immutable source card is fully admitted.
+        assert supports_innate_spellcasting_2014(source)
         assert source.model_dump_json() == snapshot
     except Exception:
         logger.exception("Cloud Giant Misty Step binding failed.")
