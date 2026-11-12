@@ -11,6 +11,7 @@ import logging
 from app.content.monster_innate_source_2014 import innate_spellcasting_source_2014, innate_spells_2014
 from app.content.monster_source_sections_2014 import source_sections_2014
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_innate_fog_cloud_2014 import source_proven_innate_fog_cloud_2014
 
 logger = logging.getLogger(__name__)
 
@@ -42,6 +43,14 @@ def source_proven_arena_inert_innate_spells_2014(
         card = innate_spellcasting_source_2014(monster)
         if card is None or not card.get("source_complete"):
             return frozenset()
+        # The shared Fog Cloud source proof validates the ENTIRE Cloud Giant
+        # innate source paragraph and every parsed spell/use, independently
+        # of monster identity. Light remains on the source card, but has no
+        # arena Action or visibility effect under the locked Pit policy.
+        if source_proven_innate_fog_cloud_2014(monster):
+            printed_ids = {row.get("id") for row in innate_spells_2014(monster)}
+            if "light" in printed_ids:
+                return frozenset({"light"})
         if card.get("ability") != "charisma" or card.get("save_dc") != 17:
             return frozenset()
         printed = source_sections_2014(
