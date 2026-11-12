@@ -19,6 +19,7 @@ from app.content.monster_healing_2014 import healing_action_names_2014
 from app.content.monster_innate_support_2014 import innate_spell_names_2014
 from app.content.monster_leadership_2014 import leadership_labels_2014
 from app.content.monster_source_charm_control_2014 import source_proven_charm_control_2014
+from app.content.monster_source_owned_condition_drain_2014 import source_proven_owned_condition_drains_2014
 from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_grapple_rescue_2014 import source_grapple_rescue_rules_2014
 from app.content.monster_source_held_turn_damage_2014 import source_held_turn_damage_2014
@@ -95,6 +96,7 @@ def source_supported_extra_action_labels_2014(monster: SourceMonster2014) -> set
             # The source-proven Charm Action already runs the universal Charmed
             # save/debuff. Arena AI never issues command-control orders.
             | {_label(action.name) for action in source_proven_charm_control_2014(monster)}
+            | {_label(action.name) for action in source_proven_owned_condition_drains_2014(monster)}
             | PIT_BANNED_ACTION_LABELS_2014
             | arena_unavailable_wall_action_labels_2014(monster)
             | {
