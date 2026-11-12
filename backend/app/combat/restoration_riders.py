@@ -11,6 +11,23 @@ from app.domain.encounters import EncounterCombatant
 logger = logging.getLogger(__name__)
 
 
+def remove_curses(target: EncounterCombatant, *, remove_all: bool) -> list[str]:
+    """End one or every source-owned curse through the timed-effect lifecycle."""
+    removed_curses = (
+        list(target.state.active_curses)
+        if remove_all
+        else list(target.state.active_curses[:1])
+    )
+    for effect in list(target.state.timed_effects):
+        if any(curse_id in effect.owned_curse_ids for curse_id in removed_curses):
+            remove_effect_group(target.state, effect)
+    target.state.active_curses = [
+        curse_id for curse_id in target.state.active_curses
+        if curse_id not in removed_curses
+    ]
+    return removed_curses
+
+
 def apply_restoration_riders(
     target: EncounterCombatant,
     action: ConditionRemovalAction,
@@ -30,18 +47,7 @@ def apply_restoration_riders(
         if "curse" in wanted and target.state.active_curses and (
             action.removes_curses or action.removes_all_curses
         ):
-            removed_curses = (
-                list(target.state.active_curses)
-                if action.removes_all_curses
-                else [target.state.active_curses[0]]
-            )
-            for effect in list(target.state.timed_effects):
-                if any(curse_id in effect.owned_curse_ids for curse_id in removed_curses):
-                    remove_effect_group(target.state, effect)
-            target.state.active_curses = [
-                curse_id for curse_id in target.state.active_curses
-                if curse_id not in removed_curses
-            ]
+            remove_curses(target, remove_all=action.removes_all_curses)
             applied.append("curse")
         if (
             "ability-score-reduction" in wanted

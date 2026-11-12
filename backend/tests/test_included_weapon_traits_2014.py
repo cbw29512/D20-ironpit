@@ -30,7 +30,7 @@ def test_included_damage_family_binds_without_certifying_other_mechanics(monster
     before = monster.model_dump_json()
     assert included_weapon_trait_names_2014(monster) == {trait}
     assert trait not in unsupported_traits_2014(monster)
-    if monster_id in {'gladiator', 'azer', 'bugbear', 'salamander', 'deva'}:
+    if monster_id in {'gladiator', 'azer', 'bugbear', 'salamander', 'deva', 'planetar'}:
         # All listed cards now have their printed combat outcomes source-bound.
         assert basic_blockers_2014(monster) == ()
         action = adapt_basic_monster_2014(monster).attack_action

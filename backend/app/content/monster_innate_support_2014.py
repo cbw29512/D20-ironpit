@@ -4,6 +4,7 @@ import logging
 
 from app.content.monster_hp_pool_spell_bindings_2014 import innate_hp_pool_spells_2014
 from app.content.monster_environmental_spell_proofs_2014 import source_proven_arena_inert_innate_spells_2014
+from app.content.monster_source_angelic_innate_2014 import source_proven_angelic_arena_exclusions_2014
 from app.content.monster_innate_spells_2014 import (
     ARENA_NEUTRAL_INNATE_SPELLS_2014,
     _PIT_BANNED_INNATE_SPELLS_2014,
@@ -54,7 +55,9 @@ def innate_timed_self_buffs_2014(monster) -> list[TimedSelfBuffAction]:
                     id="invisibility",
                     name="Invisibility",
                     action_cost="action",
-                    resource_id="invisibility",
+                    # At-will Innate Spellcasting is never a finite resource.
+                    # Keep the printed daily pool only when actually per-day.
+                    resource_id="invisibility" if spell.get("usage") == "per_day" else None,
                     resource_cost=1,
                     duration_rounds=600,
                     expiry_timing="source_turn_end",
@@ -202,6 +205,7 @@ def supports_innate_spellcasting_2014(monster) -> bool:
         # not create fake arena Actions; unrelated innate spells still block.
         bound = (ARENA_NEUTRAL_INNATE_SPELLS_2014
                  | source_proven_arena_inert_innate_spells_2014(monster)
+                 | source_proven_angelic_arena_exclusions_2014(monster)
                  | _PIT_BANNED_INNATE_SPELLS_2014) | {
             action.id for action in innate_spell_save_actions_2014(monster)
         } | {

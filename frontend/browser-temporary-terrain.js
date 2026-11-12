@@ -27,7 +27,8 @@
 
   function applySpellTerrain(setup, caster, action, center, round) {
     if (!action.createsDifficultTerrain && !action.creates_difficult_terrain) return null;
-    const radius = action.area?.radiusFt || action.area?.radius_ft || action.areaRadius;
+    const radius = action.area?.radiusFt || action.area?.radius_ft || action.areaRadius
+      || action.radiusFt || action.radius_ft;
     if (!radius) throw new Error(`${action.name} creates Difficult Terrain without a radius.`);
     const zone = {
       zone_id: `${caster.combatant_id}:${action.id}:${round}:${(setup.temporary_terrain_zones || []).length + 1}`,
@@ -37,7 +38,8 @@
       center: { ...center },
       radius_ft: radius,
       source_is_magical: true,
-      expires_round: round + (action.difficultTerrainDurationRounds || action.difficult_terrain_duration_rounds || 1),
+      expires_round: round + (action.difficultTerrainDurationRounds || action.difficult_terrain_duration_rounds
+        || action.durationRounds || action.duration_rounds || 1),
       expiry_timing: "source_turn_end",
     };
     setup.temporary_terrain_zones = [...(setup.temporary_terrain_zones || []), zone];

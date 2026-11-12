@@ -8,7 +8,7 @@
   const C = () => window.IRON_PIT_BROWSER_SPELLCASTING;
 
   const H = () => window.IRON_PIT_BROWSER_SPELL_POLICY_SUPPORT;
-  const ARENA_WALLS = new Set(["wall-of-fire", "wall-of-stone", "wall-of-ice"]);
+  const ARENA_WALLS = new Set(["wall-of-fire", "wall-of-stone", "wall-of-ice", "blade-barrier"]);
 
   function chooseActionAtSlot(caster, setup, action, castLevel, protectedAllyIds = [], alternateCast = null) {
     try {

@@ -46,6 +46,13 @@ def healing_rider_worthwhile(target: EncounterCombatant, action: HealingAction) 
             return True
     if active.intersection(action.removable_conditions):
         return True
+    if action.removes_all_curses and target.state.active_curses:
+        return True
+    if any(
+        effect.removal_effect_tag in action.removal_effect_tags
+        for effect in target.state.timed_effects
+    ):
+        return True
     return bool(
         action.prone_reaction_stand
         and "prone" in active

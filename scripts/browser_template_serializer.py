@@ -591,6 +591,8 @@ def _healing(action: Any) -> dict[str, Any]:
             "percentileSuccessMax": action.percentile_success_max, "resourceId": action.resource_id,
             "resourceCost": action.resource_cost, "excludedCreatureTypes": list(action.excluded_creature_types),
             "removableConditions": list(action.removable_conditions),
+            "removalEffectTags": list(action.removal_effect_tags),
+            "removesAllCurses": action.removes_all_curses,
             "proneReactionStand": action.prone_reaction_stand,
             "secondaryTargetWithinFt": action.secondary_target_within_ft,
             "grantsTemporaryHp": action.grants_temporary_hp,
@@ -844,6 +846,10 @@ def _save_zone(action: Any) -> dict[str, Any]:
             "resourceId": action.resource_id, "resourceCost": action.resource_cost,
             "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
         }
+        if action.creates_difficult_terrain:
+            row["createsDifficultTerrain"] = True
+        if action.lightly_obscured:
+            row["lightlyObscured"] = True
         if action.target_policy != "enemies":
             row["targetPolicy"] = action.target_policy
         if action.save_context != "spell":

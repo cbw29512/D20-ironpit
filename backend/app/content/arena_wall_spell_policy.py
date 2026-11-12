@@ -16,6 +16,7 @@ ARENA_UNAVAILABLE_WALL_EFFECT_IDS = frozenset({
     "wall-of-ice",
     "wall-of-fire",
     "wall-of-stone",
+    "blade-barrier",  # source-proven wall of spinning blades
 })
 
 

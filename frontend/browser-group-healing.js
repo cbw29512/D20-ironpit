@@ -60,7 +60,8 @@
           ? `${rolls.length}d${action.diceSize || 6}+${modifier}`
           : String(modifier);
       }
-      const hasRiders = (action.removableConditions || []).length || action.proneReactionStand;
+      const hasRiders = (action.removableConditions || []).length
+        || (action.removalEffectTags || []).length || action.removesAllCurses || action.proneReactionStand;
       const runtime = R();
       if (hasRiders && !runtime) throw new Error("Healing riders require the browser healing-resolution runtime.");
       const removed = hasRiders ? runtime.applyRiders(target, action) : [];

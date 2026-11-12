@@ -26,6 +26,9 @@
     if (!action.grantsTemporaryHp && (slotHeal(action) || action.magicalHealing)
       && (target.state.timed_effects || []).some((effect) => effect.ends_on_magical_healing)) return true;
     if ((action.removableConditions || []).some((id) => active.has(id))) return true;
+    if (action.removesAllCurses && target.state.active_curses?.length) return true;
+    if ((target.state.timed_effects || []).some((effect) =>
+      (action.removalEffectTags || []).includes(effect.removal_effect_tag))) return true;
     return Boolean(action.proneReactionStand && active.has("prone") && target.state.reaction_available);
   }
 
