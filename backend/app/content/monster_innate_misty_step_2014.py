@@ -10,13 +10,12 @@ import logging
 from app.content.monster_innate_fog_cloud_2014 import source_proven_innate_fog_cloud_2014
 from app.content.monster_innate_source_2014 import innate_spells_2014
 from app.domain.teleport_actions import TeleportAction
-from app.domain.combatants import ResourceDefinition
-from app.domain.combatants import CombatantTemplate
+from app.content.monster_source_2014 import SourceMonster2014
 
 logger = logging.getLogger(__name__)
 
 
-def source_proven_innate_misty_step_2014(monster) -> list[TeleportAction]:
+def source_proven_innate_misty_step_2014(monster: SourceMonster2014) -> list[TeleportAction]:
     """Bind only the exact, fully source-verified 3/day Cloud Giant Misty Step."""
     try:
         # The existing Fog Cloud proof validates the complete printed Cloud
