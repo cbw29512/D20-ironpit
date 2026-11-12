@@ -26,6 +26,7 @@ from app.domain.tactical_actions import BonusActionTacticalGrant
 from app.domain.effect_removal import EffectRemovalAction, EffectTagConditionGrant
 from app.domain.environment_contexts import EnvironmentContextReaction
 from app.domain.passive_modifiers import PassiveModifierGrant
+from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
 from app.domain.persistent_save_zones import PersistentSaveZoneAction
 from app.domain.suppression_zones import PersistentSuppressionZoneAction
 from app.domain.teleport_actions import TeleportAction
@@ -104,6 +105,7 @@ class CombatantDefinition(BaseModel):
     teleport_actions: list[TeleportAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list, exclude_if=lambda items: not items)
     auto_hit_spell_actions: list[AutoHitSpellAction] = Field(default_factory=list, exclude_if=lambda items: not items)
+    persistent_spell_attack_actions: list[PersistentSpellAttackAction] = Field(default_factory=list)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
     healing_actions: list[HealingAction] = Field(default_factory=list)
     timed_self_buff_actions: list[TimedSelfBuffAction] = Field(default_factory=list)
