@@ -185,11 +185,17 @@ def resolve_support_actions(sequence, round_number, member, setup, dice, turn_ke
 
 def save_choice(attacker: EncounterCombatant, setup: EncounterSetup):
     try:
-        for target in save_action_target_order(attacker, setup, "all-other-creatures"):
-            for action in attacker.state.template.saving_throw_actions:
-                if action.action_cost != "action":
-                    continue
-                if not resource_available(attacker.state, action.resource_id, action.resource_cost):
+        actions = [
+            action for action in attacker.state.template.saving_throw_actions
+            if action.action_cost == "action"
+            and resource_available(attacker.state, action.resource_id, action.resource_cost)
+        ]
+        scope = "all-other-creatures" if any(
+            action.target_scope == "all-other-creatures" for action in actions
+        ) else "enemies"
+        for target in save_action_target_order(attacker, setup, scope):
+            for action in actions:
+                if action.target_scope == "enemies" and target.side == attacker.side:
                     continue
                 distance = save_distance(attacker, target, action.range_ft)
                 if legal_save_action(action, target, distance, source_id=attacker.combatant_id, actor=attacker):
