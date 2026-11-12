@@ -63,7 +63,13 @@ def test_real_priest_runtime_and_browser_have_all_eight_spells_and_slots():
     try:
         card = _source()
         before = card.model_dump_json()
-        template = compile_combatant(adapt_basic_monster_2014(card))
+        # Source projection must preserve the persistent action before the
+        # shared schema/compiler boundary, not just in the spell package.
+        definition = adapt_basic_monster_2014(card)
+        assert [a.id for a in definition.persistent_spell_attack_actions] == [
+            "spiritual-weapon",
+        ]
+        template = compile_combatant(definition)
         row = template_row(template)
         assert [a.id for a in template.spell_save_actions] == ["sacred-flame"]
         assert [a.id for a in template.spell_attack_actions] == ["guiding-bolt"]
