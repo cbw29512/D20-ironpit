@@ -9,6 +9,7 @@ from app.domain.bonus_attacks import BonusAttackGrant
 from app.domain.area_weapon_attacks import AreaWeaponAttackAction
 from app.domain.attack_action_weapon_buffs import AttackActionWeaponBuff
 from app.domain.character_builds import AbilityScores
+from app.domain.languages import LanguageProfile
 from app.domain.damage_absorption import DamageAbsorptionRule
 from app.domain.damage_sources import ConditionalDamageDefense, DamageTakenTimedEffect
 from app.domain.effect_removal import EffectRemovalAction, EffectTagConditionGrant
@@ -80,6 +81,7 @@ class CombatantTemplate(BaseModel):
     kind: Literal["character", "monster"]
     ruleset: RulesetId = DEFAULT_RULESET
     creature_type: str | None = None
+    language_profile: LanguageProfile = Field(default_factory=LanguageProfile)
     size: CreatureSize = CreatureSize.MEDIUM
     ability_scores: AbilityScores | None = None
     armor_class: int = Field(ge=0)
