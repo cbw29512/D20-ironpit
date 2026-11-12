@@ -12,30 +12,37 @@
       if (!E().available(member.state, "bonus_action") || !member.state.position) return null;
       for (const action of member.state.template.persistent_spell_attack_actions || []) {
         const active = S().activeState(member, action, round);
-        const origin = active ? active.position : member.state.position;
-        const originSize = active ? S().EFFECT_SIZE : member.state.template.size;
-        const movement = active ? action.moveFt : action.attack.range;
         for (const target of F().targetOrder(member, setup)) {
-          const placement = S().effectPosition(
-            origin,
-            originSize,
-            target,
-            setup,
-            movement,
-            action.attackReachFt,
-          );
-          if (!placement) continue;
+          if (!target.state.position) throw new Error("Persistent spell target needs a square.");
+          const nonspatial = action.spatialMode === "nonspatial";
+          let placement = null;
+          let distance;
+          if (nonspatial) {
+            // Resolve the attack directly: no weapon token or moved square.
+            distance = G().footprintDistanceFt(
+              member.state.position, member.state.template.size,
+              target.state.position, target.state.template.size,
+            );
+            if (distance > action.attack.range) continue;
+          } else {
+            const origin = active ? active.position : member.state.position;
+            if (!origin) throw new Error("Positioned spell effect lost its grid square.");
+            const originSize = active ? S().EFFECT_SIZE : member.state.template.size;
+            const movement = active ? action.moveFt : action.attack.range;
+            placement = S().effectPosition(
+              origin, originSize, target, setup, movement, action.attackReachFt,
+            );
+            if (!placement) continue;
+            distance = G().footprintDistanceFt(
+              placement.point, S().EFFECT_SIZE,
+              target.state.position, target.state.template.size,
+            );
+          }
           const slotLevel = active
             ? active.slot_level
             : S().castSlotLevel(member, action, turnKey);
           if (slotLevel == null) continue;
           const attack = S().attackForSlot(action, slotLevel, Boolean(active));
-          const distance = G().footprintDistanceFt(
-            placement.point,
-            S().EFFECT_SIZE,
-            target.state.position,
-            target.state.template.size,
-          );
           const event = A().resolve(
             sequence,
             round,
@@ -52,15 +59,18 @@
             member.state.persistent_spell_attacks.push({
               action_id: action.id,
               slot_level: slotLevel,
-              position: placement.point,
+              position: placement ? placement.point : null,
               applied_round: round,
               expires_round: round + action.durationRounds,
             });
-          } else {
+          } else if (placement) {
             active.position = placement.point;
           }
-          event.movement_ft = placement.moved;
-          event.grid_position_after = { ...placement.point };
+          // Do not create movement / position events for nonspatial effects.
+          if (placement) {
+            event.movement_ft = placement.moved;
+            event.grid_position_after = { ...placement.point };
+          }
           return event;
         }
       }
