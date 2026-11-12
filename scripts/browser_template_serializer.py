@@ -11,10 +11,12 @@ try:
     from scripts.browser_recharge_serializer import recharge_rows
     from scripts.browser_attack_action_slots import attack_slot_row
     from scripts.browser_failed_save_timed_effect_serializer import failed_save_timed_effect_row as _failed_save_timed_effect
+    from scripts.browser_effect_removal_serializer import effect_removal_row
 except ModuleNotFoundError:
     from browser_recharge_serializer import recharge_rows
     from browser_attack_action_slots import attack_slot_row
     from browser_failed_save_timed_effect_serializer import failed_save_timed_effect_row as _failed_save_timed_effect
+    from browser_effect_removal_serializer import effect_removal_row
 
 logger = logging.getLogger(__name__)
 
@@ -1513,6 +1515,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             ]
         if template.condition_removal_actions:
             row["condition_removal_actions"] = [_removal(item) for item in template.condition_removal_actions]
+        if template.effect_removal_actions:
+            row["effect_removal_actions"] = [
+                effect_removal_row(item) for item in template.effect_removal_actions
+            ]
         if template.timed_self_buff_actions:
             row["timed_self_buff_actions"] = [_timed_self_buff(item) for item in template.timed_self_buff_actions]
         if template.suppression_zone_actions:
