@@ -84,7 +84,10 @@
     if (targetScope === "all-other-creatures") {
       const sleeping = (target) => (target.state.timed_effects || []).some((effect) =>
         effect.effect_id === "unconscious" && effect.ends_on_damage === true);
-      const priority = (target) => target.state.current_hp > 0 ? (sleeping(target) ? 2 : 0) : 3;
+      const incapacitated = window.IRON_PIT_BROWSER_CONDITION_RULES?.incapacitated;
+      if (!incapacitated) throw new Error("All-other-creatures targeting requires universal condition rules.");
+      const priority = (target) => target.state.current_hp > 0
+        ? (sleeping(target) ? 2 : incapacitated(target.state) ? 1 : 0) : 3;
       return [...targets].sort((left, right) =>
         priority(left) - priority(right)
         || Number(left.side === member.side) - Number(right.side === member.side)
