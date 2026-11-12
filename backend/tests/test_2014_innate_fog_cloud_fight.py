@@ -66,6 +66,8 @@ def test_2014_fog_cloud_avoids_waste_and_blocks_sight_only_while_active(monster_
         assert not can_see(caster.state, target.state, 15)
         assert not can_see(target.state, caster.state, 15)
         assert "blinded" not in target.state.active_effect_ids
+        assert "deafened" not in target.state.active_effect_ids
+        assert target.state.zone_damage_immunities == []
         assert "magical-darkness" not in target.state.active_effect_ids
         truesight = caster.state.model_copy(deep=True)
         truesight.template = template.model_copy(update={
