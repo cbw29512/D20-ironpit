@@ -54,6 +54,7 @@ def compile_spell_save_action(choice: SpellChoice) -> SavingThrowAction:
             effect_tags=list(spell.effect_tags),
             automatic_failure_creature_types=list(spell.automatic_failure_creature_types),
             requires_target_hearing=spell.requires_target_hearing,
+            requires_shared_spoken_language=spell.requires_shared_spoken_language,
             requires_target_sight=spell.requires_target_sight,
             failed_save_timed_effect=rider,
             failed_save_push_ft=spell.failed_save_push_ft,
