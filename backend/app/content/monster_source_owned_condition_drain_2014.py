@@ -1,8 +1,9 @@
 """Source-exact 2014 save damage against a condition owned by the acting source.
 
 This is an immutable-card adapter, not a monster/ability-name combat resolver.
-Both printed eligibility branches are represented by shared target qualification:
-source-owned Charmed or explicit willingness.
+The printed source remains unchanged. Iron Pit assumes no combatant willingly
+accepts this hostile Action, so only the attacking source's active Charmed
+condition qualifies. The universal target gate enforces this rule.
 """
 from __future__ import annotations
 
@@ -34,7 +35,7 @@ _CHARMED_DRAIN = re.compile(
 def source_proven_owned_condition_drains_2014(
     monster: SourceMonster2014,
 ) -> list[SaveCapabilityDefinition]:
-    """Compile the source-charmed hostile branch using existing save/HP semantics."""
+    """Compile only source-owned Charmed targets using generic save/HP semantics."""
     try:
         sections = source_sections_2014(
             monster.source_actions, include_continuations=True,
@@ -65,8 +66,8 @@ def source_proven_owned_condition_drains_2014(
                 damage=DiceSpec(count=count, size=size, bonus=bonus),
                 damage_type=DamageType(match["type"].casefold()),
                 success_damage="half", magical_effect=True,
-                target_scope="all-other-creatures",
-                target_qualification=TargetQualification(any_of=["source_charmed", "willing"]),
+                target_scope="enemies",
+                target_qualification=TargetQualification(any_of=["source_charmed"]),
                 reduce_hit_point_maximum_on_damage=True,
                 max_hp_zero_kills=True, animation="life-drain",
             ))

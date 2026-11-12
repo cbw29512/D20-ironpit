@@ -1,6 +1,6 @@
 "use strict";
 
-// Browser parity for the printed Draining Kiss target alternatives and scope.
+// Iron Pit policy: Draining Kiss has no willing-target branch; only source-owned Charm.
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
@@ -43,8 +43,8 @@ const action = {
   name: "Draining Kiss",
   range: 5,
   requiresTargetSight: false,
-  targetScope: "all-other-creatures",
-  targetQualification: { anyOf: ["source_charmed", "willing"] },
+  targetScope: "enemies",
+  targetQualification: { anyOf: ["source_charmed"] },
 };
 const legal = (target, selectedAction = action, distance = 5) =>
   window.IRON_PIT_BROWSER_SAVE_ACTION_SUPPORT.legalAction(
@@ -59,14 +59,20 @@ try {
   const ally = member("ally", "monsters");
   assert.equal(legal(ally), false);
   ally.state.willing_attack_source_ids.push(actor.combatant_id);
-  assert.equal(legal(ally), true);
-  assert.equal(legal(actor), false, "all-other-creatures never includes the source itself");
-  assert.equal(legal(ally, { ...action, targetScope: "enemies" }), false);
-  assert.equal(legal(member("willing-enemy", "heroes", null)), false);
+  assert.equal(legal(ally), false, "Willing allies cannot volunteer for hostile Draining Kiss.");
+  assert.equal(legal(actor), false, "The acting source is never a target.");
+
   const willingEnemy = member("willing-enemy", "heroes");
   willingEnemy.state.willing_attack_source_ids.push(actor.combatant_id);
-  assert.equal(legal(willingEnemy), true);
-  assert.equal(legal(willingEnemy, action, 10), false);
+  assert.equal(legal(willingEnemy), false, "Willingness is not a valid arena gate.");
+  assert.equal(legal(willingEnemy, action, 10), false, "Normal range still applies.");
+
+  // Even if an ally becomes source-Charmed, this hostile action targets enemies.
+  ally.state.active_effect_ids.push("charmed");
+  ally.state.timed_effects.push({
+    effect_id: "charmed", source_id: actor.combatant_id, source_is_magical: false,
+  });
+  assert.equal(legal(ally), false);
 
   const suppressed = member("suppressed-owner", "heroes");
   suppressed.state.active_effect_ids.push("charmed");
@@ -75,14 +81,14 @@ try {
     { effect_id: "charmed", source_id: "other-source", source_is_magical: false },
   ];
   suppressed.state.magical_charm_suppressed = true;
-  assert.equal(legal(suppressed), false, "another source's Charmed cannot authorize this Kiss");
+  assert.equal(legal(suppressed), false, "Another source's Charmed cannot authorize this Kiss.");
   suppressed.state.timed_effects.push({
     effect_id: "charmed", source_id: actor.combatant_id, source_is_magical: false,
   });
-  assert.equal(legal(suppressed), true, "an unsuppressed owner-sourced Charmed does authorize it");
+  assert.equal(legal(suppressed), true, "A live owner-sourced Charmed permits Draining Kiss.");
 } catch (error) {
-  console.error("Browser Draining Kiss target qualification regression failed.", error);
+  console.error("Browser Draining Kiss charmed-only regression failed.", error);
   throw error;
 }
 
-console.log("Browser Draining Kiss target qualification and scope regressions passed.");
+console.log("Browser Draining Kiss source-Charmed-only regressions passed.");

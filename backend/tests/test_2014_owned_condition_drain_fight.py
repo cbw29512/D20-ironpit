@@ -150,60 +150,45 @@ def test_renamed_actor_executes_real_source_kiss_as_generic_save(
         raise
 
 
-def test_willing_creature_can_be_an_ally_but_not_the_source_itself():
+def test_willingness_never_qualifies_an_uncharmed_enemy_or_ally():
     try:
         source, target, setup, action = _fight()
         ally = EncounterCombatant(
-            combatant_id="willing-ally", side="monsters", position_ft=5,
+            combatant_id="ally", side="monsters", position_ft=5,
             state=build_combatant_state(
-                build_demo_fighter().model_copy(update={"name": "Willing Ally", "max_hp": 60})
+                build_demo_fighter().model_copy(update={"name": "Other Combatant"})
             ),
         )
         setup.monsters.append(ally)
 
-        ordered = save_action_target_order(source, setup, action.target_scope)
-        assert ally in ordered
-        assert source not in ordered
-        assert ordered.index(target) < ordered.index(ally), "Eligible enemies stay ahead of willing allies."
-        assert not legal_save_action(action, ally, 5, source.combatant_id, source)
-
+        # Iron Pit has no willing targets for a hostile Draining Kiss.
+        target.state.willing_attack_source_ids.append(source.combatant_id)
         ally.state.willing_attack_source_ids.append(source.combatant_id)
-        assert legal_save_action(action, ally, 5, source.combatant_id, source)
+        assert not legal_save_action(action, target, 5, source.combatant_id, source)
+        assert not legal_save_action(action, ally, 5, source.combatant_id, source)
         assert not legal_save_action(action, source, 0, source.combatant_id, source)
 
-        enemy_only = action.model_copy(update={"target_scope": "enemies"})
-        assert not legal_save_action(enemy_only, ally, 5, source.combatant_id, source)
+        # A different actor's Charm plus willingness still never qualifies.
+        apply_timed_condition(
+            target.state, "charmed", "different-actor",
+            source_effect_id="other-charm", use_default_poison_recovery=False,
+        )
+        assert not legal_save_action(action, target, 5, source.combatant_id, source)
 
-        # Willingness is an independent alternative, not an additional AND gate.
-        target.state.willing_attack_source_ids.append(source.combatant_id)
+        # Only the acting source's Charm opens the hostile save action.
+        apply_timed_condition(
+            target.state, "charmed", source.combatant_id,
+            source_effect_id="own-charm", use_default_poison_recovery=False,
+        )
         assert legal_save_action(action, target, 5, source.combatant_id, source)
-    except Exception:
-        logger.exception("Willing-target scope or qualification regression failed.")
-        raise
+        assert save_action_target_order(source, setup, action.target_scope) == [target]
 
-
-def test_willing_ally_can_execute_the_compiled_draining_kiss_save():
-    try:
-        source, _target, setup, action = _fight()
-        ally = EncounterCombatant(
-            combatant_id="willing-ally", side="monsters", position_ft=5,
-            state=build_combatant_state(
-                build_demo_fighter().model_copy(update={"name": "Willing Ally", "max_hp": 100})
-            ),
+        # Even a source-Charmed ally is outside this hostile arena action.
+        apply_timed_condition(
+            ally.state, "charmed", source.combatant_id,
+            source_effect_id="own-charm", use_default_poison_recovery=False,
         )
-        ally.state.willing_attack_source_ids.append(source.combatant_id)
-        setup.monsters.append(ally)
-        event = resolve_save_action(
-            1, 1, source, ally, action, 5,
-            FixedDiceProvider([1, 10, 10, 10, 10, 10]),
-            spend_action=False, check_resource=False,
-            spend_resource=False, setup=setup,
-            affected_states=[source.state, ally.state],
-        )
-        assert event.feature_id == "draining-kiss"
-        assert event.damage_roll is not None
-        assert ally.state.hit_point_maximum_reduction > 0
-        assert ally.state.current_hp < 100
+        assert not legal_save_action(action, ally, 5, source.combatant_id, source)
     except Exception:
-        logger.exception("Willing ally Draining Kiss execution failed.")
+        logger.exception("Draining Kiss charmed-only arena target gating failed.")
         raise
