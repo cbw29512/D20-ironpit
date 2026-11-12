@@ -814,6 +814,7 @@ def _suppression_zone(action: Any) -> dict[str, Any]:
             "concentration": action.concentration, "deafens": action.deafens,
             "blocksVerbalSpells": action.blocks_verbal_spells,
             "thunderImmunity": action.thunder_immunity,
+            "obscurationKind": action.obscuration_kind,
             "resourceId": action.resource_id, "resourceCost": action.resource_cost,
             "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
         }
