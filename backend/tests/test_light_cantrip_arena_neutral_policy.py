@@ -77,20 +77,22 @@ def test_light_exclusion_does_not_erase_real_obscuration_spells():
         raise
 
 
-def test_cloud_giant_light_has_exact_source_proof_without_admitting_its_other_spells():
+def test_cloud_giant_light_and_remaining_innate_spells_have_exact_source_proofs():
     try:
         source = next(m for m in load_monster_source_2014() if m.id == "cloud-giant")
         original = source.model_dump_json()
-        assert source_proven_arena_inert_innate_spells_2014(source) == {"light"}
+        assert source_proven_arena_inert_innate_spells_2014(source) == {
+            "light", "feather-fall", "control-weather",
+        }
         assert "fog-cloud" in {
             a.id for a in compile_combatant(
                 adapt_monster_mechanics_2014(source),
             ).suppression_zone_actions
         }
-        # The Light policy resolves one obligation; Misty Step and other
-        # outstanding spell decisions must not be silently admitted.
+        # All nine Cloud Giant innate spells now have source-proven
+        # arena dispositions; the source card remains immutable.
         from app.content.monster_innate_support_2014 import supports_innate_spellcasting_2014
-        assert not supports_innate_spellcasting_2014(source)
+        assert supports_innate_spellcasting_2014(source)
         for old, new in (
             ("fog cloud, light", "fog cloud, fireball"),
             ("3/day each: feather fall", "4/day each: feather fall"),
