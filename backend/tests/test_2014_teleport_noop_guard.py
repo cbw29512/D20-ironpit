@@ -11,7 +11,7 @@ from app.combat.teleport_policy import choose_teleport_action
 from app.combat.teleport_resolution import resolve_teleport
 from app.content.arena_map import build_standard_iron_pit_map
 from app.content.audited_fighter import build_karnok_stoneward
-from app.content.demo import build_commoner
+from app.content.monsters import build_commoner
 from app.content.shared_teleport_spells_2014 import dimension_door_2014
 from app.domain.combatants import ResourceDefinition
 from app.domain.encounters import EncounterCombatant, EncounterSetup
