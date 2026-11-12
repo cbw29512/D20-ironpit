@@ -57,10 +57,14 @@
       }
       if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.actionCost} is unavailable for ${action.name}.`);
       if (!destination) throw new Error(`${action.name} requires a destination argument.`);
+      const travelers = [caster, ...passengers(caster, setup, action)];
+      const cancel = window.IRON_PIT_BROWSER_TELEPORT_CANCEL;
+      if (!travelers.some((traveler) => cancel?.cancelableIds(traveler.state).length)) {
+        throw new Error(`${action.name} has no active teleport-cancelable effect to clear.`);
+      }
       if (action.expendsSpellSlot) P()?.markSlotSpellCast?.(caster.state, turnKey);
       E().spend(caster.state, action.actionCost);
       if (action.resourceId) caster.state.resources[action.resourceId] -= action.resourceCost || 1;
-      const travelers = [caster, ...passengers(caster, setup, action)];
       const origin = { ...caster.state.position };
       const removed = [];
       for (const traveler of travelers) {
