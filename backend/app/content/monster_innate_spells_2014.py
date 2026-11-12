@@ -16,6 +16,7 @@ from app.content.shared_control_spells_2014 import (
     hold_monster_2014,
 )
 from app.content.shared_damage_spells_2014 import flame_strike_2014, harm_2014
+from app.content.monster_innate_faerie_fire_2014 import source_proven_innate_faerie_fire_2014
 from app.content.monster_innate_zone_bindings_2014 import source_supported_innate_zones_2014
 from app.content.sorcerer_draconic_2014_spells import (
     burning_hands_2014,
@@ -236,6 +237,9 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
                 actions.append(blindness_deafness_2014(dc))
             elif spell_id == "vicious-mockery":
                 actions.append(vicious_mockery_action_2014(dc))
+        # Source proof binds the printed innate 1/day use to the exact same
+        # 2014 save/Advantage/Invisibility-suppression action as Druid.
+        actions.extend(source_proven_innate_faerie_fire_2014(monster))
         return actions
     except Exception:
         logger.exception("Failed to compile 2014 innate save spells for %s.", monster.name)
