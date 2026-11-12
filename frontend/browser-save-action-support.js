@@ -11,9 +11,9 @@
       const timed = window.IRON_PIT_BROWSER_FAILED_SAVE_TIMED_EFFECTS;
       const shared = window.IRON_PIT_BROWSER_SAVE_IMMUNITY;
       const conditionImmunity = window.IRON_PIT_BROWSER_CONDITION_IMMUNITY;
-      if (actor && target.combatant_id === actor.combatant_id) return false;
-      if (actor && actor.side && target.side && (action.targetScope || "enemies") === "enemies"
-        && target.side === actor.side) return false;
+      if (actor && action.targetQualification && target.combatant_id === actor.combatant_id) return false;
+      if (actor && action.targetQualification && actor.side && target.side
+        && (action.targetScope || "enemies") === "enemies" && target.side === actor.side) return false;
       if (action.requiresTargetZeroHpAlive
         && !(target.state.current_hp === 0 && target.state.is_alive && !target.state.is_dead)) return false;
       if (action.requiredTargetCondition
