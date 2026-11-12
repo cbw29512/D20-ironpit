@@ -11,7 +11,7 @@ from app.domain.environment_contexts import EnvironmentContextId
 from app.domain.save_damage import SaveDamageComponent
 from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.size import CreatureSize
-from app.domain.targeting import AreaTargeting
+from app.domain.targeting import AreaTargeting, TargetQualification
 from app.domain.weapons import DamageType
 
 logger = logging.getLogger(__name__)
@@ -52,6 +52,7 @@ class SaveCapabilityDefinition(BaseModel):
     required_target_condition: ConditionName | None = Field(default=None, exclude_if=lambda value: value is None)
     # The live target condition must originate from this save-action actor.
     required_target_source_condition: ConditionName | None = Field(default=None, exclude_if=lambda value: value is None)
+    target_qualification: TargetQualification | None = Field(default=None, exclude_if=lambda value: value is None)
     requires_target_grappled_by_source: bool = Field(default=False, exclude_if=lambda value: not value)
     required_target_creature_types: list[str] = Field(default_factory=list, exclude_if=lambda value: not value)
     prohibited_target_source_effect_ids: list[str] = Field(default_factory=list, exclude_if=lambda value: not value)
