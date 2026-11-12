@@ -6,7 +6,10 @@ from app.combat.action_economy import is_available, spend
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.spellcasting import mark_slot_spell_cast
 from app.combat.suppression_zone_geometry import verbal_casting_blocked
-from app.combat.teleport_cancel import clear_teleport_cancelable_effects
+from app.combat.teleport_cancel import (
+    clear_teleport_cancelable_effects,
+    teleport_cancelable_effect_ids,
+)
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.events import BattleEvent
 from app.domain.grid import GridPosition
@@ -59,6 +62,11 @@ def resolve_teleport(
             raise ValueError(f"{action.name} requires the authoritative grid.")
         if destination is None:
             raise ValueError(f"{action.name} requires a destination argument.")
+        travelers = [caster, *_passengers(caster, setup, action)]
+        if not any(teleport_cancelable_effect_ids(item.state) for item in travelers):
+            raise ValueError(
+                f"{action.name} has no active teleport-cancelable effect to clear."
+            )
         if not is_available(caster.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")
         origin = caster.state.position.model_copy(deep=True)
@@ -72,7 +80,6 @@ def resolve_teleport(
         spend(caster.state, action.action_cost)
         if resource is not None:
             resource.current_uses -= action.resource_cost
-        travelers = [caster, *_passengers(caster, setup, action)]
         removed: list[str] = []
         for traveler in travelers:
             for condition_id in clear_teleport_cancelable_effects(traveler):
