@@ -42,10 +42,18 @@ def choose_teleport_action(
             return None
         if not teleport_cancelable_effect_ids(caster.state):
             return None
+        available_resources = {
+            resource.id: resource.current_uses
+            for resource in caster.state.resources
+        }
         actions = [
             action
             for action in caster.state.template.teleport_actions
             if is_available(caster.state, action.action_cost)
+            and (
+                action.resource_id is None
+                or available_resources.get(action.resource_id, 0) >= action.resource_cost
+            )
         ]
         if not actions:
             return None
