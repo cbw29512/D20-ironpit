@@ -17,6 +17,7 @@ from app.content.shared_control_spells_2014 import (
 )
 from app.content.shared_damage_spells_2014 import flame_strike_2014, harm_2014
 from app.content.monster_innate_faerie_fire_2014 import source_proven_innate_faerie_fire_2014
+from app.content.shared_nature_spells_2014 import entangle_2014
 from app.content.monster_innate_zone_bindings_2014 import source_supported_innate_zones_2014
 from app.content.sorcerer_draconic_2014_spells import (
     burning_hands_2014,
@@ -129,27 +130,7 @@ def innate_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSave
                 actions.append(poison_spray_2014(dc, _MONSTER_CANTRIP_LEVEL))
             # Existing control / lower priority
             elif spell_id == "entangle":
-                actions.append(SpellSaveAction(
-                    id="entangle",
-                    name="Entangle",
-                    level=1,
-                    range_ft=90,
-                    area=AreaTargeting(shape="cube", origin="point", length_ft=20),
-                    save_ability="strength",
-                    dc=dc,
-                    failed_save_timed_effect=FailedSaveTimedEffect(
-                        effect_id="restrained",
-                        duration_rounds=10,
-                        expiry_timing="source_turn_end",
-                        escape_check_ability="strength",
-                        escape_check_dc=dc,
-                    ),
-                    concentration=True,
-                    duration_minutes=1,
-                    creates_difficult_terrain=True,
-                    difficult_terrain_duration_rounds=10,
-                    animation="entangle",
-                ))
+                actions.append(entangle_2014(dc))
             elif spell_id == "calm-emotions":
                 actions.append(SpellSaveAction(
                     id="calm-emotions",

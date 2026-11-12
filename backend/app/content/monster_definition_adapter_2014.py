@@ -58,6 +58,8 @@ from app.content.monster_innate_spells_2014 import (
     innate_spell_save_actions_2014,
 )
 from app.content.monster_command_spell_2014 import prepared_command_spell_actions_2014
+from app.content.monster_prepared_nature_spells_2014 import prepared_nature_spells_2014
+from app.content.monster_source_shillelagh_2014 import source_shillelagh_attacks_2014
 from app.content.monster_prepared_spells_2014 import (
     prepared_auto_hit_spell_actions_2014,
     prepared_persistent_save_zone_actions_2014,
@@ -236,10 +238,11 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
     core = monster_core_fields_2014(monster.id)
     priest_spells = priest_spell_actions_2014(monster)
     shared_cleric_spells = prepared_cleric_spell_actions_2014(monster)
+    nature_spells = prepared_nature_spells_2014(monster)
     scores = AbilityScores(**ability_values_2014(monster))
     movement = movement_modes_2014(monster)
     attacks = [
-        *[_attack(monster, attack) for attack in monster.attacks],
+        *[_attack(monster, attack) for attack in source_shillelagh_attacks_2014(monster)],
         *source_ranged_save_only_hit_attacks_2014(monster),
         *source_proven_damage_free_grapple_attacks_2014(monster),
         *source_proven_damage_or_grapple_2014(monster),
@@ -321,6 +324,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
                 prepared_spell_save_actions_2014(monster),
                 prepared_command_spell_actions_2014(monster),
                 shared_cleric_spells.saves,
+                nature_spells.saves,
             ),
         ],
         hit_point_pool_spell_actions=[
@@ -332,6 +336,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *merge_unique_spell_actions(
                 prepared_spell_attack_actions_2014(monster),
                 shared_cleric_spells.attacks,
+                nature_spells.attacks,
             ),
         ],
         auto_hit_spell_actions=[
@@ -341,6 +346,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         defensive_spell_actions=merge_unique_spell_actions(
             tier1_cleric_defensive_spells_2014(monster),
             priest_spells.defenses, shared_cleric_spells.defenses,
+            nature_spells.defenses,
         ),
         persistent_spell_attack_actions=merge_unique_spell_actions(
             priest_spells.persistent_attacks, shared_cleric_spells.persistent_attacks,
@@ -356,6 +362,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *prepared_persistent_save_zone_actions_2014(monster),
         ],
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
+            *nature_spells.buffs,
             *source_invisibility_action_2014(monster),
             *source_enlarge_action_2014(monster),
             *berserk_self_buffs_2014(monster),

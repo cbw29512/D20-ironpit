@@ -1,3 +1,11 @@
+## [ ] 2014 Druid — source-complete nature spells and Shillelagh (PR #1286)
+
+- **Reconciled dependency:** Command/Grovel [PR #1285](https://github.com/cbw29512/D20-ironpit/pull/1285) merged as `50b24a0`; Druid rebuilt as one main-parent commit without overwriting the shared Command, targeting, serializer, or generated code.
+- **Exact source:** Nine printed spells; Wisdom fourth-level casting, DC 12 and +4 spell attack, four first- and three second-level slots. The source Quarterstaff variants are preserved, but its +4 / 1d8+2 magical attack is executable only while the non-Concentration Bonus Action Shillelagh buff is active. No per-monster runtime resolver.
+- **Cross-roster reuse:** Entangle shares the existing 2014 Dryad save/Restrained spell; Thunderwave uses the shared area/save/damage pipeline. Produce Flame, Longstrider and Barkskin use existing 2014 hero behavior. Utility spells are source-preserved arena-neutral.
+- **Measured branch:** Sync-generated artifacts now project **296/327 source-admitted, 31 blocked**, from certified Command main's **295/327 and 32 blocked**. This is only source admission; exact final-head Python/browser and all required GitHub checks remain the merge gate, with real webpage-fight evidence a separate completion requirement.
+- **Next family:** Dryad's source-proven Entangle, Barkskin, Club/Shillelagh, Fey Charm, tree movement and innate usage resources; preserve all original printed clauses, derive mechanics from universal engine contracts, and do not invent a Dryad-specific combat resolver.
+
 ## [ ] 2014 Command — universal Grovel-only spell selection (4 2014 source cards)
 
 - **Locked decision 2026-11-12:** For every automated Command cast, choose the printed **Grovel** option. Target fails source-owned Wisdom DC, **falls Prone on its next turn, and immediately ends that turn**; no other commands, movement or conditional monster logic. Keep exact printed spell name in logs and original card text. Existing shared Prone state is authoritative.

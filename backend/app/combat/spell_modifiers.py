@@ -39,6 +39,8 @@ def build_spell_modifier(
         multiplier=effect.multiplier,
         required_attack_ability=effect.required_attack_ability,
         required_weapon_attack_kind=effect.required_weapon_attack_kind,
+        weapon_id=effect.weapon_id,
+        source_qualifier=effect.source_qualifier,
         minimum_value=effect.minimum_value,
         dice_count=effect.dice_count,
         dice_size=effect.dice_size,
