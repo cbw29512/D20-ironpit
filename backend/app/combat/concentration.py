@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from app.combat.condition_rules import is_incapacitated
 from app.combat.dice import DiceProvider
 from app.combat.modifier_stack import remove_source_modifiers
+from app.combat.obscuration_visibility import remove_concentration_obscuration_projections
 from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.domain.events import DiceRoll
 from app.domain.modifiers import ConcentrationState
@@ -59,26 +60,7 @@ def end_concentration(
     states = _affected(owner, affected_states)
     remove_source_modifiers(states, current.source_id, current.effect_id, concentration_only=True)
     _remove_source_timed_effects(states, current.source_id, current.effect_id)
-    # Remove cached sight-obscuration immediately after Concentration breaks;
-    # the encounter zone is pruned at the next universal zone sync.
-    for state in states:
-        state.visible_obscuration_zones = [
-            zone for zone in state.visible_obscuration_zones
-            if not (zone.concentration and zone.source_id == current.source_id
-                    and zone.action_id == current.effect_id)
-        ]
-        if not any(
-            zone.obscuration_kind == "magical-darkness"
-            and state.position is not None
-            and (zone.position.x - state.position.x) ** 2
-                + (zone.position.y - state.position.y) ** 2
-                <= (zone.radius_ft / 5) ** 2
-            for zone in state.visible_obscuration_zones
-        ):
-            state.active_effect_ids = [
-                effect for effect in state.active_effect_ids
-                if effect != "magical-darkness"
-            ]
+    remove_concentration_obscuration_projections(states, current.source_id, current.effect_id)
     owner.concentration = None
     return True
 
