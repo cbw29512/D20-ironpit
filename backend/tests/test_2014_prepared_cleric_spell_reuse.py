@@ -6,7 +6,9 @@ import logging
 import pytest
 
 from app.content.monster_source_2014 import load_monster_source_2014
-from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+from app.content.monster_definition_adapter_2014 import (
+    adapt_basic_monster_2014, adapt_monster_mechanics_2014,
+)
 from app.content.monster_prepared_cleric_spells_2014 import (
     prepared_cleric_spell_actions_2014, merge_unique_spell_actions,
 )
@@ -42,7 +44,7 @@ def test_cult_fanatic_reuses_six_cleric_spell_entries_and_hold_person() -> None:
         assert package.persistent_attacks[0].spatial_mode == "nonspatial"
         assert package.persistent_attacks[0].attack.attack_bonus == 3
 
-        definition = adapt_basic_monster_2014(card)
+        definition = adapt_monster_mechanics_2014(card)
         template = compile_combatant(definition)
         assert {"sacred-flame", "hold-person"} <= {
             x.id for x in template.spell_save_actions
