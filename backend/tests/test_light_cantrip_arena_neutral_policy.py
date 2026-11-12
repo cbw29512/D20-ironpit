@@ -10,6 +10,7 @@ import pytest
 
 from app.content.canonical_cleric_spells import CLERIC_CANTRIPS
 from app.content.capability_compiler import compile_combatant
+from app.content.monster_environmental_spell_proofs_2014 import source_proven_arena_inert_innate_spells_2014
 from app.content.cleric_2014_spell_package import _CANTRIPS as CLERIC_2014_CANTRIPS
 from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
 from app.content.monster_source_2014 import load_monster_source_2014
@@ -73,4 +74,33 @@ def test_light_exclusion_does_not_erase_real_obscuration_spells():
             assert any(action.id == spell_id for action in template.suppression_zone_actions)
     except Exception:
         logger.exception("Light policy accidentally altered active obscuration.")
+        raise
+
+
+def test_cloud_giant_light_has_exact_source_proof_without_admitting_its_other_spells():
+    try:
+        source = next(m for m in load_monster_source_2014() if m.id == "cloud-giant")
+        original = source.model_dump_json()
+        assert source_proven_arena_inert_innate_spells_2014(source) == {"light"}
+        assert "fog-cloud" in {
+            a.id for a in compile_combatant(
+                adapt_monster_mechanics_2014(source),
+            ).suppression_zone_actions
+        }
+        # The Light policy resolves one obligation; Misty Step and other
+        # outstanding spell decisions must not be silently admitted.
+        from app.content.monster_innate_support_2014 import supports_innate_spellcasting_2014
+        assert not supports_innate_spellcasting_2014(source)
+        for old, new in (
+            ("fog cloud, light", "fog cloud, fireball"),
+            ("3/day each: feather fall", "4/day each: feather fall"),
+        ):
+            assert old in source.source_traits
+            mutated = source.model_copy(update={
+                "source_traits": source.source_traits.replace(old, new),
+            })
+            assert not source_proven_arena_inert_innate_spells_2014(mutated)
+        assert source.model_dump_json() == original
+    except Exception:
+        logger.exception("Cloud Giant Light printed-source proof failed.")
         raise
