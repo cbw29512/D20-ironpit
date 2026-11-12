@@ -78,7 +78,7 @@
   function saveChoice(member, setup, data) {
     try {
       const allowed = new Set(data.saveActionIds);
-      for (const target of F().targetOrder(member, setup)) {
+      for (const target of F().targetOrder(member, setup, false, "all-other-creatures")) {
         if (data.requiresSourceGrapple && !targetGrappledByActor(member, target)) continue;
         const action = (member.state.template.saving_throw_actions || []).find((item) =>
           allowed.has(item.id) && saveResourceAvailable(member.state, item) && V().legalAction(item, target, F().saveDistance(member, target, item.range), member.combatant_id, member));
