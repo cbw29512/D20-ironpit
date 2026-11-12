@@ -27,7 +27,7 @@ def legal_save_action(
 ) -> bool:
     try:
         template = target.state.template
-        if actor is not None:
+        if actor is not None and action.target_qualification is not None:
             if target.combatant_id == actor.combatant_id:
                 return False
             if action.target_scope == "enemies" and target.side == actor.side:
