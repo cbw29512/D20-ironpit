@@ -4,6 +4,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.charmed_targeting import charmed_blocks_hostile_target
+from app.combat.encounter_targeting import active_target_policy, target_priority
 from app.combat.pit_policy import is_backline, target_order
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 
@@ -15,40 +16,41 @@ def save_action_target_order(
     setup: EncounterSetup,
     target_scope: str,
 ) -> list[EncounterCombatant]:
-    """Return legal-scope candidates, keeping normal enemies ahead of willing allies."""
+    """Return all in-scope candidates, with enemies ahead of willing allies."""
     try:
         if target_scope not in {"enemies", "all-other-creatures"}:
             raise ValueError(f"Unsupported save-action target scope: {target_scope}")
-        primary = target_order(attacker, setup)
         if target_scope == "enemies":
-            return primary
+            return target_order(attacker, setup)
+        if active_target_policy(attacker) == "nearest_visible_creature":
+            return target_order(attacker, setup)
 
-        enemies = setup.monsters if attacker.side == "heroes" else setup.heroes
-        allies = setup.heroes if attacker.side == "heroes" else setup.monsters
-        primary_ids = {member.combatant_id for member in primary}
-
-        def eligible(member: EncounterCombatant) -> bool:
+        candidates: list[tuple[int, EncounterCombatant]] = []
+        for member in [*setup.heroes, *setup.monsters]:
             state = member.state
-            return (
-                member.combatant_id != attacker.combatant_id
-                and state.is_alive and not state.is_dead
-                and state.swallowed is None
-                and not any(effect.removed_from_battlefield for effect in state.timed_effects)
-                and not charmed_blocks_hostile_target(attacker.state, member.combatant_id)
-            )
+            if (
+                member.combatant_id == attacker.combatant_id
+                or not state.is_alive or state.is_dead
+                or state.swallowed is not None
+                or any(effect.removed_from_battlefield for effect in state.timed_effects)
+                or charmed_blocks_hostile_target(attacker.state, member.combatant_id)
+            ):
+                continue
+            priority = target_priority(member)
+            if priority is None and state.current_hp == 0:
+                priority = 3
+            if priority is not None:
+                candidates.append((priority, member))
 
-        remaining_enemies = [
-            member for member in enemies
-            if member.combatant_id not in primary_ids and eligible(member)
-        ]
-        remaining_allies = [
-            member for member in allies
-            if member.combatant_id not in primary_ids and eligible(member)
-        ]
-        formation_order = lambda members: sorted(
-            members, key=lambda member: (is_backline(member), member.combatant_id),
-        )
-        return [*primary, *formation_order(remaining_enemies), *formation_order(remaining_allies)]
+        return [member for _priority, member in sorted(
+            candidates,
+            key=lambda item: (
+                item[0],
+                item[1].side == attacker.side,
+                is_backline(item[1]),
+                item[1].combatant_id,
+            ),
+        )]
     except Exception as exc:
         logger.exception("Save-action target ordering failed for %s.", attacker.combatant_id)
         raise RuntimeError("Save-action targets could not be ordered.") from exc
