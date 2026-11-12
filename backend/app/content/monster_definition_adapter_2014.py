@@ -85,6 +85,7 @@ from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014, fetid_cl
 from app.content.monster_leadership_2014 import leadership_actions_2014, leadership_resources_2014
 from app.content.monster_senses_2014 import special_senses_2014, bounded_blindsight_2014
 from app.content.monster_spell_slot_resources_2014 import monster_spell_slot_resources_2014
+from app.content.monster_priest_spells_2014 import priest_spell_actions_2014
 from app.content.monster_tier1_cleric_actions_2014 import (
     tier1_cleric_defensive_spells_2014, tier1_cleric_healing_spells_2014,
 )
@@ -228,6 +229,7 @@ def adapt_basic_monster_2014(monster: SourceMonster2014) -> CombatantDefinition:
 def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinition:
     """Compile modeled mechanics without claiming full basic-roster admission."""
     core = monster_core_fields_2014(monster.id)
+    priest_spells = priest_spell_actions_2014(monster)
     scores = AbilityScores(**ability_values_2014(monster))
     movement = movement_modes_2014(monster)
     attacks = [
@@ -322,7 +324,11 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *innate_auto_hit_spell_actions_2014(monster),
             *prepared_auto_hit_spell_actions_2014(monster),
         ],
-        defensive_spell_actions=tier1_cleric_defensive_spells_2014(monster),
+        defensive_spell_actions=[
+            *tier1_cleric_defensive_spells_2014(monster),
+            *priest_spells.defenses,
+        ],
+        persistent_spell_attack_actions=list(priest_spells.persistent_attacks),
         suppression_zone_actions=[
             *source_proven_innate_darkness_2014(monster),
             *source_proven_innate_fog_cloud_2014(monster),
@@ -344,9 +350,14 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *condition_auras_from_source(monster.source_traits, "2014"),
             *contextual_save_defenses_2014(monster)[0], *leadership_actions_2014(monster),
             *recharge_self_buff_actions_2014(monster),
-            *slot_melee_weapon_bonus_actions_2014(monster)],
-        healing_actions=[*healing_actions_2014(monster), *tier1_cleric_healing_spells_2014(monster)],
-        condition_removal_actions=list(core.condition_removal_actions),
+            *slot_melee_weapon_bonus_actions_2014(monster),
+            *priest_spells.timed_buffs],
+        healing_actions=[*healing_actions_2014(monster),
+                         *tier1_cleric_healing_spells_2014(monster),
+                         *priest_spells.healing],
+        condition_removal_actions=[*core.condition_removal_actions,
+                                   *priest_spells.condition_removals],
+        effect_removal_actions=list(priest_spells.effect_removals),
         terminal_effect_tags=terminal_effect_tags_2014(monster),
         effect_tag_condition_grants=effect_tag_condition_grants_2014(monster),
         legendary_actions=legendary_options,
