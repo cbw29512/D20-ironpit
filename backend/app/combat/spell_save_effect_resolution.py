@@ -15,6 +15,7 @@ from app.combat.spell_caster_buffs import active_spell_save_dc_bonus
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_damage_maximizers import maximized_save_damage_rolls
 from app.combat.spell_policy import spell_at_slot
+from app.combat.spoken_language_eligibility import spoken_language_understood
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.domain.actions import SavingThrowAction
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -97,6 +98,10 @@ def resolve_spell_save_effect(
 
         for target_id in choice.target_ids:
             target = by_id[target_id]
+            if scaled_spell.requires_shared_spoken_language and not spoken_language_understood(
+                caster.state.template.language_profile, target.state.template.language_profile,
+            ):
+                raise ValueError("Spell target does not demonstrably understand the caster language.")
             ward = (
                 check_targeting_ward(caster, target, dice)
                 if scaled_spell.area_radius_ft is None and scaled_spell.area is None

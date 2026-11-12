@@ -461,6 +461,8 @@ def _spell(action: Any) -> dict[str, Any]:
         row["requiresTargetHearing"] = True
     if action.requires_target_sight:
         row["requiresTargetSight"] = True
+    if action.requires_shared_spoken_language:
+        row["requiresSharedSpokenLanguage"] = True
     if action.failed_save_timed_effect is not None:
         row["failedSaveTimedEffect"] = _failed_save_timed_effect(action.failed_save_timed_effect)
     if action.required_target_creature_types:
@@ -1237,6 +1239,14 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                        "off_hand": template.visual.off_hand, "body_style": template.visual.body_style},
             "source": template.source, **_progression_features(template),
         }
+        # Preserve immutable speaker/target language evidence only when explicit.
+        profile = template.language_profile
+        if profile.spoken or profile.understood or profile.speaks_all or profile.understands_all:
+            row["languageProfile"] = {
+                "spoken": list(profile.spoken), "understood": list(profile.understood),
+                "speaksAll": profile.speaks_all, "understandsAll": profile.understands_all,
+                "unspecified": profile.unspecified,
+            }
         if template.death_trigger_actions:
             row["death_trigger_effect_ids"] = list(template.death_trigger_effect_ids)
             row["death_trigger_actions"] = [_save(item) for item in template.death_trigger_actions]

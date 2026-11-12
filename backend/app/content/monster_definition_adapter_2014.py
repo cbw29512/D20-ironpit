@@ -80,6 +80,7 @@ from app.content.monster_innate_support_2014 import (
 )
 from app.content.monster_legendary_bindings_2014 import legendary_action_options_2014
 from app.content.monster_source_2014 import SourceAttack2014, SourceMonster2014
+from app.content.monster_languages_2014 import monster_languages_2014
 from app.content.monster_core_fields_2014 import monster_core_fields_2014
 from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014, fetid_cloud_resources_2014
 from app.content.monster_leadership_2014 import leadership_actions_2014, leadership_resources_2014
@@ -297,6 +298,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         id=f"2014-{monster.id}", name=monster.name, archetype=f"2014 {monster.creature_type}",
         challenge_rating=monster.challenge_rating, kind="monster", ruleset="2014",
         creature_type=monster.creature_type,
+        language_profile=monster_languages_2014(monster.languages),
         size=CreatureSize(monster.size.lower()), ability_scores=scores,
         armor_class=core.armor_class, max_hp=core.max_hp, speed_ft=standard_arena_closing_speed_from_modes(movement),
         movement_modes=movement, initiative_bonus=core.initiative_bonus,

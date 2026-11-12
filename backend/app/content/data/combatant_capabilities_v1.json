@@ -8,6 +8,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Fey (Goblinoid)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "small",
     "armor_class": 15,
     "max_hp": 10,
@@ -233,6 +240,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Fey (Goblinoid)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "small",
     "armor_class": 12,
     "max_hp": 7,
@@ -429,6 +443,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Fey (Goblinoid)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 18,
     "max_hp": 11,
@@ -640,6 +661,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Dragon",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "small",
     "armor_class": 14,
     "max_hp": 7,
@@ -839,6 +867,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Fey (Goblinoid)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "small",
     "armor_class": 17,
     "max_hp": 21,
@@ -1095,6 +1130,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Humanoid",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 12,
     "max_hp": 11,
@@ -1290,6 +1332,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Humanoid",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 10,
     "max_hp": 4,
@@ -1455,6 +1504,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Humanoid",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 16,
     "max_hp": 11,
@@ -1649,6 +1705,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "small",
     "armor_class": 13,
     "max_hp": 7,
@@ -1816,6 +1879,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 13,
     "max_hp": 9,
@@ -1979,6 +2049,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "small",
     "armor_class": 12,
     "max_hp": 7,
@@ -2159,6 +2236,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Monstrosity",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 11,
     "max_hp": 19,
@@ -2322,6 +2406,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 12,
     "max_hp": 19,
@@ -2487,6 +2578,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "ability_scores": {
       "strength": 14,
@@ -2667,6 +2765,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 14,
     "max_hp": 22,
@@ -2839,6 +2944,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 11,
     "max_hp": 19,
@@ -3025,6 +3137,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "ability_scores": {
       "strength": 17,
@@ -3252,6 +3371,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "small",
     "armor_class": 12,
     "max_hp": 3,
@@ -3419,6 +3545,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 10,
     "max_hp": 17,
@@ -3582,6 +3715,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 13,
     "max_hp": 4,
@@ -3747,6 +3887,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 10,
     "max_hp": 15,
@@ -3910,6 +4057,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 13,
     "max_hp": 15,
@@ -4075,6 +4229,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "small",
     "armor_class": 12,
     "max_hp": 3,
@@ -4238,6 +4399,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 11,
     "max_hp": 13,
@@ -4406,6 +4574,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 10,
     "max_hp": 11,
@@ -4571,6 +4746,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 13,
     "max_hp": 42,
@@ -4739,6 +4921,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Undead",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 12,
     "max_hp": 45,
@@ -4939,6 +5128,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast (Dinosaur)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "huge",
     "armor_class": 14,
     "max_hp": 114,
@@ -5127,6 +5323,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Undead",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 13,
     "max_hp": 22,
@@ -5299,6 +5502,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast (Dinosaur)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 13,
     "max_hp": 51,
@@ -5494,6 +5704,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 10,
     "max_hp": 4,
@@ -5655,6 +5872,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Elemental",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 11,
     "max_hp": 11,
@@ -5891,6 +6115,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Humanoid (Druid)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 13,
     "max_hp": 44,
@@ -6076,6 +6307,7 @@
         "automatic_failure_creature_types": [],
         "requires_target_hearing": false,
         "requires_target_sight": false,
+        "requires_shared_spoken_language": false,
         "failed_save_push_ft": 0,
         "required_target_creature_types": [],
         "excluded_target_creature_types": [],
@@ -6111,6 +6343,7 @@
         "automatic_failure_creature_types": [],
         "requires_target_hearing": false,
         "requires_target_sight": false,
+        "requires_shared_spoken_language": false,
         "failed_save_push_ft": 0,
         "required_target_creature_types": [],
         "excluded_target_creature_types": [],
@@ -6245,6 +6478,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Monstrosity",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 11,
     "max_hp": 26,
@@ -6433,6 +6673,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Plant",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "small",
     "armor_class": 9,
     "max_hp": 10,
@@ -6596,6 +6843,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "tiny",
     "armor_class": 11,
     "max_hp": 5,
@@ -6757,6 +7011,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "tiny",
     "armor_class": 12,
     "max_hp": 1,
@@ -6916,6 +7177,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "tiny",
     "armor_class": 12,
     "max_hp": 2,
@@ -7077,6 +7345,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "tiny",
     "armor_class": 11,
     "max_hp": 3,
@@ -7238,6 +7513,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "tiny",
     "armor_class": 11,
     "max_hp": 1,
@@ -7400,6 +7682,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "tiny",
     "armor_class": 13,
     "max_hp": 1,
@@ -7559,6 +7848,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "tiny",
     "armor_class": 10,
     "max_hp": 2,
@@ -7720,6 +8016,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "tiny",
     "armor_class": 11,
     "max_hp": 1,
@@ -7881,6 +8184,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "tiny",
     "armor_class": 10,
     "max_hp": 1,
@@ -8042,6 +8352,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "tiny",
     "armor_class": 12,
     "max_hp": 2,
@@ -8203,6 +8520,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "tiny",
     "armor_class": 13,
     "max_hp": 1,
@@ -8362,6 +8686,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "small",
     "armor_class": 12,
     "max_hp": 4,
@@ -8525,6 +8856,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 13,
     "max_hp": 13,
@@ -8690,6 +9028,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast (Dinosaur)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 13,
     "max_hp": 68,
@@ -8855,6 +9200,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 12,
     "max_hp": 42,
@@ -9043,6 +9395,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 10,
     "max_hp": 11,
@@ -9206,6 +9565,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast (Dinosaur)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 13,
     "max_hp": 13,
@@ -9371,6 +9737,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 11,
     "max_hp": 13,
@@ -9534,6 +9907,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 13,
     "max_hp": 30,
@@ -9704,6 +10084,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 10,
     "max_hp": 5,
@@ -9871,6 +10258,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "small",
     "armor_class": 13,
     "max_hp": 4,
@@ -10034,6 +10428,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 11,
     "max_hp": 19,
@@ -10199,6 +10600,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Celestial",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 12,
     "max_hp": 19,
@@ -10368,6 +10776,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 11,
     "max_hp": 5,
@@ -10535,6 +10950,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 13,
     "max_hp": 22,
@@ -10698,6 +11120,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 12,
     "max_hp": 5,
@@ -10866,6 +11295,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 10,
     "max_hp": 11,
@@ -11031,6 +11467,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 13,
     "max_hp": 45,
@@ -11196,6 +11639,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 11,
     "max_hp": 19,
@@ -11361,6 +11811,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Giant",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 11,
     "max_hp": 68,
@@ -11582,6 +12039,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Monstrosity",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 13,
     "max_hp": 59,
@@ -11768,6 +12232,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 13,
     "max_hp": 52,
@@ -11958,6 +12429,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Humanoid",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 13,
     "max_hp": 16,
@@ -12176,6 +12654,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Humanoid",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 13,
     "max_hp": 9,
@@ -12373,6 +12858,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 12,
     "max_hp": 13,
@@ -12550,6 +13042,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 15,
     "max_hp": 13,
@@ -12727,6 +13226,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 13,
     "max_hp": 13,
@@ -12933,6 +13439,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 15,
     "max_hp": 52,
@@ -13179,6 +13692,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Aberration",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 14,
     "max_hp": 54,
@@ -13406,6 +13926,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Monstrosity",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 12,
     "max_hp": 59,
@@ -13605,6 +14132,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "small",
     "armor_class": 14,
     "max_hp": 9,
@@ -13779,6 +14313,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Monstrosity",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 10,
     "max_hp": 25,
@@ -13958,6 +14499,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Dragon",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 14,
     "max_hp": 127,
@@ -14194,6 +14742,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 14,
     "max_hp": 11,
@@ -14374,6 +14929,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 13,
     "max_hp": 22,
@@ -14555,6 +15117,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 13,
     "max_hp": 11,
@@ -14738,6 +15307,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast (Dinosaur)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "huge",
     "armor_class": 17,
     "max_hp": 90,
@@ -14926,6 +15502,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast (Dinosaur)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "huge",
     "armor_class": 15,
     "max_hp": 68,
@@ -15117,6 +15700,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Celestial",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 13,
     "max_hp": 26,
@@ -15319,6 +15909,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Celestial",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "huge",
     "armor_class": 14,
     "max_hp": 42,
@@ -15500,6 +16097,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "huge",
     "armor_class": 14,
     "max_hp": 85,
@@ -15732,6 +16336,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "huge",
     "armor_class": 12,
     "max_hp": 60,
@@ -15962,6 +16573,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast (Dinosaur)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "huge",
     "armor_class": 13,
     "max_hp": 136,
@@ -16192,6 +16810,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Construct",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 18,
     "max_hp": 33,
@@ -16389,6 +17014,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Construct",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "small",
     "armor_class": 17,
     "max_hp": 14,
@@ -16563,6 +17195,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Elemental",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 17,
     "max_hp": 147,
@@ -16799,6 +17438,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Plant",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "huge",
     "armor_class": 13,
     "max_hp": 59,
@@ -16967,6 +17613,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Humanoid",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 12,
     "max_hp": 9,
@@ -17143,6 +17796,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Monstrosity",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "tiny",
     "armor_class": 14,
     "max_hp": 5,
@@ -17317,6 +17977,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Elemental",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 15,
     "max_hp": 67,
@@ -17511,6 +18178,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Aberration",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 11,
     "max_hp": 11,
@@ -17687,6 +18361,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Humanoid",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 18,
     "max_hp": 75,
@@ -17935,6 +18616,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 14,
     "max_hp": 82,
@@ -18123,6 +18811,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Giant",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "huge",
     "armor_class": 13,
     "max_hp": 105,
@@ -18354,6 +19049,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "huge",
     "armor_class": 12,
     "max_hp": 90,
@@ -18519,6 +19221,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Fiend (Devil)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 9,
     "max_hp": 9,
@@ -18693,6 +19402,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Monstrosity",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 14,
     "max_hp": 68,
@@ -18919,6 +19635,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Undead",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 8,
     "max_hp": 85,
@@ -19091,6 +19814,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Celestial",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 12,
     "max_hp": 59,
@@ -19267,6 +19997,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "tiny",
     "armor_class": 11,
     "max_hp": 1,
@@ -19439,6 +20176,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Undead",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 14,
     "max_hp": 13,
@@ -19639,6 +20383,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "tiny",
     "armor_class": 12,
     "max_hp": 1,
@@ -19814,6 +20565,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Humanoid",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 12,
     "max_hp": 27,
@@ -20035,6 +20793,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Giant",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 15,
     "max_hp": 94,
@@ -20289,6 +21054,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Humanoid",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 12,
     "max_hp": 32,
@@ -20486,6 +21258,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "tiny",
     "armor_class": 12,
     "max_hp": 5,
@@ -20662,6 +21441,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Plant",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 5,
     "max_hp": 18,
@@ -20853,6 +21639,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Elemental",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 19,
     "max_hp": 84,
@@ -21092,6 +21885,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Undead",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 8,
     "max_hp": 15,
@@ -21264,6 +22064,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "huge",
     "armor_class": 13,
     "max_hp": 92,
@@ -21456,6 +22263,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 12,
     "max_hp": 45,
@@ -21625,6 +22439,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "tiny",
     "armor_class": 13,
     "max_hp": 1,
@@ -21790,6 +22611,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Beast",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 12,
     "max_hp": 22,
@@ -21958,6 +22786,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Fiend",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 12,
     "max_hp": 22,
@@ -22157,6 +22992,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Swarm of Tiny Beasts",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 13,
     "max_hp": 28,
@@ -22355,6 +23197,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Fiend",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 15,
     "max_hp": 58,
@@ -22611,6 +23460,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Dragon (Chromatic)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 17,
     "max_hp": 33,
@@ -22866,6 +23722,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Dragon (Chromatic)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 17,
     "max_hp": 65,
@@ -23119,6 +23982,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Dragon (Chromatic)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 17,
     "max_hp": 38,
@@ -23375,6 +24245,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Dragon (Chromatic)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 17,
     "max_hp": 75,
@@ -23627,6 +24504,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Dragon (Chromatic)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 16,
     "max_hp": 32,
@@ -23881,6 +24765,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Dragon (Chromatic)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 18,
     "max_hp": 127,
@@ -24143,6 +25034,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Dragon (Chromatic)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 18,
     "max_hp": 152,
@@ -24403,6 +25301,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Dragon (Chromatic)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 18,
     "max_hp": 136,
@@ -24666,6 +25571,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Dragon (Chromatic)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 18,
     "max_hp": 178,
@@ -24925,6 +25837,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Dragon (Chromatic)",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 17,
     "max_hp": 123,
@@ -25186,6 +26105,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Fey",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 13,
     "max_hp": 26,
@@ -25359,6 +26285,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Swarm of Tiny Beasts",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "large",
     "armor_class": 12,
     "max_hp": 11,
@@ -25552,6 +26485,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Swarm of Tiny Beasts",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 10,
     "max_hp": 14,
@@ -25745,6 +26685,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Swarm of Tiny Undead",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 12,
     "max_hp": 49,
@@ -25948,6 +26895,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Humanoid",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 15,
     "max_hp": 52,
@@ -26172,6 +27126,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Humanoid",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 18,
     "max_hp": 52,
@@ -26424,6 +27385,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Humanoid",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 15,
     "max_hp": 9,
@@ -26592,6 +27560,13 @@
     "kind": "monster",
     "ruleset": "2024",
     "creature_type": "Humanoid",
+    "language_profile": {
+      "spoken": [],
+      "understood": [],
+      "speaks_all": false,
+      "understands_all": false,
+      "unspecified": true
+    },
     "size": "medium",
     "armor_class": 17,
     "max_hp": 65,

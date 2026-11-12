@@ -164,6 +164,7 @@ def _spell(action: Any) -> dict[str, Any]:
     if action.effect_tags: row["effectTags"] = list(action.effect_tags)
     if action.requires_target_hearing: row["requiresTargetHearing"] = True
     if action.requires_target_sight: row["requiresTargetSight"] = True
+    if action.requires_shared_spoken_language: row["requiresSharedSpokenLanguage"] = True
     if action.automatic_failure_creature_types:
         row["automaticFailureCreatureTypes"] = list(action.automatic_failure_creature_types)
     if action.failed_save_modifier_effects:
@@ -889,6 +890,13 @@ def _template(key: tuple[str, int, str], template: CombatantTemplate) -> dict[st
         row["canonical_cantrips"] = [_spell_choice(item) for item in package.cantrips]
         row["canonical_prepared_spells"] = [_spell_choice(item) for item in package.spells]
         row["canonical_always_prepared_spells"] = [_spell_choice(item) for item in package.always_prepared_spells]
+    profile = template.language_profile
+    if profile.spoken or profile.understood or profile.speaks_all or profile.understands_all:
+        row["languageProfile"] = {
+            "spoken": list(profile.spoken), "understood": list(profile.understood),
+            "speaksAll": profile.speaks_all, "understandsAll": profile.understands_all,
+            "unspecified": profile.unspecified,
+        }
     if template.spell_save_actions: row["spell_save_actions"] = [_spell(item) for item in template.spell_save_actions]
     if template.spell_attack_actions: row["spell_attack_actions"] = [_spell_attack(item) for item in template.spell_attack_actions]
     if template.targeted_concentration_damage_actions:

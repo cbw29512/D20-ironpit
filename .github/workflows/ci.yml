@@ -914,6 +914,7 @@ jobs:
           node frontend/browser-fighter8.test.cjs
           node frontend/browser-next-incoming-attack-bonus.test.cjs
           node frontend/browser-save-action-cost.test.cjs
+          node frontend/browser-spoken-language-eligibility.test.cjs
           node frontend/browser-2014-audit-fixes.test.cjs
 
       - name: Upload preset fight results

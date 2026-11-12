@@ -64,6 +64,7 @@ class SourceMonster2014(BaseModel):
     speed: dict[str, int]
     abilities: dict[str, int]
     senses: str = ""
+    languages: str = ""  # Exact 2014 printed Languages metadata; never infer Common.
     saving_throws: dict[str, int] = Field(default_factory=dict)
     skills: dict[str, int] = Field(default_factory=dict)
     damage_resistances: list[str] = Field(default_factory=list)

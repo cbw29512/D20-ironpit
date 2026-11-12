@@ -19,6 +19,7 @@ from app.domain.capability_attacks import (
     SaveCapabilityDefinition,
 )
 from app.domain.character_builds import AbilityScores
+from app.domain.languages import LanguageProfile
 from app.domain.combatants import ResourceDefinition, VisualLoadout
 from app.domain.damage_sources import ConditionalDamageDefense, DamageTakenTimedEffect
 from app.domain.damage_absorption import DamageAbsorptionRule
@@ -64,6 +65,7 @@ class CombatantDefinition(BaseModel):
     kind: Literal["character", "monster"]
     ruleset: RulesetId
     creature_type: str | None = None
+    language_profile: LanguageProfile = Field(default_factory=LanguageProfile)
     size: CreatureSize = CreatureSize.MEDIUM
     ability_scores: AbilityScores | None = None
     armor_class: int = Field(ge=0)

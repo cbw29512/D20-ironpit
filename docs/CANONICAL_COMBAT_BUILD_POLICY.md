@@ -112,6 +112,10 @@ Iron Pit runtime includes only data and abilities that can change an Iron Pit co
 
 Noncombat skills, languages, tools, exploration ribbons, social features, crafting, downtime features, and utility-only choices may remain in legal-build/source metadata but are omitted from the runtime capability surface and do not block combat certification.
 
+When a printed combat action explicitly requires language comprehension (such as 2014 Command), **language ceases to be noncombat metadata for that action**. The generic combatant schema may carry source-proven spoken/understood languages solely for that conditional target-eligibility check. Do not infer Common, treat telepathy as spoken language, or silently make unspecified prior-life/creator/any-one-language choices. An unknown language profile fails only actions requiring comprehension, not normal combat readiness.
+
+Whenever combatant language evidence changes serialized browser templates, regenerate every affected source-derived parity fixture through its existing generator-owned workflow (including Multiattack, included weapon damage, and Veteran fixtures). Final certification must run on the exact resulting PR head; a green generator lane alone is insufficient.
+
 If RAW requires a noncombat choice that cannot affect the arena, choose a legal class-relevant option deterministically or randomize among equivalent legal options. Do not spend custom engine work on it.
 
 ## Feat, ASI, spell, equipment, and subclass policy

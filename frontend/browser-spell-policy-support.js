@@ -157,6 +157,12 @@
       && target.state.current_hp > 0 && S().distance(caster, target) <= range
       && (!window.IRON_PIT_BROWSER_GRID_BARRIERS || window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(caster, target, setup))
       && (!action.requiresTargetHearing || !target.state.active_effect_ids.includes("deafened"))
+      && (!action.requiresSharedSpokenLanguage
+        || (() => {
+          const resolver = window.IRON_PIT_BROWSER_SPOKEN_LANGUAGES?.understood;
+          if (!resolver) throw new Error("Spoken-language eligibility runtime is missing.");
+          return resolver(caster.state.template.languageProfile, target.state.template.languageProfile);
+        })())
       && (!action.requiresTargetSight || window.IRON_PIT_BROWSER_CONDITION_RULES.canSee(caster.state, target.state, S().distance(caster, target)))
       && (!(action.requiredTargetCreatureTypes || []).length
         || (action.requiredTargetCreatureTypes || []).some((kind) =>
