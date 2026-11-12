@@ -25,6 +25,13 @@
         throw new Error(`${spell.name} cannot be cast inside a Silence effect.`);
       }
 
+      // A malformed cast must not consume spell slots or action economy.
+      if (spell.maxTargetPairDistanceFt != null) {
+        const validate = window.IRON_PIT_BROWSER_SPELL_TARGET_GROUPS?.validateChoice;
+        if (typeof validate !== "function") throw new Error("Shared spell target-group runtime is missing.");
+        validate(setup, choice.targetIds, spell.maxTargetPairDistanceFt);
+      }
+
       let remaining = null;
       if (choice.alternateCast) {
         const grant = choice.alternateCast;

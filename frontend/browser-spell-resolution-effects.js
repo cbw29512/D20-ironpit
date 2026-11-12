@@ -55,6 +55,11 @@
       const members = new Map([...setup.heroes, ...setup.monsters]
         .map((member) => [member.combatant_id, member]));
       const action = saveAction(choice);
+      if (spell.maxTargetPairDistanceFt != null) {
+        const validate = window.IRON_PIT_BROWSER_SPELL_TARGET_GROUPS?.validateChoice;
+        if (typeof validate !== "function") throw new Error("Shared spell target-group runtime is missing.");
+        validate(setup, choice.targetIds, spell.maxTargetPairDistanceFt);
+      }
       const dcBonus = window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS?.spellSaveDcBonus?.(caster.state) || 0;
       if (dcBonus) action.dc += dcBonus;
       const events = [];

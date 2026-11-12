@@ -10,6 +10,7 @@ from app.combat.defensive_modifier_rules import remove_owner_attack_ending_modif
 from app.combat.spell_cast_effects import apply_spell_cast_timed_resistance
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_policy import spell_at_slot
+from app.combat.spell_target_groups import validate_spell_target_group
 from app.combat.spell_range_modifiers import spend_spell_range_modifier
 from app.combat.spell_save_effect_resolution import resolve_spell_save_effect
 from app.combat.spell_damage_maximizers import resolve_maximizer_after_cast
@@ -48,6 +49,9 @@ def resolve_spell(
         from app.combat.suppression_zone_geometry import verbal_casting_blocked
         if getattr(spell, "verbal_component", True) and verbal_casting_blocked(caster, setup):
             raise ValueError(f"{spell.name} cannot be cast inside a Silence effect.")
+
+        # Validate the entire source-owned group before spending slots or actions.
+        validate_spell_target_group(setup, choice.target_ids, spell.max_target_pair_distance_ft)
 
         remaining = None
         if choice.alternate_cast is not None:

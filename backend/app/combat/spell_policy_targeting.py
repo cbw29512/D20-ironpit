@@ -14,6 +14,7 @@ from app.combat.spell_area import best_area_placement
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_range_modifiers import choose_spell_range_modifier, effective_spell_range_ft
 from app.combat.spell_target_counts import spell_save_target_count
+from app.combat.spell_target_groups import choose_spell_target_group
 from app.content.monster_creature_types import is_creature_type
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
@@ -155,16 +156,19 @@ def single_target_spell_choice(
     legal = legal_single_spell_targets(caster, setup, action, range_ft=effective_range)
     if not legal:
         return None
+    # Match browser ordering: higher expected damage, then lower HP, then ID.
     ranked = sorted(
         legal,
         key=lambda item: (
-            save_spell_expected_damage(item, scaled),
-            -item.state.current_hp,
+            -save_spell_expected_damage(item, scaled),
+            item.state.current_hp,
             item.combatant_id,
         ),
-        reverse=True,
     )
-    chosen = ranked[: spell_save_target_count(scaled, slot_level)]
+    chosen = choose_spell_target_group(
+        ranked, spell_save_target_count(scaled, slot_level),
+        scaled.max_target_pair_distance_ft,
+    )
     score = 0.0
     for target in chosen:
         score += save_spell_expected_damage(target, scaled)

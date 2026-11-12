@@ -15,6 +15,7 @@ from app.combat.spell_caster_buffs import active_spell_save_dc_bonus
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_damage_maximizers import maximized_save_damage_rolls
 from app.combat.spell_policy import spell_at_slot
+from app.combat.spell_target_groups import validate_spell_target_group
 from app.combat.spoken_language_eligibility import spoken_language_understood
 from app.combat.targeting_wards import blocked_targeting_event, check_targeting_ward
 from app.domain.actions import SavingThrowAction
@@ -85,6 +86,9 @@ def resolve_spell_save_effect(
         by_id = {member.combatant_id: member for member in members}
         affected_states = [member.state for member in members]
         placement = choice.placement
+        validate_spell_target_group(
+            setup, choice.target_ids, scaled_spell.max_target_pair_distance_ft,
+        )
         compiled = compile_spell_save_action(choice)
         bonus = active_spell_save_dc_bonus(caster.state)
         if bonus:

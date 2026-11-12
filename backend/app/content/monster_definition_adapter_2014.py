@@ -57,6 +57,7 @@ from app.content.monster_innate_spells_2014 import (
     innate_persistent_save_zone_actions_2014,
     innate_spell_save_actions_2014,
 )
+from app.content.monster_command_spell_2014 import prepared_command_spell_actions_2014
 from app.content.monster_prepared_spells_2014 import (
     prepared_auto_hit_spell_actions_2014,
     prepared_persistent_save_zone_actions_2014,
@@ -318,6 +319,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *innate_spell_save_actions_2014(monster),
             *merge_unique_spell_actions(
                 prepared_spell_save_actions_2014(monster),
+                prepared_command_spell_actions_2014(monster),
                 shared_cleric_spells.saves,
             ),
         ],

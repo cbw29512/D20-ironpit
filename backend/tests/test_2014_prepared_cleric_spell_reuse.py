@@ -52,8 +52,8 @@ def test_cult_fanatic_reuses_six_cleric_spell_entries_and_hold_person() -> None:
         assert "inflict-wounds" in {x.id for x in template.spell_attack_actions}
         assert "shield-of-faith" in {x.id for x in template.defensive_spell_actions}
         assert "spiritual-weapon" in {x.id for x in template.persistent_spell_attack_actions}
-        assert all(a.id != "command" for a in template.spell_save_actions)
-        assert supports_prepared_spellcasting_2014(card) is False
+        assert any(a.id == "command" for a in template.spell_save_actions)
+        assert supports_prepared_spellcasting_2014(card) is True
         assert card.model_dump_json() == original
     except Exception:
         logger.exception("2014 Cult Fanatic shared Cleric spell bindings failed.")
