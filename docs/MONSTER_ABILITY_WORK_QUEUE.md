@@ -1,3 +1,10 @@
+## [x] 2014 Kraken — passive Freedom of Movement
+
+- **Merged evidence:** [PR #1271](https://github.com/cbw29512/D20-ironpit/pull/1271) passed CI (source/Python, browser regressions and combat certification), 2014 Basic Roster, 2014 Hero Certification, Paired Edition Monster Report and exact-final-head review on `1110266df084ce16e40b5579040972ce111b7dfc`; it squash-merged as `3a6e6d997f9b2cc45a271d6fb53604ef1ef46961`.
+- **Shared mechanic:** The complete printed trait composes existing Python/browser debuff counters: ignore Difficult Terrain; prevent magical speed reduction and Restrained; spend 5 feet of movement to escape nonmagical Grappled or Restrained. The spell's separate magical-Paralyzed clause remains spell-only, and the certified spell serialization order is unchanged.
+- **Coverage evidence:** The owner-generated semantic scan covers all 327 immutable 2014 cards: 1 applicable, 1 Python-wired, 1 browser-wired, 0 remaining and 0 exceptions. The canonical 330-card 2024 audit finds no equivalent declaration, so no 2014 parameters are copied. Focused tests passed, owner regeneration has zero static drift, and no deployed webpage-fight certification is claimed.
+- **Still pending:** Kraken's `source:trait` obligation is cleared, but Kraken remains blocked by `mechanic:legendary`, `multiattack:complex`, `source:extra-action` and `source:legendary`. Generated main remains **291/327 source-admitted, 36 blocked**. Succubus/Incubus Charm command obedience and suicidal-command repeat-save remain the top unresolved queue item; production Netlify remains locked.
+
 ## [x] 2014 Succubus/Incubus — Draining Kiss charmed-or-willing target qualification
 
 - **Merged evidence:** [PR #1269](https://github.com/cbw29512/D20-ironpit/pull/1269) passed CI, 2014 Basic Roster, 2014 Hero Certification, Paired Edition Monster Report, generated-artifact synchronization, and exact-head review on `25ef2735a5729ef0329b7c4cba62a1c5e655f9eb`; it squash-merged as `71c5e9e86d8d4c76f3867c73e4e16fa4c124a0ce`.
