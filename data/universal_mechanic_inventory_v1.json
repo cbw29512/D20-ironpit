@@ -5864,19 +5864,19 @@
     }
   },
   "monster_2014": {
-    "blocked_monster_count": 38,
+    "blocked_monster_count": 37,
     "blocker_categories": {
       "arena:neutral": 1,
       "attack:incomplete": 7,
       "attack:none": 1,
       "mechanic:legendary": 9,
       "mechanic:recharge": 1,
-      "mechanic:spellcasting": 24,
+      "mechanic:spellcasting": 23,
       "multiattack:complex": 3,
       "source:extra-action": 18,
       "source:legendary": 9,
       "source:reaction": 1,
-      "source:trait": 32
+      "source:trait": 31
     },
     "unresolved_printed_abilities": [
       {
@@ -5916,7 +5916,7 @@
         "printed_name": "Grasping Tendrils"
       },
       {
-        "demand_count": 12,
+        "demand_count": 11,
         "monsters": [
           "Cloud Giant",
           "Couatl",
@@ -5924,7 +5924,6 @@
           "Dryad",
           "Efreeti",
           "Glabrezu",
-          "Ice Mephit",
           "Lamia",
           "Magma Mephit",
           "Oni",
