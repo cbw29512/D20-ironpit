@@ -210,6 +210,14 @@ def supports_innate_spellcasting_2014(monster) -> bool:
         if not _innate(monster).get("source_complete"):
             return False
         known = {str(spell.get("id") or "") for spell in _spells(monster)}
+        # Misty Step is an in-place escape Action in this arena, not a
+        # blanket exemption. Require its exact source proof even though the
+        # historical pit-banned set also contains its spell ID.
+        if (
+            "misty-step" in known
+            and not source_proven_innate_misty_step_2014(monster)
+        ):
+            return False
         if not known:
             return False
         # Source-proven noncombat weather, water, height and light magic does
