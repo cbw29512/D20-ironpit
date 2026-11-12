@@ -45,7 +45,7 @@
             .sort((left, right) => (left.side === member.side) - (right.side === member.side)
               || F().saveDistance(member, left, action.range) - F().saveDistance(member, right, action.range)
               || left.combatant_id.localeCompare(right.combatant_id))
-          : F().targetOrder(member, setup);
+          : F().targetOrder(member, setup, false, "all-other-creatures");
         for (const target of eligibleTargets) {
           const distance = F().saveDistance(member, target, action.range);
           if (V().legalAction(action, target, distance, member.combatant_id, member)) {
