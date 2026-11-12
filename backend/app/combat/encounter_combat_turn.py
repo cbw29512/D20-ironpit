@@ -23,6 +23,7 @@ from app.combat.ongoing_spell_control import (
     build_forced_retreat_event,
     forced_approach_active,
     forced_retreat_active,
+    resolve_fall_prone_end_turn,
     resolve_forced_approach,
 )
 from app.combat.offensive_movement_policy import move_to_enable_offense
@@ -59,6 +60,16 @@ def resolve_combat_turn(
             sequence, round_number, attacker.combatant_id, attacker.state, dice, member=attacker,
         )
         events.extend(start_events)
+        # Generic delayed commands resolve only on this creature's next turn.
+        # The marker ends this turn; actual Prone survives until normal standing.
+        compelled_prone = resolve_fall_prone_end_turn(sequence, round_number, attacker)
+        if compelled_prone is not None:
+            events.append(compelled_prone)
+            sequence += 1
+            return finish_turn(
+                events, sequence, round_number, attacker, setup, dice,
+                f"{round_number}:{attacker.combatant_id}", allow_surge=False,
+            )
         if initiative_order is not None:
             gaze_events, sequence = resolve_visual_turn_start_events(
                 sequence, round_number, attacker, setup, dice, initiative_order,
