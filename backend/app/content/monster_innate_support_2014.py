@@ -7,6 +7,9 @@ from app.content.monster_environmental_spell_proofs_2014 import source_proven_ar
 from app.content.monster_source_angelic_innate_2014 import source_proven_angelic_arena_exclusions_2014
 from app.content.monster_innate_darkness_2014 import source_proven_innate_darkness_2014
 from app.content.monster_innate_fog_cloud_2014 import source_proven_innate_fog_cloud_2014
+from app.content.monster_innate_misty_step_2014 import (
+    source_proven_innate_misty_step_2014,
+)
 from app.content.monster_innate_spells_2014 import (
     ARENA_NEUTRAL_INNATE_SPELLS_2014,
     _PIT_BANNED_INNATE_SPELLS_2014,
@@ -136,6 +139,7 @@ def innate_spell_resources_2014(monster) -> list[ResourceDefinition]:
         bound.update(action.id for action in innate_timed_self_buffs_2014(monster))
         bound.update(action.id for action in source_proven_innate_darkness_2014(monster))
         bound.update(action.id for action in source_proven_innate_fog_cloud_2014(monster))
+        bound.update(action.id for action in source_proven_innate_misty_step_2014(monster))
         for spell in _spells(monster):
             spell_id = str(spell.get("id") or "")
             if spell_id not in bound or str(spell.get("usage") or "") != "per_day":
@@ -192,6 +196,7 @@ def innate_spell_names_2014(monster) -> set[str]:
     names.update(action.name.casefold() for action in innate_timed_self_buffs_2014(monster))
     names.update(action.name.casefold() for action in source_proven_innate_darkness_2014(monster))
     names.update(action.name.casefold() for action in source_proven_innate_fog_cloud_2014(monster))
+    names.update(action.name.casefold() for action in source_proven_innate_misty_step_2014(monster))
     names.update(action.name.casefold() for action in innate_condition_removal_2014(monster))
     return names
 
@@ -228,6 +233,8 @@ def supports_innate_spellcasting_2014(monster) -> bool:
             action.id for action in source_proven_innate_darkness_2014(monster)
         } | {
             action.id for action in source_proven_innate_fog_cloud_2014(monster)
+        } | {
+            action.id for action in source_proven_innate_misty_step_2014(monster)
         }
         return known <= bound
     except Exception:
