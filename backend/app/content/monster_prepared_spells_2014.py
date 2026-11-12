@@ -11,6 +11,7 @@ from app.content.monster_tier1_cleric_actions_2014 import tier1_cleric_save_spel
 from app.content.shared_control_spells_2014 import (
     blindness_deafness_2014,
     hold_monster_2014,
+    hold_person_2014,
 )
 from app.content.shared_damage_spells_2014 import flame_strike_2014, harm_2014
 from app.content.shared_zone_spells_2014 import wall_of_fire_2014
@@ -88,6 +89,9 @@ def prepared_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSa
                 actions.append(poison_spray_2014(dc, _MONSTER_CANTRIP_LEVEL))
             elif spell_id == "hold-monster":
                 actions.append(hold_monster_2014(dc))
+            elif spell_id == "hold-person":
+                # Same 2014 spell action for every source, never caster-specific.
+                actions.append(hold_person_2014(dc))
             elif spell_id == "blindness-deafness":
                 actions.append(blindness_deafness_2014(dc))
             elif spell_id == "vicious-mockery":
