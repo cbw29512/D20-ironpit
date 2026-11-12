@@ -143,7 +143,6 @@
       if (member.state.is_dead || member.state.current_hp === 0) {
         return finalize(events, sequence, round, member, setup, turnKey, false);
       }
- before voluntary actions.
       // Its marker expires at turn end; the independent Prone condition remains.
       const proneCommand = O()?.resolveProneEndTurn?.(sequence, round, member);
       if (proneCommand) {
