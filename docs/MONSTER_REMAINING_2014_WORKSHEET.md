@@ -297,8 +297,8 @@ For each entry: (1) read exact 2014 printed trait/action and existing code; (2) 
 
 ### 033. Cloud Giant
 
-- [ ] **SOURCE REVIEW COMPLETE / BIND IMPLEMENTED / TESTING / CERTIFY / MERGE** — implementation is in PR #1265; do not mark admitted before exact-head Python/browser and source-artifact certification.
-- **Recorded blockers:** `mechanic:spellcasting`, `source:trait` — expected to clear only after regenerated certification artifacts confirm the exact head.
+- [ ] **SOURCE REVIEW COMPLETE / BIND IMPLEMENTED / SOURCE CLASSIFIER CLEAR / RUNTIME CERTIFY / MERGE** — PR #1265 is at 291/327 on the regenerated 2014 source report; Cloud Giant no longer appears in the generated blocker list. Full exact-head Python certification and merge remain.
+- **Recorded blockers on main:** `mechanic:spellcasting`, `source:trait`. **Current PR branch:** no remaining 2014 source-classifier blockers; do not claim runtime certification until the full Python/browser gates pass.
 - **Printed spell dispositions:** Detect Magic — informational/source-neutral; Fog Cloud — existing heavy-obscuration zone with tactical-benefit gate; Light, Feather Fall and Control Weather — source-proven arena-inert; Fly, Telekinesis and Gaseous Form — source-preserved, source-proven standard-AI exclusions; Misty Step — Bonus Action, 3/day, in-place escape from active teleport-cancelable holds/snare effects.
 - **Fix notes:** All nine source rows and their printed frequencies are checked by the complete source proof. The card remains immutable. Only Misty Step has a fight resource because it is the only limited-use spell exposed as a combat Action; excluded/inert spell frequencies remain on the source card.
 
