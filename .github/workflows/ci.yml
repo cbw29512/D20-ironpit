@@ -123,6 +123,8 @@ jobs:
           PYTHONPATH=.:backend pytest -q backend/tests/test_universal_success_shared_space_exit.py
           PYTHONPATH=.:backend pytest -q backend/tests/test_2014_imp_invisibility.py
           PYTHONPATH=.:backend pytest -q backend/tests/test_2014_cloud_giant_innate_spell_decisions.py
+          PYTHONPATH=.:backend pytest -q backend/tests/test_2014_innate_misty_step.py
+          PYTHONPATH=.:backend pytest -q backend/tests/test_2014_cloud_giant_misty_step_runtime.py
       - name: Reconcile canonical 2014 source-derived artifacts
         if: ${{ github.event_name == 'pull_request' && (startsWith(github.event.pull_request.head.ref, 'feat/2014-') || startsWith(github.event.pull_request.head.ref, 'fix/2014-')) && github.event.pull_request.head.repo.full_name == github.repository }}
         run: |
