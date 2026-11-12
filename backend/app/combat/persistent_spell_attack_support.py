@@ -107,7 +107,12 @@ def attack_for_slot(
         )
         return action.attack.model_copy(update={
             "level": 0 if repeat else slot_level,
-            "range_ft": action.attack_reach_ft if repeat else action.attack.range_ft,
+            # A nonspatial effect attacks from the caster without moving a token.
+            "range_ft": (
+                action.attack_reach_ft
+                if repeat and action.spatial_mode == "positioned"
+                else action.attack.range_ft
+            ),
             "damage_dice_count": action.attack.damage_dice_count + extra_dice,
         })
     except Exception as exc:
