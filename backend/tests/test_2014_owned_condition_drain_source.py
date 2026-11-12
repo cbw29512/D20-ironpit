@@ -64,8 +64,9 @@ def test_2014_source_draining_save_is_compiled_without_inventing_control():
         assert "requiredTargetSourceCondition" not in browser
         assert browser["reduceHitPointMaximumOnDamage"] is True
         assert browser["maxHpZeroKills"] is True
-        # The arena forbids voluntary targets; Charm command obedience remains blocked.
-        assert "source:extra-action" in basic_blockers_2014(source)
+        # Iron Pit never uses voluntary or scripted Charm commands. Both
+        # printed Actions are now fully source-proven universal save effects.
+        assert basic_blockers_2014(source) == ()
         assert source.model_dump_json() == immutable
         renamed = source.model_copy(update={"id": "renamed-source", "name": "Unknown"})
         assert source_proven_owned_condition_drains_2014(renamed) == [action]
@@ -92,6 +93,7 @@ def test_printed_source_mutations_fail_closed(before, after):
             "source_actions": source.source_actions.replace(before, after),
         })
         assert source_proven_owned_condition_drains_2014(mutated) == []
+        assert "source:extra-action" in basic_blockers_2014(mutated)
     except Exception:
         logger.exception("Owned-condition drain source mutation failed: %s.", before)
         raise
