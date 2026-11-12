@@ -28,8 +28,8 @@ _PATTERN = re.compile(
     re.IGNORECASE,
 )
 _CANNOT_SPEAK = re.compile(
-    r"(?:can't|cannot|doesn't|does not|can't|couldn't)\s+speak"
-    r"|without (?:the ability to )?speak",
+    r"(?:can|doesn|couldn).{0,8}t\s+speak|cannot\s+speak"
+    r"|does not\s+speak|without (?:the ability to )?speak",
     re.IGNORECASE,
 )
 
@@ -49,6 +49,8 @@ def source_languages_2014(monster: SourceMonster2014) -> tuple[list[str], list[s
         if raw.casefold().startswith(("any ", "one language", "the languages", "a language")):
             if "(usually common)" not in raw.casefold():
                 matches.clear()
+        if re.search(r"\bunderstands? commands given in any language\b", raw, re.IGNORECASE):
+            matches.add("all")
         understood = sorted(matches)
         spoken = [] if _CANNOT_SPEAK.search(raw) else list(understood)
         return spoken, understood
