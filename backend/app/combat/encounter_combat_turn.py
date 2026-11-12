@@ -60,7 +60,17 @@ def resolve_combat_turn(
             sequence, round_number, attacker.combatant_id, attacker.state, dice, member=attacker,
         )
         events.extend(start_events)
-        # Generic delayed commands resolve only on this creature's next turn.
+        if initiative_order is not None:
+            gaze_events, sequence = resolve_visual_turn_start_events(
+                sequence, round_number, attacker, setup, dice, initiative_order,
+            )
+            events.extend(gaze_events)
+            if attacker.state.is_dead or attacker.state.current_hp <= 0:
+                return finish_turn(events, sequence, round_number, attacker, setup, dice,
+                                   f"{round_number}:{attacker.combatant_id}", allow_surge=False)
+        # Resolve forced turn loss after involuntary gaze but before any
+        # voluntary movement, maintenance Action, or Bonus Action.
+ on this creature's next turn.
         # The marker ends this turn; actual Prone survives until normal standing.
         compelled_prone = resolve_fall_prone_end_turn(sequence, round_number, attacker)
         if compelled_prone is not None:
@@ -70,14 +80,6 @@ def resolve_combat_turn(
                 events, sequence, round_number, attacker, setup, dice,
                 f"{round_number}:{attacker.combatant_id}", allow_surge=False,
             )
-        if initiative_order is not None:
-            gaze_events, sequence = resolve_visual_turn_start_events(
-                sequence, round_number, attacker, setup, dice, initiative_order,
-            )
-            events.extend(gaze_events)
-            if attacker.state.is_dead or attacker.state.current_hp <= 0:
-                return finish_turn(events, sequence, round_number, attacker, setup, dice,
-                                   f"{round_number}:{attacker.combatant_id}", allow_surge=False)
         maintenance_events, sequence = resolve_source_maintenance(
             sequence, round_number, attacker, setup,
         )
