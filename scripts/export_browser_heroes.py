@@ -164,6 +164,7 @@ def _spell(action: Any) -> dict[str, Any]:
     if action.effect_tags: row["effectTags"] = list(action.effect_tags)
     if action.requires_target_hearing: row["requiresTargetHearing"] = True
     if action.requires_target_sight: row["requiresTargetSight"] = True
+    if action.requires_shared_spoken_language: row["requiresSharedSpokenLanguage"] = True
     if action.automatic_failure_creature_types:
         row["automaticFailureCreatureTypes"] = list(action.automatic_failure_creature_types)
     if action.failed_save_modifier_effects:
