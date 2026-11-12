@@ -52,6 +52,22 @@ class PreparedClericSpellActions2014:
             raise
 
 
+def merge_unique_spell_actions(*groups):
+    """Preserve one source-owned action per spell without changing its behavior."""
+    try:
+        unique = {}
+        for actions in groups:
+            for action in actions:
+                prior = unique.get(action.id)
+                if prior is not None and prior != action:
+                    raise ValueError(f"Conflicting prepared spell binding: {action.id}.")
+                unique[action.id] = action
+        return list(unique.values())
+    except Exception:
+        logger.exception("Generic prepared spell action merge failed.")
+        raise
+
+
 def prepared_cleric_spell_actions_2014(
     monster: SourceMonster2014,
 ) -> PreparedClericSpellActions2014:
