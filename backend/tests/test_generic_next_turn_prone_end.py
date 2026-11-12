@@ -97,7 +97,7 @@ def test_next_turn_prone_and_end_turn_preserves_normal_recovery(effect_name: str
 
 def test_target_turn_expiry_validates_source_schema() -> None:
     try:
-        with pytest.raises(ValueError, match="target-turn duration"):
+        with pytest.raises(ValueError, match="Target-turn durations"):
             FailedSaveTimedEffect(
                 effect_id="commanded", duration_target_turns=1,
                 duration_rounds=1, turn_behavior="fall_prone_end_turn",
