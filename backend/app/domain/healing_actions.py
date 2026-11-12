@@ -26,6 +26,8 @@ class HealingAction(BaseModel):
     healing_from_resource_pool: bool = False
     excluded_creature_types: list[str] = Field(default_factory=list)
     removable_conditions: list[ConditionName] = Field(default_factory=list)
+    removal_effect_tags: list[str] = Field(default_factory=list)
+    removes_all_curses: bool = False
     prone_reaction_stand: bool = False
     secondary_target_within_ft: int | None = Field(default=None, ge=5)
     grants_temporary_hp: bool = False

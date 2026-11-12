@@ -26,6 +26,8 @@ def healing_actions_2014(monster: SourceMonster2014) -> list[HealingAction]:
                 dice_size=int(raw.get("dice_size") or 8),
                 healing_bonus=int(raw.get("healing_bonus") or 0),
                 removable_conditions=list(raw.get("removable_conditions") or []),
+                removal_effect_tags=list(raw.get("removal_effect_tags") or []),
+                removes_all_curses=bool(raw.get("removes_all_curses", False)),
                 resource_id=raw.get("resource_id"),
                 resource_cost=int(raw.get("resource_cost") or 1),
                 animation=str(raw.get("animation") or "healing"),

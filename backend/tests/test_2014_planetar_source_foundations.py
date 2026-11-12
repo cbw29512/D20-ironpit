@@ -47,6 +47,8 @@ def test_unparsed_healing_touch_reuses_shared_healing_schema():
                 action.healing_bonus, uses) == ("Healing Touch", 6, 8, 3, 4)
         assert action.target_mode == "other" and action.range_ft == 5
         assert action.removable_conditions == ["poisoned", "blinded", "deafened"]
+        assert action.removal_effect_tags == ["disease"]
+        assert action.removes_all_curses
         assert healing_actions_2014(card) == [action]
         assert [(x.id, x.max_uses) for x in healing_resources_2014(card)] == [
             ("healing-touch", 4),
@@ -62,7 +64,6 @@ def test_unparsed_healing_touch_reuses_shared_healing_schema():
 
 
 @pytest.mark.parametrize("old,new", [
-    ("4/Day", "5/Day"),
     ("6d8 + 3", "8d8 + 3"),
     ("30 (6d8 + 3)", "50 (6d8 + 3)"),
     ("touches another creature", "touches any creature"),
@@ -79,6 +80,19 @@ def test_healing_text_mutation_fails_closed(old, new):
         assert "source:extra-action" in basic_blockers_2014(modified)
     except Exception:
         logger.exception("Planetar healing-source mutation failed: %s", old)
+        raise
+
+
+def test_healing_touch_uses_are_bound_from_printed_source():
+    try:
+        card = _planetar()
+        modified = card.model_copy(update={
+            "source_actions": card.source_actions.replace("4/Day", "5/Day"),
+        })
+        proof = source_proven_missing_healing_touch_2014(modified)
+        assert proof is not None and proof[1] == 5
+    except Exception:
+        logger.exception("Healing Touch printed use-count binding failed.")
         raise
 
 

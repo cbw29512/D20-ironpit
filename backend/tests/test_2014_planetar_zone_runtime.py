@@ -9,6 +9,7 @@ from app.combat import persistent_save_zone_resolution as zone_resolver
 from app.combat.ability_checks import ability_check_roll_mode
 from app.combat.concentration import end_concentration
 from app.combat.dice import FixedDiceProvider
+from app.combat.healing_resolution_support import apply_healing_riders
 from app.combat.persistent_save_zone_cast import cast_save_zone
 from app.combat.persistent_save_zone_resolution import expire_save_zones
 from app.combat.state import begin_turn, build_combatant_state
@@ -22,12 +23,13 @@ from app.content.monsters import build_commoner
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grid import GridPosition
 from app.domain.models import RollMode
+from app.domain.timed_effects import TimedEffect
 
 logger = logging.getLogger(__name__)
 SCRIPTS = Path(__file__).resolve().parents[2] / "scripts"
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
-from browser_template_serializer import _save_zone
+from browser_template_serializer import _healing, _save_zone
 
 
 def _member(template, combatant_id, side, x):
@@ -51,6 +53,8 @@ def test_2014_planetar_composes_damage_zone_and_healing_without_special_resolver
         template = compile_combatant(adapt_basic_monster_2014(source))
         assert len(template.attack_action.slots) == 2
         assert template.healing_actions[0].name == "Healing Touch"
+        assert _healing(template.healing_actions[0])["removalEffectTags"] == ["disease"]
+        assert _healing(template.healing_actions[0])["removesAllCurses"] is True
         assert any(x.id == "healing-touch" and x.max_uses == 4 for x in template.resources)
         zone = next(x for x in template.persistent_save_zone_actions if x.id == "insect-plague")
         assert zone.level == 5 and zone.dc == 20
@@ -105,4 +109,33 @@ def test_2014_planetar_composes_damage_zone_and_healing_without_special_resolver
         assert source.model_dump_json() == before
     except Exception:
         logger.exception("Planetar shared 2014 zone lifecycle certification failed.")
+        raise
+
+
+def test_healing_touch_shared_riders_end_any_disease_and_every_curse():
+    try:
+        source = next(x for x in load_monster_source_2014() if x.id == "planetar")
+        template = compile_combatant(adapt_basic_monster_2014(source))
+        target = _member(build_commoner(), "target", "heroes", 2)
+        target.state.active_effect_ids.extend(["renamed-disease", "curse-symptom"])
+        target.state.active_curses.extend(["first-curse", "second-curse"])
+        target.state.timed_effects.extend([
+            TimedEffect(
+                effect_id="renamed-disease", source_id="disease-source",
+                removal_effect_tag="disease", minimum_removal_spell_level=9,
+            ),
+            TimedEffect(
+                effect_id="curse-symptom", source_id="curse-source",
+                owned_curse_ids=["first-curse", "second-curse"],
+            ),
+        ])
+        removed = apply_healing_riders(target, template.healing_actions[0])
+        assert removed == ["renamed-disease", "curse"]
+        assert not target.state.active_curses
+        assert not target.state.timed_effects
+        assert not {"renamed-disease", "curse-symptom"}.intersection(
+            target.state.active_effect_ids
+        )
+    except Exception:
+        logger.exception("Planetar generic Healing Touch rider lifecycle failed.")
         raise

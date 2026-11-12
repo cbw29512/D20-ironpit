@@ -591,6 +591,8 @@ def _healing(action: Any) -> dict[str, Any]:
             "percentileSuccessMax": action.percentile_success_max, "resourceId": action.resource_id,
             "resourceCost": action.resource_cost, "excludedCreatureTypes": list(action.excluded_creature_types),
             "removableConditions": list(action.removable_conditions),
+            "removalEffectTags": list(action.removal_effect_tags),
+            "removesAllCurses": action.removes_all_curses,
             "proneReactionStand": action.prone_reaction_stand,
             "secondaryTargetWithinFt": action.secondary_target_within_ft,
             "grantsTemporaryHp": action.grants_temporary_hp,

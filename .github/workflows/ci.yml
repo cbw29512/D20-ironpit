@@ -740,6 +740,7 @@ jobs:
           node frontend/browser-damage-type-choice.test.cjs
           node frontend/browser-attack-action-weapon-buffs.test.cjs
           node frontend/browser-action-healing.test.cjs
+          node frontend/browser-healing-restoration-riders.test.cjs
           node frontend/browser-healing-creature-type-exclusions.test.cjs
           node frontend/browser-group-healing-area.test.cjs
           node frontend/browser-cleric-2024-leftover-spells.test.cjs

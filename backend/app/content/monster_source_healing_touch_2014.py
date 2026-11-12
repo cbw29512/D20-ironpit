@@ -49,6 +49,7 @@ def source_proven_missing_healing_touch_2014(
                 range_ft=5, target_mode="other", dice_count=dice, dice_size=size,
                 healing_bonus=bonus, resource_id="healing-touch", resource_cost=1,
                 removable_conditions=["poisoned", "blinded", "deafened"],
+                removal_effect_tags=["disease"], removes_all_curses=True,
                 animation="healing",
             ),
             uses,

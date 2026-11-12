@@ -5,6 +5,7 @@ from app.combat.condition_removal import remove_condition
 from app.combat.healing_policy import healing_dice_maximized
 from app.combat.dice import DiceProvider
 from app.combat.hit_points import effective_max_hp
+from app.combat.restoration_riders import remove_curses
 from app.combat.temporary_hp import grant_temporary_hit_points
 from app.combat.zero_hp import restore_hit_points
 from app.domain.encounters import EncounterCombatant
@@ -20,6 +21,17 @@ def apply_healing_riders(
         if condition_id in target.state.active_effect_ids:
             remove_condition(target, condition_id)
             removed.append(condition_id)
+    tagged_effect_ids = {
+        effect.effect_id
+        for effect in target.state.timed_effects
+        if effect.removal_effect_tag in action.removal_effect_tags
+    }
+    for condition_id in sorted(tagged_effect_ids):
+        if condition_id in target.state.active_effect_ids:
+            remove_condition(target, condition_id)
+            removed.append(condition_id)
+    if action.removes_all_curses and remove_curses(target, remove_all=True):
+        removed.append("curse")
     if (
         action.prone_reaction_stand
         and "prone" in target.state.active_effect_ids
