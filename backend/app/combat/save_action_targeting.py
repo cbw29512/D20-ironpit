@@ -37,7 +37,7 @@ def save_action_target_order(
             ):
                 continue
             priority = target_priority(member)
-            if priority is None and state.current_hp == 0:
+            if priority is None and state.current_hp <= 0:
                 priority = 3
             if priority is not None:
                 candidates.append((priority, member))
