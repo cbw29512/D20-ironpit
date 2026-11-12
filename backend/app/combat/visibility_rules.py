@@ -11,6 +11,7 @@ from app.combat.effective_senses import (
     source_sense_range_ft,
 )
 from app.combat.grid_geometry import footprint_distance_ft
+from app.combat.obscuration_visibility import sight_line_is_obscured
 from app.domain.models import CombatantState
 
 logger = logging.getLogger(__name__)
@@ -78,8 +79,11 @@ def can_see(
             return False
         if observer.template.blind_beyond_blindsight:
             return False
+        truesight = _sense_reaches(observer, SENSE_TRUESIGHT, resolved_distance)
+        if sight_line_is_obscured(observer, target, truesight_reaches=truesight):
+            return False
         if target_hidden:
-            return _sense_reaches(observer, SENSE_TRUESIGHT, resolved_distance)
+            return truesight
         return True
     except Exception:
         logger.exception(
