@@ -461,6 +461,8 @@ def _spell(action: Any) -> dict[str, Any]:
         row["requiresTargetHearing"] = True
     if action.requires_target_sight:
         row["requiresTargetSight"] = True
+    if action.requires_shared_spoken_language:
+        row["requiresSharedSpokenLanguage"] = True
     if action.failed_save_timed_effect is not None:
         row["failedSaveTimedEffect"] = _failed_save_timed_effect(action.failed_save_timed_effect)
     if action.required_target_creature_types:
