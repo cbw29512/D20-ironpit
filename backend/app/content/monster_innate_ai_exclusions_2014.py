@@ -13,6 +13,7 @@ from app.content.monster_innate_elemental_inert_2014 import (
     source_proven_elemental_inert_spells_2014,
 )
 from app.content.monster_innate_source_2014 import innate_spells_2014
+from app.content.monster_innate_nature_spells_2014 import source_proven_goodberry_ai_exclusion_2014
 from app.content.monster_source_2014 import SourceMonster2014
 
 logger = logging.getLogger(__name__)
@@ -29,7 +30,8 @@ def source_proven_arena_ai_excluded_innate_spells_2014(
 ) -> frozenset[str]:
     """Return only source-proven, arena-excluded spell IDs without monster dispatch."""
     try:
-        elemental_excluded = source_proven_elemental_inert_spells_2014(monster)
+        elemental_excluded = (source_proven_elemental_inert_spells_2014(monster)
+                              | source_proven_goodberry_ai_exclusion_2014(monster))
         # This proof verifies the complete printed Cloud Giant innate paragraph
         # and every parsed spell/use row, not a monster ID or display name.
         if not source_proven_innate_fog_cloud_2014(monster):
