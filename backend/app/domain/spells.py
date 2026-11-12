@@ -150,6 +150,8 @@ class SpellSaveAction(BaseModel):
     effect_tags: list[str] = Field(default_factory=list)
     automatic_failure_creature_types: list[str] = Field(default_factory=list)
     requires_target_hearing: bool = False
+    # Requires both actual caster speech and target language comprehension.
+    requires_shared_spoken_language: bool = Field(default=False, exclude_if=lambda v: not v)
     requires_target_sight: bool = False
     failed_save_timed_effect: FailedSaveTimedEffect | None = None
     failed_save_push_ft: int = Field(default=0, ge=0)
