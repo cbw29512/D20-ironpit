@@ -13,6 +13,43 @@ logger = logging.getLogger(__name__)
 FORCED_APPROACH_DISTANCE_FT = 5
 
 
+def resolve_fall_prone_end_turn(
+    sequence: int, round_number: int, member: EncounterCombatant,
+) -> BattleEvent | None:
+    """Execute a declared, source-neutral delayed turn command.
+
+    The command marker expires after this target turn; Prone is a separate
+    condition and remains until the usual standing rule clears it.
+    """
+    try:
+        state = member.state
+        effects = [item for item in state.timed_effects
+                   if item.turn_behavior == "fall_prone_end_turn"]
+        if not effects or state.is_dead or state.is_unconscious:
+            return None
+        from app.combat.condition_immunity import condition_is_immune
+        from app.combat.state import terminate_turn
+        prone_applied = not condition_is_immune(state, "prone")
+        if prone_applied and "prone" not in state.active_effect_ids:
+            state.active_effect_ids.append("prone")
+        terminate_turn(state, "compelled-fall-prone-end-turn")
+        effect = effects[0]
+        source_name = (effect.source_effect_id or effect.effect_id).replace("-", " ").title()
+        return BattleEvent(
+            sequence=sequence, round_number=round_number, event_type="feature",
+            actor_id=member.combatant_id, actor_name=state.template.name,
+            target_id=member.combatant_id, target_name=state.template.name,
+            applied_condition_ids=["prone"] if prone_applied else [],
+            feature_id=effect.source_effect_id or "fall-prone-end-turn",
+            animation="prone" if prone_applied else "condition-ended",
+            description=f"{state.template.name} obeys {source_name}: falls Prone and ends the turn."
+            if prone_applied else f"{state.template.name} ends the turn under {source_name}.",
+        )
+    except Exception:
+        logger.exception("Generic fall-Prone/end-turn resolution failed for %s.", member.combatant_id)
+        raise
+
+
 def forced_retreat_active(state: CombatantState) -> bool:
     return any(effect.turn_behavior == "forced_retreat" for effect in state.timed_effects)
 
