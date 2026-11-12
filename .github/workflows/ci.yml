@@ -588,6 +588,7 @@ jobs:
           node frontend/browser-hp-pool-spell-combat.test.cjs
           node frontend/browser-save-maximum-hp-on-damage.test.cjs
           node frontend/browser-owned-condition-save-targets.test.cjs
+          node frontend/browser-draining-kiss-target-qualification.test.cjs
           node frontend/browser-source-target-capacity.test.cjs
           node frontend/browser-event-only-repeat-save.test.cjs
           node frontend/browser-turn-start-hooks.test.cjs
