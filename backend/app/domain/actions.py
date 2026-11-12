@@ -182,6 +182,7 @@ class SavingThrowAction(BaseModel):
     effect_tags: list[str] = Field(default_factory=list)
     automatic_failure_creature_types: list[str] = Field(default_factory=list)
     requires_target_hearing: bool = False
+    requires_shared_spoken_language: bool = Field(default=False, exclude_if=lambda value: not value)
     requires_target_to_see_source: bool = Field(default=False, exclude_if=lambda value: not value)
     required_target_condition: ConditionName | None = Field(default=None, exclude_if=lambda value: value is None)
     required_target_source_condition: ConditionName | None = Field(default=None, exclude_if=lambda value: value is None)
