@@ -9,6 +9,7 @@ from app.combat.area_targeting import legal_area_placements
 from app.combat.condition_rules import can_see
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.offense_value import save_spell_expected_damage
+from app.combat.spoken_language_eligibility import spoken_language_understood
 from app.combat.spell_area import best_area_placement
 from app.combat.spell_choice import SpellChoice
 from app.combat.spell_range_modifiers import choose_spell_range_modifier, effective_spell_range_ft
@@ -42,6 +43,10 @@ def legal_single_spell_targets(
             if action.requires_target_hearing and "deafened" in target.state.active_effect_ids:
                 continue
             if action.requires_target_sight and not can_see(caster.state, target.state, distance):
+                continue
+            if action.requires_shared_spoken_language and not spoken_language_understood(
+                caster.state.template.language_profile, target.state.template.language_profile,
+            ):
                 continue
             if action.required_target_creature_types and not any(
                 is_creature_type(target.state.template, kind)
