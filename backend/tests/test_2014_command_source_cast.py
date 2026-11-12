@@ -25,9 +25,9 @@ logger = logging.getLogger(__name__)
 def test_printed_androsphinx_command_grovel_targets_commoner_through_existing_engine() -> None:
     try:
         source = {row.id: row for row in load_monster_source_2014()}
-        original = {name: source[name].model_dump_json() for name in ("androsphinx", "commoner")}
+        original = {name: source[name].model_dump_json() for name in ("androsphinx", "goblin")}
         caster_template = compile_combatant(adapt_monster_mechanics_2014(source["androsphinx"]))
-        target_template = compile_combatant(adapt_basic_monster_2014(source["commoner"]))
+        target_template = compile_combatant(adapt_basic_monster_2014(source["goblin"]))
         assert "common" in caster_template.language_profile.spoken
         assert "common" in target_template.language_profile.understood
         caster = EncounterCombatant(
