@@ -75,6 +75,18 @@ test("2014 source-neutral Darkness casts once, obscures sight, and ends with Con
     template: { ...caster.state.template, truesight_ft: 60 },
   };
   assert.equal(vision.canSee(trueSeer, target.state, 15), true);
+  const devilSeer = {
+    ...caster.state,
+    template: { ...caster.state.template, magical_darkness_sight_ft: 120 },
+  };
+  assert.equal(vision.canSee(devilSeer, target.state, 15), true);
+  devilSeer.template.magical_darkness_sight_ft = 10;
+  assert.equal(vision.canSee(devilSeer, target.state, 15), false);
+  devilSeer.template.magical_darkness_sight_ft = 120;
+  target.state.active_effect_ids.push("invisible");
+  assert.equal(vision.canSee(devilSeer, target.state, 15), false);
+  target.state.active_effect_ids = target.state.active_effect_ids.filter(
+    (effect) => effect !== "invisible");
   const blindSeer = {
     ...caster.state,
     template: { ...caster.state.template, blindsight_ft: 60 },
@@ -97,6 +109,7 @@ test("physical fog cannot be bypassed by Truesight; a missing position fails clo
   const observer = member("seer", "heroes", 0).state;
   const target = member("target", "monsters", 8).state;
   observer.template.truesight_ft = 100;
+  observer.template.magical_darkness_sight_ft = 120;
   const fog = {
     zone_id: "fog", position: { x: 4, y: 7 }, radius_ft: 15,
     obscuration_kind: "heavy-physical",
