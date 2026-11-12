@@ -19,7 +19,7 @@ class FailedSaveTimedEffect(BaseModel):
     failure_margin_escalation: FailureMarginEscalation | None = None
     duration_rounds: int | None = Field(default=None, ge=1, le=100800)
     # Unlike round durations, this expires after N actual target turns.
-    duration_target_turns: int | None = Field(default=None, ge=1, le=100800)
+    duration_target_turns: int | None = Field(default=None, ge=1, le=100800, exclude_if=lambda v: v is None)
     # A source may control only N simultaneous targets of the same effect.
     source_target_limit: int | None = Field(default=None, ge=1, le=20)
     expiry_timing: SaveEffectTiming | None = "target_turn_end"
