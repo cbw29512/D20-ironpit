@@ -16,7 +16,7 @@ from app.content.monster_source_darkness_sight_2014 import (
 )
 from app.domain.grid import GridPosition
 from app.domain.suppression_zones import PersistentSuppressionZoneState
-from scripts.browser_template_serializer import _template
+from scripts.browser_template_serializer import template_row
 
 logger = logging.getLogger(__name__)
 _DEVILS = (
@@ -36,7 +36,7 @@ def test_2014_printed_devils_sight_is_real_declared_sensor(monster_id):
         template = compile_combatant(definition)
         assert definition.magical_darkness_sight_ft == 120
         assert template.magical_darkness_sight_ft == 120
-        assert _template(template)["magical_darkness_sight_ft"] == 120
+        assert template_row(template)["magical_darkness_sight_ft"] == 120
         assert card.model_dump_json() == before
         renamed = card.model_copy(update={"id": "source-neutral", "name": "Other"})
         assert source_proven_magical_darkness_sight_ft_2014(renamed) == 120
