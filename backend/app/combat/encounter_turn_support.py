@@ -22,7 +22,7 @@ from app.combat.frenzy_2014 import resolve_frenzy_bonus_attack
 from app.combat.healing_support import resolve_healing_support
 from app.combat.monk_bonus_attacks_2014 import resolve_monk_bonus_attacks
 from app.combat.paladin_channel_divinity_2014 import resolve_paladin_channel_support
-from app.combat.pit_policy import save_distance, target_order
+from app.combat.pit_policy import save_distance
 from app.combat.save_action_targeting import save_action_target_order
 from app.combat.spell_resolution import resolve_spell
 from app.combat.encounter_turn_utility import resolve_control_support
