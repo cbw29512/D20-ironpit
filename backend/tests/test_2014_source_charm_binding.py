@@ -61,7 +61,9 @@ def test_charm_compiles_to_source_named_universal_save_and_browser_fields():
         assert card.model_dump_json() == before
         # No scripted verbal/telepathic/suicidal commands in automated Pit:
         # the existing Charmed debuff is the full executable arena decision.
-        assert "charm" in source_supported_extra_action_labels_2014(card)
+        # Both printed actions are source-proven, not name-whitelisted:
+        # Charm is the Charmed debuff, Kiss is its conditional damage save.
+        assert {"charm", "draining kiss"} <= source_supported_extra_action_labels_2014(card)
         assert basic_blockers_2014(card) == ()
     except Exception:
         logger.exception("2014 source Charm definition, serializer or blocker failed.")
