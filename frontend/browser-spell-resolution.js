@@ -25,22 +25,11 @@
         throw new Error(`${spell.name} cannot be cast inside a Silence effect.`);
       }
 
-      // Reject malformed source-owned spell groups before any resource is spent.
+      // A malformed cast must not consume spell slots or action economy.
       if (spell.maxTargetPairDistanceFt != null) {
-        const legal = window.IRON_PIT_BROWSER_SPELL_TARGET_GROUPS?.legalGroup;
-        if (typeof legal !== "function") throw new Error("Shared spell target-group runtime is missing.");
-        const lookup = new Map([...setup.heroes, ...setup.monsters]
-          .map((member) => [member.combatant_id, member]));
-        if (new Set(choice.targetIds).size !== choice.targetIds.length) {
-          throw new Error("A spell target group cannot repeat a target.");
-        }
-        const targets = choice.targetIds.map((id) => {
-          if (!lookup.has(id)) throw new Error("A spell target group contains an unknown target.");
-          return lookup.get(id);
-        });
-        if (!legal(targets, spell.maxTargetPairDistanceFt)) {
-          throw new Error("Spell targets exceed their declared pairwise distance.");
-        }
+        const validate = window.IRON_PIT_BROWSER_SPELL_TARGET_GROUPS?.validateChoice;
+        if (typeof validate !== "function") throw new Error("Shared spell target-group runtime is missing.");
+        validate(setup, choice.targetIds, spell.maxTargetPairDistanceFt);
       }
 
       let remaining = null;
