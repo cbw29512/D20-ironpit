@@ -1,5 +1,17 @@
 # Iron Pit locked rules
 
+## Misty Step — in-place escape (2026-11-11)
+
+- Misty Step is never a repositioning option in the standard Iron Pit. The combatant remains on the same authoritative grid square.
+- The AI may use it only when an active effect that teleport would clear is present: Grappled, Restrained, Entangle/ground snare, or another source effect marked `ends_on_teleport`. No eligible effect means no cast and no resource/action spend.
+- Retain the printed source cost and frequency. The 2014 Cloud Giant's Misty Step is a Bonus Action, 3/day. Reuse the shared teleport-cancel engine; do not add a Misty Step-specific resolver.
+
+## Light spell — arena-neutral (2026-11-11; supersedes previous Light-combat ruling)
+
+- The **Light cantrip/spell has no combat impact in the standard Iron Pit**, in either the 2014 or 2024 ruleset. Combat AI never chooses or casts Light as an Action or pre-fight buff. Do not invent an illumination buff, vision modifier, attack Advantage/Disadvantage, bright-light sensitivity trigger, resource cost, concentration, timed effect, or combat event from it.
+- Preserve Light's exact printed spell name, spell-list membership, edition, and source text on immutable monster/pregen/homebrew cards. It remains a noncombat reference entry; standard fights have no Light-generated temporary state. The normal attack/weapon **Light property**, magical **Darkness**, **Fog Cloud**, real **sunlight** emitters, and other mechanically supported bright-light effects remain separate and are **not** disabled by this ruling.
+- This is an explicit **Iron Pit arena policy** and not a claim that tabletop Light lacks RAW effects. Source classification must recognize only verified Light spell declarations; never use name-string combat dispatch, and never mark other unknown spells neutral. Both Python and browser must agree, and source cards must remain unchanged after combat/reset.
+
 ## No wall-creation Actions — locked arena rule (2026-11-11)
 
 **Wall creation is arena-unavailable.** Iron Pit is an automated offensive

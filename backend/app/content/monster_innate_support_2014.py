@@ -7,6 +7,12 @@ from app.content.monster_environmental_spell_proofs_2014 import source_proven_ar
 from app.content.monster_source_angelic_innate_2014 import source_proven_angelic_arena_exclusions_2014
 from app.content.monster_innate_darkness_2014 import source_proven_innate_darkness_2014
 from app.content.monster_innate_fog_cloud_2014 import source_proven_innate_fog_cloud_2014
+from app.content.monster_innate_ai_exclusions_2014 import (
+    source_proven_arena_ai_excluded_innate_spells_2014,
+)
+from app.content.monster_innate_misty_step_2014 import (
+    source_proven_innate_misty_step_2014,
+)
 from app.content.monster_innate_spells_2014 import (
     ARENA_NEUTRAL_INNATE_SPELLS_2014,
     _PIT_BANNED_INNATE_SPELLS_2014,
@@ -32,8 +38,13 @@ def innate_timed_self_buffs_2014(monster) -> list[TimedSelfBuffAction]:
     """Bind in-combat innate self-buffs. Dismissal/plane-shift functions stay omitted."""
     try:
         actions: list[TimedSelfBuffAction] = []
+        # Source-proven AI omissions remain on the immutable spell card but
+        # do not become selectable combat Actions for this caster.
+        ai_excluded = source_proven_arena_ai_excluded_innate_spells_2014(monster)
         for spell in _spells(monster):
             spell_id = str(spell.get("id") or "")
+            if spell_id in ai_excluded:
+                continue
             if spell_id == "dispel-evil-and-good":
                 actions.append(TimedSelfBuffAction(
                     id="dispel-evil-and-good",
@@ -136,6 +147,7 @@ def innate_spell_resources_2014(monster) -> list[ResourceDefinition]:
         bound.update(action.id for action in innate_timed_self_buffs_2014(monster))
         bound.update(action.id for action in source_proven_innate_darkness_2014(monster))
         bound.update(action.id for action in source_proven_innate_fog_cloud_2014(monster))
+        bound.update(action.id for action in source_proven_innate_misty_step_2014(monster))
         for spell in _spells(monster):
             spell_id = str(spell.get("id") or "")
             if spell_id not in bound or str(spell.get("usage") or "") != "per_day":
@@ -192,6 +204,7 @@ def innate_spell_names_2014(monster) -> set[str]:
     names.update(action.name.casefold() for action in innate_timed_self_buffs_2014(monster))
     names.update(action.name.casefold() for action in source_proven_innate_darkness_2014(monster))
     names.update(action.name.casefold() for action in source_proven_innate_fog_cloud_2014(monster))
+    names.update(action.name.casefold() for action in source_proven_innate_misty_step_2014(monster))
     names.update(action.name.casefold() for action in innate_condition_removal_2014(monster))
     return names
 
@@ -205,6 +218,14 @@ def supports_innate_spellcasting_2014(monster) -> bool:
         if not _innate(monster).get("source_complete"):
             return False
         known = {str(spell.get("id") or "") for spell in _spells(monster)}
+        # Misty Step is an in-place escape Action in this arena, not a
+        # blanket exemption. Require its exact source proof even though the
+        # historical pit-banned set also contains its spell ID.
+        if (
+            "misty-step" in known
+            and not source_proven_innate_misty_step_2014(monster)
+        ):
+            return False
         if not known:
             return False
         # Source-proven noncombat weather, water, height and light magic does
@@ -228,7 +249,9 @@ def supports_innate_spellcasting_2014(monster) -> bool:
             action.id for action in source_proven_innate_darkness_2014(monster)
         } | {
             action.id for action in source_proven_innate_fog_cloud_2014(monster)
-        }
+        } | {
+            action.id for action in source_proven_innate_misty_step_2014(monster)
+        } | source_proven_arena_ai_excluded_innate_spells_2014(monster)
         return known <= bound
     except Exception:
         logger.exception("Failed to classify 2014 innate spellcasting for %s.", monster.name)

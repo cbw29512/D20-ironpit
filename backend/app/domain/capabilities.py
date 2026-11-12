@@ -28,6 +28,7 @@ from app.domain.environment_contexts import EnvironmentContextReaction
 from app.domain.passive_modifiers import PassiveModifierGrant
 from app.domain.persistent_save_zones import PersistentSaveZoneAction
 from app.domain.suppression_zones import PersistentSuppressionZoneAction
+from app.domain.teleport_actions import TeleportAction
 from app.domain.movement import MovementModes
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.recharge import RechargeRule
@@ -98,6 +99,9 @@ class CombatantDefinition(BaseModel):
     # Generic Silence/Darkness-style environmental zone actions. The compiled
     # card must preserve these typed capabilities rather than silently drop them.
     suppression_zone_actions: list[PersistentSuppressionZoneAction] = Field(default_factory=list)
+    # Keep the existing shared in-place teleport-cancel Action in the
+    # source-to-template pipeline; teleport never relocates in the Iron Pit.
+    teleport_actions: list[TeleportAction] = Field(default_factory=list)
     spell_attack_actions: list[SpellAttackAction] = Field(default_factory=list, exclude_if=lambda items: not items)
     auto_hit_spell_actions: list[AutoHitSpellAction] = Field(default_factory=list, exclude_if=lambda items: not items)
     defensive_spell_actions: list[DefensiveSpellAction] = Field(default_factory=list)
