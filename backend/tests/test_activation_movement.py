@@ -32,6 +32,23 @@ def test_activation_movement_grants_extra_movement_without_spending_normal_budge
     assert events[0].event_type == "movement"
 
 
+def test_activation_movement_is_neutral_in_standard_formation_arena() -> None:
+    mover = _member("hero", "heroes", 0)
+    target = _member("monster", "monsters", 60)
+    setup = EncounterSetup(
+        heroes=[mover], monsters=[target],
+        hero_total_levels=1, monster_total_cr="1", arena_mode="formation",
+    )
+    original_movement = mover.state.movement_remaining_ft
+    events, next_sequence = resolve_activation_movement(
+        19, 1, mover, setup, FixedDiceProvider([10]), speed_fraction=0.5,
+    )
+    assert events == []
+    assert next_sequence == 19
+    assert mover.position_ft == 0
+    assert mover.state.movement_remaining_ft == original_movement
+
+
 def test_activation_movement_fails_closed_on_invalid_fraction() -> None:
     mover = _member("hero", "heroes", 0)
     target = _member("monster", "monsters", 60)
