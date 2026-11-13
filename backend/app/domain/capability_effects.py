@@ -103,6 +103,8 @@ class GrappleEffectDefinition(BaseModel):
     restrains: bool = False
     requires_source_free: bool = False
     max_active_grapples: int | None = Field(default=None, ge=1, le=20)
+    # Declarative object durability for a Grapple's external appendage/snare.
+    breakable_object: BreakableObjectSpec | None = None
     # Applies only to checks and saves while the corresponding Grapple exists.
     check_save_disadvantage_abilities: list[AbilityName] = Field(default_factory=list)
     # Legacy max_target_size limits the entire save. Only a source with a

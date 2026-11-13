@@ -45,6 +45,12 @@
       prevents_breathing: Boolean(linked.preventsBreathing),
       blinded_preexisting: blindedPreexisting,
       linked_effect_id: linked.effectId || null,
+      breakable_object: linked.breakableObject ? {
+        armor_class: linked.breakableObject.armorClass,
+        current_hp: linked.breakableObject.hitPoints,
+        damage_immunities: [...(linked.breakableObject.damageImmunities || [])],
+        damage_vulnerabilities: [...(linked.breakableObject.damageVulnerabilities || [])],
+      } : null,
       check_save_disadvantage_abilities: [...(linked.checkSaveDisadvantageAbilities || [])],
     });
     sync(state);

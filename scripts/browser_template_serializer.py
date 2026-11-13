@@ -39,6 +39,14 @@ def _control(effect: Any) -> dict[str, Any] | None:
         row["grappleRequiresSourceFree"] = True
     if effect.grapple_max_active_grapples is not None:
         row["grappleMaxActiveGrapples"] = effect.grapple_max_active_grapples
+    if effect.grapple_breakable_object is not None:
+        spec = effect.grapple_breakable_object
+        row["grappleBreakableObject"] = {
+            "armorClass": spec.armor_class,
+            "hitPoints": spec.hit_points,
+            "damageVulnerabilities": [d.value for d in spec.damage_vulnerabilities],
+            "damageImmunities": [d.value for d in spec.damage_immunities],
+        }
     if effect.grapple_check_save_disadvantage_abilities:
         row["grappleCheckSaveDisadvantageAbilities"] = list(effect.grapple_check_save_disadvantage_abilities)
     if effect.grapple_periodic_damage is not None:

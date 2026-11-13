@@ -12,7 +12,7 @@ from app.domain.save_effects import FailedSaveTimedEffect
 from app.domain.size import CreatureSize
 from app.domain.targeting import AreaTargeting, TargetQualification
 from app.domain.environment_contexts import EnvironmentContextId
-from app.domain.breakable_restraints import BreakableObjectSpec
+from app.domain.breakable_restraints import BreakableObjectSpec, BreakableObjectState
 
 from app.domain.action_types import (
     AbilityName, ActionCost, HealingTargetMode, ConditionRemovalTargetMode,
@@ -38,6 +38,7 @@ class GrappleSource(BaseModel):
     prevents_breathing: bool = False
     blinded_preexisting: bool = False
     linked_effect_id: str | None = None
+    breakable_object: BreakableObjectState | None = None
     check_save_disadvantage_abilities: list[AbilityName] = Field(default_factory=list)
 
 
@@ -47,6 +48,7 @@ class HitControlEffect(BaseModel):
     restrains_while_grappled: bool = False
     grapple_requires_source_free: bool = False
     grapple_max_active_grapples: int | None = Field(default=None, ge=1, le=20)
+    grapple_breakable_object: BreakableObjectSpec | None = None
     grapple_check_save_disadvantage_abilities: list[AbilityName] = Field(default_factory=list)
     grapple_periodic_damage: GrapplePeriodicDamage | None = None
     condition_id: ConditionName | None = None

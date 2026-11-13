@@ -116,6 +116,7 @@ def apply_hit_conditions(
                 restrains=control.restrains_while_grappled,
                 check_save_disadvantage_abilities=control.grapple_check_save_disadvantage_abilities,
                 periodic_damage=control.grapple_periodic_damage,
+                breakable_object=control.grapple_breakable_object,
             ))
     if (control is not None and control.condition_id is not None
             and (control.max_target_size is None or size_at_most(defender.template.size, control.max_target_size))):

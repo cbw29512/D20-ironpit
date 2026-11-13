@@ -35,7 +35,7 @@ def _value(item: Any) -> Any:
 def _control(effect: Any) -> dict[str, Any] | None:
     if effect is None:
         return None
-    return {
+    row = {
         "maxTargetSize": _value(effect.max_target_size) if effect.max_target_size else None,
         "grappleEscapeDc": effect.grapple_escape_dc,
         "restrainsWhileGrappled": effect.restrains_while_grappled,
@@ -47,6 +47,14 @@ def _control(effect: Any) -> dict[str, Any] | None:
         "repeatSaveTiming": effect.repeat_save_timing,
         "allowedRemovalActionIds": list(effect.allowed_removal_action_ids),
     }
+    if effect.grapple_breakable_object is not None:
+        spec = effect.grapple_breakable_object
+        row["grappleBreakableObject"] = {
+            "armorClass": spec.armor_class, "hitPoints": spec.hit_points,
+            "damageVulnerabilities": [d.value for d in spec.damage_vulnerabilities],
+            "damageImmunities": [d.value for d in spec.damage_immunities],
+        }
+    return row
 
 
 def _attack(attack: WeaponAttack) -> dict[str, Any]:
