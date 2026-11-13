@@ -79,6 +79,21 @@ const vm = require("node:vm");
     assert.ok(report.observed.feature_ids["source-melee"] >= 1);
     assert.equal(JSON.stringify(heroes.h14a), JSON.stringify({id:"h14a",ruleset:"2014"}));
 
+    const presetsOnly = await context.IRON_PIT_TEST_ALL_PLAN.create("presets");
+    assert.equal(presetsOnly.duel_total, 0);
+    assert.equal(presetsOnly.total, 2);
+    assert.equal(presetsOnly.at(0).selection.ruleset, "2014");
+    assert.equal(presetsOnly.at(1).selection.ruleset, "2024");
+    const presetResults = await context.IRON_PIT_TEST_ALL_RUNNER.run(
+      presetsOnly, 123, {stopRequested: false}
+    );
+    assert.equal(presetResults.completed, 2);
+    assert.equal(presetResults.passed, 1);
+    assert.equal(presetResults.failed, 1);
+    assert.ok(presetResults.failures[0].problems[0].startsWith("engine_error"));
+    assert.equal(presetResults.failures[0].selection.ruleset, "2024");
+    assert.equal(presetResults.failures[0].seed, 99);
+
     const quick = await context.IRON_PIT_TEST_ALL_PLAN.create("cards");
     assert.equal(quick.duel_total, 6);
     assert.equal(quick.total, 8);
@@ -109,6 +124,20 @@ const vm = require("node:vm");
       scripts.indexOf("browser-wanted-posters.js"));
     assert.ok(scripts.indexOf("browser-wanted-posters.js") <
       scripts.indexOf("browser-catalog.js"));
+    assert.ok(html.includes('value="presets" selected'),
+      "Prebuilt fights must be the default scope, not an enormous roster matrix.");
+    assert.ok(html.includes("Test All Fights"));
+    for (const home of ["index.html"]) {
+      const frontend = fs.readFileSync(path.join(__dirname, home), "utf8");
+      const root = fs.readFileSync(path.join(__dirname, "..", home), "utf8");
+      for (const page of [frontend, root]) {
+        assert.match(page, /action="engine-test-lab\.html" method="get"/);
+        assert.match(page, /name="run" value="presets"/);
+      }
+    }
+    const controller = fs.readFileSync(path.join(__dirname,
+      "engine-test-lab-sweep-ui.js"), "utf8");
+    assert.ok(controller.includes('request.get("run") === "presets"'));
     assert.ok(scripts.indexOf("engine-test-lab-sweep-plan.js") <
       scripts.indexOf("engine-test-lab-sweep-ui.js"));
     console.log("Test All: both-edition complete matrix, presets, failures, stop and UI passed.");

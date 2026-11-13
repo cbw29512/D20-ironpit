@@ -22,8 +22,10 @@
       progress(result, plan);
       const blocked = Object.entries(plan.unavailable || {})
         .map(([edition, count]) => `${edition}: ${count} blocked/not playable`).join("; ");
+      const scope = result.mode === "presets" ? "All predefined fights"
+        : result.mode === "pairs" ? "Full 1v1 matrix" : "All-card coverage";
       $("sweep-summary").textContent =
-        `${result.mode === "pairs" ? "Full 1v1 matrix" : "All-card coverage"}: ` +
+        `${scope}: ` +
         `${result.passed.toLocaleString()} passed, ${result.failed.toLocaleString()} failed, ` +
         `${result.skipped.toLocaleString()} untested after stop, ` +
         `${result.warnings.toLocaleString()} long-draw warnings. ` +
@@ -125,4 +127,16 @@
     if (running) running.stopRequested = true;
   });
   $("sweep-download").addEventListener("click", download);
+  // Direct navigation from the main Pit is an explicit Test All click.
+  // Auto-run only that exact opt-in URL; ordinary visits stay idle.
+  try {
+    const request = new URLSearchParams(window.location.search);
+    if (request.get("run") === "presets") {
+      $("sweep-mode").value = "presets";
+      void start();
+    }
+  } catch (error) {
+    console.error("Could not read opt-in preset test launch URL", error);
+    $("sweep-status").textContent = "Open Test Lab and press Test All Fights.";
+  }
 })();

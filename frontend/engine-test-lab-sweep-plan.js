@@ -59,12 +59,12 @@
 
   async function create(mode) {
     try {
-      if (!["cards", "pairs"].includes(mode))
-        throw new Error("Sweep mode must be 'cards' or 'pairs'.");
+      if (!["presets", "cards", "pairs"].includes(mode))
+        throw new Error("Sweep mode must be 'presets', 'cards', or 'pairs'.");
       const editions = EDITIONS.map(roster);
       const {entries: presets, unavailable} = await sourcePresets();
-      const counts = editions.map(entry => mode === "pairs"
-        ? entry.hero_ids.length * entry.monster_ids.length
+      const counts = editions.map(entry => mode === "presets" ? 0
+        : mode === "pairs" ? entry.hero_ids.length * entry.monster_ids.length
         : entry.hero_ids.length + entry.monster_ids.length);
       const duel_total = counts.reduce((sum, count) => sum + count, 0);
       const total = duel_total + presets.length;
