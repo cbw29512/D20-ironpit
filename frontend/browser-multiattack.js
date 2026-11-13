@@ -140,5 +140,6 @@
   window.IRON_PIT_BROWSER_MULTIATTACK = {
     available: MC.available, legalChoiceAvailable: MC.legalChoiceAvailable,
     meleeAvailable: MC.meleeAvailable, expectedDamage: MC.expectedDamage, resolveAttackAction,
+    attackSlotFeature,
   };
 })();
