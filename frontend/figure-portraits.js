@@ -6,6 +6,8 @@
   }[char]));
 
   const SHAPES = {
+    // Art-only identity for the private test opponent; never combat dispatch.
+    heavy_bag: '<path fill="none" stroke="currentColor" stroke-width="4" d="M50 0v11m0 3v13M50 29 36 42m14-13 14 13"/><circle cx="50" cy="14" r="4" fill="none" stroke="currentColor" stroke-width="3"/><path d="M37 41q-8 2-8 10v35q0 7 8 9 13 4 26 0 8-2 8-9V51q0-8-8-10-13-4-26 0z"/><path d="M34 58q16-4 32 0m-32 26q16 4 32 0" fill="none" stroke="currentColor" stroke-width="2"/>',
     humanoid: '<circle cx="50" cy="24" r="11"/><path d="M34 86 38 46q12-10 24 0l4 40-9 2-5-26-2 26H46l-2-26-5 26z"/><path d="m66 46 15-16 4 4-13 20z"/>',
     goblin: '<path d="M28 22 18 10l8 4 10 10 6-12 6 12 10-10 8-4-10 12h-36z"/><circle cx="50" cy="30" r="10"/><path d="M38 84 41 50q9-8 18 0l3 34-8 2-3-20-2 20H46l-2-20-3 20z"/><path d="M64 50c16-12 26-2 20 16l-8 18-5-3 6-16c-8-2-12 2-14 6z"/>',
     hobgoblin: '<circle cx="50" cy="22" r="12"/><path d="M29 86 35 46q15-12 30 0l6 40-11 3-6-26-3 26H49l-3-26-6 26z"/><path d="m72 48 14-12 4 5-12 16z"/>',
@@ -46,6 +48,8 @@
   };
 
   function keyFor(template, info) {
+    if (/^custom-(?:2014|2024)-punching-bag$/.test(String(template?.id || "")))
+      return "heavy_bag";
     const name = String(template?.name || "").toLowerCase();
     const detail = String(info?.detail || "").toLowerCase();
     const blob = `${name} ${detail}`;

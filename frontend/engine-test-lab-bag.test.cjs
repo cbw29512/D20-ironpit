@@ -123,9 +123,14 @@ require("./browser-test-runtime.cjs").loadWebsite();
     assert.match(lab, /id="bag-download"/);
     for (const file of ["index.html", "../index.html"]) {
       const html = fs.readFileSync(path.join(__dirname, file), "utf8");
-      assert.match(html, /name="run" value="bag"/);
-      assert.match(html, /value="bag">Run Punching Bag Test</,
-        "Home pages must expose the one-click gauntlet.");
+      assert.match(html, /id="bag-all-button"/,
+        "The real battlefield must expose the one-click gauntlet.");
+      assert.match(html, /id="bag-download-button"/,
+        "The real battlefield must provide a full log download.");
+      assert.match(html, /battlefield-bag-runner.js/,
+        "The actual home page must load the gauntlet runner.");
+      assert.doesNotMatch(html, /name="run" value="bag"/,
+        "Do not redirect users to a separate Test Lab for this action.");
     }
     console.log("Punching Bag 2014/2024 all-source plan, real fights, logs and isolation passed.");
   } catch (error) {
