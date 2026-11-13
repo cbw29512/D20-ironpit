@@ -51,8 +51,9 @@
     if (!turbo?.runSeeded || !turbo?.deriveSeed || !lab?.fingerprint)
       throw new Error("Shared seeded combat runtime is not available.");
     const reporter = window.IRON_PIT_TEST_ALL_REPORT;
-    if (!reporter?.create || !reporter?.failure || !reporter?.advance)
+    if (!reporter?.create || !reporter?.failure || !reporter?.advance || !reporter?.verifyRuntime)
       throw new Error("Bounded Test All evidence recorder is missing.");
+    reporter.verifyRuntime();
     const startIndex = control.startIndex ?? 0;
     const result = reporter.create(plan, baseSeed, startIndex);
     try {
