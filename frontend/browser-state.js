@@ -195,6 +195,13 @@
     try {
       if (!target) throw new Error("Target-adjacent ally evaluation requires a target.");
       const allies = member.side === "heroes" ? setup.heroes : setup.monsters;
+      if (setup.arena_mode === "formation") {
+        const rows = window.IRON_PIT_BROWSER_FORMATION_ENGAGEMENT;
+        if (!rows) throw new Error("Formation ally engagement requires shared row runtime.");
+        return rows.effectiveRow(target, setup) === "front"
+          && allies.some(ally => ally.combatant_id !== member.combatant_id
+            && active(ally) && rows.effectiveRow(ally, setup) === "front");
+      }
       return allies.some((ally) => ally.combatant_id !== member.combatant_id && active(ally) && distance(ally, target) <= 5);
     } catch (error) { console.error("Failed browser target-adjacent ally lookup", { member: member.combatant_id, error }); throw error; }
   }
