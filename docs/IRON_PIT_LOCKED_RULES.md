@@ -1,5 +1,14 @@
 # Iron Pit locked rules
 
+## Formation-only battle; grid is display capacity — latest clarification 2026-11-12
+
+- **Grid is visual capacity only.** The 24 × 16 board accommodates up to six creatures per side (including six dragons), each in exactly one display slot regardless of size; it is not an arena for tactical movement, attack range, reach, or distance calculations.
+- **Frontline = melee; backline = ranged.** Melee engagement depends on effective formation and a valid source attack, not how many feet separate two displayed units. When the final active frontline combatant falls, all surviving backliners immediately promote to melee/frontline without movement, action cost, or repositioning. No unprinted melee attack may be invented for a promoted caster or archer.
+- **No movement/distance legality gate.** Do not impose closing/pathfinding, an attack's 5-foot Bite reach, or a Tendril's 50-foot reach to prohibit a valid formation attack. Keep all printed ranges and Speed values intact on the card. Distinct source conditions, action resources, attack counts, and normal Advantage/Disadvantage stay in force. Geometry-dependent area or range mechanics require separate universal treatment; this ruling does not turn them into unconditional all-target hits.
+- **Roper:** Four no-damage Tendril controls may Grapple/Restrain; Reel never relocates; its one printed Bite can target an exposed frontline opponent even when the historical grid engine would claim that opponent was outside 5 feet. Restrained grants normal Advantage. No free Bite on a Tendril hit.
+- **Authority:** The newest [formation-only clause](IRON_PIT_RULES_CONTRACT.md#standard-arena-formation-only-engagement-no-tactical-movement-or-distance--clarified-2026-11-12) supersedes historical moving-grid language below and older Roper distance regressions. Python/browser enforcement remains subject to cross-roster certification; do not assert implementation from the rule alone.
+
+
 ## Command spell: always Grovel — 2026-11-12
 
 - In the automated Iron Pit, every creature and pregen choosing **Command** selects only the printed **Grovel** option. After a failed Wisdom save, its legal target **falls Prone on its next turn and then ends that turn**; nothing flees, approaches, drops an item or executes free-form orders. Prone and one-turn activity loss compose existing universal semantics; no monster-specific command resolver.
