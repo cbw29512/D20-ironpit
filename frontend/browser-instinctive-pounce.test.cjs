@@ -58,6 +58,19 @@ assert.throws(
   /speedFraction/,
 );
 
+// Formation-only mode preserves Rage but never calls spatial movement.
+const originalRemaining = mover.state.movement_remaining_ft;
+const originalPosition = mover.position_ft;
+observedRemaining = null;
+const formationOnly = window.IRON_PIT_BROWSER_ACTIVATION_MOVEMENT.resolve(
+  11, 2, mover, { heroes: [mover], monsters: [target], arena_mode: "formation" },
+  { speedFraction: 0.5, turnKey: "2:hero" },
+);
+assert.deepEqual(formationOnly, {events: [], sequence: 11});
+assert.equal(observedRemaining, null, "Formation must bypass reaction movement.");
+assert.equal(mover.position_ft, originalPosition);
+assert.equal(mover.state.movement_remaining_ft, originalRemaining);
+
 const rageSource = fs.readFileSync(path.join(__dirname, "browser-rage.js"), "utf8");
 const turnSource = fs.readFileSync(path.join(__dirname, "browser-turn.js"), "utf8");
 assert.match(rageSource, /instinctive_pounce_fraction/);
