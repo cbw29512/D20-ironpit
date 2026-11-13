@@ -13,6 +13,8 @@ const load = (name) => vm.runInThisContext(
 
 load("browser-heroes.js");
 load("browser-monsters-2014.js");
+load("browser-wanted-2014.js");
+load("browser-wanted-posters.js");
 load("browser-catalog.js");
 
 (async () => {
@@ -25,7 +27,12 @@ load("browser-catalog.js");
   assert.equal(catalog.monster_count, 327);
   assert.equal(catalog.monster_ready_count, Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length);
   assert.equal(catalog.heroes.length, catalog.hero_ready_count);
-  assert.equal(catalog.monsters.length, Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length);
+  assert.equal(catalog.monsters.length, 327, "Complete 2014 source catalog stays visible.");
+  assert.equal(catalog.monsters.filter((card) => card.coverage_status === "raw_ready").length, catalog.monster_ready_count);
+  const wanted = catalog.monsters.filter((card) => card.coverage_status === "blocked");
+  assert.equal(wanted.length, 327 - catalog.monster_ready_count);
+  assert.ok(wanted.every((card) => card.runnable_template_id === null && card.blockers.length));
+  assert.ok(wanted.some((card) => card.name === "Roper"));
   assert.ok(catalog.heroes.every((card) => card.ruleset === "2014" && card.kind === "character"));
   assert.ok(catalog.monsters.every((card) => card.ruleset === "2014" && card.kind === "monster"));
   const fighters = catalog.heroes.filter((card) => card.class_id === "fighter");

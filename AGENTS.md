@@ -1,5 +1,8 @@
 # D20 Iron Pit repository instructions
 
+**Latest arena authority (2026-11-12):** Standard Iron Pit combat is formation-only, with no tactical movement or foot-distance attack gate; the 24×16 board is for displaying six monsters per side, including dragons. Frontline engages in melee; backline engages at range and promotes immediately when its frontline falls. See [the locked formation rule](docs/IRON_PIT_LOCKED_RULES.md#formation-only-battle-grid-is-display-capacity--latest-clarification-2026-11-12) before touching attack selection, Roper Tendril/Bite, range, grid, or movement. This newer user instruction supersedes older moving-grid language in this file and older design documents; retain source ranges as card data and require full Python/browser migration and certification.
+
+
 ## Multi-agent coordination
 
 When Chris has more than one assistant working on Iron Pit concurrently, read and follow `docs/TWO_AGENT_COORDINATION.md` before editing any production combat subsystem. One subsystem has one writer at a time; read-only auditing may proceed in parallel.

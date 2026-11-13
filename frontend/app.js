@@ -24,6 +24,7 @@
     for (const id of ["fight-button", "step-fight-button", "turbo-button"]) el(id).disabled = state.fighting || active || !ready;
     el("rerun-button").disabled = state.fighting || active || !state.hasRun;
     el("quick-test").disabled = state.fighting || active;
+    if (el("bag-all-button")) el("bag-all-button").disabled = state.fighting || active;
     el("load-combat-button").disabled = state.fighting || active || !window.IRON_PIT_COMBAT_PRESETS?.selected?.();
     for (const id of ["reset-fight", "reset-board"]) el(id).disabled = state.fighting;
     rulesetUi()?.syncDisabled(state);
@@ -42,7 +43,7 @@
     window.IRON_PIT_COMBAT_REVIEW?.hide?.();
     actions()?.syncControls(state); updateControls();
   }
-  function render() { if (state.catalog) view().render(state, openSlot, removeSlot); window.IRON_PIT_FORMATION_BOARD?.renderPreview(state); updateControls(); actions()?.syncControls(state); }
+  function render() { if (state.catalog) { view().render(state, openSlot, removeSlot); window.IRON_PIT_WANTED_POSTERS?.render(state.catalog); } window.IRON_PIT_FORMATION_BOARD?.renderPreview(state); updateControls(); actions()?.syncControls(state); }
   function setSlot(side, index, card) { (side === "heroes" ? state.heroSlots : state.monsterSlots)[index] = card; window.IRON_PIT_COMBAT_PRESETS?.clear?.(); invalidateRun(); clearResult(); render(); }
   function removeSlot(side, index) { (side === "heroes" ? state.heroSlots : state.monsterSlots)[index] = null; window.IRON_PIT_COMBAT_PRESETS?.clear?.(); invalidateRun(); clearResult(); render(); }
   function openSlot(side, index) {
@@ -108,13 +109,13 @@
     }
   }
 
-  async function changeRuleset(nextRuleset) {
+  async function changeRuleset(nextRuleset, fromGauntlet = false) {
     const selector = el("ruleset-select");
     if (nextRuleset === state.ruleset) {
       if (selector) selector.value = state.ruleset;
       return;
     }
-    if (state.fighting || (state.session && !state.session.complete)) { if (selector) selector.value = state.ruleset; return; }
+    if ((state.fighting && !fromGauntlet) || (state.session && !state.session.complete)) { if (selector) selector.value = state.ruleset; return; }
     try {
       await rulesetUi().ensureBundle(nextRuleset);
       state.ruleset = nextRuleset; state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog(nextRuleset);
@@ -123,7 +124,7 @@
       el("status").textContent = `${nextRuleset} ready. Add pregens or monsters to either team, or choose a preset fight.`;
     } catch (error) {
       console.error("Ruleset switch failed", error); if (selector) selector.value = state.ruleset;
-      el("status").textContent = `Could not load the ${nextRuleset} ruleset.`;
+      el("status").textContent = `Could not load the ${nextRuleset} ruleset.`; if (fromGauntlet) throw error;
     }
   }
 
@@ -139,6 +140,9 @@
       await window.IRON_PIT_COMBAT_PRESETS.install({ state, load: loadCards, ensureRuleset: changeRuleset });
       window.IRON_PIT_COMBAT_REVIEW.install({ state, matchup, render, updateControls, clearResult, load: loadCards, ensureRuleset: changeRuleset });
       window.IRON_PIT_BATTLE_LOG_EXPORT?.install?.();
+      window.IRON_PIT_BATTLEFIELD_BAG_CONTROLS.install({
+        state, ensureRuleset: changeRuleset, load: loadCards, matchup, updateControls,
+      });
       rulesetUi().update(state); render();
       el("status").textContent = "Iron Pit ready. Pick heroes and monsters, then press Fight.";
     } catch (error) { console.error("Iron Pit initialization failed", error); el("status").textContent = "The Iron Pit failed to initialize."; }

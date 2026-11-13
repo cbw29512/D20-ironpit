@@ -60,7 +60,11 @@ console.error = (...args) => errors.push(args.map((arg) => arg instanceof Error 
 const click = async (id) => { await el(id).listeners.click(); };
 
 (async () => {
-  load("combat-preset-recipes.js"); load("combat-presets.js"); load("combat-review.js"); load("app.js");
+  load("combat-preset-recipes.js"); load("combat-presets.js"); load("combat-review.js");
+  // Real website loads these before app.js; the UI fixture must too.
+  load("engine-test-lab-punching-bag.js"); load("engine-test-lab-bag-coverage.js");
+  load("battlefield-bag-report.js"); load("battlefield-bag-runner.js");
+  load("battlefield-bag-controls.js"); load("app.js");
   const presetButton = (id) => el("combat-presets").children.find((item) => item.dataset?.preset === id);
   for (let i = 0; i < 40 && !presetButton("goblins"); i += 1) await Promise.resolve();
   assert.ok(api, `production app must initialize: ${JSON.stringify(errors)}`);
