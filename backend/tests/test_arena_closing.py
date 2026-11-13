@@ -12,6 +12,8 @@ from app.domain.models import EncounterSelection, RollMode, WeaponAttackKind
 
 
 def _set_grid_distance(setup, distance_ft: int):
+    # This fixture exercises historical measured grid closing, not standard Pit.
+    setup.arena_mode = "grid"
     hero, monster = setup.heroes[0], setup.monsters[0]
     hero.state.position = GridPosition(x=0, y=6)
     monster.state.position = GridPosition(x=distance_ft // 5, y=6)

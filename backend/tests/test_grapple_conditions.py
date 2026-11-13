@@ -73,6 +73,7 @@ def test_grappler_keeps_attacking_a_held_target() -> None:
 
 def test_grapple_ends_when_grappler_is_dead_or_out_of_range() -> None:
     setup = _setup()
+    setup.arena_mode = "grid"  # Test legacy measured break-range policy.
     hero, crocodile = setup.heroes[0], setup.monsters[0]
     apply_grapple(hero.state, crocodile.combatant_id, 12, 5, restrains=True)
     crocodile.state.is_dead = True

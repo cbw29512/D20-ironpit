@@ -14,6 +14,7 @@ def _boar_fixture(distance_ft: int):
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-boar"],
     ))
+    setup.arena_mode = "grid"  # Charge-runup geometry fixture only.
     hero, boar = setup.heroes[0], setup.monsters[0]
     hero.state.position = GridPosition(x=0, y=6)
     boar.state.position = GridPosition(x=distance_ft // 5, y=6)
