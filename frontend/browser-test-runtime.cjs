@@ -15,10 +15,11 @@ function loadWebsite(page = "frontend/index.html") {
       vm.runInThisContext(fs.readFileSync(path.join(__dirname, file), "utf8"), { filename: file });
       if (file === "browser-engine.js") break;
     }
-    // The actual UI loads this bundle lazily when selecting the 2014 lane.
-    vm.runInThisContext(fs.readFileSync(path.join(__dirname, "browser-monsters-2014.js"), "utf8"), {
-      filename: "browser-monsters-2014.js",
-    });
+    // Mirror the post-engine catalog modules and the lazily loaded 2014 bundle.
+    // The real page loads the Wanted scripts before browser-catalog.js.
+    for (const file of ["browser-wanted-2014.js", "browser-wanted-posters.js", "browser-monsters-2014.js"]) {
+      vm.runInThisContext(fs.readFileSync(path.join(__dirname, file), "utf8"), { filename: file });
+    }
   } catch (error) {
     console.error("Website runtime fixture failed to initialize.", page, error);
     throw error;
