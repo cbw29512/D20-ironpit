@@ -142,8 +142,11 @@
       const capacity = control?.grappleMaxActiveGrapples;
       if (capacity != null && (!G().sourceGrappleCount || !extra.setup))
         throw new Error("Source-limited grapple requires a live shared query and encounter.");
-      const belowCapacity = capacity == null || alreadyHeld || G().sourceGrappleCount(extra.setup, attacker.combatant_id) < capacity;
-      if (living && control?.grappleEscapeDc && belowCapacity && (!control.maxTargetSize || S().sizeAtMost(actualTarget, control.maxTargetSize)) && (!control.grappleRequiresSourceFree || !G().sourceHasActiveGrapple(extra.setup, attacker.combatant_id))) applied.push(...G().apply(actualTarget.state, attacker.combatant_id, control.grappleEscapeDc, attack.reach || 5, Boolean(control.restrainsWhileGrappled), false, control.grapplePeriodicDamage || null, { checkSaveDisadvantageAbilities: control.grappleCheckSaveDisadvantageAbilities || [], breakableObject: control.grappleBreakableObject || null }));
+      const occupied = capacity == null ? 0 : (control?.grappleBreakableObject
+        ? G().sourceGrappleCapacityUsed(extra.setup, attacker.combatant_id, attack.id)
+        : G().sourceGrappleCount(extra.setup, attacker.combatant_id));
+      const belowCapacity = capacity == null || alreadyHeld || occupied < capacity;
+      if (living && control?.grappleEscapeDc && belowCapacity && (!control.maxTargetSize || S().sizeAtMost(actualTarget, control.maxTargetSize)) && (!control.grappleRequiresSourceFree || !G().sourceHasActiveGrapple(extra.setup, attacker.combatant_id))) applied.push(...G().apply(actualTarget.state, attacker.combatant_id, control.grappleEscapeDc, attack.reach || 5, Boolean(control.restrainsWhileGrappled), false, control.grapplePeriodicDamage || null, { checkSaveDisadvantageAbilities: control.grappleCheckSaveDisadvantageAbilities || [], breakableObject: control.grappleBreakableObject || null, effectId: control.grappleBreakableObject ? attack.id : null }));
       if (living && control?.conditionId && (!control.maxTargetSize || S().sizeAtMost(actualTarget, control.maxTargetSize))) {
         const timed = T().apply(actualTarget.state, control.conditionId, attacker.combatant_id, { sourceEffectId: attack.id, appliedRound: round,
           expiresAtStartOfSourceTurn: Boolean(control.expiresAtStartOfSourceTurn), expiryTiming: control.expiryTiming || null,

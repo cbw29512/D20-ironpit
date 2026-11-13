@@ -8,6 +8,8 @@ from __future__ import annotations
 import logging
 
 from app.combat.breakable_grapple_object import damage_breakable_grapple_object
+from app.combat.grapple_appendage_capacity import source_grapple_capacity_used
+from app.combat.state import begin_turn
 from app.combat.conditions import apply_hit_conditions
 from app.combat.state import build_combatant_state
 from app.content.capability_compiler import compile_combatant
@@ -76,18 +78,60 @@ def test_tendril_object_hits_are_not_hits_against_owner_and_end_its_grapple():
         apply_hit_conditions(attack, victim.state, "owner", setup=setup)
         original_hp = victim.state.current_hp
         grapple = victim.state.grapple_sources[0]
-        assert damage_breakable_grapple_object(victim.state, grapple, 19, 4, "slashing") == (0, False)
-        assert damage_breakable_grapple_object(victim.state, grapple, 20, 99, "poison") == (0, False)
-        assert damage_breakable_grapple_object(victim.state, grapple, 21, 99, "psychic") == (0, False)
+        assert damage_breakable_grapple_object(victim.state, grapple, 19, 4, "slashing", setup) == (0, False)
+        assert damage_breakable_grapple_object(victim.state, grapple, 20, 99, "poison", setup) == (0, False)
+        assert damage_breakable_grapple_object(victim.state, grapple, 21, 99, "psychic", setup) == (0, False)
         assert grapple.breakable_object.current_hp == 10
-        assert damage_breakable_grapple_object(victim.state, grapple, 22, 4, "slashing") == (4, False)
+        assert damage_breakable_grapple_object(victim.state, grapple, 22, 4, "slashing", setup) == (4, False)
         assert grapple.breakable_object.current_hp == 6
-        assert damage_breakable_grapple_object(victim.state, grapple, 22, 6, "piercing") == (6, True)
+        assert damage_breakable_grapple_object(victim.state, grapple, 22, 6, "piercing", setup) == (6, True)
         assert victim.state.grapple_sources == []
         assert "grappled" not in victim.state.active_effect_ids
         assert "restrained" not in victim.state.active_effect_ids
         assert victim.state.current_hp == original_hp
+        assert source_grapple_capacity_used(setup, "owner", attack.id) == 1
+        assert setup.monsters[0].state.broken_grapple_appendages[attack.id] == 1
+        begin_turn(setup.monsters[0].state)
+        assert source_grapple_capacity_used(setup, "owner", attack.id) == 0
         assert damage_breakable_grapple_object.__name__ == "damage_breakable_grapple_object"
     except Exception:
         logger.exception("Breakable Grapple target state failed universal damage/release rules.")
+        raise
+
+
+
+def test_six_source_slots_do_not_reappear_until_next_owner_turn():
+    try:
+        _, _, attack, first, setup = _fixture()
+        apply_hit_conditions(attack, first.state, "owner", setup=setup)
+        grapple = first.state.grapple_sources[0]
+        assert damage_breakable_grapple_object(
+            first.state, grapple, 20, 10, "slashing", setup,
+        ) == (10, True)
+        held = []
+        for index in range(5):
+            member = EncounterCombatant(
+                combatant_id=f"held-{index}", side="heroes", position_ft=5,
+                state=build_combatant_state(build_commoner()),
+            )
+            setup.heroes.append(member)
+            held.append(member)
+            assert apply_hit_conditions(attack, member.state, "owner", setup=setup) == [
+                "grappled", "restrained",
+            ]
+        assert source_grapple_capacity_used(setup, "owner", attack.id) == 6
+        sixth = EncounterCombatant(
+            combatant_id="sixth", side="heroes", position_ft=5,
+            state=build_combatant_state(build_commoner()),
+        )
+        setup.heroes.append(sixth)
+        assert apply_hit_conditions(attack, sixth.state, "owner", setup=setup) == []
+        assert sixth.state.grapple_sources == []
+        begin_turn(setup.monsters[0].state)
+        assert source_grapple_capacity_used(setup, "owner", attack.id) == 5
+        assert apply_hit_conditions(attack, sixth.state, "owner", setup=setup) == [
+            "grappled", "restrained",
+        ]
+    except Exception:
+        logger.exception("Broken tendrils violated next-owner-turn replacement capacity.")
         raise
