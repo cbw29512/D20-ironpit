@@ -43,7 +43,9 @@ require("./browser-test-runtime.cjs").loadWebsite();
       assert.equal(bag.armor_class, 10);
       assert.equal(bag.max_hp, 10000);
       assert.equal(bag.attacks.length, 1);
-      assert.equal(bag.attacks[0].damageBonus, -4);
+      assert.equal(bag.attacks[0].damageBonus, 0);
+      assert.equal(bag.attacks[0].fixedDamage, 0,
+        "Even critical hits must use native fixed zero damage.");
       assert.equal(bag.attacks[0].diceCount, 1);
       assert.equal(bag.attacks[0].diceSize, 2);
       assert.ok(!Object.hasOwn(window.IRON_PIT_BROWSER_MONSTERS || {}, bag.id));
