@@ -91,10 +91,12 @@
 
   function legalPlacements(actor, setup, area, rangeFt = 0, allowNoEnemyTargets = false) {
     try {
-      if (setup?.arena_mode === "formation" && area?.shape === "cone") {
+      if (setup?.arena_mode === "formation" && ["cone", "line"].includes(area?.shape)) {
         const formation = window.IRON_PIT_BROWSER_FORMATION_AREA_TARGETING;
-        if (!formation) throw new Error("Formation cone resolver is unavailable.");
-        const targetIds = formation.coneFrontlineTargets(actor, setup, area);
+        if (!formation) throw new Error("Formation area resolver is unavailable.");
+        const targetIds = area.shape === "cone"
+          ? formation.coneFrontlineTargets(actor, setup, area)
+          : formation.lineLaneTargets(actor, setup, area);
         if (!targetIds.length && !allowNoEnemyTargets) return [];
         return [{
           targetIds, enemyIds: targetIds, friendlyIds: [],
