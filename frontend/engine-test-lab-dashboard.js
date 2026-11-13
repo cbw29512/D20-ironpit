@@ -111,6 +111,7 @@
       const ids = {bag: "bag-run", pairs: "sweep-run", presets: "all-presets"};
       if (!ids[kind]) throw new Error("Unknown workbench test mode.");
       if (kind === "pairs") $("sweep-mode").value = "pairs";
+      if (kind === "presets") $("advanced-tests").open = true;
       $(ids[kind]).click();
       const destination = kind === "bag" ? "bag-panel" :
         kind === "pairs" ? "sweep-panel" : "advanced-tests";
