@@ -115,10 +115,17 @@ require("./browser-test-runtime.cjs").loadWebsite();
     assert.ok(scripts.indexOf("custom-monster-runtime.js") <
       scripts.indexOf("engine-test-lab-punching-bag.js"));
     assert.match(lab, /id="bag-run"/);
+    assert.match(lab, /class="bag-card"/, "Test-only opponent needs a visible card preview.");
+    assert.match(lab, /Silhouette of a hanging heavy punching bag/,
+      "The Punching Bag card must display the hanging heavy-bag silhouette.");
+    assert.match(lab, /id="bag-run">Run Punching Bag Test</,
+      "The button must advertise the one-click test.");
     assert.match(lab, /id="bag-download"/);
     for (const file of ["index.html", "../index.html"]) {
       const html = fs.readFileSync(path.join(__dirname, file), "utf8");
       assert.match(html, /name="run" value="bag"/);
+      assert.match(html, /value="bag">Run Punching Bag Test</,
+        "Home pages must expose the one-click gauntlet.");
     }
     console.log("Punching Bag 2014/2024 all-source plan, real fights, logs and isolation passed.");
   } catch (error) {
