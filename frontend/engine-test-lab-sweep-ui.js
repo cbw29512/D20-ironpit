@@ -9,6 +9,7 @@
       $("sweep-progress").value = result.completed;
       $("sweep-status").textContent =
         `${result.completed.toLocaleString()} / ${plan.total.toLocaleString()} matchups · ` +
+        `segment starts at #${result.start_case} · ` +
         `${result.passed.toLocaleString()} passed · ${result.failed.toLocaleString()} failed` +
         (result.stopped ? " · stopped" : "");
     } catch (error) {
@@ -53,10 +54,10 @@
         table.append(row);
       }
       $("sweep-failures").replaceChildren(table);
-      if (result.failures.length > 100) {
+      if (result.failed > result.failures.length) {
         const message = document.createElement("p");
         message.textContent =
-          `Showing 100 of ${result.failures.length.toLocaleString()} failures. Export JSON for all.`;
+          `Showing ${result.failures.length} samples of ${result.failed.toLocaleString()} failures. The JSON contains every failed case number and its error codes.`;
         $("sweep-failures").append(message);
       }
       $("sweep-evidence").textContent = JSON.stringify({
@@ -86,14 +87,24 @@
       const mode = $("sweep-mode").value;
       const seed = Number($("seed").value);
       const plan = await window.IRON_PIT_TEST_ALL_PLAN.create(mode);
+      const startCase = Number($("sweep-start").value);
+      if (!Number.isInteger(startCase) || startCase < 1 || startCase > plan.total)
+        throw new RangeError(`Resume case must be between 1 and ${plan.total}.`);
+      control.startIndex = startCase - 1;
       if (!Number.isInteger(seed) || seed < 1 || seed > 0xffffffff)
         throw new RangeError("Select a valid 1–4294967295 seed first.");
       $("sweep-status").textContent =
-        `Testing ${plan.total.toLocaleString()} matchups in both editions…`;
+        `Testing matchups #${startCase.toLocaleString()}–${plan.total.toLocaleString()} across both editions…`;
       report = await window.IRON_PIT_TEST_ALL_RUNNER.run(
-        plan, seed, control, result => progress(result, plan)
+        plan, seed, control, interim => {
+          report = interim;
+          progress(interim, plan);
+          $("sweep-download").disabled = false; // live, recoverable checkpoint
+        }
       );
       render(report, plan);
+      if (report.stopped && report.completed < report.total)
+        $("sweep-start").value = String(report.completed + 1);
     } catch (error) {
       console.error("Test All failed before completion", error);
       $("sweep-status").textContent =
@@ -113,9 +124,9 @@
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `iron-pit-test-all-${report.mode}-${report.seed}.json`;
+      link.download = `iron-pit-test-all-${report.mode}-${report.seed}-from-${report.start_case}-through-${report.completed}.json`;
       link.click();
-      setTimeout(() => URL.revokeObjectURL(url), 0);
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
     } catch (error) {
       console.error("Test All JSON export failed", error);
       $("sweep-status").textContent = "Export failed: " + error.message;
