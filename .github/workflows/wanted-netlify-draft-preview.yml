@@ -19,6 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          fetch-depth: 2
           persist-credentials: false
 
       - name: Refuse unverified source or a production deploy
