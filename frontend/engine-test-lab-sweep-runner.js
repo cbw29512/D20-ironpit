@@ -3,8 +3,6 @@
 
   // Runtime state: {completed, passed, failed, skipped, by_edition,
   // failures, observed, warnings, stopped}. One source case = one real fight.
-  const MAX_EVENT_SAMPLES = 30;
-  const MAX_LOGGED_FAILURES = 25;
   const OUTCOMES = new Set(["heroes_win", "monsters_win", "draw"]);
 
   function sources(selection) {
@@ -52,19 +50,13 @@
     const lab = window.IRON_PIT_BATTLE_LAB;
     if (!turbo?.runSeeded || !turbo?.deriveSeed || !lab?.fingerprint)
       throw new Error("Shared seeded combat runtime is not available.");
-    const result = {
-      generated_at: new Date().toISOString(), seed: baseSeed,
-      engine: "IRON_PIT_BROWSER_TURBO.runSeeded",
-      coverage_kind: "observed fight behavior only; not full RAW certification",
-      mode: plan.mode, total: plan.total, completed: 0, passed: 0,
-      failed: 0, skipped: 0, stopped: false, warnings: 0,
-      by_edition: {"2014": {passed: 0, failed: 0},
-        "2024": {passed: 0, failed: 0}},
-      failures: [], observed: {event_types: {}, feature_ids: {},
-        conditions: {}, damage_types: {}},
-    };
+    const reporter = window.IRON_PIT_TEST_ALL_REPORT;
+    if (!reporter?.create || !reporter?.failure || !reporter?.advance)
+      throw new Error("Bounded Test All evidence recorder is missing.");
+    const startIndex = control.startIndex ?? 0;
+    const result = reporter.create(plan, baseSeed, startIndex);
     try {
-      for (let index = 0; index < plan.total; index += 1) {
+      for (let index = startIndex; index < plan.total; index += 1) {
         if (control.stopRequested) { result.stopped = true; break; }
         const entry = plan.at(index);
         const edition = entry.selection.ruleset;
@@ -97,32 +89,20 @@
             result.warnings += 1;
           aggregate(result.observed, events || []);
         } catch (error) {
-          console.error("Test All fight failed", {entry: entry.label, edition, seed, error});
+          // Reporter logs only one example per error class to avoid
+          // exhausting the browser console during a very large sweep.
           problems.push(`engine_error: ${error?.message || String(error)}`);
         }
-        if (problems.length) {
-          result.failed += 1;
-          result.by_edition[edition].failed += 1;
-          result.failures.push({
-            case_number: index + 1, kind: entry.kind, label: entry.label,
-            selection: entry.selection, seed, problems,
-            diagnostic_id: replay?.diagnostic_id || null,
-            ...(result.failures.length < MAX_LOGGED_FAILURES && replay?.battle
-              ? {sample_events: (replay.battle.events || []).slice(0, MAX_EVENT_SAMPLES)}
-              : {}),
-          });
-        } else {
-          result.passed += 1;
-          result.by_edition[edition].passed += 1;
-        }
-        result.completed = index + 1;
+        if (problems.length) reporter.failure(result, entry, index, seed, problems, replay);
+        else result.by_edition[edition].passed += 1;
+        reporter.advance(result, index, problems);
         if (result.completed % 20 === 0 || result.completed === plan.total) {
           try { onProgress(result); }
           catch (error) { console.error("Test All progress display failed", error); }
           await new Promise(resolve => setTimeout(resolve, 0));
         }
       }
-      result.skipped = result.total - result.completed;
+      result.skipped = result.total - result.processed;
       try { onProgress(result); }
       catch (error) { console.error("Final Test All status could not be displayed", error); }
       return result;
