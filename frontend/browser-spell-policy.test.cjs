@@ -125,6 +125,20 @@ function caster(spells, slots) {
   };
   c.state.template.spell_damage_maximizer = grant;
 
+  // Regression: exercise the full player spell resolution, not only the
+  // direct after-cast helper. Level-18/19/20 Wizards previously crashed
+  // with "C is not defined" in this exact post-cast path.
+  const casterForRealCast = caster([spell("fireball", 3, 20)], {3: 1});
+  casterForRealCast.state.template.spell_damage_maximizer = grant;
+  const enemyForRealCast = member("maximizer-target", "monsters", 30);
+  const realSetup = {heroes: [casterForRealCast], monsters: [enemyForRealCast]};
+  const realChoice = P.choose(casterForRealCast, realSetup, "1:caster");
+  assert.equal(realChoice.damageMaximizer, grant);
+  window.IRON_PIT_DICE = queuedDice([1, 6, 2]);
+  const realCast = X.resolve(1, 1, casterForRealCast, realSetup, realChoice, "1:caster");
+  assert.ok(realCast.events.some(event => event.feature_id === "fireball"));
+  assert.equal(casterForRealCast.state.feature_use_counts.overchannel, 1);
+
   assert.equal(C.safeDamageMaximizer(c.state, "fireball", 3), grant);
   let result = C.resolveDamageMaximizerAfterCast(1, 1, c, setup, grant, 3);
   assert.equal(result.events.length, 0);
