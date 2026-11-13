@@ -113,7 +113,10 @@
         report, control.stopRequested);
     } catch (error) {
       console.error("Player-facing Punching Bag suite aborted", error);
-      if (report) window.IRON_PIT_BATTLEFIELD_BAG_REPORT.finish(report, true);
+      if (report) {
+        report.fatal_error = error?.message || String(error);
+        return window.IRON_PIT_BATTLEFIELD_BAG_REPORT.finish(report, true);
+      }
       throw error;
     } finally {
       api.state.fighting = false;
