@@ -25,7 +25,8 @@ require("./browser-test-runtime.cjs").loadWebsite();
     const groupCounts = plan.groups.map(g => g.ids.length);
     assert.equal(plan.groups.length, 4);
     assert.ok(groupCounts.every(n => n > 0), "Both editions need heroes and monsters.");
-    assert.equal(groupCounts[0], 297, "Must exercise the entire certified 2014 roster.");
+    assert.equal(groupCounts[0], Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014).length,
+      "Must exercise every currently certified 2014 monster without a frozen count.");
     assert.ok(groupCounts[2] >= 141, "Must include every certified 2024 monster.");
     assert.equal(plan.total, groupCounts.reduce((a,b) => a+b, 0));
     assert.equal(new Set(Array.from({length:plan.total}, (_,i) => {
