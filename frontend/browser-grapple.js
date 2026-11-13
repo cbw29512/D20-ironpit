@@ -117,6 +117,42 @@
       && (member.state.grapple_sources || []).some((grapple) => grapple.source_id === sourceId)).length;
   }
 
+  function ownerFor(setup, sourceId) {
+    try {
+      if (!setup || !sourceId) throw new Error("Broken appendage needs its encounter and source.");
+      const owners = [...setup.heroes, ...setup.monsters].filter((member) =>
+        member.combatant_id === sourceId);
+      if (owners.length !== 1) throw new Error("Broken appendage owner is not unique.");
+      return owners[0];
+    } catch (error) {
+      console.error("Broken Grapple source lookup failed.", { sourceId, error });
+      throw error;
+    }
+  }
+  function sourceGrappleCapacityUsed(setup, sourceId, effectId) {
+    try {
+      if (!effectId) throw new Error("Source capacity requires an effect ID.");
+      const owner = ownerFor(setup, sourceId);
+      const lost = (owner.state.broken_grapple_appendages || {})[effectId] || 0;
+      if (!Number.isInteger(lost) || lost < 0) throw new Error("Invalid broken appendage count.");
+      return sourceGrappleCount(setup, sourceId) + lost;
+    } catch (error) {
+      console.error("Broken Grapple source capacity failed.", { sourceId, effectId, error });
+      throw error;
+    }
+  }
+  function recordBrokenAppendage(setup, sourceId, effectId) {
+    try {
+      if (!effectId) throw new Error("Broken Grapple needs a linked source effect.");
+      const owner = ownerFor(setup, sourceId);
+      const bucket = owner.state.broken_grapple_appendages ||= {};
+      bucket[effectId] = (bucket[effectId] || 0) + 1;
+    } catch (error) {
+      console.error("Failed to record destroyed Grapple appendage.", { sourceId, effectId, error });
+      throw error;
+    }
+  }
+
   function sourceHasActiveGrapple(setup, sourceId) {
     return sourceGrappleCount(setup, sourceId) > 0;
   }
@@ -191,5 +227,5 @@
     };
   }
 
-  window.IRON_PIT_BROWSER_GRAPPLE = { apply, attackDisadvantage, checkSaveDisadvantage, cleanup, escape, release, resolveMovementCounters, shouldEscape, sourceGrappleCount, sourceHasActiveGrapple, speedIsZero };
+  window.IRON_PIT_BROWSER_GRAPPLE = { apply, attackDisadvantage, checkSaveDisadvantage, cleanup, escape, release, resolveMovementCounters, shouldEscape, sourceGrappleCount, sourceGrappleCapacityUsed, recordBrokenAppendage, sourceHasActiveGrapple, speedIsZero };
 })();

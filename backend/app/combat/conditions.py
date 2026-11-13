@@ -105,8 +105,12 @@ def apply_hit_conditions(
             if setup is None:
                 raise ValueError("A limited on-hit grapple requires encounter setup.")
             from app.combat.grapple_queries import source_grapple_count
+            from app.combat.grapple_appendage_capacity import source_grapple_capacity_used
             already_held = any(row.source_id == source_id for row in defender.grapple_sources)
-            free = free and (already_held or source_grapple_count(setup, source_id) < control.grapple_max_active_grapples)
+            occupied = (source_grapple_capacity_used(setup, source_id, attack.id)
+                        if control.grapple_breakable_object is not None
+                        else source_grapple_count(setup, source_id))
+            free = free and (already_held or occupied < control.grapple_max_active_grapples)
         if free and (control.max_target_size is None or size_at_most(defender.template.size, control.max_target_size)):
             applied.extend(apply_grapple(
                 defender,
@@ -117,6 +121,7 @@ def apply_hit_conditions(
                 check_save_disadvantage_abilities=control.grapple_check_save_disadvantage_abilities,
                 periodic_damage=control.grapple_periodic_damage,
                 breakable_object=control.grapple_breakable_object,
+                linked_effect_id=(attack.id if control.grapple_breakable_object is not None else None),
             ))
     if (control is not None and control.condition_id is not None
             and (control.max_target_size is None or size_at_most(defender.template.size, control.max_target_size))):

@@ -35,6 +35,7 @@ from app.content.monster_source_held_turn_damage_2014 import source_held_turn_da
 from app.content.monster_source_breathing_media_2014 import source_can_breathe_water_2014
 from app.content.monster_breath_lifecycle_source_2014 import source_breath_hold_rounds_2014, source_needs_air_2014
 from app.content.monster_source_grapple_rescue_2014 import source_grapple_rescue_rules_2014
+from app.content.monster_source_breakable_grapple_rescue_2014 import source_breakable_grapple_rescue_rules_2014
 from app.content.monster_contextual_save_defenses import contextual_save_defenses_2014
 from app.content.monster_definition_adapter_support_2014 import (
     ability_values_2014,
@@ -417,7 +418,10 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         # Source-proven negative environmental traits stay in DEBUFFS, inactive
         # where the standard arena has no legal trigger.
         source_weakness_trait_names=sorted(arena_inactive_environment_traits_2014(monster)),
-        grapple_rescue_rules=source_grapple_rescue_rules_2014(monster),
+        grapple_rescue_rules=[
+            *source_grapple_rescue_rules_2014(monster),
+            *source_breakable_grapple_rescue_rules_2014(monster),
+        ],
         source_turn_relation_damages=[
             *source_turn_grappler_damage_2014(monster),
             *source_held_turn_damage_2014(monster),
