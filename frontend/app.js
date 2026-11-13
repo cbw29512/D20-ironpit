@@ -24,6 +24,7 @@
     for (const id of ["fight-button", "step-fight-button", "turbo-button"]) el(id).disabled = state.fighting || active || !ready;
     el("rerun-button").disabled = state.fighting || active || !state.hasRun;
     el("quick-test").disabled = state.fighting || active;
+    if (el("bag-all-button")) el("bag-all-button").disabled = state.fighting || active;
     el("load-combat-button").disabled = state.fighting || active || !window.IRON_PIT_COMBAT_PRESETS?.selected?.();
     for (const id of ["reset-fight", "reset-board"]) el(id).disabled = state.fighting;
     rulesetUi()?.syncDisabled(state);
