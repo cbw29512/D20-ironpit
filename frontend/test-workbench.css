@@ -1,0 +1,25 @@
+/* Test-only page: reusable recipe cards and two explicit exhaustive sweep controls. */
+.workbench-banner{border-color:#b78949;background:linear-gradient(125deg,#2c251d,#171a1c)}
+.workbench-banner h2{margin:.2rem 0;font-size:1.45rem}
+.workbench-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:1rem 0}
+.workbench-action{display:flex;flex-direction:column;gap:10px;border:1px solid #6a5740;border-radius:12px;padding:14px;background:#211c18}
+.workbench-action strong{font-size:1rem;color:#f1c77d}
+.workbench-action p{margin:0;color:#d5c6b0;line-height:1.45;font-size:.88rem}
+.workbench-action button{margin:auto 0 0;width:100%;min-height:56px;background:#d7b06a;color:#17120c}
+.workbench-action button:focus-visible{outline:3px solid #fff}
+.workbench-action button:disabled{opacity:.5}
+.workbench-note{color:#c9bdac;font-size:.9rem}
+.test-preset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,265px),1fr));gap:12px}
+.test-recipe-card{background:#1d2229;border:1px solid #6f614b;border-radius:11px;padding:14px;display:flex;flex-direction:column;gap:9px;min-width:0}
+.test-recipe-card h3{margin:0;font-size:1.04rem;color:#f5e5c5}
+.test-recipe-card p{margin:0;font-size:.86rem;color:#d0c8bb;line-height:1.4}
+.test-recipe-card .edition{color:#eac47e;font-size:.72rem;font-weight:800;letter-spacing:.09em}
+.test-recipe-card button{margin-top:auto}
+.test-recipe-card .case-result{min-height:1.3rem;font-size:.8rem;color:#d6c19d}
+.test-recipe-card .case-result[data-result="pass"]{color:#9fdfba}
+.test-recipe-card .case-result[data-result="fail"]{color:#f2a4a4}
+#advanced-tests{border:1px solid #555;border-radius:12px;margin:1rem 0;padding:.85rem}
+#advanced-tests>summary{cursor:pointer;font-weight:700;color:#e6c686}
+#advanced-tests>section{margin:12px 0 0}
+#test-preset-cards-status{font-size:.88rem;color:#d0c8bb}
+@media(max-width:700px){.workbench-actions{grid-template-columns:1fr}.test-preset-grid{grid-template-columns:1fr}}

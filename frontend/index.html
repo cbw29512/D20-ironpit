@@ -66,8 +66,9 @@
 <link rel="stylesheet" href="combat-review.css" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="audit-log.css"><link rel="stylesheet" href="combat-review.css"></noscript>
 <script data-goatcounter="https://chrisgrowth-ironpit.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<link rel="stylesheet" href="player-mode.css">
 </head>
-<body>
+<body class="player-mode">
 <a class="skip-link" href="#pit">Skip to the Pit</a>
 <div class="shell">
 <header class="pit-chrome">
@@ -77,6 +78,7 @@
 </div>
 <div id="ruleset-control" class="ruleset-control" data-ruleset="2014"><label for="ruleset-select">Ruleset <select id="ruleset-select" aria-label="Iron Pit ruleset"><option value="2014" selected>2014</option><option value="2024">2024</option></select></label><small id="ruleset-summary">Loading roster…</small></div>
 <p id="ruleset-edition-note" class="rules-note">Choose 2014 or 2024. Cards stay in their own edition's fights.</p>
+<nav class="mode-nav" aria-label="Iron Pit pages"><a href="engine-test-lab.html">Test workbench</a></nav>
 </header>
 <p class="rules-note"><a href="engine-test-lab.html">Engine Test Lab — test pregens, monsters, seeds and battle results</a> · <a href="#wanted-board">2014 Wanted board</a></p>
 <form class="rules-note" action="engine-test-lab.html" method="get" aria-label="Run all predefined Iron Pit fights"><button type="submit" name="run" value="presets">Test All 25 Preset Fights</button> <small>Run every prebuilt 2014/2024 fight and inspect failures.</small></form>
