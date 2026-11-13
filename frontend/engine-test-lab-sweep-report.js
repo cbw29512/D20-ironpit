@@ -10,6 +10,28 @@
   const SAMPLE_LIMIT = 100;
   const EVENT_SAMPLE_LIMIT = 30;
 
+  function verifyRuntime() {
+    try {
+      // A missing shared module must block the sweep up front, not produce
+      // tens of thousands of misleading monster-specific failure records.
+      const required = [
+        ["formation attack", "IRON_PIT_BROWSER_FORMATION_ENGAGEMENT", "weaponTargetAllowed"],
+        ["formation area", "IRON_PIT_BROWSER_FORMATION_AREA_TARGETING", "coneFrontlineTargets"],
+        ["death trigger", "IRON_PIT_BROWSER_DEATH_TRIGGER_DISPATCH", "resolvePending"],
+        ["breakable control", "IRON_PIT_BROWSER_BREAKABLE_CONDITION_OBJECT", "preferFreshLimitedControl"],
+        ["target-chosen save", "IRON_PIT_BROWSER_TARGET_CHOSEN_SAVE", "choose"],
+      ];
+      const missing = required.filter(([, key, method]) =>
+        typeof window[key]?.[method] !== "function");
+      if (missing.length)
+        throw new Error("Test All cannot start: missing shared browser runtimes: "
+          + missing.map(row => row[0]).join(", ") + ". Refresh the beta page.");
+    } catch (error) {
+      console.error("Test All shared runtime preflight failed", error);
+      throw error;
+    }
+  }
+
   function create(plan, seed, startIndex) {
     try {
       if (!Number.isInteger(startIndex) || startIndex < 0 || startIndex >= plan.total)
@@ -88,5 +110,5 @@
     }
   }
 
-  window.IRON_PIT_TEST_ALL_REPORT = {create, failure, advance};
+  window.IRON_PIT_TEST_ALL_REPORT = {verifyRuntime, create, failure, advance};
 })();
