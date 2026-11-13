@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  let lastRenderedCatalog = null;
+
   // The generated Python classifier is the sole Wanted source of truth.
   // Cards have no runnable template, so selecting or fighting them is forbidden.
   function cards() {
@@ -61,11 +63,13 @@
       const summary = document.getElementById("wanted-count");
       if (!board || !grid || !summary) throw new Error("Wanted board markup is missing.");
       board.hidden = catalog?.ruleset !== "2014";
-      if (board.hidden) return;
+      if (board.hidden) { lastRenderedCatalog = null; return; }
+      if (catalog === lastRenderedCatalog) return;
       const blocked = catalog.monsters.filter((card) =>
         card.ruleset === "2014" && card.coverage_status === "blocked");
       summary.textContent = `${blocked.length} still wanted · ${catalog.monster_ready_count} admitted`;
       grid.replaceChildren(...blocked.map(poster));
+      lastRenderedCatalog = catalog;
     } catch (error) {
       console.error("Failed to render Wanted board.", error);
       throw error;
