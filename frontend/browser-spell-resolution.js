@@ -124,7 +124,9 @@
         }
       }
       if (choice.damageMaximizer) {
-        const followUp = C().resolveDamageMaximizerAfterCast(
+        // Reuse the already-bound spellcasting runtime for Overchannel.
+        // A stale C() alias caused real high-level wizard fights to abort.
+        const followUp = SC().resolveDamageMaximizerAfterCast(
           sequence, round, caster, setup, choice.damageMaximizer, choice.slotLevel,
         );
         events.push(...followUp.events);
