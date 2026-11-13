@@ -2,7 +2,6 @@
   "use strict";
   const $ = id => document.getElementById(id);
   let running = null, report = null;
-
   function progress(result, plan) {
     try {
       $("sweep-progress").max = plan.total;
@@ -17,7 +16,6 @@
       throw error;
     }
   }
-
   function render(result, plan) {
     try {
       progress(result, plan);
@@ -71,7 +69,6 @@
       throw error;
     }
   }
-
   async function start() {
     if (running) return;
     const control = {stopRequested: false};
@@ -115,7 +112,6 @@
       $("sweep-stop").disabled = true;
     }
   }
-
   function download() {
     try {
       if (!report) throw new Error("No completed or stopped sweep report.");
@@ -132,7 +128,6 @@
       $("sweep-status").textContent = "Export failed: " + error.message;
     }
   }
-
   $("sweep-run").addEventListener("click", () => { void start(); });
   $("sweep-stop").addEventListener("click", () => {
     if (running) running.stopRequested = true;
