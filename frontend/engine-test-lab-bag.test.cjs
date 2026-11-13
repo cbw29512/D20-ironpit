@@ -9,6 +9,8 @@ require("./browser-test-runtime.cjs").loadWebsite();
   try {
     for (const file of [
       "custom-monster-runtime.js",
+      "battle-lab.js",
+      "browser-turbo.js",
       "engine-test-lab-sweep-plan.js",
       "engine-test-lab-punching-bag.js",
       "engine-test-lab-bag-plan.js",
