@@ -693,6 +693,8 @@ jobs:
           IRON_PIT_RECORD_GOLDENS=1 node frontend/browser-engine.test.cjs
           node frontend/engine-test-lab.test.cjs
           node frontend/engine-test-lab-sweep.test.cjs
+          node frontend/engine-test-lab-sweep-report.test.cjs
+          node frontend/test-lab-engine-parity.test.cjs
           node frontend/engine-test-lab-bag.test.cjs
           node frontend/battlefield-bag.test.cjs
           node frontend/battlefield-bag-full-roster.test.cjs
@@ -708,6 +710,7 @@ jobs:
           node --check frontend/battlefield-bag-controls.js
           node --check frontend/engine-test-lab.js
           node --check frontend/engine-test-lab-sweep-plan.js
+          node --check frontend/engine-test-lab-sweep-report.js
           node --check frontend/engine-test-lab-sweep-runner.js
           node --check frontend/engine-test-lab-sweep-ui.js
           node frontend/browser-ruleset-isolation.test.cjs
