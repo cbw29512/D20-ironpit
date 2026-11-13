@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 3
           persist-credentials: false
 
       - name: Refuse unverified source or a production deploy
@@ -27,8 +27,8 @@ jobs:
         run: |
           set -euo pipefail
           expected=e829705c78440c6154ef1e1fb7ffaef627871eb8
-          test "$(git rev-parse HEAD^)" = "$expected"
-          test "$(git diff --name-only HEAD^ HEAD)" = ".github/workflows/wanted-netlify-draft-preview.yml"
+          git cat-file -e "$expected^{commit}"
+          test "$(git diff --name-only "$expected" HEAD)" = ".github/workflows/wanted-netlify-draft-preview.yml"
           test -s frontend/index.html
           test -s frontend/browser-monsters-2014.js
           test -s frontend/browser-wanted-2014.js
