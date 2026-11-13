@@ -121,3 +121,22 @@ def test_source_roper_bite_has_advantage_without_reel_movement():
     except Exception:
         logger.exception("Roper source/formation Bite parity failed.")
         raise
+
+def test_frontline_ally_counts_as_target_adjacent_for_pack_mechanics():
+    try:
+        from app.combat.ally_context import has_adjacent_active_ally
+
+        setup = _setup()
+        attacker, companion = setup.monsters[:2]
+        enemy = setup.heroes[0]
+        # They start in separate grid cells; formation engagement, not feet,
+        # defines the shared "ally adjacent to target" universal qualifier.
+        assert has_adjacent_active_ally(attacker, enemy, setup)
+        companion.state.current_hp = 0
+        companion.state.is_alive = False
+        companion.state.is_dead = True
+        # Third frontline goblin still qualifies.
+        assert has_adjacent_active_ally(attacker, enemy, setup)
+    except Exception:
+        logger.exception("Frontline adjacent-ally qualification failed.")
+        raise
