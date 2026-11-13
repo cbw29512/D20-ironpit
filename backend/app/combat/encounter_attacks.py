@@ -9,6 +9,7 @@ from app.combat.brutal_strike_effects import apply_brutal_strike_effects, select
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.frenzy import mark_reckless_use_while_raging
+from app.combat.formation_engagement import formation_mode, weapon_target_allowed, engagement_distance
 from app.combat.reckless_attack import activate_reckless_attack
 from app.combat.post_hit_self_buffs import apply_triggered_post_hit_self_buff
 from app.combat.redirect_attack import select_redirect_ally, swap_redirect_positions
@@ -38,6 +39,11 @@ def resolve_encounter_attack(
     off_turn: bool = False,
     brutal_strike_effect_ids: tuple[str, ...] | None = None,
 ) -> BattleEvent:
+    # Reject direct bypasses of the shared formation attack selector.
+    if formation_mode(setup):
+        if not weapon_target_allowed(attacker, target, attack, setup):
+            raise ValueError("Weapon target is not engaged under arena formation rules.")
+        distance_ft = engagement_distance(attack)
     if brutal_strike_effect_ids is not None:
         select_brutal_strike_effects(attacker.state, brutal_strike_effect_ids)
     ward = check_targeting_ward(attacker, target, dice)
