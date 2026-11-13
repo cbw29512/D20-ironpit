@@ -1,5 +1,7 @@
 # D20 Iron Pit — SOUL
 
+**Rules-first execution lock (2026-10-23):** [RAW-first card-driven delivery contract](docs/CARD_DRIVEN_RULES_FIRST_EXECUTION.md). Before building new combat branches, prove an immutable monster/pregen form cannot be expressed using existing universal primitives. Resolve bindings in batches, test Python/browser parity, and measure certified roster movement instead of PR activity. Forced displacement is a logging-only positional no-op; never gate cards on a movement algorithm.
+
 **MANDATORY SESSION HANDOFF:** Read [Iron Pit Session Continuity](docs/IRON_PIT_SESSION_CONTINUITY.md) at the start of every development session and scheduled run. It is an entry point to these existing authorities, not a replacement. Never ask the user to repeat the established universal-engine/immutable-card architecture.
 
 **Card-to-combat acceptance gate:** [Universal Card-to-Combat Contract](docs/UNIVERSAL_CARD_COMBAT_CONTRACT.md). Every monster and pregen implementation must preserve this source-data versus universal-behavior separation, including future homebrew.
