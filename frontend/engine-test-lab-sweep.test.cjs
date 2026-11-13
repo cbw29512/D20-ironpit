@@ -102,8 +102,13 @@ const vm = require("node:vm");
     const scripts = [...html.matchAll(/<script defer src="([^"]+)"/g)]
       .map(match => match[1]);
     for (const file of ["engine-test-lab-sweep-plan.js",
-      "engine-test-lab-sweep-runner.js","engine-test-lab-sweep-ui.js"])
-      assert.ok(scripts.includes(file));
+      "engine-test-lab-sweep-runner.js","engine-test-lab-sweep-ui.js",
+      "browser-wanted-2014.js","browser-wanted-posters.js"])
+      assert.ok(scripts.includes(file), `Missing Test Lab dependency: ${file}`);
+    assert.ok(scripts.indexOf("browser-wanted-2014.js") <
+      scripts.indexOf("browser-wanted-posters.js"));
+    assert.ok(scripts.indexOf("browser-wanted-posters.js") <
+      scripts.indexOf("browser-catalog.js"));
     assert.ok(scripts.indexOf("engine-test-lab-sweep-plan.js") <
       scripts.indexOf("engine-test-lab-sweep-ui.js"));
     console.log("Test All: both-edition complete matrix, presets, failures, stop and UI passed.");
