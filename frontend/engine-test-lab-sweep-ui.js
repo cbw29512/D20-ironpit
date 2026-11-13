@@ -26,7 +26,8 @@
       $("sweep-summary").textContent =
         `${scope}: ` +
         `${result.passed.toLocaleString()} passed, ${result.failed.toLocaleString()} failed, ` +
-        `${result.skipped.toLocaleString()} untested after stop, ` +
+        `${(result.start_case - 1).toLocaleString()} before this segment, ` +
+        `${(result.total - result.completed).toLocaleString()} still pending, ` +
         `${result.warnings.toLocaleString()} long-draw warnings. ` +
         `${plan.presets_count} source preset patterns included. ${blocked}. ` +
         "Observed runs are not proof that every declared ability activated.";
