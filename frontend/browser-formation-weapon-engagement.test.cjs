@@ -25,7 +25,8 @@ try {
   tendril.controlEffect.grappleEscapeDc = 15;
   tendril.controlEffect.restrainsWhileGrappled = true;
   const bite = {...structuredClone(tendril), id: "generic-bite", name: "Generic Bite",
-    reach: 5, fixedDamage: 4, controlEffect: null};
+    reach: 5, fixedDamage: 4, controlEffect: null,
+    forbidSelfGrappledTarget: false, grappleTargetPolicy: "normal"};
   const bow = {...structuredClone(bite), id: "generic-bow", name: "Generic Bow",
     kind: "ranged", normal: 80, long: 320};
   template.attacks = [tendril, bite, bow];
