@@ -21,6 +21,7 @@ from app.content.monster_source_grapple_owner_save_2014 import source_proven_gra
 from app.content.monster_source_grappled_poison_2014 import source_proven_grappled_poison_saves_2014
 from app.content.monster_source_owned_condition_drain_2014 import source_proven_owned_condition_drains_2014
 from app.content.monster_source_charm_control_2014 import source_proven_charm_control_2014
+from app.content.monster_source_fey_charm_2014 import source_proven_fey_charm_2014
 from app.content.monster_source_limited_audible_conditions_2014 import (
     limited_audible_resource_uses_2014,
     source_proven_limited_audible_conditions_2014,
@@ -98,6 +99,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
         result.extend(source_proven_grappled_poison_saves_2014(monster))
         result.extend(source_proven_owned_condition_drains_2014(monster))
         result.extend(source_proven_charm_control_2014(monster))
+        result.extend(source_proven_fey_charm_2014(monster))
         existing_ids = {item.id for item in result}
         for source_action in [
             *source_proven_recharge_line_damage_2014(monster),

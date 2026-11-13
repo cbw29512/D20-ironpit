@@ -22,11 +22,12 @@ class FailedSaveTimedEffect(BaseModel):
     duration_target_turns: int | None = Field(default=None, ge=1, le=100800, exclude_if=lambda v: v is None)
     # A source may control only N simultaneous targets of the same effect.
     source_target_limit: int | None = Field(default=None, ge=1, le=20)
+    source_target_limits_by_creature_type: dict[str, int] = Field(default_factory=dict)
     expiry_timing: SaveEffectTiming | None = "target_turn_end"
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: SaveEffectTiming | None = None
-    damage_repeat_save_trigger: Literal["none", "other_than_effect_source", "any_damage_source"] = "none"
+    damage_repeat_save_trigger: Literal["none", "other_than_effect_source", "any_damage_source", "source_or_allies"] = "none"
     repeat_save_before_damaging_terrain: bool = False
     source_maintenance_action_cost: Literal["none", "bonus_action"] = "none"
     repeat_save_failure_condition_id: ConditionName | None = None
@@ -42,6 +43,7 @@ class FailedSaveTimedEffect(BaseModel):
     ground_contact: bool = False
     ends_on_teleport: bool = False
     source_effect_immunity_on_end: bool = False
+    source_effect_immunity_on_repeat_save_success: bool = False
     repeat_save_disadvantage_while_source_visible: bool = False
     speed_multiplier: float = Field(default=1.0, gt=0.0, le=1.0)
     blocks_reactions: bool = False
@@ -75,6 +77,8 @@ class FailedSaveTimedEffect(BaseModel):
                 "repeat_save_failure_condition_id": None,
                 "repeat_save_disadvantage_while_source_visible": False,
                 "source_target_limit": None,
+                "source_target_limits_by_creature_type": {},
+                "source_effect_immunity_on_repeat_save_success": False,
                 "damage_repeat_save_trigger": "none",
                 "repeat_save_before_damaging_terrain": False,
                 "source_maintenance_action_cost": "none",
@@ -104,6 +108,13 @@ class FailedSaveTimedEffect(BaseModel):
     @model_validator(mode="after")
     def validate_repeat_save(self) -> "FailedSaveTimedEffect":
         try:
+            if self.source_target_limits_by_creature_type:
+                if self.source_target_limit is not None:
+                    raise ValueError("Source capacity may not combine total and type-specific limits.")
+                if any(not kind.strip() or kind != kind.lower()
+                       or limit < 1 or limit > 20
+                       for kind, limit in self.source_target_limits_by_creature_type.items()):
+                    raise ValueError("Source capacity groups need lowercase creature types and limits 1–20.")
             grouped_ids = [self.effect_id, *self.additional_effect_ids]
             if len(grouped_ids) != len(set(grouped_ids)):
                 raise ValueError("Grouped failed-save condition ids must be distinct.")

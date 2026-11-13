@@ -34,7 +34,7 @@ class TimedEffect(BaseModel):
     repeat_save_ability: AbilityName | None = None
     repeat_save_dc: int | None = Field(default=None, ge=1, le=40)
     repeat_save_timing: ConditionTiming | None = None
-    damage_repeat_save_trigger: Literal["none", "other_than_effect_source", "any_damage_source"] = "none"
+    damage_repeat_save_trigger: Literal["none", "other_than_effect_source", "any_damage_source", "source_or_allies"] = "none"
     repeat_save_before_damaging_terrain: bool = False
     source_maintenance_action_cost: Literal["none", "bonus_action"] = "none"
     source_turn_count_at_application: int | None = Field(default=None, ge=0)
@@ -100,6 +100,7 @@ class TimedEffect(BaseModel):
     ground_contact: bool = False
     ends_on_teleport: bool = False
     source_effect_immunity_on_end: bool = False
+    source_effect_immunity_on_repeat_save_success: bool = False
     repeat_save_disadvantage_while_source_visible: bool = False
     control_limits: TimedControlLimits | None = None
 

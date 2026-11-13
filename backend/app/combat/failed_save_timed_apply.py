@@ -118,14 +118,20 @@ def apply_failed_save_timed_effect(
                 source_effect_immunity_on_end=(
                     rider.source_effect_immunity_on_end if owns_lifecycle else False
                 ),
+                source_effect_immunity_on_repeat_save_success=(
+                    rider.source_effect_immunity_on_repeat_save_success
+                    if owns_lifecycle else False
+                ),
             )
             if result is not None:
                 applied.append(result)
-        if applied and rider.source_target_limit is not None:
+        if applied and (rider.source_target_limit is not None
+                        or rider.source_target_limits_by_creature_type):
             from app.combat.source_target_capacity import enforce_source_target_capacity
             enforce_source_target_capacity(
                 actor, target, action.id, rider.effect_id,
-                rider.source_target_limit, setup,
+                rider.source_target_limit or 20, setup,
+                rider.source_target_limits_by_creature_type or None,
             )
         if len(condition_ids) == 1:
             return applied[0] if applied else None

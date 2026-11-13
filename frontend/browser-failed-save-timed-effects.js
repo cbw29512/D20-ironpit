@@ -122,13 +122,17 @@
           groundContact,
           endsOnTeleport: ownsLifecycle && Boolean(rider.endsOnTeleport || groundContact),
           sourceEffectImmunityOnEnd: ownsLifecycle && Boolean(rider.sourceEffectImmunityOnEnd),
+          sourceEffectImmunityOnRepeatSaveSuccess: ownsLifecycle
+            && Boolean(rider.sourceEffectImmunityOnRepeatSaveSuccess),
         });
         if (result) applied.push(result);
       }
-      if (applied.length && rider.sourceTargetLimit != null) {
+      if (applied.length && (rider.sourceTargetLimit != null
+          || Object.keys(rider.sourceTargetLimitsByCreatureType || {}).length)) {
         const capacity = window.IRON_PIT_BROWSER_SOURCE_TARGET_CAPACITY;
         if (!capacity?.enforce) throw new Error("Source-target capacity runtime is unavailable.");
-        capacity.enforce(actor, target, action.id, rider.effectId, rider.sourceTargetLimit, setup);
+        capacity.enforce(actor, target, action.id, rider.effectId,
+          rider.sourceTargetLimit ?? 20, setup, rider.sourceTargetLimitsByCreatureType || null);
       }
       if (effectIds.length === 1) return applied[0] || null;
       return applied;

@@ -9,6 +9,24 @@
 
   function key(effect) { return `${effect.source_id}|${effect.source_effect_id || ""}`; }
 
+  function damageTriggersRepeatSave(effect, damageSource, setup) {
+    try {
+      const trigger = effect.damage_repeat_save_trigger || "none";
+      if (trigger === "none") return false;
+      if (trigger === "any_damage_source") return true;
+      if (trigger === "other_than_effect_source") return damageSource.combatant_id !== effect.source_id;
+      if (trigger === "source_or_allies") {
+        const owner = [...(setup.heroes || []), ...(setup.monsters || [])]
+          .find((member) => member.combatant_id === effect.source_id);
+        return Boolean(owner && damageSource.side === owner.side);
+      }
+      throw new Error(`Unknown repeat-save source rule: ${trigger}`);
+    } catch (error) {
+      console.error("Failed source-owned damage repeat-save eligibility.", { error });
+      throw error;
+    }
+  }
+
   function endDamageSensitive(state) {
     const removed = [], handled = new Set();
     for (const effect of [...state.timed_effects]) {
@@ -40,10 +58,12 @@
     for (const effect of [...(target.state.timed_effects || [])]) {
       if (handled.has(key(effect)) || (effect.damage_repeat_save_trigger || "none") === "none") continue;
       handled.add(key(effect));
-      if (effect.damage_repeat_save_trigger === "other_than_effect_source"
-        && damageSource.combatant_id === effect.source_id) continue;
+      if (!damageTriggersRepeatSave(effect, damageSource, setup)) continue;
       const save = L().repeatSave(target, effect, round, setup);
-      const removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
+      const removed = save.succeeded ? T().removeGroup(target.state, effect, {
+        grantSourceImmunity: Boolean(effect.source_effect_immunity_on_end
+          || effect.source_effect_immunity_on_repeat_save_success),
+      }) : [];
       if (!save.succeeded) effect.repeat_save_failure_count = (effect.repeat_save_failure_count || 0) + 1;
       events.push(saveEvent(sequence++, round, target, effect, save, removed,
         `after damage from ${damageSource.state.template.name}`));
@@ -64,7 +84,10 @@
         if (handled.has(key(effect)) || !effect.repeat_save_before_damaging_terrain) continue;
         handled.add(key(effect));
         const save = L().repeatSave(target, effect, round, setup);
-        const removed = save.succeeded ? T().removeGroup(target.state, effect) : [];
+        const removed = save.succeeded ? T().removeGroup(target.state, effect, {
+          grantSourceImmunity: Boolean(effect.source_effect_immunity_on_end
+            || effect.source_effect_immunity_on_repeat_save_success),
+        }) : [];
         if (save.succeeded && effect.turn_behavior === "forced_approach_source") released = true;
         if (!save.succeeded) effect.repeat_save_failure_count = (effect.repeat_save_failure_count || 0) + 1;
         events.push(saveEvent(sequence++, round, target, effect, save, removed,

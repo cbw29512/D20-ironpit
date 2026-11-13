@@ -252,6 +252,9 @@ jobs:
       - name: Verify shared 2014 Vampire-family grapple parameters
         working-directory: backend
         run: PYTHONPATH=.:.. pytest -q tests/test_2014_vampire_family_grapple_alternative.py tests/test_2014_typed_bite_drain.py
+      - name: Validate source-proven 2014 Dryad nature and Fey Charm
+        working-directory: backend
+        run: PYTHONPATH=.:.. pytest -q tests/test_2014_dryad_innate_nature_spells.py tests/test_2014_fey_charm_binding.py tests/test_2014_fey_charm_combat.py
       - name: Certify Python rules reference
         working-directory: backend
         run: timeout 20m pytest -vv --durations=25
@@ -592,6 +595,7 @@ jobs:
           node frontend/browser-owned-condition-save-targets.test.cjs
           node frontend/browser-draining-kiss-target-qualification.test.cjs
           node frontend/browser-source-target-capacity.test.cjs
+          node frontend/browser-fey-charm-universal.test.cjs
           node frontend/browser-event-only-repeat-save.test.cjs
           node frontend/browser-turn-start-hooks.test.cjs
           node frontend/browser-condition-auras.test.cjs

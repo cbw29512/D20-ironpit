@@ -57,8 +57,9 @@ def test_six_innate_spells_bind_without_undocumented_actions() -> None:
         assert resources["entangle"] == 3
         assert "goodberry" not in resources, "AI-excluded berries must not create a usable cast"
         assert source.model_dump_json() == original
-        # Charm action remains a different, independent source blocker.
-        assert "source:extra-action" in basic_blockers_2014(source)
+        # Once the separately source-proven Fey Charm binding is present,
+        # all six innate spells and its action must be admitted together.
+        assert basic_blockers_2014(source) == ()
     except Exception:
         logger.exception("The six 2014 innate nature spell dispositions regressed.")
         raise

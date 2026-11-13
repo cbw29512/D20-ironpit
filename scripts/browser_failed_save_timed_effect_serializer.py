@@ -24,6 +24,10 @@ def failed_save_timed_effect_row(rider: Any) -> dict[str, Any]:
         }
         if rider.source_target_limit is not None:
             row["sourceTargetLimit"] = rider.source_target_limit
+        if rider.source_target_limits_by_creature_type:
+            row["sourceTargetLimitsByCreatureType"] = dict(
+                rider.source_target_limits_by_creature_type
+            )
         if rider.additional_effect_ids:
             row["additionalEffectIds"] = list(rider.additional_effect_ids)
         if rider.failure_margin_escalation is not None:
@@ -47,6 +51,8 @@ def failed_save_timed_effect_row(rider: Any) -> dict[str, Any]:
             row["escapeCheckDc"] = rider.escape_check_dc
         if rider.source_effect_immunity_on_end:
             row["sourceEffectImmunityOnEnd"] = True
+        if rider.source_effect_immunity_on_repeat_save_success:
+            row["sourceEffectImmunityOnRepeatSaveSuccess"] = True
         if rider.repeat_save_disadvantage_while_source_visible:
             row["repeatSaveDisadvantageWhileSourceVisible"] = True
         if rider.start_of_turn_damage_dice_count:

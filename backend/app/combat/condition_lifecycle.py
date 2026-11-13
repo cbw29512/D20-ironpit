@@ -72,7 +72,11 @@ def resolve_target_condition_timing(
                 continue
             if _repeat_save_due(effect, round_number, timing):
                 roll, succeeded, buffs = resolve_repeat_save(target, effect, dice, round_number, setup)
-                removed = remove_effect_group(target.state, effect) if succeeded else []
+                removed = remove_effect_group(
+                    target.state, effect,
+                    grant_source_immunity=(effect.source_effect_immunity_on_end
+                                           or effect.source_effect_immunity_on_repeat_save_success),
+                ) if succeeded else []
                 if succeeded:
                     _end_matching_source_concentration(effect, setup)
                 applied: list[str] = []
