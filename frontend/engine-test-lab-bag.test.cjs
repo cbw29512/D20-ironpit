@@ -42,6 +42,14 @@ require("./browser-test-runtime.cjs").loadWebsite();
       assert.equal(bag.name, "Punching Bag");
       assert.equal(bag.armor_class, 10);
       assert.equal(bag.max_hp, 10000);
+      // The training opponent must be a legal target for every save family.
+      for (const ability of ["strength", "dexterity", "constitution",
+        "intelligence", "wisdom", "charisma"]) {
+        assert.equal(bag.ability_scores[ability], 10);
+        assert.equal(bag.saving_throw_bonuses[ability], 1);
+      }
+      assert.equal(bag.skill_bonuses.athletics, 0);
+      assert.equal(bag.skill_bonuses.acrobatics, 0);
       assert.equal(bag.attacks.length, 1);
       assert.equal(bag.attacks[0].damageBonus, 0);
       assert.equal(bag.attacks[0].fixedDamage, 0,
