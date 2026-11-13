@@ -14,6 +14,7 @@ from app.content.monster_source_2014 import SourceMonster2014
 from app.content.monster_source_sections_2014 import source_sections_2014
 from app.domain.capability_attack_definitions import AttackCapabilityDefinition
 from app.domain.capability_effects import GrappleEffectDefinition
+from app.domain.breakable_restraints import BreakableObjectSpec
 from app.domain.weapons_base import DamageType
 
 logger = logging.getLogger(__name__)
@@ -90,6 +91,10 @@ def source_proven_damage_free_grapple_attacks_2014(
                 animation="slash",
                 effects=[GrappleEffectDefinition(
                     escape_dc=dc, restrains=True, max_active_grapples=limit,
+                    breakable_object=BreakableObjectSpec(
+                        armor_class=int(trait['ac']), hit_points=int(trait['hp']),
+                        damage_immunities=[DamageType.POISON, DamageType.PSYCHIC],
+                    ),
                     check_save_disadvantage_abilities=["strength"],
                 )],
             ))

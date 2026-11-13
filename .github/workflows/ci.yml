@@ -255,6 +255,9 @@ jobs:
       - name: Validate source-proven 2014 Dryad nature and Fey Charm
         working-directory: backend
         run: PYTHONPATH=.:.. pytest -q tests/test_2014_dryad_innate_nature_spells.py tests/test_2014_fey_charm_binding.py tests/test_2014_fey_charm_combat.py
+      - name: Validate universal breakable Roper grapple source and object lifecycle
+        working-directory: backend
+        run: PYTHONPATH=.:.. pytest -q tests/test_2014_roper_breakable_grapple.py tests/test_2014_roper_tendril_partial_binding.py tests/test_2014_roper_grapple_linked_d20.py
       - name: Certify Python rules reference
         working-directory: backend
         run: timeout 20m pytest -vv --durations=25
@@ -782,6 +785,7 @@ jobs:
           node frontend/browser-once-per-turn-hit-damage.test.cjs
           node frontend/browser-chain-grapple-periodic.test.cjs
           node frontend/browser-source-grapple-capacity.test.cjs
+          node frontend/browser-roper-breakable-grapple.test.cjs
           node frontend/browser-2014-chuul-combat.test.cjs
           node frontend/browser-otyugh-grapple-slam.test.cjs
           node frontend/browser-attachments.test.cjs

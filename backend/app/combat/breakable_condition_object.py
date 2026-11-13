@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import logging
 from app.combat.timed_condition_lifecycle import remove_effect_group
+from app.combat.breakable_object_damage import damage_breakable_object_state
 from app.combat.condition_immunity import condition_is_immune
 from app.domain.models import CombatantState, TimedEffect, WeaponAttack, WeaponAttackKind
 
@@ -50,25 +51,9 @@ def damage_breakable_condition_object(
     try:
         if effect not in target.timed_effects or effect.breakable_object is None:
             raise ValueError("The target has no active breakable condition object.")
-        if attack_total < 0 or rolled_damage < 0:
-            raise ValueError("Resolved attack/damage values must be nonnegative.")
-        obj = effect.breakable_object
-        if attack_total < obj.armor_class:
-            return 0, False
-        if damage_type not in {part.value for part in obj.damage_immunities} | {
-            part.value for part in obj.damage_vulnerabilities
-        } and damage_type not in {
-            "acid", "bludgeoning", "cold", "fire", "force", "lightning",
-            "necrotic", "piercing", "poison", "psychic", "radiant",
-            "slashing", "thunder",
-        }:
-            raise ValueError(f"Unknown breakable object damage type {damage_type!r}.")
-        amount = 0 if damage_type in obj.damage_immunities else rolled_damage
-        if amount and damage_type in obj.damage_vulnerabilities:
-            amount *= 2
-        applied = min(amount, obj.current_hp)
-        obj.current_hp -= applied
-        destroyed = obj.current_hp == 0
+        applied, destroyed = damage_breakable_object_state(
+            effect.breakable_object, attack_total, rolled_damage, damage_type,
+        )
         if destroyed:
             remove_effect_group(target, effect)
         return applied, destroyed
