@@ -8,6 +8,7 @@ from app.combat.attack_legality import attack_allowed_against
 from app.combat.attachment_attack_gate import source_attacks_blocked
 from app.combat.encounter_targeting import active_target_policy, combatant_distance, living_opponents, living_targets
 from app.combat.formation_rows import member_is_backline
+from app.combat.formation_engagement import formation_mode, weapon_target_allowed, engagement_distance
 from app.combat.printed_damage import weapon_mean_damage
 from app.combat.resources import action_resource_available
 from app.combat.range import resolve_attack_roll_mode
@@ -106,23 +107,24 @@ def choose_attack(
         for target in target_order(attacker, setup, prefer_backline=prefer_backline):
             if target_id is not None and target.combatant_id != target_id:
                 continue
-            distance = combatant_distance(attacker, target)
+            # Standard Pit: formation controls weapon eligibility; the
+            # 24x16 display never defines melee reach or ranged bands.
+            formation = formation_mode(setup)
+            distance = 0 if formation else combatant_distance(attacker, target)
             legal = [
                 attack
                 for attack in profiles
                 if (
-                    clear_line_between_members(attacker, target, setup)
+                    (formation or clear_line_between_members(attacker, target, setup))
+                    and weapon_target_allowed(attacker, target, attack, setup)
                     and attack_allowed_against(attack, attacker.combatant_id, target.state, [item.state for item in [*setup.heroes, *setup.monsters]])
-                    and _attack_in_range(attack, distance)
+                    and (formation or _attack_in_range(attack, distance))
                     and action_resource_available(attacker.state, attack)
                 )
             ]
             if legal:
-                attack = max(
-                    legal,
-                    key=weapon_mean_damage,
-                )
-                return target, attack, distance
+                attack = max(legal, key=weapon_mean_damage)
+                return target, attack, engagement_distance(attack) if formation else distance
         return None
     except Exception as exc:
         logger.exception("Pit attack selection failed for %s.", attacker.combatant_id)
