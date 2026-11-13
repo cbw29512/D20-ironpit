@@ -37,6 +37,11 @@ try {
   const source = make("source", "monsters", "front", 0);
   const victim = make("victim", "heroes", "front", 40);
   const setup = {heroes: [victim], monsters: [source], arena_mode: "formation"};
+  const teammate = make("teammate", "monsters", "front", 50);
+  setup.monsters.push(teammate);
+  source.state.template.traits = [...(source.state.template.traits || []), "pack-tactics"];
+  assert.equal(State.hasAdjacentActiveAlly(source, victim, setup), true);
+  assert.equal(State.packTactics(source, victim, setup), true);
 
   assert.equal(Engagement.effectiveRow(victim, setup), "front");
   assert.equal(Formation.chooseSlotAttack(source, setup, [bite.id]).attack.id, bite.id);
