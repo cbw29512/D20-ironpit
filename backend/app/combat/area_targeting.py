@@ -96,9 +96,12 @@ def _point_origins(actor: EncounterCombatant, setup: EncounterSetup, range_ft: i
 def legal_area_placements(actor: EncounterCombatant, setup: EncounterSetup, area: AreaTargeting, range_ft: int, *, actor_position: GridPosition | None = None, allow_no_enemy_targets: bool = False) -> list[AreaPlacement]:
     """Return distinct placements with enemy targets and explicit friendly exposure."""
     try:
-        if setup.arena_mode == "formation" and area.shape == "cone":
-            from app.combat.formation_area_targeting import cone_frontline_targets
-            targets = cone_frontline_targets(actor, setup, area)
+        if setup.arena_mode == "formation" and area.shape in {"cone", "line"}:
+            from app.combat.formation_area_targeting import cone_frontline_targets, line_lane_targets
+            targets = (
+                cone_frontline_targets(actor, setup, area)
+                if area.shape == "cone" else line_lane_targets(actor, setup, area)
+            )
             if not targets and not allow_no_enemy_targets:
                 return []
             return [AreaPlacement(
