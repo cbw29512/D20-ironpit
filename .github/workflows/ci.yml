@@ -682,7 +682,11 @@ jobs:
           node frontend/browser-visual-disguise-inspection.test.cjs
           IRON_PIT_RECORD_GOLDENS=1 node frontend/browser-engine.test.cjs
           node frontend/engine-test-lab.test.cjs
+          node frontend/engine-test-lab-sweep.test.cjs
           node --check frontend/engine-test-lab.js
+          node --check frontend/engine-test-lab-sweep-plan.js
+          node --check frontend/engine-test-lab-sweep-runner.js
+          node --check frontend/engine-test-lab-sweep-ui.js
           node frontend/browser-ruleset-isolation.test.cjs
           node frontend/browser-catalog-2014.test.cjs
           node frontend/browser-wanted-posters.test.cjs
