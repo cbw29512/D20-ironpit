@@ -30,8 +30,8 @@ def test_source_acid_breath_honors_one_living_lane():
         (placed,) = legal_area_save_placements(dragon, setup, action)
         assert placed.formation_only
         assert placed.target_ids == (front[0].combatant_id, back[0].combatant_id)
-        assert all(member_in_area_placement(dragon, setup.heroes[0], action.area, placed)
-                   for _ in range(1))
+        assert member_in_area_placement(dragon, front[0], action.area, placed)
+        assert not member_in_area_placement(dragon, front[1], action.area, placed)
         assert action.area.model_dump_json() == original
 
         # A fallen forward fighter must not make this line target inaccessible.
