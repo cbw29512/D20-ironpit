@@ -49,7 +49,8 @@ const vm = require("node:vm");
     for (const id of ["test-preset-cards", "test-preset-cards-status",
       "test-bag-all", "test-pairs-all", "test-presets-all", "bag-stop",
       "sweep-stop", "bag-run", "sweep-run", "all-presets", "sweep-mode",
-      "advanced-tests", "test-dashboard-status", "events", "summary"])
+      "advanced-tests", "test-dashboard-status", "events", "summary",
+      "bag-panel", "sweep-panel"])
       ids[id] = new Element();
     ids["bag-stop"].disabled = ids["sweep-stop"].disabled = true;
     const calls = {bag: 0, pairs: 0, presets: 0, fight: 0};
@@ -101,6 +102,7 @@ const vm = require("node:vm");
     assert.deepEqual([calls.bag,calls.pairs,calls.presets],[1,1,1]);
     assert.equal(ids["sweep-mode"].value,"pairs");
     assert.equal(ids["advanced-tests"].open,true);
+    assert.equal(ids["test-dashboard-status"].textContent,"");
     console.log("Production page split: player-only controls and shared test workbench OK");
   } catch (error) {
     console.error("Production page split regression failed",error);
