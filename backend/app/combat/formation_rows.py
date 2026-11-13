@@ -81,10 +81,12 @@ def sync_formation_rows(setup: EncounterSetup) -> list[EncounterCombatant]:
     try:
         promoted: list[EncounterCombatant] = []
         for side in (setup.heroes, setup.monsters):
+            # Snapshot the prior active frontline once per team. Promoting the
+            # first backliner must not prevent the other survivors from joining.
+            if any(_alive(ally) and ally.state.formation_row == "front" for ally in side):
+                continue
             for member in side:
                 if not _alive(member) or member.state.formation_row != "back":
-                    continue
-                if _living_frontline(side, member):
                     continue
                 member.state.formation_row = "front"
                 promoted.append(member)
