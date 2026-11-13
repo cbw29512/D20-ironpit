@@ -8,6 +8,13 @@ const vm = require("node:vm");
   try {
     const context = {console, setTimeout};
     context.window = context;
+    Object.assign(context, {
+      IRON_PIT_BROWSER_FORMATION_ENGAGEMENT: {weaponTargetAllowed: () => true},
+      IRON_PIT_BROWSER_FORMATION_AREA_TARGETING: {coneFrontlineTargets: () => []},
+      IRON_PIT_BROWSER_DEATH_TRIGGER_DISPATCH: {resolvePending: () => ({})},
+      IRON_PIT_BROWSER_BREAKABLE_CONDITION_OBJECT: {preferFreshLimitedControl: () => true},
+      IRON_PIT_BROWSER_TARGET_CHOSEN_SAVE: {choose: () => "dex"},
+    });
     context.IRON_PIT_BROWSER_HEROES = {
       h24: {id:"h24",ruleset:"2024",kind:"character"},
     };
@@ -34,6 +41,11 @@ const vm = require("node:vm");
         selection:{ruleset:"2024",hero_ids:["h24"],monster_ids:["m24"]}}),
     };
     const run = context.IRON_PIT_TEST_ALL_RUNNER.run;
+    const cached = context.IRON_PIT_BROWSER_FORMATION_ENGAGEMENT;
+    delete context.IRON_PIT_BROWSER_FORMATION_ENGAGEMENT;
+    await assert.rejects(run(plan, 123, {stopRequested:false}),
+      /missing shared browser runtimes: formation attack/);
+    context.IRON_PIT_BROWSER_FORMATION_ENGAGEMENT = cached;
     const large = await run(plan, 123, {stopRequested:false});
     assert.equal(large.failed, 300);
     assert.equal(large.passed, 0);
