@@ -34,7 +34,11 @@
       const catalogs = {};
       for (const edition of EDITIONS)
         catalogs[edition] = await catalog(edition);
-      return recipes.map(recipe => {
+      const unavailable = Object.fromEntries(EDITIONS.map(edition => [
+        edition, (catalogs[edition].monsters || []).filter(card =>
+          card.coverage_status !== "raw_ready").length,
+      ]));
+      const entries = recipes.map(recipe => {
         const resolved = resolver(recipe, catalogs[recipe.ruleset]);
         return {
           kind: "preset", label: recipe.title || recipe.id, seed: recipe.seed,
@@ -46,6 +50,7 @@
           },
         };
       });
+      return {entries, unavailable};
     } catch (error) {
       console.error("Could not resolve certified combat presets for full sweep", error);
       throw error;
@@ -57,7 +62,7 @@
       if (!["cards", "pairs"].includes(mode))
         throw new Error("Sweep mode must be 'cards' or 'pairs'.");
       const editions = EDITIONS.map(roster);
-      const presets = await sourcePresets();
+      const {entries: presets, unavailable} = await sourcePresets();
       const counts = editions.map(entry => mode === "pairs"
         ? entry.hero_ids.length * entry.monster_ids.length
         : entry.hero_ids.length + entry.monster_ids.length);
@@ -90,7 +95,7 @@
           throw error;
         }
       }
-      return {mode, editions, presets_count: presets.length,
+      return {mode, editions, unavailable, presets_count: presets.length,
         duel_total, total, at};
     } catch (error) {
       console.error("Test All plan could not be created", {mode, error});
