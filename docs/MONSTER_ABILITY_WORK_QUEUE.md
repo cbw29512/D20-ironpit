@@ -164,6 +164,12 @@
 - **Still blocked:** Tendril attack, its source-defined ongoing Strength disadvantages and per-tendril state, individual destruction/break/regrowth, and printed Multiattack. The `source:extra-action` and `source:trait` monster blockers remain until those are certified; this checkmark is for Reel alone.
 
 # D20 Iron Pit — single operational monster ability queue (2014 first)
+## Swallow damage-threshold regurgitation — parked 2026-10-30
+
+- Behir (one-blocker `source:extra-action`) and the matching family (Remorhaz, Kraken, Tarrasque) print a damage-threshold from the swallowed creature that triggers an end-of-turn Constitution save or regurgitation (prone within 10 ft).
+- Current shared GrappleSwallowAction and lifecycle support only the simple death-exit profile (Giant Frog/Toad). Adding turn-scoped damage tracking from a specific swallowed creature and the end-turn save is a new universal primitive, not a fidelity cut or name dispatch.
+- Parked until the end-turn damage-threshold Con-save regurgitation primitive is implemented with Python/browser parity and permanent tests. No admission claimed. Production remains locked.
+
 
 ## [x] 2014 Succubus/Incubus — printed Charm save/condition integrated (PR #1225)
 
