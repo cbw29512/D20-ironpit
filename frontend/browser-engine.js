@@ -87,7 +87,7 @@
         heroes: heroMembers, monsters: monsterMembers,
         hero_total_levels: heroMembers.reduce((sum, item) => sum + Number(item.state.template.level || 0), 0),
         monster_total_cr: totalCr(monsterMembers.map((item) => item.state.template.challenge_rating)),
-        ruleset, map_definition: mapDefinition, persistent_hazards: [], persistent_barriers: [],
+        ruleset, arena_mode: "formation", map_definition: mapDefinition, persistent_hazards: [], persistent_barriers: [],
         persistent_beneficial_zones: [], suppression_zones: [], save_zones: [],
         attachments: [],
       };
