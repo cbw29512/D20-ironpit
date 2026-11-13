@@ -110,8 +110,7 @@
 
   function build2014() {
     if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 browser bundle did not load.");
-    const heroes = build2014Heroes();
-    const runnable = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
+    const heroes = build2014Heroes(), runnable = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
     const wanted = window.IRON_PIT_WANTED_POSTERS?.cards();
     if (!wanted) throw new Error("2014 Wanted catalog source was not loaded.");
     const monsters = [...runnable, ...wanted];
