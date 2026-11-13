@@ -108,13 +108,13 @@
     }
   }
 
-  async function changeRuleset(nextRuleset) {
+  async function changeRuleset(nextRuleset, fromGauntlet = false) {
     const selector = el("ruleset-select");
     if (nextRuleset === state.ruleset) {
       if (selector) selector.value = state.ruleset;
       return;
     }
-    if (state.fighting || (state.session && !state.session.complete)) { if (selector) selector.value = state.ruleset; return; }
+    if ((state.fighting && !fromGauntlet) || (state.session && !state.session.complete)) { if (selector) selector.value = state.ruleset; return; }
     try {
       await rulesetUi().ensureBundle(nextRuleset);
       state.ruleset = nextRuleset; state.catalog = await window.IRON_PIT_BROWSER_CATALOG.buildCatalog(nextRuleset);
@@ -123,7 +123,7 @@
       el("status").textContent = `${nextRuleset} ready. Add pregens or monsters to either team, or choose a preset fight.`;
     } catch (error) {
       console.error("Ruleset switch failed", error); if (selector) selector.value = state.ruleset;
-      el("status").textContent = `Could not load the ${nextRuleset} ruleset.`;
+      el("status").textContent = `Could not load the ${nextRuleset} ruleset.`; if (fromGauntlet) throw error;
     }
   }
 
@@ -139,6 +139,9 @@
       await window.IRON_PIT_COMBAT_PRESETS.install({ state, load: loadCards, ensureRuleset: changeRuleset });
       window.IRON_PIT_COMBAT_REVIEW.install({ state, matchup, render, updateControls, clearResult, load: loadCards, ensureRuleset: changeRuleset });
       window.IRON_PIT_BATTLE_LOG_EXPORT?.install?.();
+      window.IRON_PIT_BATTLEFIELD_BAG_CONTROLS.install({
+        state, ensureRuleset: changeRuleset, load: loadCards, matchup, updateControls,
+      });
       rulesetUi().update(state); render();
       el("status").textContent = "Iron Pit ready. Pick heroes and monsters, then press Fight.";
     } catch (error) { console.error("Iron Pit initialization failed", error); el("status").textContent = "The Iron Pit failed to initialize."; }
