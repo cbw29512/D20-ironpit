@@ -26,7 +26,10 @@
   function weaponTargetAllowed(member, target, attack, setup) {
     try {
       if (!enabled(setup)) return true;
-      if (!active(target)) return false;
+      // Downed characters remain legal targets until actually Dead.
+      const state = target.state;
+      if (!state.is_alive || state.is_dead
+        || (state.current_hp <= 0 && state.template.kind !== "character")) return false;
       if (attack.kind === "melee") {
         return effectiveRow(member, setup) === "front"
           && effectiveRow(target, setup) === "front";
