@@ -3,7 +3,6 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const vm = require("node:vm");
-
 (async () => {
   try {
     const heroes = {h14a: {id: "h14a", ruleset: "2014"},
@@ -18,10 +17,15 @@ const vm = require("node:vm");
       {id: "p24", title: "2024 preset", ruleset: "2024", seed: 99,
         hero_id: "h24", monster_id: "m24", aspects: [{kind: "attack"}]},
     ];
-    const context = {console, setTimeout};
-    context.window = context;
-    context.IRON_PIT_BROWSER_HEROES = heroes;
-    context.IRON_PIT_BROWSER_MONSTERS_2014 = monsters14;
+    const context = {console, setTimeout}; context.window = context;
+    Object.assign(context, {
+      IRON_PIT_BROWSER_FORMATION_ENGAGEMENT: {weaponTargetAllowed: () => true},
+      IRON_PIT_BROWSER_FORMATION_AREA_TARGETING: {coneFrontlineTargets: () => []},
+      IRON_PIT_BROWSER_DEATH_TRIGGER_DISPATCH: {resolvePending: () => ({})},
+      IRON_PIT_BROWSER_BREAKABLE_CONDITION_OBJECT: {preferFreshLimitedControl: () => true},
+      IRON_PIT_BROWSER_TARGET_CHOSEN_SAVE: {choose: () => "dex"},
+    });
+    context.IRON_PIT_BROWSER_HEROES = heroes; context.IRON_PIT_BROWSER_MONSTERS_2014 = monsters14;
     context.IRON_PIT_BROWSER_MONSTERS = monsters24;
     context.IRON_PIT_BROWSER_CATALOG = {buildCatalog: async edition => ({
       heroes: [], monsters: edition === "2014" ?
@@ -51,7 +55,7 @@ const vm = require("node:vm");
       },
     };
     for (const file of ["engine-test-lab-sweep-plan.js",
-      "engine-test-lab-sweep-runner.js"]) {
+      "engine-test-lab-sweep-report.js", "engine-test-lab-sweep-runner.js"]) {
       vm.runInNewContext(fs.readFileSync(path.join(__dirname, file), "utf8"),
         context, {filename: file});
     }
@@ -65,7 +69,6 @@ const vm = require("node:vm");
     assert.equal(plan.at(4).selection.ruleset, "2024");
     assert.equal(plan.at(5).kind, "preset");
     assert.equal(plan.at(5).seed, 77);
-
     const report = await context.IRON_PIT_TEST_ALL_RUNNER.run(
       plan, 123, {stopRequested: false}
     );
@@ -78,7 +81,6 @@ const vm = require("node:vm");
     assert.equal(report.by_edition["2024"].failed, 2);
     assert.ok(report.observed.feature_ids["source-melee"] >= 1);
     assert.equal(JSON.stringify(heroes.h14a), JSON.stringify({id:"h14a",ruleset:"2014"}));
-
     const presetsOnly = await context.IRON_PIT_TEST_ALL_PLAN.create("presets");
     assert.equal(presetsOnly.duel_total, 0);
     assert.equal(presetsOnly.total, 2);
@@ -93,7 +95,6 @@ const vm = require("node:vm");
     assert.ok(presetResults.failures[0].problems[0].startsWith("engine_error"));
     assert.equal(presetResults.failures[0].selection.ruleset, "2024");
     assert.equal(presetResults.failures[0].seed, 99);
-
     const quick = await context.IRON_PIT_TEST_ALL_PLAN.create("cards");
     assert.equal(quick.duel_total, 6);
     assert.equal(quick.total, 8);
@@ -109,7 +110,6 @@ const vm = require("node:vm");
     assert.equal(partial.completed, 20);
     assert.equal(partial.skipped, 5);
     assert.equal(partial.stopped, true);
-
     const html = fs.readFileSync(path.join(__dirname,"engine-test-lab.html"),"utf8");
     for (const id of ["sweep-run","sweep-stop","sweep-mode","sweep-status",
       "sweep-summary","sweep-download","sweep-evidence","sweep-failures"])
@@ -117,7 +117,8 @@ const vm = require("node:vm");
     const scripts = [...html.matchAll(/<script defer src="([^"]+)"/g)]
       .map(match => match[1]);
     for (const file of ["engine-test-lab-sweep-plan.js",
-      "engine-test-lab-sweep-runner.js","engine-test-lab-sweep-ui.js",
+      "engine-test-lab-sweep-report.js", "engine-test-lab-sweep-runner.js",
+      "engine-test-lab-sweep-ui.js",
       "browser-wanted-2014.js","browser-wanted-posters.js"])
       assert.ok(scripts.includes(file), `Missing Test Lab dependency: ${file}`);
     assert.ok(scripts.indexOf("browser-wanted-2014.js") <
