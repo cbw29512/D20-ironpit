@@ -80,7 +80,7 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
 {
   const battle = fight(["karnok-stoneward-l1"], ["srd-bandit"], deterministicDice(7));
   const karnokAttacks = battle.events.filter((event) => event.event_type === "attack" && event.actor_id.startsWith("hero-1:"));
-  assert.ok(karnokAttacks.length > 0, "Karnok should eventually make a legal attack after grid approach");
+  assert.ok(karnokAttacks.length > 0, "Karnok should attack without grid closing or measured reach");
 }
 
 {
@@ -134,8 +134,11 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
   const rage = battle.events.find((event) => event.actor_id.startsWith("hero-1:") && event.feature_id === "rage");
   const attack = battle.events.find((event) => event.actor_id.startsWith("hero-1:") && event.event_type === "attack");
   assert.ok(rage, "audited Barbarian should Rage in combat");
-  assert.ok(battle.events.some((event) => event.actor_id.startsWith("hero-1:") && event.event_type === "movement"), "Rokhan should close with legal movement under no-kiting AI");
-  assert.equal(attack?.weapon_id, "rokhan-greataxe", "Rokhan should use melee after closing to legal reach from the compact starting formation");
+  assert.equal(battle.setup.arena_mode, "formation");
+  assert.ok(!battle.events.some(event => event.event_type === "movement"),
+    "Standard Iron Pit combat cannot spend tactical movement.");
+  assert.equal(attack?.weapon_id, "rokhan-greataxe",
+    "Rokhan's printed melee attack should reach the exposed frontline without walking.");
 }
 
 {
