@@ -53,7 +53,7 @@ require("./combat-preset-recipes.js"); require("./combat-presets.js");
     for (const spec of recipe.aspects) {
       assert.ok(
         IRON_PIT_COMBAT_PRESETS.aspectFired(battle, spec),
-        `${recipe.id} seed ${recipe.seed} missed ${spec.kind}:${Array.isArray(spec.value) ? spec.value.join("|") : spec.value}`,
+        `${recipe.id} seed ${recipe.seed} missed ${spec.kind}:${Array.isArray(spec.value) ? spec.value.join("|") : spec.value}; events=${JSON.stringify(battle.events.filter(event => ["attack", "feature", "saving_throw", "damage", "spell"].includes(event.event_type)).slice(0, 55).map(event => ({actor: event.actor_id, type: event.event_type, feature: event.feature_id, desc: event.description?.slice(0, 65)})))}`,
       );
     }
     fired.push(`${recipe.id}@${recipe.seed}:${recipe.aspects.map((spec) => spec.kind).join("+")}`);
