@@ -1,0 +1,31 @@
+/* Player mode only: retain live combat state/DOM hooks but remove testing UI. */
+body.player-mode .shell{width:min(1480px,97%);padding:16px 0 28px}
+body.player-mode .pit-chrome{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
+body.player-mode .pit-chrome-brand h1{font-size:clamp(1.25rem,2.8vw,2rem);margin:0;letter-spacing:.1em}
+body.player-mode .pit-chrome-brand .eyebrow{display:none}
+body.player-mode #ruleset-edition-note,
+body.player-mode .shell>p.rules-note,
+body.player-mode .shell>form.rules-note,
+body.player-mode .pit-options-bar,
+body.player-mode .formation-board,
+body.player-mode .log-panel,
+body.player-mode .preset-panel,
+body.player-mode .turbo-panel,
+body.player-mode .wanted-board,
+body.player-mode .pitch-panel,
+body.player-mode .site-footer{display:none!important}
+body.player-mode .mode-nav{display:flex;align-items:center;gap:12px}
+body.player-mode .mode-nav a{color:#f3d08b;border:1px solid #7b6550;border-radius:8px;padding:8px 12px;font-weight:700;text-decoration:none}
+body.player-mode .mode-nav a:hover,
+body.player-mode .mode-nav a:focus-visible{background:#30261d;border-color:#f3d08b}
+body.player-mode #main{display:grid;gap:14px}
+body.player-mode #pit{min-height:min(75vh,800px)}
+body.player-mode #pit .battle-controls{align-self:center}
+body.player-mode #pit .fight-button{box-shadow:0 8px 26px #0008}
+body.player-mode #result-panel[hidden]{display:none}
+body.player-mode #result-panel:not([hidden]){display:block;margin-top:0}
+@media(max-width:720px){
+  body.player-mode .pit-chrome{flex-wrap:wrap}
+  body.player-mode .mode-nav{margin-left:auto}
+  body.player-mode #pit{min-height:0}
+}
