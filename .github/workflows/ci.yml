@@ -694,6 +694,7 @@ jobs:
           node frontend/browser-formation-cone-targeting.test.cjs
           node frontend/browser-attack-action-event-label.test.cjs
           node frontend/browser-formation-line-targeting.test.cjs
+          node frontend/browser-formation-breath-action-choice.test.cjs
           node frontend/browser-conditional-damage.test.cjs
           node frontend/browser-active-effect-weapon-damage.test.cjs
           node frontend/browser-swarm.test.cjs
