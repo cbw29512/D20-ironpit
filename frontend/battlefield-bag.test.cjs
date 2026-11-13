@@ -34,6 +34,17 @@ require("./browser-test-runtime.cjs").loadWebsite();
     assert.equal(bag.coverage_status, "custom_ready");
     assert.equal(bag.compiled_template.max_hp, 10000);
     assert.equal(bag.compiled_template.armor_class, 10);
+    // Both entrypoints compile the same full-stat Punching Bag template.
+    for (const edition of ["2014", "2024"]) {
+      const template = runner.bagCard(edition).compiled_template;
+      for (const ability of ["strength", "dexterity", "constitution",
+        "intelligence", "wisdom", "charisma"]) {
+        assert.equal(template.ability_scores[ability], 10);
+        assert.equal(template.saving_throw_bonuses[ability], 1);
+      }
+      assert.equal(template.skill_bonuses.athletics, 0);
+      assert.equal(template.skill_bonuses.acrobatics, 0);
+    }
     assert.equal(bag.compiled_template.attacks[0].fixedDamage, 0);
     assert.equal(window.IRON_PIT_FIGURE_PORTRAITS.keyFor(bag.compiled_template, {}),
       "heavy_bag", "The real card renderer must use the bag silhouette.");
