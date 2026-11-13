@@ -64,7 +64,9 @@
         if (choice) {
           if (window.IRON_PIT_BROWSER_TIMED_CONTROL?.turnAttackAllowed(member.state) === false) break;
           const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
-          const featureId = openingFeature || (pack ? "pack-tactics" : variant.id);
+          const label = window.IRON_PIT_BROWSER_ATTACK_ACTION_LABEL;
+          if (!label) throw new Error("Shared Attack Action attribution runtime is missing.");
+          const featureId = openingFeature || (pack ? "pack-tactics" : label.featureId(definition, variant, index));
           const event = A().resolveAttack(sequence, round, member, choice.target, choice.attack, choice.distance, {
             spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey,
             allowReckless: true, ignoreCloseThreat: true,
