@@ -1,0 +1,81 @@
+name: Iron Pit GitHub Pages Beta
+
+# The public beta only advances from an exact commit that has passed CI on main.
+# This does not deploy or unlock the separately controlled Netlify production site.
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: iron-pit-github-pages-beta
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout exact certified commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+
+      - name: Refuse stale or incomplete beta release
+        shell: bash
+        run: |
+          set -euo pipefail
+          certified="$(git rev-parse HEAD)"
+          latest="$(git ls-remote origin refs/heads/main | cut -f1)"
+          if [ "$certified" != "$latest" ]; then
+            echo "A newer main commit exists; refusing to publish an old beta."
+            exit 1
+          fi
+          test -s index.html
+          test -s frontend/index.html
+          test -s frontend/browser-wanted-2014.js
+          test -s frontend/browser-monsters-2014.js
+          test -s frontend/browser-heroes.js
+          grep -Fq 'id="wanted-board"' index.html
+          grep -Fq 'id="wanted-board"' frontend/index.html
+          grep -Fq 'browser-wanted-posters.js' index.html
+          grep -Fq 'window.IRON_PIT_BROWSER_WANTED_2014' frontend/browser-wanted-2014.js
+          grep -Fq 'window.IRON_PIT_2014_MVP_READY = true' frontend/browser-monsters-2014.js
+
+      - name: Assemble browser-only beta
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          cp index.html _site/index.html
+          cp -R frontend _site/frontend
+          cp robots.txt sitemap.xml _site/
+          touch _site/.nojekyll
+          test -s _site/index.html
+          test -s _site/frontend/browser-wanted-posters.js
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload static beta
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Publish GitHub Pages beta
+        id: deployment
+        uses: actions/deploy-pages@v4
