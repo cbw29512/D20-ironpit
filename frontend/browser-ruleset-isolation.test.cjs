@@ -21,7 +21,7 @@ for (const file of [
   "browser-multiattack-choices.js", "browser-multiattack.js", "browser-spellcasting.js", "browser-spell-area.js",
   "browser-healing-policy.js", "browser-healing-resolution.js", "browser-group-healing.js", "browser-healing.js",
   "browser-condition-removal-policy.js", "browser-condition-removal-policy.js", "browser-condition-removal.js",
-  "browser-support.js", "browser-formation.js", "browser-arena-map.js", "browser-grid-geometry.js",
+  "browser-support.js", "browser-formation-engagement.js", "browser-formation-area-targeting.js", "browser-formation.js", "browser-formation-rows.js", "browser-arena-map.js", "browser-grid-geometry.js",
   "browser-grid-movement-support.js", "browser-grid-path-search-support.js", "browser-grid-path-search.js",
   "browser-grid-movement.js", "browser-grid-reaction-support.js", "browser-creature-space-entry.js", "browser-reaction-movement.js",
   "browser-offensive-ranges.js", "browser-offensive-movement.js", "browser-grid-placement.js",
