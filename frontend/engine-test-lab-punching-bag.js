@@ -34,9 +34,26 @@
       // uses the existing universal fixedDamage=0 attack parameter instead:
       // no negative rolls, and 0 damage even on a critical hit.
       compiled.attacks[0].fixedDamage = 0;
+      // User-locked homebrew training stats. Provide full source-owned
+      // values so every universal save/check resolver has a legal opponent.
+      // This augments only the test bag, never the generic monster compiler.
+      const abilityNames = ["strength", "dexterity", "constitution",
+        "intelligence", "wisdom", "charisma"];
+      compiled.ability_scores = Object.fromEntries(
+        abilityNames.map(ability => [ability, 10]));
+      compiled.saving_throw_bonuses = Object.fromEntries(
+        abilityNames.map(ability => [ability, 1]));
+      // STR/DEX 10 are +0 checks without proficiency. They are needed
+      // for ordinary Grapple escape contests and are not save modifiers.
+      compiled.skill_bonuses = {...compiled.skill_bonuses,
+        athletics: 0, acrobatics: 0};
       if (compiled.armor_class !== 10 || compiled.max_hp !== 10000
           || compiled.ruleset !== edition || compiled.kind !== "monster")
         throw new Error("Punching Bag did not compile to its locked test stats.");
+      if (abilityNames.some(ability =>
+          compiled.ability_scores[ability] !== 10 ||
+          compiled.saving_throw_bonuses[ability] !== 1))
+        throw new Error("Punching Bag must have six base-10 stats and +1 saves.");
       const attack = compiled.attacks[0];
       if (attack.diceCount !== 1 || attack.diceSize !== 2
           || attack.damageBonus !== 0 || attack.fixedDamage !== 0 || attack.onHitDamage?.length)
