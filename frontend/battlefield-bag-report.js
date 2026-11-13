@@ -67,13 +67,15 @@
       return failure(report, entry, seed, error);
     }
   }
-  function failure(report, entry, seed, error) {
+  function failure(report, entry, seed, error, session = null) {
     try {
       const row = {
         edition: entry.ruleset, card_id: entry.runnable_template_id,
         card_name: entry.name, level: entry.level, seed,
         problems: ["engine_error: " + (error?.message || String(error))],
-        event_count: 0, events: [], abilities: null,
+        event_count: session?.battle?.events?.length || 0,
+        events: session?.battle?.events || [], abilities: null,
+        diagnostic_id: session?.diagnosticId || null,
       };
       report.cases.push(row);
       report.completed += 1;
