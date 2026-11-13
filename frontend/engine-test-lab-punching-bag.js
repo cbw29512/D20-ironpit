@@ -13,7 +13,7 @@
         armor_class: 10, max_hp: 10000, speed_ft: 0, initiative_bonus: -10,
         attacks: [{
           id: "harmless-tap", name: "Harmless Tap", attack_kind: "melee",
-          attack_bonus: -50, damage: {count: 1, size: 2, bonus: -2},
+          attack_bonus: -50, damage: {count: 1, size: 2, bonus: -4},
           damage_type: "bludgeoning", animation: "slash",
         }],
         primary_attack_id: "harmless-tap",
@@ -35,7 +35,7 @@
         throw new Error("Punching Bag did not compile to its locked test stats.");
       const attack = compiled.attacks[0];
       if (attack.diceCount !== 1 || attack.diceSize !== 2
-          || attack.damageBonus !== -2 || attack.onHitDamage?.length)
+          || attack.damageBonus !== -4 || attack.onHitDamage?.length)
         throw new Error("Punching Bag attack must remain harmless.");
       return compiled;
     } catch (error) {
