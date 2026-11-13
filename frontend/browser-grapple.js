@@ -134,7 +134,8 @@
       const stale = target.state.grapple_sources.filter((source) => {
         const grappler = members.get(source.source_id);
         if (!grappler || grappler.state.is_dead || !grappler.state.is_alive || Q().incapacitated(grappler.state)) return true;
-        return Math.abs(grappler.position_ft - target.position_ft) > source.range_ft;
+        return setup.arena_mode !== "formation"
+          && Math.abs(grappler.position_ft - target.position_ft) > source.range_ft;
       });
       for (const source of stale) release(target.state, source.source_id);
       sync(target.state);

@@ -20,6 +20,18 @@
     return [...setup.heroes, ...setup.monsters].find((item) => item.combatant_id === event.target_id) || fallback;
   }
 
+  // Each extra slot in an Attack Action is the universal Extra Attack
+  // capability; printed monster Multiattack retains its own action label.
+  function attackSlotFeature(definition, variant, slotIndex) {
+    try {
+      if (!Number.isInteger(slotIndex) || slotIndex < 1) throw new Error("Invalid attack slot index.");
+      return definition.isAttackAction && slotIndex > 1 ? "extra-attack" : variant.id;
+    } catch (error) {
+      console.error("Failed additional Attack Action attribution.", error);
+      throw error;
+    }
+  }
+
   function resolveAttackAction(sequence, round, member, setup) {
     try {
       const definition = member.state.template.attack_action;
@@ -64,7 +76,7 @@
         if (choice) {
           if (window.IRON_PIT_BROWSER_TIMED_CONTROL?.turnAttackAllowed(member.state) === false) break;
           const pack = window.IRON_PIT_BROWSER_STATE.packTactics(member, choice.target, setup);
-          const featureId = openingFeature || (pack ? "pack-tactics" : variant.id);
+          const featureId = openingFeature || (pack ? "pack-tactics" : attackSlotFeature(definition, variant, index));
           const event = A().resolveAttack(sequence, round, member, choice.target, choice.attack, choice.distance, {
             spendAction: false, advantage: pack ? 1 : 0, setup, featureId, turnKey,
             allowReckless: true, ignoreCloseThreat: true,
@@ -128,5 +140,6 @@
   window.IRON_PIT_BROWSER_MULTIATTACK = {
     available: MC.available, legalChoiceAvailable: MC.legalChoiceAvailable,
     meleeAvailable: MC.meleeAvailable, expectedDamage: MC.expectedDamage, resolveAttackAction,
+    attackSlotFeature,
   };
 })();

@@ -62,6 +62,7 @@ def _scout_attack_ids(*, protected: bool, distance: int = 5) -> list[str]:
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=monster_ids,
     ))
+    setup.arena_mode = "grid"  # Compare historical actual 5-foot reach.
     scout = next(member for member in setup.monsters if member.state.template.id == "srd-scout")
     setup.heroes[0].state.position = GridPosition(x=7, y=6)
     scout.state.position = GridPosition(x=7+distance//5, y=6)

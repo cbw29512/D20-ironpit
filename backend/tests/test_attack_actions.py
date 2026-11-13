@@ -17,6 +17,7 @@ def _extra_attack_setup():
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-commoner", "srd-commoner"],
     ))
+    setup.arena_mode = "grid"  # Explicit legacy reach/retarget fixture.
     attacker = setup.heroes[0]
     attacker.state.position = GridPosition(x=7, y=6)
     setup.monsters[0].state.position = GridPosition(x=8, y=6)
@@ -37,6 +38,7 @@ def _mixed_attack_setup(distance_ft: int):
     setup = build_encounter_setup(EncounterSelection(
         hero_ids=["karnok-stoneward-l1"], monster_ids=["srd-bandit"],
     ))
+    setup.arena_mode = "grid"  # Explicit legacy distance-based mixed attack.
     attacker = setup.monsters[0]
     setup.heroes[0].state.position = GridPosition(x=0, y=6)
     attacker.state.position = GridPosition(x=distance_ft // 5, y=6)

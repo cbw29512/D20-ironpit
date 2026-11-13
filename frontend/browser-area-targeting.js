@@ -91,6 +91,18 @@
 
   function legalPlacements(actor, setup, area, rangeFt = 0, allowNoEnemyTargets = false) {
     try {
+      if (setup?.arena_mode === "formation" && ["cone", "line"].includes(area?.shape)) {
+        const formation = window.IRON_PIT_BROWSER_FORMATION_AREA_TARGETING;
+        if (!formation) throw new Error("Formation area resolver is unavailable.");
+        const targetIds = area.shape === "cone"
+          ? formation.coneFrontlineTargets(actor, setup, area)
+          : formation.lineLaneTargets(actor, setup, area);
+        if (!targetIds.length && !allowNoEnemyTargets) return [];
+        return [{
+          targetIds, enemyIds: targetIds, friendlyIds: [],
+          origin: [0, 0], direction: [1, 0], formationOnly: true,
+        }];
+      }
       if (area?.contiguousSectionCount || area?.contiguous_section_count) {
         return window.IRON_PIT_BROWSER_CONTIGUOUS_CUBES.legalPlacements(actor, setup, area, rangeFt);
       }
@@ -131,6 +143,10 @@
 
   function memberInPlacement(actor, member, area, placement) {
     try {
+      if (placement?.formationOnly) {
+        return [...(placement.targetIds || []), ...(placement.friendlyIds || [])]
+          .includes(member.combatant_id);
+      }
       if (placement?.cubeSwCells?.length) {
         const span = window.IRON_PIT_BROWSER_CONTIGUOUS_CUBES.spanOf(area);
         return placement.cubeSwCells.some((sw) => window.IRON_PIT_BROWSER_CONTIGUOUS_CUBES.covers(sw, span, member));

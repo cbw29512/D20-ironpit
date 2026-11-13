@@ -122,6 +122,13 @@ require("./browser-test-runtime.cjs").loadWebsite();
     assert.equal(report.stopped, false);
     assert.ok(report.cases.every(row => row.event_count > 0));
     assert.ok(report.cases.every(row => Array.isArray(row.events)));
+    // User-provided 480-fight report found 2,038 forbidden movement events.
+    // The actual player-facing Test All runner must never produce those
+    // events in either 2014 or 2024 standard Pit combat.
+    assert.equal(report.failed, 0, "Both formation gauntlet fights must pass.");
+    assert.ok(report.cases.every(row => row.events.every(
+      event => event.event_type !== "movement")),
+    "Formation-only gauntlet must not move combatants between grid cells.");
     assert.equal(JSON.stringify(heroes), before);
     assert.equal(state.fighting, false);
 

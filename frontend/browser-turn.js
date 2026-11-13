@@ -168,8 +168,8 @@
         events.push({
           sequence: sequence++, round_number: round, event_type: "feature",
           actor_id: stepped.combatant_id, actor_name: stepped.state.template.name,
-          feature_id: "formation-step-up", animation: "movement",
-          description: `${stepped.state.template.name} steps to the front row.`,
+          feature_id: "formation-step-up", animation: "feature",
+          description: `${stepped.state.template.name} becomes the frontline.`,
         });
       }
       const compelled = O()?.resolveForcedApproach?.(sequence, round, member, setup, turnKey);
@@ -230,9 +230,11 @@
         events.push(...opened.events);
         return finalize(events, opened.sequence, round, member, setup, turnKey);
       }
-      const charged = C()?.resolveClosing(sequence, round, member, targets[0], setup);
+      const charged = setup.arena_mode === "formation" ? null
+        : C()?.resolveClosing(sequence, round, member, targets[0], setup);
       if (charged?.handled) { events.push(...charged.events); PA()?.sync(setup); FA()?.sync(setup); return finalize(events, charged.sequence, round, member, setup, turnKey); }
-      const movement = OM()?.move(sequence, round, member, setup, turnKey);
+      const movement = setup.arena_mode === "formation" ? null
+        : OM()?.move(sequence, round, member, setup, turnKey);
       if (movement) { events.push(...movement.events); sequence = movement.sequence; PA()?.sync(setup); FA()?.sync(setup); }
       if (!E().available(member.state, "action")) return finalize(events, sequence, round, member, setup, turnKey);
       const postMove = resolveMainActionOpportunity("normalPostMove", sequence, round, member, setup, turnKey);

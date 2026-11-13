@@ -38,6 +38,7 @@ def legal_area_save_placements(
             filtered[placement_key] = AreaPlacement(
                 target_ids=targets, origin=placement.origin,
                 direction=placement.direction, friendly_ids=placement.friendly_ids,
+                formation_only=placement.formation_only,
             )
     return sorted(
         filtered.values(),

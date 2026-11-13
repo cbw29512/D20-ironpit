@@ -2,6 +2,7 @@
   "use strict";
   const HERO_BACK = 0, HERO_FRONT = 5, MONSTER_FRONT = 10, MONSTER_BACK = 15;
   const S = () => window.IRON_PIT_BROWSER_STATE;
+  const FE = () => window.IRON_PIT_BROWSER_FORMATION_ENGAGEMENT;
   const attacks = (template) => template?.attacks || [];
   const alive = (member) => member.state.is_alive && !member.state.is_dead && member.state.current_hp > 0
     && !window.IRON_PIT_BROWSER_EXILE?.removed(member.state);
@@ -127,6 +128,7 @@
           || allowed.has("willing") && (state.willing_attack_source_ids || []).includes(member.combatant_id)
           || allowed.has("source_charmed") && window.IRON_PIT_BROWSER_CONDITION_RULES?.hasSourceOwnedCondition?.(state, "charmed", member.combatant_id, setup))) return false;
       }
+      if (FE()?.enabled(setup) && !FE().weaponTargetAllowed(member, target, attack, setup)) return false;
       const policy = attack.grappleTargetPolicy || "normal";
       if (policy === "normal") return true;
       if (!["own_grapple_only", "auto_hit_own_grapple"].includes(policy)) throw new Error(`Unsupported grapple target policy: ${policy}`);
@@ -186,11 +188,17 @@
     });
     for (const target of targetOrder(member, setup, preferBackline)) {
       if (targetId !== null && target.combatant_id !== targetId) continue;
-      const distance = attackDistance(member, target);
-      const legal = profiles.filter((profile) => (!window.IRON_PIT_BROWSER_GRID_BARRIERS || window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(member, target, setup)) && targetAllowed(member, target, profile, setup) && attackInRange(profile, distance));
+      const formation = FE()?.enabled(setup) === true;
+      const distance = formation ? null : attackDistance(member, target);
+      const legal = profiles.filter((profile) =>
+        (formation || !window.IRON_PIT_BROWSER_GRID_BARRIERS
+          || window.IRON_PIT_BROWSER_GRID_BARRIERS.clearBetweenMembers(member, target, setup))
+        && targetAllowed(member, target, profile, setup)
+        && (formation || attackInRange(profile, distance)));
       if (legal.length) {
         legal.sort((a, b) => weaponMeanDamage(b) - weaponMeanDamage(a));
-        return { target, attack: legal[0], distance };
+        return { target, attack: legal[0],
+          distance: formation ? FE().engagementDistance(legal[0]) : distance };
       }
     }
     return null;

@@ -27,6 +27,10 @@ def resolve_activation_movement(
     try:
         if speed_fraction <= 0 or speed_fraction > 1:
             raise ValueError("Activation movement speed_fraction must be in (0, 1].")
+        # The standard Pit is non-spatial. A generic activation-movement
+        # rider grants no relocation, regardless of class or feature name.
+        if setup.arena_mode == "formation":
+            return [], sequence
         opponents = setup.monsters if mover.side == "heroes" else setup.heroes
         living = [member for member in opponents if not member.state.is_dead and not member.state.is_unconscious]
         if not living:

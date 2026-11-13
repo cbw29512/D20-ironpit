@@ -18,7 +18,7 @@ for (const file of [
   "browser-light-weapons.js", "browser-light-attack.js", "browser-standard-attack-action.js",
   "browser-multiattack-choices.js", "browser-multiattack.js", "browser-spellcasting.js", "browser-spell-area.js",
   "browser-healing-policy.js", "browser-healing-resolution.js", "browser-group-healing.js", "browser-healing.js",
-  "browser-condition-removal-policy.js", "browser-condition-removal-policy.js", "browser-condition-removal.js", "browser-support.js", "browser-formation.js", "browser-arena-map.js", "browser-grid-geometry.js",
+  "browser-condition-removal-policy.js", "browser-condition-removal-policy.js", "browser-condition-removal.js", "browser-support.js", "browser-formation-engagement.js", "browser-formation.js", "browser-formation-rows.js", "browser-arena-map.js", "browser-grid-geometry.js",
   "browser-grid-movement-support.js", "browser-grid-path-search-support.js", "browser-grid-path-search.js",
   "browser-grid-movement.js", "browser-grid-reaction-support.js", "browser-creature-space-entry.js", "browser-reaction-movement.js",
   "browser-offensive-ranges.js", "browser-offensive-movement.js", "browser-grid-placement.js",
@@ -80,7 +80,7 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
 {
   const battle = fight(["karnok-stoneward-l1"], ["srd-bandit"], deterministicDice(7));
   const karnokAttacks = battle.events.filter((event) => event.event_type === "attack" && event.actor_id.startsWith("hero-1:"));
-  assert.ok(karnokAttacks.length > 0, "Karnok should eventually make a legal attack after grid approach");
+  assert.ok(karnokAttacks.length > 0, "Karnok should attack without grid closing or measured reach");
 }
 
 {
@@ -134,8 +134,11 @@ function fight(heroIds, monsterIds, dice = deterministicDice()) {
   const rage = battle.events.find((event) => event.actor_id.startsWith("hero-1:") && event.feature_id === "rage");
   const attack = battle.events.find((event) => event.actor_id.startsWith("hero-1:") && event.event_type === "attack");
   assert.ok(rage, "audited Barbarian should Rage in combat");
-  assert.ok(battle.events.some((event) => event.actor_id.startsWith("hero-1:") && event.event_type === "movement"), "Rokhan should close with legal movement under no-kiting AI");
-  assert.equal(attack?.weapon_id, "rokhan-greataxe", "Rokhan should use melee after closing to legal reach from the compact starting formation");
+  assert.equal(battle.setup.arena_mode, "formation");
+  assert.ok(!battle.events.some(event => event.event_type === "movement"),
+    "Standard Iron Pit combat cannot spend tactical movement.");
+  assert.equal(attack?.weapon_id, "rokhan-greataxe",
+    "Rokhan's printed melee attack should reach the exposed frontline without walking.");
 }
 
 {

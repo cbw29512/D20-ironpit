@@ -33,3 +33,21 @@ def validate_attack_action_slots(attacker: EncounterCombatant) -> None:
     except Exception:
         logger.exception("Multiattack slot validation failed for %s.", attacker.combatant_id)
         raise
+
+def attack_action_event_feature_id(definition: AttackActionDefinition, variant, slot_index: int) -> str:
+    """Label extra weapon strikes from any source-defined multi-slot Attack Action.
+
+    The first strike belongs to the ordinary Attack Action. Subsequent
+    source-granted slots are the universal Extra Attack mechanic. Printed
+    Multiattack is a different action family and keeps its own source ID.
+    This affects event attribution only; it never adds a slot or changes rolls.
+    """
+    try:
+        if slot_index < 1:
+            raise ValueError("Attack slot index must begin at one.")
+        if definition.is_attack_action and slot_index > 1:
+            return "extra-attack"
+        return variant.id
+    except Exception:
+        logger.exception("Failed source-neutral Attack Action log attribution.")
+        raise

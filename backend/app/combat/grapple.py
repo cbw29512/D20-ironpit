@@ -160,7 +160,8 @@ def cleanup_grapples(setup: EncounterSetup) -> None:
             grappler = members.get(source.source_id)
             if grappler is None or grappler.state.is_dead or not grappler.state.is_alive or is_incapacitated(grappler.state):
                 continue
-            if abs(grappler.position_ft - target.position_ft) > source.range_ft:
+            # Display coordinates cannot release a Grapple in formation mode.
+            if setup.arena_mode != "formation" and abs(grappler.position_ft - target.position_ft) > source.range_ft:
                 continue
             retained.append(source)
         for removed in [source for source in target.state.grapple_sources if source not in retained]:

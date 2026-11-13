@@ -18,7 +18,7 @@ for (const file of [
   "browser-spellcasting.js", "browser-spell-area.js",
   "browser-healing-policy.js", "browser-healing-resolution.js", "browser-group-healing.js", "browser-healing.js",
   "browser-condition-removal-policy.js", "browser-condition-removal-policy.js", "browser-condition-removal.js", "browser-support.js",
-  "browser-dodge.js", "browser-formation.js", "browser-arena-map.js", "browser-grid-geometry.js",
+  "browser-dodge.js", "browser-formation-engagement.js", "browser-formation-area-targeting.js", "browser-formation.js", "browser-formation-rows.js", "browser-arena-map.js", "browser-grid-geometry.js",
   "browser-grid-movement-support.js", "browser-grid-path-search-support.js", "browser-grid-path-search.js",
   "browser-grid-movement.js", "browser-grid-reaction-support.js", "browser-creature-space-entry.js", "browser-reaction-movement.js",
   "browser-offensive-ranges.js", "browser-offensive-movement.js", "browser-grid-placement.js",
@@ -152,11 +152,11 @@ function scoutAtFive() {
   const scoutAttacks = battle.events.filter((event) => event.event_type === "attack" && event.actor_id.startsWith("monster-1:"));
   const opening = scoutAttacks.slice(0, 2).map((event) => event.weapon_id);
   assert.deepEqual(opening, ["scout-shortsword", "scout-shortsword"],
-    "a Scout uses its printed melee Multiattack after legally closing from 25 feet");
-  assert.ok(battle.events.some((event) =>
-    event.event_type === "movement" && event.actor_id.startsWith("monster-1:")
-    && Array.isArray(event.grid_path) && event.grid_path.length > 0),
-    "a Scout must approach through measured grid movement, never teleport into melee");
+    "Scout retains its printed two-attack melee Multiattack in frontline.");
+  assert.equal(battle.setup.arena_mode, "formation");
+  assert.ok(!battle.events.some(event =>
+    event.event_type === "movement" && event.actor_id.startsWith("monster-1:")),
+    "Scout attacks from its exposed formation without walking or teleporting.");
 }
 
 console.log("Browser melee deathmatch and live-grid ranged regressions passed.");

@@ -12,6 +12,7 @@ def _rat_pack_setup():
         hero_ids=["karnok-stoneward-l1"],
         monster_ids=["srd-giant-rat", "srd-giant-rat"],
     ))
+    setup.arena_mode = "grid"  # Historical coordinate-adjacent ally fixture.
     target = setup.heroes[0]
     attacker, ally = setup.monsters
     target.state.position = GridPosition(x=7, y=6)

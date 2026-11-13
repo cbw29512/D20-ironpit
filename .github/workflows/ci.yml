@@ -25,6 +25,9 @@ jobs:
       - name: Install Python rules reference
         working-directory: backend
         run: pip install -e '.[dev]'
+      - name: Validate standard Pit formation weapon engagement
+        working-directory: backend
+        run: PYTHONPATH=.:.. pytest -q tests/test_formation_weapon_engagement.py tests/test_formation_no_movement_turn.py tests/test_formation_cone_targeting.py tests/test_attack_action_event_label.py tests/test_formation_line_targeting.py tests/test_formation_atomic_promotion.py
       - name: Audit 327-card Death Trigger source binding coverage
         run: python scripts/report_death_trigger_bindings_2014.py --check
       - name: Audit 327-card staged disease coverage
@@ -582,6 +585,12 @@ jobs:
           PYTHONPATH=backend:scripts python scripts/fungus_sequence_parity_fixture.py > frontend/test-fixtures/fungus-sequence.json
       - name: Run browser combat regressions
         run: |
+          node frontend/browser-formation-weapon-engagement.test.cjs
+          node frontend/browser-formation-atomic-promotion.test.cjs
+          node frontend/browser-formation-cone-targeting.test.cjs
+          node frontend/browser-attack-action-event-label.test.cjs
+          node frontend/browser-formation-line-targeting.test.cjs
+          node frontend/browser-formation-breath-action-choice.test.cjs
           node frontend/browser-body-control.test.cjs
           node frontend/browser-2014-antimagic-susceptibility.test.cjs
           node frontend/browser-terminal-effect-lifecycle.test.cjs
@@ -685,6 +694,7 @@ jobs:
           node frontend/engine-test-lab-sweep.test.cjs
           node frontend/engine-test-lab-bag.test.cjs
           node frontend/battlefield-bag.test.cjs
+          node frontend/battlefield-bag-full-roster.test.cjs
           node --check frontend/engine-test-lab-punching-bag.js
           node --check frontend/engine-test-lab-bag-plan.js
           node --check frontend/engine-test-lab-bag-fight.js

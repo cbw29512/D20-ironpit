@@ -93,8 +93,8 @@ def resolve_combat_turn(
             events.append(BattleEvent(
                 sequence=sequence, round_number=round_number, event_type="feature",
                 actor_id=member.combatant_id, actor_name=member.state.template.name,
-                feature_id="formation-step-up", animation="movement",
-                description=f"{member.state.template.name} steps to the front row.",
+                feature_id="formation-step-up", animation="feature",
+                description=f"{member.state.template.name} becomes the frontline.",
             ))
             sequence += 1
         turn_key = f"{round_number}:{attacker.combatant_id}"
@@ -165,8 +165,9 @@ def resolve_combat_turn(
         events.extend(form_events)
         if not is_available(attacker.state, "action"):
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-        if not melee_can_land_now(attacker, setup) and not melee_can_be_enabled_this_turn(
-            attacker, setup, turn_key,
+        if not melee_can_land_now(attacker, setup) and (
+            setup.arena_mode == "formation"
+            or not melee_can_be_enabled_this_turn(attacker, setup, turn_key)
         ):
             spell_events, sequence = resolve_best_spell_offense(
                 sequence, round_number, attacker, setup, turn_key, dice,
@@ -187,17 +188,22 @@ def resolve_combat_turn(
             )
             events.extend(opener_events)
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-        charge_events, sequence, charged = resolve_charge_closing(
-            sequence, round_number, attacker, targets[0], dice, setup,
-        )
-        events.extend(charge_events)
+        charged = False
+        if setup.arena_mode != "formation":
+            charge_events, sequence, charged = resolve_charge_closing(
+                sequence, round_number, attacker, targets[0], dice, setup,
+            )
+            events.extend(charge_events)
         if charged:
             sync_paladin_auras_2014(setup)
             sync_friendly_save_auras(setup)
         if charged or attacker.state.is_dead or attacker.state.is_unconscious:
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
-        movement_events, sequence = move_to_enable_offense(sequence, round_number, attacker, setup, turn_key, dice)
-        events.extend(movement_events)
+        if setup.arena_mode != "formation":
+            movement_events, sequence = move_to_enable_offense(
+                sequence, round_number, attacker, setup, turn_key, dice,
+            )
+            events.extend(movement_events)
         sync_paladin_auras_2014(setup)
         sync_friendly_save_auras(setup)
         if attacker.state.is_dead or attacker.state.is_unconscious or is_incapacitated(attacker.state):

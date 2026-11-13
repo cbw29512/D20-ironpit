@@ -37,6 +37,11 @@
   }
   const HD = () => window.IRON_PIT_BROWSER_HIT_DAMAGE || { resolve: legacyHitDamage };
   function resolveAttack(sequence, round, attacker, target, attack, distance, extra = {}) {
+    if (extra.setup?.arena_mode === "formation") {
+      const engagement = window.IRON_PIT_BROWSER_FORMATION_ENGAGEMENT;
+      if (!engagement) throw new Error("Formation attack runtime is unavailable.");
+      distance = engagement.engagementDistance(attack);
+    }
     if (attack.unavailableReason != null) throw new Error(`${attack.id} unavailable: ${attack.unavailableReason}`); if (attacker.state.is_dead || Q().incapacitated(attacker.state)) throw new Error("An incapacitated or dead creature cannot attack.");
     if (window.IRON_PIT_BROWSER_ATTACHMENTS?.sourceAttacksBlocked(extra.setup, attacker.combatant_id))
       throw new Error("Source-declared attachment prevents another attack while linked.");
@@ -65,7 +70,8 @@
     const disadvantage = conditions.disadvantage + visualAversionDisadvantage + SAP().disadvantage(attacker.state)
       + (T()?.nextAttackDisadvantage(attacker.state) || 0) + (extra.otherDisadvantageSources || 0) + (window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS?.disadvantageSources(attacker, extra.setup, "attack_rolls") || 0) + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.abilityD20Disadvantage(attacker.state, attack.attackAbility || attack.attack_ability) || 0)
       + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.attackRollDisadvantage(attacker.state) || 0);
-    const closeThreat = attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
+    const closeThreat = extra.setup?.arena_mode === "formation" ? false
+      : attack.kind === "ranged" && rangedCloseThreat(attacker, target, distance, extra.setup);
     const rangedDisadvantage = attack.kind === "ranged" && ((attack.normal && distance > attack.normal) || closeThreat);
     const recklessAdvantage = B2().attackAdvantage(attacker.state, attack);
     const brutalSuppression = BS()?.advantageSuppression(

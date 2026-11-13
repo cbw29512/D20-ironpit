@@ -7,7 +7,7 @@ from app.combat.ally_context import pack_tactics_active
 from app.combat.attack_action_choices import attack_choice, save_choice, followup_target, slot_grapple_eligible
 from app.combat.attack_action_sequences import select_sequence, expanded_sequence_slots
 from app.combat.attack_action_event_target import event_target
-from app.combat.attack_action_rules import validate_attack_action_slots
+from app.combat.attack_action_rules import validate_attack_action_slots, attack_action_event_feature_id
 from app.combat.attack_action_weapon_buffs import resolve_attack_action_weapon_buff
 from app.combat.cleave import resolve_cleave_extra_attack
 from app.combat.condition_rules import is_incapacitated
@@ -100,7 +100,7 @@ def resolve_attack_action(
                     break
                 target, attack, distance = chosen_attack
                 pack = pack_tactics_active(attacker, target, setup)
-                feature_id = opening_feature or ("pack-tactics" if pack else variant.id)
+                feature_id = opening_feature or ("pack-tactics" if pack else attack_action_event_feature_id(definition, variant, slot_index))
                 event = resolve_encounter_attack(
                     sequence, round_number, attacker, target, attack, distance, dice, setup,
                     spend_action=False, advantage_sources=1 if pack else 0,

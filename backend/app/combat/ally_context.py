@@ -65,6 +65,12 @@ def has_adjacent_active_ally(
 ) -> bool:
     """Return whether an eligible ally is actually within 5 feet of the target."""
     try:
+        if setup.arena_mode == "formation":
+            from app.combat.formation_engagement import effective_row
+            return effective_row(target, setup) == "front" and any(
+                effective_row(ally, setup) == "front"
+                for ally in active_allies(attacker, setup)
+            )
         return any(
             combatant_distance(ally, target) <= 5
             for ally in active_allies(attacker, setup)

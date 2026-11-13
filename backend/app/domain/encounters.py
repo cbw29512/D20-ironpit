@@ -56,6 +56,9 @@ class EncounterSetup(BaseModel):
     hero_total_levels: int = Field(ge=0, le=120)
     monster_total_cr: str
     ruleset: RulesetId = DEFAULT_RULESET
+    # Production Iron Pit uses formation engagement; grid remains for display.
+    # Explicit grid mode preserves legacy geometry fixtures until migrated.
+    arena_mode: Literal["grid", "formation"] = "grid"
     map_definition: BattleMapDefinition | None = None
     persistent_hazards: list[PersistentHazardState] = Field(default_factory=list)
     persistent_barriers: list[PersistentBarrierState] = Field(default_factory=list)
