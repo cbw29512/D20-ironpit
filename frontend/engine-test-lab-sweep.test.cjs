@@ -17,8 +17,7 @@ const vm = require("node:vm");
       {id: "p24", title: "2024 preset", ruleset: "2024", seed: 99,
         hero_id: "h24", monster_id: "m24", aspects: [{kind: "attack"}]},
     ];
-    const context = {console, setTimeout};
-    context.window = context;
+    const context = {console, setTimeout}; context.window = context;
     Object.assign(context, {
       IRON_PIT_BROWSER_FORMATION_ENGAGEMENT: {weaponTargetAllowed: () => true},
       IRON_PIT_BROWSER_FORMATION_AREA_TARGETING: {coneFrontlineTargets: () => []},
@@ -26,8 +25,7 @@ const vm = require("node:vm");
       IRON_PIT_BROWSER_BREAKABLE_CONDITION_OBJECT: {preferFreshLimitedControl: () => true},
       IRON_PIT_BROWSER_TARGET_CHOSEN_SAVE: {choose: () => "dex"},
     });
-    context.IRON_PIT_BROWSER_HEROES = heroes;
-    context.IRON_PIT_BROWSER_MONSTERS_2014 = monsters14;
+    context.IRON_PIT_BROWSER_HEROES = heroes; context.IRON_PIT_BROWSER_MONSTERS_2014 = monsters14;
     context.IRON_PIT_BROWSER_MONSTERS = monsters24;
     context.IRON_PIT_BROWSER_CATALOG = {buildCatalog: async edition => ({
       heroes: [], monsters: edition === "2014" ?
