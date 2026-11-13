@@ -44,8 +44,10 @@ try {
   assert.equal(Rescue.eligible(ally, held, owner, rule), false);
   ally.position_ft = 45;
   const originalRoll = window.IRON_PIT_DICE.roll;
+  const originalRollMany = window.IRON_PIT_DICE.rollMany;
   try {
     window.IRON_PIT_DICE.roll = (sides) => sides === 20 ? 20 : 1;
+    window.IRON_PIT_DICE.rollMany = (count, sides) => Array.from({length: count}, () => sides === 20 ? 20 : 1);
     const event = Rescue.resolve(1, 1, ally, held, owner, rule, setup);
     assert.equal(event.check_succeeded, true);
     assert.equal(event.check_dc, 15);
@@ -67,6 +69,7 @@ try {
     assert.equal(Grapple.sourceGrappleCapacityUsed(setup, "owner", rule.source_action_id), 0);
   } finally {
     window.IRON_PIT_DICE.roll = originalRoll;
+    window.IRON_PIT_DICE.rollMany = originalRollMany;
   }
   console.log("Generic held/ally Grapple Break Action parity passed.");
 } catch (error) {
