@@ -790,6 +790,7 @@ jobs:
           node frontend/browser-source-grapple-capacity.test.cjs
           node frontend/browser-roper-breakable-grapple.test.cjs
           node frontend/browser-roper-break-action.test.cjs
+          node frontend/browser-roper-bite-reach.test.cjs
           node frontend/browser-2014-chuul-combat.test.cjs
           node frontend/browser-otyugh-grapple-slam.test.cjs
           node frontend/browser-attachments.test.cjs
