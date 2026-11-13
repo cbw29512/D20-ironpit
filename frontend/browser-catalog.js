@@ -110,21 +110,26 @@
 
   function build2014() {
     if (window.IRON_PIT_2014_MVP_READY !== true) throw new Error("Certified 2014 browser bundle did not load.");
-    const heroes = build2014Heroes(), monsters = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
+    const heroes = build2014Heroes(), runnable = readyMonsterCards(window.IRON_PIT_BROWSER_MONSTERS_2014);
+    const wanted = window.IRON_PIT_WANTED_POSTERS?.cards();
+    if (!wanted) throw new Error("2014 Wanted catalog source was not loaded.");
+    const monsters = [...runnable, ...wanted];
     if (!heroes.length || heroes.length > 240) {
       throw new Error(`Certified 2014 hero registry has invalid size: ${heroes.length}.`);
     }
     const heroKeys = new Set(heroes.map((card) => `${card.class_id}:${card.level}`));
     if (heroKeys.size !== heroes.length) throw new Error("Certified 2014 hero registry contains duplicate class/level entries.");
     const exportedMonsterCount = Object.keys(window.IRON_PIT_BROWSER_MONSTERS_2014 || {}).length;
-    if (!exportedMonsterCount || monsters.length !== exportedMonsterCount) {
-      throw new Error(`2014 browser catalog mismatch: ${exportedMonsterCount} exported, ${monsters.length} ready.`);
+    if (!exportedMonsterCount || runnable.length !== exportedMonsterCount) {
+      throw new Error(`2014 browser catalog mismatch: ${exportedMonsterCount} exported, ${runnable.length} ready.`);
     }
+    if (monsters.length !== 327 || new Set(monsters.map((card) => card.id)).size !== 327)
+      throw new Error("2014 source roster and Wanted board must contain 327 unique monsters.");
     if (heroes.some((card) => card.ruleset !== "2014" || card.kind !== "character")) throw new Error("2014 hero catalog crossed the ruleset boundary.");
     if (monsters.some((card) => card.ruleset !== "2014" || card.kind !== "monster")) throw new Error("2014 monster catalog crossed the ruleset boundary.");
     return {
       heroes, monsters, hero_count: 240, monster_count: 327,
-      hero_ready_count: heroes.length, monster_ready_count: monsters.length,
+      hero_ready_count: heroes.length, monster_ready_count: runnable.length,
       ruleset: "2014", test_lane: true,
     };
   }
