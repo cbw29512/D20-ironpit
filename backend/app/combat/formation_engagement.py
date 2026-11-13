@@ -58,7 +58,11 @@ def weapon_target_allowed(
     try:
         if not formation_mode(setup):
             return True
-        if not _active(defender):
+        # A downed character remains a legal finishing-attack target until Dead.
+        state = defender.state
+        if not state.is_alive or state.is_dead or (
+            state.current_hp <= 0 and state.template.kind != "character"
+        ):
             return False
         if attack.weapon.attack_kind is WeaponAttackKind.MELEE:
             return (
