@@ -64,7 +64,7 @@
       return row;
     } catch (error) {
       console.error("Battlefield gauntlet case inspection failed", {entry, seed, error});
-      return failure(report, entry, seed, error);
+      return failure(report, entry, seed, error, session);
     }
   }
   function failure(report, entry, seed, error, session = null) {
