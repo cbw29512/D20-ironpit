@@ -138,6 +138,7 @@ def build_encounter_setup(selection: EncounterSelection) -> EncounterSetup:
             hero_total_levels=_hero_level_total(hero_states),
             monster_total_cr=_monster_cr_total(monster_states),
             ruleset=ruleset,
+            arena_mode="formation",
             map_definition=battle_map,
         )
         apply_opening_conditions(setup, selection)
