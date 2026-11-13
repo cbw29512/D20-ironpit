@@ -8,6 +8,7 @@ require("./browser-test-runtime.cjs").loadWebsite();
 (async () => {
   try {
     for (const file of [
+      "custom-monster-runtime.js",
       "engine-test-lab-sweep-plan.js",
       "engine-test-lab-punching-bag.js",
       "engine-test-lab-bag-plan.js",
