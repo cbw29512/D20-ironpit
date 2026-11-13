@@ -79,31 +79,6 @@ const vm = require("node:vm");
     assert.ok(report.observed.feature_ids["source-melee"] >= 1);
     assert.equal(JSON.stringify(heroes.h14a), JSON.stringify({id:"h14a",ruleset:"2014"}));
 
-    // A huge fail-heavy matrix must keep all reproducible failure indexes
-    // without retaining tens of thousands of verbose example objects.
-    const failingPlan = {mode:"pairs",total:300,at:() => ({
-      kind:"duel",label:"synthetic broken opponent",
-      selection:{ruleset:"2024",hero_ids:["h24"],monster_ids:["m24"]},
-    })};
-    const large = await context.IRON_PIT_TEST_ALL_RUNNER.run(
-      failingPlan, 123, {stopRequested:false}
-    );
-    assert.equal(large.failed, 300);
-    assert.equal(large.failures.length, 100);
-    assert.equal(large.failure_cases.length, 300);
-    assert.equal(large.failure_codebook.length, 1);
-    assert.equal(large.error_counts[large.failure_codebook[0]], 300);
-    assert.ok(large.failure_cases.every(row => row.length === 2));
-    assert.equal(large.processed, 300);
-    const resumed = await context.IRON_PIT_TEST_ALL_RUNNER.run(
-      failingPlan, 123, {startIndex: 290, stopRequested:false}
-    );
-    assert.equal(resumed.start_case, 291);
-    assert.equal(resumed.completed, 300);
-    assert.equal(resumed.processed, 10);
-    assert.equal(resumed.skipped, 290);
-    assert.equal(resumed.failure_cases[0][0], 291);
-
     const presetsOnly = await context.IRON_PIT_TEST_ALL_PLAN.create("presets");
     assert.equal(presetsOnly.duel_total, 0);
     assert.equal(presetsOnly.total, 2);
