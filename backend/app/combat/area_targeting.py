@@ -25,6 +25,7 @@ class AreaPlacement:
     friendly_ids: tuple[str, ...] = ()
     protected_friendly_ids: tuple[str, ...] = ()
     cube_sw_cells: tuple[tuple[int, int], ...] = ()
+    formation_only: bool = False
 
     @property
     def enemy_ids(self) -> tuple[str, ...]:
@@ -95,6 +96,16 @@ def _point_origins(actor: EncounterCombatant, setup: EncounterSetup, range_ft: i
 def legal_area_placements(actor: EncounterCombatant, setup: EncounterSetup, area: AreaTargeting, range_ft: int, *, actor_position: GridPosition | None = None, allow_no_enemy_targets: bool = False) -> list[AreaPlacement]:
     """Return distinct placements with enemy targets and explicit friendly exposure."""
     try:
+        if setup.arena_mode == "formation" and area.shape == "cone":
+            from app.combat.formation_area_targeting import cone_frontline_targets
+            targets = cone_frontline_targets(actor, setup, area)
+            if not targets and not allow_no_enemy_targets:
+                return []
+            return [AreaPlacement(
+                target_ids=targets,
+                origin=(0.0, 0.0), direction=(1.0, 0.0),
+                formation_only=True,
+            )]
         if area.contiguous_section_count:
             from app.combat.contiguous_cube_targeting import legal_contiguous_cube_placements
             return legal_contiguous_cube_placements(
@@ -160,6 +171,8 @@ def member_in_area_placement(
 ) -> bool:
     """Return whether a combatant occupies any square covered by one resolved area placement."""
     try:
+        if placement.formation_only:
+            return member.combatant_id in (*placement.target_ids, *placement.friendly_ids)
         if placement.cube_sw_cells:
             from app.combat.contiguous_cube_targeting import member_in_contiguous_cubes
             return member_in_contiguous_cubes(member, placement, (area.length_ft or 5) // 5)
