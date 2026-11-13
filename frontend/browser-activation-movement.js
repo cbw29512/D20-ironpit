@@ -11,6 +11,10 @@
       const speedFraction = Number(options.speedFraction || 0);
       const desiredDistanceFt = options.desiredDistanceFt ?? 5;
       if (!(speedFraction > 0 && speedFraction <= 1)) throw new Error("Activation movement speedFraction must be in (0, 1].");
+      // The standard Pit is formation-only: Rage/Pounce and all equivalent
+      // source-declared activation moves never relocate combatants.
+      // Keep validation and all non-movement triggering effects unchanged.
+      if (setup.arena_mode === "formation") return { events: [], sequence };
       const opponents = mover.side === "heroes" ? setup.monsters : setup.heroes;
       const living = opponents.filter((member) => !member.state.is_dead && !member.state.is_unconscious);
       if (!living.length) return { events: [], sequence };
