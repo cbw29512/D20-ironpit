@@ -103,3 +103,10 @@
   .battle-card.turn-active,.battle-card.card-attacking,.battle-card.card-hit,.screen-shake{animation:none!important}
   .battle-card{transition:none!important}
 }
+
+/* Test All uses the real battlefield; controls stay alongside ordinary fight controls. */
+.bag-all-controls{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:6px 8px;border:1px solid #79592e;border-radius:9px;background:#1e1812}
+.bag-all-controls button{font-size:.75rem}
+.bag-all-controls #bag-all-button{font-weight:800;color:#f8e4b6}
+.bag-all-controls #bag-all-progress{width:130px;max-width:100%;accent-color:#c3a16b}
+.bag-all-controls #bag-all-status{flex:1 1 100%;font-size:.68rem;line-height:1.4;color:#d7ccba}
