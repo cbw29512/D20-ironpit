@@ -25,6 +25,9 @@ jobs:
       - name: Install Python rules reference
         working-directory: backend
         run: pip install -e '.[dev]'
+      - name: Validate standard Pit formation weapon engagement
+        working-directory: backend
+        run: PYTHONPATH=.:.. pytest -q tests/test_formation_weapon_engagement.py tests/test_formation_no_movement_turn.py tests/test_formation_cone_targeting.py tests/test_attack_action_event_label.py tests/test_formation_line_targeting.py tests/test_formation_atomic_promotion.py
       - name: Audit 327-card Death Trigger source binding coverage
         run: python scripts/report_death_trigger_bindings_2014.py --check
       - name: Audit 327-card staged disease coverage
@@ -258,9 +261,6 @@ jobs:
       - name: Validate universal breakable Roper grapple source and object lifecycle
         working-directory: backend
         run: PYTHONPATH=.:.. pytest -q tests/test_2014_roper_breakable_grapple.py tests/test_2014_roper_tendril_partial_binding.py tests/test_2014_roper_grapple_linked_d20.py
-      - name: Validate standard Pit formation weapon engagement
-        working-directory: backend
-        run: PYTHONPATH=.:.. pytest -q tests/test_formation_weapon_engagement.py tests/test_formation_no_movement_turn.py tests/test_formation_cone_targeting.py tests/test_attack_action_event_label.py tests/test_formation_line_targeting.py tests/test_formation_atomic_promotion.py
       - name: Certify Python rules reference
         working-directory: backend
         run: timeout 20m pytest -vv --durations=25
