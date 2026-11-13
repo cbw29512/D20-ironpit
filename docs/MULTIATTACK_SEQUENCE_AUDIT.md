@@ -1,3 +1,5 @@
+> **Superseded historical evidence.** Not the live execution cursor. See [MONSTER_ABILITY_WORK_QUEUE.md](MONSTER_ABILITY_WORK_QUEUE.md). Old Actions URLs in this file will age out.
+
 # Complete Multiattack sequence audit
 
 Owner: ChatGPT. Branch: `fix/2014-multiattack-sequences`. Status: DONE, merged #631.
