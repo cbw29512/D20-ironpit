@@ -128,7 +128,7 @@
           || allowed.has("willing") && (state.willing_attack_source_ids || []).includes(member.combatant_id)
           || allowed.has("source_charmed") && window.IRON_PIT_BROWSER_CONDITION_RULES?.hasSourceOwnedCondition?.(state, "charmed", member.combatant_id, setup))) return false;
       }
-      if (setup && !FE().weaponTargetAllowed(member, target, attack, setup)) return false;
+      if (FE()?.enabled(setup) && !FE().weaponTargetAllowed(member, target, attack, setup)) return false;
       const policy = attack.grappleTargetPolicy || "normal";
       if (policy === "normal") return true;
       if (!["own_grapple_only", "auto_hit_own_grapple"].includes(policy)) throw new Error(`Unsupported grapple target policy: ${policy}`);
@@ -188,7 +188,7 @@
     });
     for (const target of targetOrder(member, setup, preferBackline)) {
       if (targetId !== null && target.combatant_id !== targetId) continue;
-      const formation = FE().enabled(setup);
+      const formation = FE()?.enabled(setup) === true;
       const distance = formation ? null : attackDistance(member, target);
       const legal = profiles.filter((profile) =>
         (formation || !window.IRON_PIT_BROWSER_GRID_BARRIERS
