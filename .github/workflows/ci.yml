@@ -694,6 +694,7 @@ jobs:
           node frontend/engine-test-lab-sweep.test.cjs
           node frontend/engine-test-lab-bag.test.cjs
           node frontend/battlefield-bag.test.cjs
+          node frontend/battlefield-bag-full-roster.test.cjs
           node --check frontend/engine-test-lab-punching-bag.js
           node --check frontend/engine-test-lab-bag-plan.js
           node --check frontend/engine-test-lab-bag-fight.js
