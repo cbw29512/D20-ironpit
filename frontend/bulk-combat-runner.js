@@ -5,23 +5,6 @@
   const BAG_ATTEMPTS = 3;
   const $ = id => document.getElementById(id);
   let control = null;
-  function inspect(battle, originals) {
-    try {
-      const problems = [];
-      if (!Array.isArray(battle?.events) || !battle.events.length)
-        problems.push("no_combat_events");
-      if (!["heroes_win", "monsters_win", "draw"].includes(battle?.outcome))
-        problems.push("invalid_outcome");
-      if (battle.events?.some(event => event.event_type === "movement"))
-        problems.push("forbidden_tactical_movement");
-      for (const [card, serialized] of originals)
-        if (JSON.stringify(card) !== serialized) problems.push("source_card_mutation");
-      return problems;
-    } catch (error) {
-      console.error("Bulk combat evidence validation failed", error);
-      throw error;
-    }
-  }
   function caseAt(plan, mode, index) {
     try {
       return mode === "bag" ? plan.at(Math.floor(index / BAG_ATTEMPTS)) : plan.at(index);
@@ -40,13 +23,18 @@
       const entry = caseAt(plan, mode, index);
       const seed = entry.kind === "preset" ? entry.seed :
         turbo.deriveSeed(BASE_SEED, index + 1);
-      let battle = null, diagnostic = null;
+      let battle = null, diagnostic = null, bagActorId = null, evidence = null;
       try {
         let originals = [];
         if (mode === "bag") {
           const result = window.IRON_PIT_TEST_BAG_FIGHT.run(entry, seed);
           battle = result.replay.battle;
           diagnostic = result.replay.diagnostic_id;
+          bagActorId = result.bag_actor_id;
+          evidence = window.IRON_PIT_BULK_COMBAT_VALIDATION.abilityEvidence(
+            result.source, battle.events, result.source_actor_id);
+          if (evidence.not_observed_count)
+            report.bag_attempts_with_unobserved_abilities += 1;
         } else {
           originals = source(entry.selection).map(([, card]) =>
             [card, JSON.stringify(card)]);
@@ -54,10 +42,11 @@
           battle = result.battle;
           diagnostic = result.diagnostic_id;
         }
-        const problems = inspect(battle, originals);
+        const problems = window.IRON_PIT_BULK_COMBAT_VALIDATION.inspect(
+          battle, originals, bagActorId);
         // A raw, lossless transcript is written for EVERY completed fight,
         // not just failures, samples, first rounds, or observed abilities.
-        await writer.fight(index, report.total, entry, seed, battle, diagnostic);
+        await writer.fight(index, report.total, entry, seed, battle, diagnostic, evidence);
         if (problems.length) throw new Error(problems.join(", "));
         report.passed++;
         if (index % 25 === 0 || index === report.total - 1) {
@@ -93,7 +82,8 @@
       if (!api?.state || !api.ensureRuleset || !api.load || !api.updateControls)
         throw new Error("Actual player battlefield controller is required.");
       async function start(mode) {
-        if (control || api.state.fighting) return;
+        if (control || api.state.fighting ||
+          (api.state.session && !api.state.session.complete)) return;
         const flag = {running: true, stopRequested: false};
         control = flag;
         api.state.fighting = true;
@@ -112,6 +102,7 @@
           report = {mode, seed: BASE_SEED,
             total: mode === "bag" ? plan.total * BAG_ATTEMPTS : plan.total,
             completed: 0, passed: 0, failed: 0, stopped: false,
+            bag_attempts_with_unobserved_abilities: 0,
             failure_samples: [], attempts_per_card: mode === "bag" ? BAG_ATTEMPTS : 1};
           window.IRON_PIT_BULK_COMBAT_UI.progress(report, mode);
           await execute(api, plan, mode, writer, report, flag);
@@ -146,5 +137,8 @@
       throw error;
     }
   }
-  window.IRON_PIT_BULK_COMBAT_RUNNER = {install, inspect, caseAt};
+  window.IRON_PIT_BULK_COMBAT_RUNNER = {
+    install, caseAt,
+    inspect: (...args) => window.IRON_PIT_BULK_COMBAT_VALIDATION.inspect(...args),
+  };
 })();
