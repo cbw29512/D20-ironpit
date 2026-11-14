@@ -147,10 +147,13 @@
     const state = member.state;
     if (!E().available(state, "action")) throw new Error("Action is unavailable to escape grapple.");
     const source = state.grapple_sources.find((item) => item.restrains) || state.grapple_sources[0];
-    const athletics = state.template.skill_bonuses?.athletics;
-    const acrobatics = state.template.skill_bonuses?.acrobatics;
-    if (athletics == null && acrobatics == null) throw new Error(`${state.template.name} lacks certified grapple escape bonuses.`);
-    const useAthletics = athletics != null && (acrobatics == null || athletics >= acrobatics);
+    // Use the same universal skill-check resolver as all other ability checks:
+    // missing proficiency means untrained ability modifier, not a missing action.
+    if (typeof A()?.skillBonus !== "function")
+      throw new Error("Canonical skill-check runtime is unavailable for grapple escape.");
+    const athletics = A().skillBonus(state, "strength", "athletics");
+    const acrobatics = A().skillBonus(state, "dexterity", "acrobatics");
+    const useAthletics = athletics >= acrobatics;
     const bonus = useAthletics ? athletics : acrobatics;
     const ability = useAthletics ? "strength" : "dexterity";
     const advantage = useAthletics && (state.active_effect_ids.includes("rage") || state.template.athletics_advantage) ? 1 : 0;
