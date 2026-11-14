@@ -13,9 +13,8 @@
       const state = target.state;
       // Same eligibility as the universal HP restoration primitive.
       // An active no-healing curse must not become a wasted Channel Action.
-      const policy = window.IRON_PIT_BROWSER_HEALING_POLICY;
-      if (!policy?.swarm) throw new Error("Shared healing eligibility runtime is unavailable.");
-      if (state.is_dead || policy.swarm(state)
+      const swarm = (state.template.traits || []).includes("swarm");
+      if (state.is_dead || swarm
           || (state.timed_effects || []).some((effect) => effect.cannot_regain_hit_points)
           || window.IRON_PIT_BROWSER_BREATHING?.blocksRecovery(state)) return 0;
       const ceiling = Math.floor(S().effectiveMaxHp(state) * numerator / denominator);
