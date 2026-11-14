@@ -295,7 +295,11 @@ jobs:
           grep -q 'id="load-combat-button"' index.html
           grep -q '>Review log<' index.html
           grep -q 'id="download-log-button"' index.html
-          grep -q '>Download log<' index.html
+          grep -q 'id="bulk-save"' index.html
+          grep -q '>Download Full Visible Log<' index.html
+          grep -q 'id="bulk-copy"' index.html
+          grep -q 'id="bulk-bag"' index.html
+          grep -q 'id="bulk-pairs"' index.html
           grep -q 'id="rerun-button"' index.html
           grep -q 'class="pit-chrome"' index.html
           ! grep -q 'Enter the Pit' index.html
