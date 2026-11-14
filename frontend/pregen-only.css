@@ -1,8 +1,13 @@
 /* Only the source-backed individual pregen card fights are visible here. */
-body.pregen-only main>section:not(#test-fight-cards):not(#pregen-log-panel),
+body.pregen-only main>section:not(#single-pregens):not(#pregen-log-panel),
 body.pregen-only main>details{display:none!important}
 body.pregen-only .test-preset-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
 body.pregen-only #pregen-log-panel{margin-top:16px}
 body.pregen-only #pregen-log-panel pre{max-height:65vh;white-space:pre-wrap;overflow:auto;
  background:#0b0b0b;color:#e7e7e7;padding:18px;border:1px solid #5c5146;border-radius:8px}
 body.pregen-only .pregen-log-actions{display:flex;gap:10px;flex-wrap:wrap}
+body.pregen-only .single-filters{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+body.pregen-only .single-filters label{flex:1;min-width:140px}
+body.pregen-only #single-pregens{margin-top:10px}
+body.pregen-only #single-pregen-cards .test-recipe-card{display:flex;flex-direction:column;gap:10px}
+body.pregen-only #single-pregen-cards button{margin-top:auto}
