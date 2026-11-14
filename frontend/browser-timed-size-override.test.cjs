@@ -27,6 +27,9 @@ load("browser-timed-condition-lifecycle.js");
 load("browser-ability-checks.js");
 load("browser-concentration.js");
 load("browser-timed-self-buffs.js");
+window.IRON_PIT_BROWSER_STATE = { effectiveMaxHp: (s) => s.template.max_hp };
+window.IRON_PIT_BROWSER_HEALING_POLICY = { swarm: () => false };
+load("browser-healing.js");
 
 const original = { id: "renamed-fighter", name: "Renamed Fighter", size: "medium" };
 const state = {
@@ -78,7 +81,31 @@ try {
   assert.equal(original.size, "medium");
   assert.equal(window.IRON_PIT_BROWSER_CONCENTRATION.end(state, [state]), true);
   assert.equal(state.template.size, "medium");
-  console.log("Universal browser temporary size/check Advantage and Concentration lifecycle passed.");
+  // Full-HP source-owned expiry is the same generic size cleanup as
+  // Concentration ending. Preserve unrelated effects and the original card.
+  const fullHpAction = { ...action, id: "source-neutral-growth",
+    name: "Source Neutral Growth", endsAtFullHp: true };
+  state.template = { ...state.template, max_hp: 20,
+    timed_self_buff_actions: [fullHpAction] };
+  state.current_hp = 19;
+  state.is_dead = false;
+  const sourceSnapshot = JSON.stringify(state.template);
+  window.IRON_PIT_BROWSER_TIMED.apply(state, "invisible", "external-source", {
+    sourceEffectId: "independent-invisibility",
+    useDefaultPoisonRecovery: false,
+  });
+  window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.resolve(
+    4, 4, member, fullHpAction, { spendActionCost: false },
+  );
+  assert.equal(state.template.size, "large");
+  assert.equal(window.IRON_PIT_BROWSER_HEALING.restore(state, 1), 1);
+  assert.equal(state.template.size, "medium");
+  assert.ok(!state.active_effect_ids.includes(fullHpAction.id));
+  assert.ok(state.active_effect_ids.includes("invisible"));
+  assert.equal(state.timed_effects.length, 1);
+  assert.equal(state.timed_effects[0].source_effect_id, "independent-invisibility");
+  assert.equal(JSON.stringify(state.template), sourceSnapshot);
+  console.log("Universal browser temporary size cleanup: group, Concentration and full HP passed.");
 } catch (error) {
   console.error("Universal browser temporary size/check parity failed", error);
   throw error;
