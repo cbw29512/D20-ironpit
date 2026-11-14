@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from app.combat.action_economy import is_available, spend
 from app.domain.breakable_restraints import BreakableObjectSpec, BreakableObjectState
-from app.combat.ability_checks import ability_check_roll_mode, resolve_ability_check_outcome
+from app.combat.ability_checks import ability_check_roll_mode, resolve_ability_check_outcome, skill_check_bonus
 from app.combat.barbarian import rage_active
 from app.combat.condition_immunity import condition_is_immune
 from app.combat.condition_rules import condition_speed_is_zero, has_condition, is_incapacitated
@@ -189,13 +189,18 @@ def _check_mode(state: CombatantState, strength_check: bool, setup=None) -> Roll
 
 
 def _escape_choice(state: CombatantState, setup=None) -> tuple[str, str, int, RollMode]:
-    athletics = state.template.skill_bonuses.get("athletics")
-    acrobatics = state.template.skill_bonuses.get("acrobatics")
-    if athletics is None and acrobatics is None:
-        raise ValueError(f"{state.template.name} lacks certified Athletics/Acrobatics bonuses.")
-    if athletics is not None and (acrobatics is None or athletics >= acrobatics):
-        return "strength", "strength (athletics)", athletics, _check_mode(state, True, setup)
-    return "dexterity", "dexterity (acrobatics)", int(acrobatics), _check_mode(state, False, setup)
+    try:
+        # Shared skill-check math handles both printed proficiency and the
+        # untrained ability modifier when a source monster lists no skill.
+        athletics = skill_check_bonus(state, "strength", "athletics")
+        acrobatics = skill_check_bonus(state, "dexterity", "acrobatics")
+        if athletics >= acrobatics:
+            return "strength", "strength (athletics)", athletics, _check_mode(state, True, setup)
+        return "dexterity", "dexterity (acrobatics)", acrobatics, _check_mode(state, False, setup)
+    except Exception:
+        import logging
+        logging.getLogger(__name__).exception("Unable to determine canonical grapple escape check for %s.", state.template.name)
+        raise
 
 
 def resolve_escape_grapple(
