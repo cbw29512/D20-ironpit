@@ -53,10 +53,10 @@
         },
         async error(index, total, entry, seedValue, error) {
           try {
-            await write(`\n========== FIGHT ${index + 1} OF ${total}: ENGINE FAILURE ==========\n` +
+            await write(`\n========== FIGHT ${index + 1} OF ${total}: ENGINE OR VALIDATION FAILURE ==========\n` +
               `MATCHUP: ${entry.label || entry.source_id} | SEED: ${seedValue}\n` +
               `ERROR: ${error?.stack || error?.message || String(error)}\n` +
-              "No combat events were returned; none have been fabricated.\n");
+              "If events were returned, their full transcript appears above. No missing events have been invented.\n");
           } catch (writeError) {
             console.error("Engine failure could not be preserved in full log", writeError);
             throw writeError;
