@@ -46,7 +46,7 @@ global.document = {
 };
 global.requestAnimationFrame = (callback) => callback();
 load("browser-catalog.js"); load("encounter-picker.js"); load("battle-log-format.js"); load("battle-lab.js"); load("browser-audit.js");
-load("custom-monster-runtime.js"); load("custom-pregen-runtime.js"); load("battlefield-view.js"); load("battle-log-export.js"); load("browser-turbo.js"); load("turbo-view.js"); load("browser-execution.js"); load("battle-actions.js");
+load("custom-monster-runtime.js"); load("custom-pregen-runtime.js"); load("battlefield-view.js"); load("battle-log-export.js"); load("browser-turbo.js"); load("turbo-view.js"); load("browser-execution.js"); load("battle-fight-stop.js"); load("battle-actions.js"); load("player-control-state.js");
 const view = window.IRON_PIT_BATTLEFIELD_VIEW;
 const actions = window.IRON_PIT_BATTLE_ACTIONS;
 let api = null;
