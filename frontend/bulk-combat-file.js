@@ -22,7 +22,7 @@
         "Every engine event is written below, including full raw event fields.\n" +
         "A pass is an observed result, not proof that all source abilities fired.\n\n");
       return {
-        async fight(index, total, entry, seedValue, battle, diagnostic) {
+        async fight(index, total, entry, seedValue, battle, diagnostic, evidence = null) {
           try {
             if (!Array.isArray(battle?.events) || !battle.events.length)
               throw new Error("Engine returned no combat events.");
@@ -37,9 +37,13 @@
             // Narrative retains every event and its rule-audit lines.
             // Raw JSON retains every extra engine field the formatter may not display.
             const narrative = formatter(battle);
+            const coverageText = evidence
+              ? "\n===== OBSERVED AND UNOBSERVED SOURCE ABILITIES =====\n" +
+                JSON.stringify(evidence, null, 2) + "\n"
+              : "";
             const raw = battle.events.map((event, offset) =>
               `EVENT ${offset + 1} RAW: ${JSON.stringify(event)}`).join("\n");
-            await write(header + narrative + "\n\n" + raw +
+            await write(header + narrative + coverageText + "\n\n" + raw +
               "\n========== END FIGHT ==========\n");
             fights++;
           } catch (error) {
