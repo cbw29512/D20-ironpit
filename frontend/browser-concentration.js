@@ -17,12 +17,20 @@
   }
 
   function removeTimed(states, sourceId, effectId) {
-    for (const state of states) {
-      const removed = new Set(state.timed_effects.filter((effect) => effect.source_id === sourceId && effect.source_effect_id === effectId).map((effect) => effect.effect_id));
-      state.timed_effects = state.timed_effects.filter((effect) => !(effect.source_id === sourceId && effect.source_effect_id === effectId));
-      for (const conditionId of removed) {
-        if (!state.timed_effects.some((effect) => effect.effect_id === conditionId)) state.active_effect_ids = state.active_effect_ids.filter((id) => id !== conditionId);
+    try {
+      // Concentration must use canonical per-effect lifecycle cleanup:
+      // reverting owned size, removing owned curses, then clearing conditions.
+      const timed = window.IRON_PIT_BROWSER_TIMED;
+      for (const state of states) {
+        const owned = (state.timed_effects || []).filter((effect) =>
+          effect.source_id === sourceId && effect.source_effect_id === effectId);
+        if (owned.length && typeof timed?.removeEffect !== "function")
+          throw new Error("Concentration removal requires the shared timed-effect lifecycle.");
+        for (const effect of owned) timed.removeEffect(state, effect);
       }
+    } catch (error) {
+      console.error("Concentration-owned timed effect cleanup failed", {sourceId, effectId, error});
+      throw error;
     }
   }
 
