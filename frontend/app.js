@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   const MAX_SLOTS = 6;
-  const state = { ruleset: "2014", catalog: null, heroSlots: Array(MAX_SLOTS).fill(null), monsterSlots: Array(MAX_SLOTS).fill(null), fighting: false, hasRun: false, turboBatch: null, session: null };
+  const state = { ruleset: "2014", catalog: null, heroSlots: Array(MAX_SLOTS).fill(null), monsterSlots: Array(MAX_SLOTS).fill(null), fighting: false, liveFightRunning: false, stopFightRequested: false, hasRun: false, turboBatch: null, session: null };
   const el = (id) => document.getElementById(id);
   const view = () => window.IRON_PIT_BATTLEFIELD_VIEW;
   const picker = () => window.IRON_PIT_BATTLEFIELD_PICKER;
@@ -21,7 +21,12 @@
   function updateControls() {
     const ready = state.heroSlots.some(Boolean) && state.monsterSlots.some(Boolean);
     const active = Boolean(state.session && !state.session.complete);
-    for (const id of ["fight-button", "step-fight-button", "turbo-button"]) el(id).disabled = state.fighting || active || !ready;
+    // The single Fight control stays enabled to stop its own live replay.
+    const stoppingAvailable = state.fighting && state.liveFightRunning;
+    const fight = el("fight-button");
+    fight.textContent = stoppingAvailable ? "Stop Fight" : "Fight";
+    fight.disabled = !stoppingAvailable && (state.fighting || active || !ready);
+    for (const id of ["step-fight-button", "turbo-button"]) el(id).disabled = state.fighting || active || !ready;
     el("rerun-button").disabled = state.fighting || active || !state.hasRun;
     el("quick-test").disabled = state.fighting || active;
     if (el("bag-all-button")) el("bag-all-button").disabled = state.fighting || active;
