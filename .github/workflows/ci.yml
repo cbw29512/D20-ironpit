@@ -639,6 +639,7 @@ jobs:
           node frontend/browser-save-grapple-capacity.test.cjs
           node frontend/browser-breathing.test.cjs
           node frontend/browser-grapple-helper-rescue.test.cjs
+          node frontend/browser-untrained-grapple-escape.test.cjs
           node frontend/browser-swallow-advanced.test.cjs
           node frontend/browser-bite-hit-swallow-save.test.cjs
           node frontend/browser-corrosion-roll-integration.test.cjs
