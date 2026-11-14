@@ -709,6 +709,7 @@ jobs:
           node frontend/battlefield-bag.test.cjs
           node frontend/bulk-combat.test.cjs
           node frontend/player-six-v-six.test.cjs
+          node frontend/battlefield-picker-bag.test.cjs
           node frontend/bulk-combat-worker.test.cjs
           node frontend/bulk-combat-preset.test.cjs
           node frontend/pregen-single.test.cjs

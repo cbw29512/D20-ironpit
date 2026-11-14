@@ -6,6 +6,25 @@
   const ready = (item) => Boolean(item?.runnable_template_id && (item?.coverage_status === "raw_ready" || (active?.side === "monsters" && item?.custom && item?.kind === "monster" && item.coverage_status === "custom_ready" && item.compiled_template) || (active?.side === "heroes" && item?.custom && item?.kind === "character" && item.coverage_status === "custom_ready" && item.compiled_template)));
   let active = null;
   const customCards = (kind, ruleset) => (window.IRON_PIT_CUSTOM_LIBRARY?.list(kind, ruleset) || []).map(item => kind === "monster" ? window.IRON_PIT_CUSTOM_MONSTER_RUNTIME?.decorate(item) || item : window.IRON_PIT_CUSTOM_PREGEN_RUNTIME?.decorate(item) || item);
+  // A picker-only training option: NEVER add this to the 327 official source cards.
+  // Reuse the exact compiled homebrew template used by the live Punching Bag tests.
+  function selectableMonsters(state) {
+    try {
+      const factory = window.IRON_PIT_BATTLEFIELD_BAG_RUNNER;
+      const official = state.catalog.monsters;
+      const saved = customCards("monster", state.ruleset);
+      // Standalone editors and old test fixtures omit the optional training
+      // module. Retain the official/custom picker rather than blocking it.
+      if (!factory?.bagCard) return [...official, ...saved];
+      const bag = {...factory.bagCard(state.ruleset), test_only: true};
+      if ([...official, ...saved].some(card => card.id === bag.id))
+        throw new Error("Punching Bag picker ID conflicts with an existing card.");
+      return [...official, bag, ...saved];
+    } catch (error) {
+      console.error("Could not load CR 0 Punching Bag for the battlefield picker", error);
+      throw error;
+    }
+  }
   const customPreview = (card) => {
     const frame = el("picker-portrait");
     if (frame && card?.custom) {
@@ -95,6 +114,7 @@
   function monsterNote(state, rows, chosen) {
     const certified = rows.filter(ready).length;
     if (!rows.length) return "No monsters exist at this Challenge Rating.";
+    if (chosen?.test_only) return "TEST ONLY · CR 0 · AC 10 · 10,000 HP · zero-damage training opponent (not an official monster).";
     if (chosen?.custom) return ready(chosen) ? `✦ CUSTOM MONSTER · ${chosen.name} · ready for homebrew battle (not official RAW-certified).` : `✦ CUSTOM MONSTER · ${chosen.name} · ${chosen.compile_error || "draft not ready for combat"}`;
     if (chosen && !ready(chosen)) return `${chosen.name} is listed, but is not ready to fight yet.`;
     if (state.ruleset === "2014") return `${rows.length} 2014 monster${rows.length === 1 ? "" : "s"} at this Challenge Rating.`;
@@ -102,8 +122,8 @@
   }
 
   function populateMonster(state, existing, side = "monsters") {
-    const all = [...state.catalog.monsters, ...customCards("monster", state.ruleset)], crSelect = el("picker-cr"), monsterSelect = el("picker-monster");
-    crSelect.replaceChildren(option("all", `All CRs · ${all.length} monsters`, true));
+    const all = selectableMonsters(state), crSelect = el("picker-cr"), monsterSelect = el("picker-monster");
+    crSelect.replaceChildren(option("all", `All CRs · ${all.length} choices`, true));
     P().challengeRatings(state.catalog.monsters).forEach((cr) => crSelect.append(option(cr, `CR ${cr}`)));
     if (all.some(item => item.custom)) crSelect.append(option("custom", "✦ Custom Monsters"));
 
@@ -114,10 +134,13 @@
       el("confirm-card").textContent = ready(chosen) ? "Add to slot" : "Not available";
       renderPreview(chosen, "monsters");
     }
+    const eligible = () => crSelect.value === "custom"
+      ? all.filter(item => item.custom && !item.test_only)
+      : P().sortedMonsters(all.filter(item => !item.custom || item.test_only), crSelect.value);
     function refreshMonsters() {
-      const rows = crSelect.value === "custom" ? all.filter(item => item.custom) : P().sortedMonsters(all.filter(item => !item.custom), crSelect.value); monsterSelect.replaceChildren();
+      const rows = eligible(); monsterSelect.replaceChildren();
       rows.forEach((monster) => monsterSelect.append(option(
-        monster.id, monster.custom ? `✦ CUSTOM · ${monster.name} · ${ready(monster) ? "playable homebrew" : "draft (not ready)"}` : `CR ${monster.challenge_rating} · ${monster.name}${ready(monster) ? "" : " · not available"}`,
+        monster.id, monster.test_only ? "CR 0 · Punching Bag · TEST ONLY" : monster.custom ? `✦ CUSTOM · ${monster.name} · ${ready(monster) ? "playable homebrew" : "draft (not ready)"}` : `CR ${monster.challenge_rating} · ${monster.name}${ready(monster) ? "" : " · not available"}`,
         monster.id === existing?.id,
       )));
       const existingShown = existing && rows.some((monster) => monster.id === existing.id), firstReady = rows.find(ready);
@@ -126,16 +149,16 @@
       else if (rows[0]) monsterSelect.value = rows[0].id;
       refreshNote(rows);
     }
-    if (existing) crSelect.value = existing.custom ? "custom" : String(existing.challenge_rating);
+    if (existing) crSelect.value = existing.custom && !existing.test_only ? "custom" : String(existing.challenge_rating);
     crSelect.onchange = refreshMonsters;
-    monsterSelect.onchange = () => refreshNote(crSelect.value === "custom" ? all.filter(item => item.custom) : P().sortedMonsters(all.filter(item => !item.custom), crSelect.value));
+    monsterSelect.onchange = () => refreshNote(eligible());
     refreshMonsters();
   }
 
   function selectedCard(state) {
     if (!active) return null;
     if (el("picker-kind").value === "pregen") return chosenHero(state);
-    return [...state.catalog.monsters, ...customCards("monster", state.ruleset)].find((monster) => monster.id === el("picker-monster").value) || null;
+    return selectableMonsters(state).find((monster) => monster.id === el("picker-monster").value) || null;
   }
 
   function open(state, side, index, onConfirm, onRemove) {

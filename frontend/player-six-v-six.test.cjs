@@ -16,8 +16,12 @@ try {
     "Mirrored layout must retain original full-size desktop card heights.");
   assert.match(css, /width:\s*min\(100%,210px\)/,
     "Desktop portraits need their full 210px picture area.");
-  assert.match(css, /aspect-ratio:\s*1\s*\/\s*1/,
-    "Portrait art must remain square rather than stretched into a narrow strip.");
+  assert.match(css, /aspect-ratio:\s*3\s*\/\s*4/,
+    "Portrait frame must preserve the original 480x640 source proportions.");
+  assert.match(css, /flex:\s*0\s+0\s+auto/,
+    "Portraits must not collapse in the flex-column card.");
+  assert.match(css, /\.portrait-image\s*\{\s*object-fit:\s*contain/,
+    "Show the complete picture rather than center-cropping artwork.");
   assert.match(css, /max-height:\s*none/,
     "Mirrored layout must not clamp portraits below the full frame.");
   assert.doesNotMatch(css, /max-height:\s*(?:52|72)px/,
