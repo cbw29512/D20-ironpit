@@ -48,7 +48,7 @@
     }
   }
 
-  function progress(report, label) {
+  function progress(report, label, currentFight = "") {
     try {
       const bar = $("bulk-progress");
       bar.max = report.total;
@@ -56,7 +56,8 @@
       $("bulk-status").textContent = `${label}: ${report.completed.toLocaleString()} / ` +
         `${report.total.toLocaleString()} · ${report.passed.toLocaleString()} passed · ` +
         `${report.failed.toLocaleString()} failed` +
-        (report.stopped ? " · stopped" : "");
+        (report.stopped ? " · stopped" : "") +
+        (currentFight ? " · Now: " + currentFight : "");
     } catch (error) {
       console.error("Could not update bulk combat progress", error);
       throw error;
