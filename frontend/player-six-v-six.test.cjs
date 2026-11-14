@@ -88,7 +88,7 @@ try {
       assert.equal((segment.match(new RegExp('class="battle-card empty-slot ' + side + '"', "g")) || []).length,
         6, pageName + " must offer exactly six initial combatant slots for " + side);
     }
-    assert.ok(html.indexOf('href="player-six-v-six.css(?:\?v=20261114-fixed12)?"') >
+    assert.ok(html.indexOf('href="player-six-v-six.css') >
       html.indexOf('href="bulk-combat.css"'), "Mirrored formation must override legacy board styles.");
   }
   console.log("Mirrored 6v6: 3 ranged + 3 melee per team, one Fight button, no engine edits.");
