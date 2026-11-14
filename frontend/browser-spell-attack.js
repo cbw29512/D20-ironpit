@@ -183,7 +183,7 @@
       A().applyDamage(target.state, applied, critical, appliedTypes, states, setup, damageComponents, caster.combatant_id);
       if (hit && target.state.is_alive && !target.state.is_dead) {
         (spell.onHitModifierEffects || []).forEach((effect, index) => {
-          M().add(target.state, SM().build(caster.combatant_id, target.combatant_id, spell, effect, index, round));
+          M().add(target.state, SM().build(caster.combatant_id, target.combatant_id, spell, effect, index, round), {refreshExpiry: true});
         });
         (spell.onHitTimedEffects || []).forEach((effect) => {
           const appliedId = T().apply(target.state, effect.effectId, caster.combatant_id, {
