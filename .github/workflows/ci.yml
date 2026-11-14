@@ -708,6 +708,7 @@ jobs:
           node frontend/engine-test-lab-bag-combat-log.test.cjs
           node frontend/battlefield-bag.test.cjs
           node frontend/bulk-combat.test.cjs
+          node frontend/bulk-combat-preset.test.cjs
           node frontend/pregen-single.test.cjs
           node frontend/battlefield-bag-full-roster.test.cjs
           node --check frontend/engine-test-lab-punching-bag.js
