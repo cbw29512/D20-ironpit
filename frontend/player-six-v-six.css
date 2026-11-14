@@ -38,15 +38,22 @@ body.player-mode #pit .battle-card.empty-slot {
   min-height: 220px;
   gap: 7px;
 }
-/* Keep portraits square at their original desktop scale; don't shrink art
-   when arranging the six slot nodes into mirrored formation columns. */
+/* Match original 480x640 portrait art. A flex item with only aspect-ratio
+   still shrinks in a tall card; prevent that or the image becomes a strip. */
 body.player-mode #pit .battle-card .fighter-portrait {
   width: min(100%,210px);
   height: auto;
   max-height: none;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 3 / 4;
+  flex: 0 0 auto;
+  align-self: center;
   margin-left: auto;
   margin-right: auto;
+}
+/* The whole source picture must be visible, not cropped to a square. */
+body.player-mode #pit .battle-card .portrait-image {
+  object-fit: contain;
+  object-position: center;
 }
 body.player-mode #pit .card-name {
   font-size: .76rem;
