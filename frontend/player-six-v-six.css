@@ -1,0 +1,92 @@
+/* Six combatants per team: indexes 0–2 are the inner melee display,
+   indexes 3–5 the outer ranged display. The combat engine continues to
+   assign true front/back behavior from immutable source-card mechanics.
+   This stylesheet only places existing six slot DOM nodes. */
+body.player-mode #pit {
+  grid-template-columns: minmax(0,1fr) minmax(136px,174px) minmax(0,1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  min-height: 0;
+}
+body.player-mode #pit .battle-side { min-width: 0; }
+body.player-mode #pit .lane-headers {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 8px;
+  margin-bottom: 6px;
+  color: #e7c98b;
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-align: center;
+}
+body.player-mode #pit .battle-slots {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  grid-template-rows: repeat(3,minmax(0,1fr));
+  gap: 8px;
+  align-items: stretch;
+}
+body.player-mode #pit .battle-slots > * { min-width: 0; }
+body.player-mode #pit .battle-card {
+  min-height: 168px;
+  padding: 8px 5px;
+  border-radius: 12px;
+}
+body.player-mode #pit .battle-card.empty-slot {
+  min-height: 168px;
+  gap: 3px;
+}
+body.player-mode #pit .battle-card .fighter-portrait,
+body.player-mode #pit .battle-card .stick-figure { max-height: 72px; }
+body.player-mode #pit .card-name {
+  font-size: .76rem;
+  line-height: 1.2;
+  padding: 4px 24px 1px;
+}
+body.player-mode #pit .card-meta { font-size: .58rem; min-height: 0; }
+body.player-mode #pit .battle-controls {
+  align-self: center;
+  justify-self: stretch;
+  min-height: 0;
+  padding: 8px 2px;
+}
+body.player-mode #pit .fight-button {
+  width: 100%;
+  max-width: 174px;
+  min-height: 64px;
+  padding: 14px 8px;
+  font-size: clamp(1.2rem,2vw,1.85rem);
+}
+/* Team A: ranged outside (left), melee inside (right). */
+body.player-mode #hero-slots > :nth-child(1) { grid-area: 1 / 2; }
+body.player-mode #hero-slots > :nth-child(2) { grid-area: 2 / 2; }
+body.player-mode #hero-slots > :nth-child(3) { grid-area: 3 / 2; }
+body.player-mode #hero-slots > :nth-child(4) { grid-area: 1 / 1; }
+body.player-mode #hero-slots > :nth-child(5) { grid-area: 2 / 1; }
+body.player-mode #hero-slots > :nth-child(6) { grid-area: 3 / 1; }
+/* Team B: melee inside (left), ranged outside (right). */
+body.player-mode #monster-slots > :nth-child(1) { grid-area: 1 / 1; }
+body.player-mode #monster-slots > :nth-child(2) { grid-area: 2 / 1; }
+body.player-mode #monster-slots > :nth-child(3) { grid-area: 3 / 1; }
+body.player-mode #monster-slots > :nth-child(4) { grid-area: 1 / 2; }
+body.player-mode #monster-slots > :nth-child(5) { grid-area: 2 / 2; }
+body.player-mode #monster-slots > :nth-child(6) { grid-area: 3 / 2; }
+@media (max-width: 900px) {
+  body.player-mode #pit { grid-template-columns: 1fr; gap: 10px; }
+  body.player-mode #pit .battle-controls {
+    grid-row: 2;
+    padding: 8px;
+    width: 100%;
+  }
+  body.player-mode #pit .battle-controls .fight-button { max-width: 300px; }
+  body.player-mode #pit .battle-card,
+  body.player-mode #pit .battle-card.empty-slot { min-height: 138px; }
+}
+@media (max-width: 480px) {
+  body.player-mode #pit .battle-slots { gap: 5px; }
+  body.player-mode #pit .battle-card .fighter-portrait,
+  body.player-mode #pit .battle-card .stick-figure { max-height: 52px; }
+  body.player-mode #pit .card-name { font-size: .7rem; }
+}
