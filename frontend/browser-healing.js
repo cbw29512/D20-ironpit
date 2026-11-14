@@ -7,17 +7,33 @@
   const R = () => window.IRON_PIT_BROWSER_HEALING_RESOLUTION;
 
   function syncHpEndedSelfBuffs(state) {
-    const runtime = window.IRON_PIT_BROWSER_STATE;
-    if (!runtime?.effectiveMaxHp || state.current_hp < runtime.effectiveMaxHp(state)) return [];
-    const ended = (state.template.timed_self_buff_actions || [])
-      .filter((action) => action.endsAtFullHp && (state.active_effect_ids || []).includes(action.id))
-      .map((action) => action.id);
-    if (ended.length) {
-      state.active_effect_ids = (state.active_effect_ids || []).filter((id) => !ended.includes(id));
-      state.timed_effects = (state.timed_effects || [])
-        .filter((effect) => !ended.includes(effect.effect_id) && !ended.includes(effect.source_effect_id));
+    try {
+      const runtime = window.IRON_PIT_BROWSER_STATE;
+      if (!runtime?.effectiveMaxHp || state.current_hp < runtime.effectiveMaxHp(state)) return [];
+      const ended = (state.template.timed_self_buff_actions || [])
+        .filter((action) => action.endsAtFullHp && (state.active_effect_ids || []).includes(action.id))
+        .map((action) => action.id);
+      if (ended.length) {
+        const timed = window.IRON_PIT_BROWSER_TIMED;
+        for (const effect of [...(state.timed_effects || [])]) {
+          if (!(state.timed_effects || []).includes(effect)) continue;
+          if (!ended.includes(effect.effect_id) && !ended.includes(effect.source_effect_id)) continue;
+          // Use the same state-restoring source-group cleanup as expiry and
+          // Concentration; filtering arrays directly strands owned size.
+          if (typeof timed?.removeGroup !== "function")
+            throw new Error("Full-HP self-buff cleanup requires the shared timed-effect lifecycle.");
+          timed.removeGroup(state, effect);
+        }
+        state.active_effect_ids = (state.active_effect_ids || [])
+          .filter((id) => !ended.includes(id));
+      }
+      return ended;
+    } catch (error) {
+      console.error("Full-HP self-buff cleanup failed", {
+        combatant: state?.template?.name, error,
+      });
+      throw error;
     }
-    return ended;
   }
 
   function restore(state, amount) {
