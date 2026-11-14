@@ -32,8 +32,8 @@ def apply_or_stack_hp_loss(
             if matched.ends_on_magical_healing != ends_on_magical_healing:
                 raise ValueError("An existing source wound has incompatible healing-removal semantics.")
             new_count = matched.start_of_turn_hp_loss_dice_count + dice_count
-            if new_count > 40:
-                raise ValueError("Ongoing HP-loss stacks exceed the supported dice limit.")
+            # A single hit is source-capped, but its accumulated wound
+            # grows with each additional legal hit; 40 is not a stack cap.
             matched.start_of_turn_hp_loss_dice_count = new_count
             return new_count
         effect = TimedEffect(
