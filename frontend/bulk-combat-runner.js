@@ -93,10 +93,10 @@
         control = flag;
         api.state.fighting = true;
         $("bulk-bag").disabled = $("bulk-pairs").disabled = true;
-        $("bulk-stop").disabled = false;
+        $("bulk-stop").disabled = false; $("bulk-export").disabled = true;
         let writer = null, report = null, exportClosed = true;
         try {
-          // User click opens the streaming destination BEFORE any planning awaits.
+          // Record privately without a file dialog or blocking the fights.
           writer = await window.IRON_PIT_BULK_COMBAT_FILE.open(mode, BASE_SEED);
           await api.ensureRuleset("2024", true);
           await api.ensureRuleset("2014", true);
@@ -128,10 +128,10 @@
           control = null;
           api.state.fighting = false;
           $("bulk-bag").disabled = $("bulk-pairs").disabled = false;
-          $("bulk-stop").disabled = true;
+          $("bulk-stop").disabled = true; $("bulk-export").disabled = !window.IRON_PIT_BULK_COMBAT_FILE.latestName();
           api.updateControls();
           if (report && !report.fatal_error && exportClosed)
-            $("bulk-status").textContent += " · Full TXT transcript saved.";
+            $("bulk-status").textContent += " · Full logs recorded locally. Click Download Full Test Logs to save.";
         }
       }
       window.IRON_PIT_BULK_COMBAT_UI.install(start, () => {
