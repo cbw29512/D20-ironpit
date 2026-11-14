@@ -94,13 +94,14 @@
 <button id="bulk-bag" type="button">Fight Everything vs Punching Bag</button>
 <button id="bulk-pairs" type="button">Fight Every Pregen vs Every Monster</button>
 <button id="bulk-stop" type="button" disabled>Stop</button>
+<button id="bulk-export" type="button" disabled>Download Full Test Logs</button>
 </div>
 <p>Both editions. Punching Bag: 3 seeded fights per playable monster and pregen.
 All Pairs: every same-edition pregen × monster matchup, plus prepared battles.
-Choose a file when prompted: every round, event, roll, rule audit, and raw engine event
-will be streamed to that full TXT transcript, including failures.</p>
+Click Fight to start immediately. Every round, roll, rule audit, and raw event is recorded
+privately in this browser, including failures. Click Download Full Test Logs when finished.</p>
 <progress id="bulk-progress" max="1" value="0" aria-label="Bulk fight progress"></progress>
-<p id="bulk-status" role="status" aria-live="polite">Choose a test to begin. Full logs are saved as the fights run.</p>
+<p id="bulk-status" role="status" aria-live="polite">Choose a test to begin. Complete logs are recorded locally without a file popup.</p>
 </section>
 <section class="log-panel" aria-labelledby="battle-log-heading"><div class="result-heading"><div><span class="side-label">FIGHT RESULTS</span><h2 id="battle-log-heading">Fight log</h2></div><div class="log-toolbar"><span class="rules-note">2014 rules</span><button id="bulk-copy" type="button">Copy Full Visible Log</button><button id="bulk-save" type="button">Download Full Visible Log</button><button id="download-log-button" type="button" disabled>Legacy Log</button></div></div><div id="battle-log" class="battle-log" role="log" aria-label="Live battle log" aria-live="polite" aria-relevant="additions"><p>Click an empty card slot on each side, then press Fight.</p></div></section>
 <section class="preset-panel" aria-labelledby="preset-heading"><h2 id="preset-heading">Ready-made fights</h2><p>Click a fight to load both sides. Then press Fight, use Turbo to run many fights, or Review log to read a saved fight. 2024 fights switch the ruleset for you.</p><div id="combat-presets" class="combat-presets"></div></section>
@@ -150,6 +151,7 @@ will be streamed to that full TXT transcript, including failures.</p>
 <script defer src="engine-test-lab-bag-fight.js"></script>
 <script defer src="bulk-combat-validation.js"></script>
 <script defer src="bulk-combat-file.js"></script>
+<script defer src="bulk-combat-export.js"></script>
 <script defer src="bulk-combat-ui.js"></script>
 <script defer src="bulk-combat-runner.js"></script>
 <script defer src="app.js"></script>
