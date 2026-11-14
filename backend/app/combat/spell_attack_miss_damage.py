@@ -66,7 +66,7 @@ def apply_spell_attack_damage_outcome(
                     caster.combatant_id, target.combatant_id, spell.id, effect, index,
                     spell.name, concentration_required=spell.concentration,
                     round_number=round_number,
-                ))
+                ), refresh_expiry=True)
             for effect in spell.on_hit_timed_effects:
                 applied = apply_timed_condition(
                     target.state, effect.effect_id, caster.combatant_id,
