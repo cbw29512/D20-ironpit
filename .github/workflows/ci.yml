@@ -295,7 +295,11 @@ jobs:
           grep -q 'id="load-combat-button"' index.html
           grep -q '>Review log<' index.html
           grep -q 'id="download-log-button"' index.html
-          grep -q '>Download log<' index.html
+          grep -q 'id="bulk-save"' index.html
+          grep -q '>Download Full Visible Log<' index.html
+          grep -q 'id="bulk-copy"' index.html
+          grep -q 'id="bulk-bag"' index.html
+          grep -q 'id="bulk-pairs"' index.html
           grep -q 'id="rerun-button"' index.html
           grep -q 'class="pit-chrome"' index.html
           ! grep -q 'Enter the Pit' index.html
@@ -416,7 +420,11 @@ jobs:
           grep -q 'id="load-combat-button"' frontend/index.html
           grep -q '>Review log<' frontend/index.html
           grep -q 'id="download-log-button"' frontend/index.html
-          grep -q '>Download log<' frontend/index.html
+          grep -q 'id="bulk-save"' frontend/index.html
+          grep -q '>Download Full Visible Log<' frontend/index.html
+          grep -q 'id="bulk-copy"' frontend/index.html
+          grep -q 'id="bulk-bag"' frontend/index.html
+          grep -q 'id="bulk-pairs"' frontend/index.html
           grep -q 'id="rerun-button"' frontend/index.html
           grep -q 'class="pit-chrome"' frontend/index.html
           ! grep -q 'Enter the Pit' frontend/index.html
@@ -699,6 +707,9 @@ jobs:
           node frontend/engine-test-lab-bag.test.cjs
           node frontend/engine-test-lab-bag-combat-log.test.cjs
           node frontend/battlefield-bag.test.cjs
+          node frontend/bulk-combat.test.cjs
+          node frontend/bulk-combat-preset.test.cjs
+          node frontend/pregen-single.test.cjs
           node frontend/battlefield-bag-full-roster.test.cjs
           node --check frontend/engine-test-lab-punching-bag.js
           node --check frontend/engine-test-lab-bag-plan.js

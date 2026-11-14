@@ -86,8 +86,12 @@ const vm = require("node:vm");
       createElement:tag => new Element(tag),
       createDocumentFragment:() => new Element("#fragment"),
     };
-    vm.runInNewContext(read("frontend/engine-test-lab-dashboard.js"),
-      {window,document,console});
+    const browserContext = {window, document, console};
+    // The individual page now relies on the same full event formatter as
+    // real fights. Load both canonical log modules before its dashboard.
+    vm.runInNewContext(read("frontend/battle-log-format.js"), browserContext);
+    vm.runInNewContext(read("frontend/battle-log-export.js"), browserContext);
+    vm.runInNewContext(read("frontend/engine-test-lab-dashboard.js"), browserContext);
     await new Promise(resolve => setImmediate(resolve));
     const cards = ids["test-preset-cards"].children;
     assert.equal(cards.length,1,"One source recipe must create one fight card");

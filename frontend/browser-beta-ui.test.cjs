@@ -29,8 +29,12 @@ for (const page of [html, rootHtml]) {
   assert.ok(board >= 0, "board must exist");
   assert.ok(board === 0, "the live arena must be the first section on the page");
   assert.match(sections[board], /id="pit"/, "the live board is the first visible product surface");
-  assert.match(sections[board + 1], /class="log-panel"/, "log must directly follow the board");
-  assert.match(sections[board + 2], /class="preset-panel"/, "prebuilt fights must directly follow the log");
+  assert.match(sections[board + 1], /id="bulk-tests"/,
+    "two one-click suite buttons must directly follow the board");
+  assert.match(sections[board + 2], /class="log-panel"/,
+    "full combat event log must follow the two bulk controls");
+  assert.match(sections[board + 3], /class="preset-panel"/,
+    "legacy preset DOM hooks remain intact but hidden from the hero page");
 }
 const elements = new Map([...html.matchAll(/\bid="([^"]+)"/g)].map((match) => [match[1], node()]));
 const el = (id) => { assert.ok(elements.has(id), `missing page element #${id}`); return elements.get(id); };
@@ -64,10 +68,19 @@ const click = async (id) => { await el(id).listeners.click(); };
   // Real website loads these before app.js; the UI fixture must too.
   load("engine-test-lab-punching-bag.js"); load("engine-test-lab-bag-coverage.js");
   load("battlefield-bag-report.js"); load("battlefield-bag-runner.js");
-  load("battlefield-bag-controls.js"); load("app.js");
+  load("battlefield-bag-controls.js");
+  load("bulk-combat-validation.js"); load("bulk-combat-file.js"); load("bulk-combat-ui.js");
+  load("bulk-combat-runner.js"); load("app.js");
   const presetButton = (id) => el("combat-presets").children.find((item) => item.dataset?.preset === id);
-  for (let i = 0; i < 40 && !presetButton("goblins"); i += 1) await Promise.resolve();
+  // The 2024 catalog has a real async fetch/fallback during app boot.
+  // Wait for both the original preset panel and the new hero controls.
+  for (let i = 0; i < 200 && (!presetButton("goblins") ||
+    !el("bulk-bag").listeners.click); i += 1)
+    await new Promise(resolve => setTimeout(resolve, 10));
   assert.ok(api, `production app must initialize: ${JSON.stringify(errors)}`);
+  for (const id of ["bulk-bag", "bulk-pairs", "bulk-stop", "bulk-copy", "bulk-save"])
+    assert.ok(typeof el(id).listeners.click === "function",
+      "The simplified player-facing button must be wired: " + id);
   assert.equal(el("combat-presets").children.filter((item) => item.dataset?.preset).length, 25);
   await presetButton("goblins").listeners.click();
   assert.equal(api.state.heroSlots.filter(Boolean).length, 1);

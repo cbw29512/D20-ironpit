@@ -39,7 +39,9 @@ assert.match(html, /combat-review\.js/); assert.match(html, /combat-review\.css/
 assert.match(html, /id="step-fight-button"/); assert.match(html, /id="turbo-count"[^>]+value="100"/);
 assert.match(html, /battle-log-export\.js/);
 assert.match(html, /id="download-log-button"/);
-assert.match(html, />Download log</);
+assert.match(html, /id="bulk-save"[^>]*>Download Full Visible Log</);
+assert.match(html, /id="bulk-copy"[^>]*>Copy Full Visible Log</);
+assert.match(html, /bulk-combat-file\.js/);
 assert.match(html, /class="pit-options-bar"/);
 assert.ok(html.indexOf('class="pit-options-bar"') < html.indexOf('class="formation-board"'), "options bar sits directly below the six-slot arena");
 assert.ok(html.indexOf('id="pit"') < html.indexOf('id="how-heading"'));

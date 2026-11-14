@@ -42,10 +42,20 @@
       resultEl.textContent = pass
         ? "PASS · " + battle.rounds + " rounds · " + events.length + " events"
         : "FAIL · " + problems.join(", ");
-      $("events").textContent = JSON.stringify({
-        label: entry.label, edition: entry.selection.ruleset,
-        seed: entry.seed, outcome: battle?.outcome, problems, events,
-      }, null, 2);
+      // Full readable combat plus full source-owned event data: no excerpts,
+      // omitted rolls, truncated audit steps or limited first-N events.
+      const readable = window.IRON_PIT_BATTLE_LOG_EXPORT.textFromBattle(battle);
+      $("events").textContent = [
+        "IRON PIT — COMPLETE PREGEN FIGHT",
+        entry.label + " | " + entry.selection.ruleset + " | Seed " + entry.seed,
+        "Outcome " + battle.outcome + " | Rounds " + battle.rounds +
+          " | Engine events " + events.length,
+        "Validation: " + (problems.length ? problems.join(", ") : "no detected violations"),
+        "===== EVERY COMBAT ROUND =====", readable,
+        "===== FULL RAW ENGINE EVENT DATA (NO FIELDS OMITTED) =====",
+        JSON.stringify({selection: entry.selection, seed: entry.seed,
+          diagnostic_id: replay.diagnostic_id, events}, null, 2),
+      ].join("\n");
       $("summary").textContent = resultEl.textContent +
         " · Observed mechanics only; untriggered abilities remain unverified.";
       $("events").scrollIntoView({behavior: "smooth", block: "start"});
