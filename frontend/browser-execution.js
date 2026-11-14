@@ -15,6 +15,7 @@
       event_count: session.battle.events?.length || 0,
       started: session.started,
       complete: session.complete,
+      stopped: session.stopped,
       seed: session.seed,
     };
   }
@@ -31,6 +32,8 @@
       eventIndex: 0,
       started: false,
       complete: false,
+      stopped: false,
+      stopRequested: false,
     };
 
     session.begin = async () => {
@@ -68,10 +71,21 @@
       }
     };
 
+    // Stop only the animation/replay. The engine's immutable event evidence
+    // remains intact; consumers export the prefix that was actually watched.
+    session.stop = () => {
+      session.stopRequested = true;
+      return snapshot(session);
+    };
+
     session.watch = async () => {
       try {
         await session.begin();
-        while (!session.complete) await session.step();
+        while (!session.complete && !session.stopRequested) await session.step();
+        if (session.stopRequested) {
+          session.stopped = true;
+          session.complete = true;
+        }
         return snapshot(session);
       } catch (error) {
         console.error("Iron Pit watch execution failed", error);
