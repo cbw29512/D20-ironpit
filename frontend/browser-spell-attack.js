@@ -134,7 +134,11 @@
         ? Math.max(0, slotLevel - spell.level) * (spell.upcastDicePerLevel || 0)
         : 0;
       const count = (spell.damageDiceCount + extraDice) * (critical ? 2 : 1);
-      const rolls = window.IRON_PIT_DICE.rollMany(count, spell.damageDiceSize);
+      if (!Number.isInteger(count) || count < 0)
+        throw new Error("Spell attack requires a nonnegative source dice count.");
+      // Non-damaging spell attacks still hit and apply their source riders.
+      // Python's shared damage helper rolls zero dice without calling the dice pool.
+      const rolls = count ? window.IRON_PIT_DICE.rollMany(count, spell.damageDiceSize) : [];
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (spell.damageBonus || 0);
       const rolledComponents = spell.damageType ? [{
         source: spell.name,

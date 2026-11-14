@@ -60,7 +60,11 @@ function dice(values) {
   const rolls = [...values];
   window.IRON_PIT_DICE = {
     roll: () => rolls.shift(),
-    rollMany: (count) => Array.from({ length: count }, () => rolls.shift()),
+    rollMany: (count) => {
+      if (!Number.isInteger(count) || count < 1)
+        throw new RangeError("Dice count must be positive.");
+      return Array.from({ length: count }, () => rolls.shift());
+    },
   };
 }
 
