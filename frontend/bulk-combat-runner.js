@@ -53,12 +53,12 @@
         // not just failures, samples, first rounds, or observed abilities.
         await writer.fight(index, report.total, entry, seed, battle, diagnostic, evidence);
         if (problems.length) throw new Error(problems.join(", "));
-        report.passed++;
         if (index % 25 === 0 || index === report.total - 1) {
           await window.IRON_PIT_BULK_COMBAT_UI.show(api, entry, battle,
             `Fight ${index + 1} of ${report.total}: ${entry.label}`);
           window.IRON_PIT_BULK_COMBAT_UI.lastBattle = battle;
         }
+        report.passed++;
       } catch (error) {
         console.error("Real bulk combat case failed", {entry, index, seed, error});
         report.failed++;
@@ -94,8 +94,7 @@
         api.state.fighting = true;
         $("bulk-bag").disabled = $("bulk-pairs").disabled = true;
         $("bulk-stop").disabled = false;
-        let writer = null;
-        let report = null;
+        let writer = null, report = null, exportClosed = true;
         try {
           // User click opens the streaming destination BEFORE any planning awaits.
           writer = await window.IRON_PIT_BULK_COMBAT_FILE.open(mode, BASE_SEED);
@@ -121,6 +120,7 @@
           if (writer) {
             try { await writer.close(report || {mode, fatal_error: "Plan unavailable"}); }
             catch (error) {
+              exportClosed = false;
               console.error("Full combat log file close failed", error);
               $("bulk-status").textContent = "Log file could not be finalized: " + error.message;
             }
@@ -130,7 +130,7 @@
           $("bulk-bag").disabled = $("bulk-pairs").disabled = false;
           $("bulk-stop").disabled = true;
           api.updateControls();
-          if (report && !report.fatal_error)
+          if (report && !report.fatal_error && exportClosed)
             $("bulk-status").textContent += " · Full TXT transcript saved.";
         }
       }
