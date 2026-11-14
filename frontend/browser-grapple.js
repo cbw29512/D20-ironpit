@@ -149,13 +149,13 @@
     const source = state.grapple_sources.find((item) => item.restrains) || state.grapple_sources[0];
     // Use the same universal skill-check resolver as all other ability checks:
     // missing proficiency means untrained ability modifier, not a missing action.
-    const hasScores = Boolean(state.template.ability_scores);
-    if (hasScores && typeof A()?.skillBonus !== "function")
-      throw new Error("Canonical skill-check runtime is unavailable for grapple escape.");
-    // Historical explicit-skill fixtures remain valid even without scores.
-    const athletics = hasScores ? A().skillBonus(state, "strength", "athletics")
+    const shared = typeof A()?.skillBonus === "function";
+    // Explicit source skills remain legal in minimal fixtures. When scores
+    // exist, the loaded universal skill runtime supplies missing untrained
+    // ability modifiers and incorporates fight-local score reductions.
+    const athletics = shared ? A().skillBonus(state, "strength", "athletics")
       : state.template.skill_bonuses?.athletics;
-    const acrobatics = hasScores ? A().skillBonus(state, "dexterity", "acrobatics")
+    const acrobatics = shared ? A().skillBonus(state, "dexterity", "acrobatics")
       : state.template.skill_bonuses?.acrobatics;
     if (athletics == null && acrobatics == null)
       throw new Error("Grapple escape requires source-certified ability scores or skills.");
