@@ -18,23 +18,7 @@
     });
   }
 
-  function updateControls() {
-    const ready = state.heroSlots.some(Boolean) && state.monsterSlots.some(Boolean);
-    const active = Boolean(state.session && !state.session.complete);
-    // The single Fight control stays enabled to stop its own live replay.
-    const stoppingAvailable = state.fighting && state.liveFightRunning;
-    const fight = el("fight-button");
-    fight.textContent = stoppingAvailable ? "Stop Fight" : "Fight";
-    fight.disabled = !stoppingAvailable && (state.fighting || active || !ready);
-    for (const id of ["step-fight-button", "turbo-button"]) el(id).disabled = state.fighting || active || !ready;
-    el("rerun-button").disabled = state.fighting || active || !state.hasRun;
-    el("quick-test").disabled = state.fighting || active;
-    if (el("bag-all-button")) el("bag-all-button").disabled = state.fighting || active;
-    el("load-combat-button").disabled = state.fighting || active || !window.IRON_PIT_COMBAT_PRESETS?.selected?.();
-    for (const id of ["reset-fight", "reset-board"]) el(id).disabled = state.fighting;
-    rulesetUi()?.syncDisabled(state);
-    window.IRON_PIT_COMBAT_PRESETS?.sync(state);
-  }
+  function updateControls() { window.IRON_PIT_PLAYER_CONTROL_STATE.update(state); }
 
   function clearResult(message = "Cards loaded. Press Fight when both sides are ready.") {
     el("result-panel").hidden = true; el("pit-round").textContent = "";
