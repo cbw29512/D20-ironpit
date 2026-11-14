@@ -192,9 +192,17 @@ def _escape_choice(state: CombatantState, setup=None) -> tuple[str, str, int, Ro
     try:
         # Shared skill-check math handles both printed proficiency and the
         # untrained ability modifier when a source monster lists no skill.
-        athletics = skill_check_bonus(state, "strength", "athletics")
-        acrobatics = skill_check_bonus(state, "dexterity", "acrobatics")
-        if athletics >= acrobatics:
+        # Legacy source templates may explicitly certify a skill before
+        # ability-score enrichment. Preserve that value when scores are absent.
+        if state.template.ability_scores is None:
+            athletics = state.template.skill_bonuses.get("athletics")
+            acrobatics = state.template.skill_bonuses.get("acrobatics")
+            if athletics is None and acrobatics is None:
+                raise ValueError("Grapple escape requires source-certified ability scores or skills.")
+        else:
+            athletics = skill_check_bonus(state, "strength", "athletics")
+            acrobatics = skill_check_bonus(state, "dexterity", "acrobatics")
+        if athletics is not None and (acrobatics is None or athletics >= acrobatics):
             return "strength", "strength (athletics)", athletics, _check_mode(state, True, setup)
         return "dexterity", "dexterity (acrobatics)", acrobatics, _check_mode(state, False, setup)
     except Exception:
