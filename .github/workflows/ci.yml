@@ -816,6 +816,7 @@ jobs:
           node frontend/browser-holy-aura-blind.test.cjs
           node frontend/browser-matching-dice-leap.test.cjs
           node frontend/browser-pooled-healing.test.cjs
+          node frontend/browser-pool-healing-no-regain.test.cjs
           node frontend/browser-outgoing-healing-maximize.test.cjs
           node frontend/browser-once-per-turn-hit-damage.test.cjs
           node frontend/browser-chain-grapple-periodic.test.cjs
