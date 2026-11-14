@@ -95,8 +95,9 @@ def resolve_hp_threshold_condition(
             affected_states=[member.state for member in [*setup.heroes, *setup.monsters]],
             use_default_poison_recovery=False,
         )
-        if applied is None:
-            raise ValueError(f"{action.name} could not apply {action.condition_id}.")
+        # A target can be immune to the condition without making the
+        # source-legal cast itself invalid. The cost was already spent.
+        affected = applied is not None
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
@@ -105,13 +106,16 @@ def resolve_hp_threshold_condition(
             actor_name=actor.state.template.name,
             target_id=target.combatant_id,
             target_name=target.state.template.name,
-            applied_condition_ids=[applied],
+            applied_condition_ids=[applied] if affected else [],
             feature_id=action.id,
             resource_remaining=remaining,
             animation=action.animation,
             description=(
                 f"{actor.state.template.name} uses {action.name} on {target.state.template.name}; "
-                f"{target.state.template.name} is {action.condition_id.title()}."
+                (
+                    f"{target.state.template.name} is {action.condition_id.title()}."
+                    if affected else f"{target.state.template.name} is unaffected."
+                )
             ),
         )
     except ValueError:
