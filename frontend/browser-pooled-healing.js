@@ -10,8 +10,16 @@
           || numerator <= 0 || denominator <= 0 || numerator > denominator) {
         throw new Error("Pooled-healing HP cap must be a positive fraction no greater than 1.");
       }
-      const ceiling = Math.floor(S().effectiveMaxHp(target.state) * numerator / denominator);
-      return Math.max(0, ceiling - target.state.current_hp);
+      const state = target.state;
+      // Same eligibility as the universal HP restoration primitive.
+      // An active no-healing curse must not become a wasted Channel Action.
+      const policy = window.IRON_PIT_BROWSER_HEALING_POLICY;
+      if (!policy?.swarm) throw new Error("Shared healing eligibility runtime is unavailable.");
+      if (state.is_dead || policy.swarm(state)
+          || (state.timed_effects || []).some((effect) => effect.cannot_regain_hit_points)
+          || window.IRON_PIT_BROWSER_BREATHING?.blocksRecovery(state)) return 0;
+      const ceiling = Math.floor(S().effectiveMaxHp(state) * numerator / denominator);
+      return Math.max(0, ceiling - state.current_hp);
     } catch (error) {
       console.error("Browser pooled-healing capacity failed", {
         target: target?.combatant_id, error,
