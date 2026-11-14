@@ -6,14 +6,32 @@
   const C = () => window.IRON_PIT_BROWSER_DEBUFF_COUNTERS || { prevented: () => false };
   const validate = (item) => window.IRON_PIT_BROWSER_MODIFIER_VALIDATION.validate(item);
 
-  function add(state, modifier) {
-    validate(modifier);
-    const existing = (state.active_modifiers || []).find((item) => item.id === modifier.id);
-    if (existing) {
-      if (JSON.stringify(existing) === JSON.stringify(modifier)) return;
-      throw new Error(`Modifier id ${modifier.id} already exists with different data.`);
+  function add(state, modifier, options = {}) {
+    try {
+      validate(modifier);
+      const existing = (state.active_modifiers || []).find((item) => item.id === modifier.id);
+      if (existing) {
+        if (JSON.stringify(existing) === JSON.stringify(modifier)) return;
+        // Refresh the expiry of an identical repeat-hit effect; never merge
+        // or overwrite an unrelated modifier sharing an invalid ID.
+        const oldExpiry = existing.expires_source_turn_end_round;
+        const newExpiry = modifier.expires_source_turn_end_round;
+        const samePayload = JSON.stringify({
+          ...existing, expires_source_turn_end_round: null,
+        }) === JSON.stringify({...modifier, expires_source_turn_end_round: null});
+        if (options.refreshExpiry && Number.isInteger(oldExpiry)
+          && Number.isInteger(newExpiry) && newExpiry >= oldExpiry && samePayload) {
+          const index = state.active_modifiers.indexOf(existing);
+          state.active_modifiers[index] = {...modifier};
+          return;
+        }
+        throw new Error(`Modifier id ${modifier.id} already exists with different data.`);
+      }
+      state.active_modifiers.push({...modifier});
+    } catch (error) {
+      console.error("Could not add or refresh combat modifier", modifier?.id, error);
+      throw error;
     }
-    state.active_modifiers.push({ ...modifier });
   }
 
   function removeSource(states, sourceId, effectId, concentrationOnly = false) {

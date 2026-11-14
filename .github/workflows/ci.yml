@@ -913,6 +913,7 @@ jobs:
           node frontend/browser-cleric2.test.cjs
           node frontend/browser-cleric4.test.cjs
           node frontend/browser-druid4-2024.test.cjs
+          node frontend/browser-hit-modifier-refresh.test.cjs
           node frontend/browser-druid7-2024.test.cjs
           node frontend/browser-druid8-2024.test.cjs
           node frontend/browser-druid9-2024.test.cjs
