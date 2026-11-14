@@ -420,7 +420,11 @@ jobs:
           grep -q 'id="load-combat-button"' frontend/index.html
           grep -q '>Review log<' frontend/index.html
           grep -q 'id="download-log-button"' frontend/index.html
-          grep -q '>Download log<' frontend/index.html
+          grep -q 'id="bulk-save"' frontend/index.html
+          grep -q '>Download Full Visible Log<' frontend/index.html
+          grep -q 'id="bulk-copy"' frontend/index.html
+          grep -q 'id="bulk-bag"' frontend/index.html
+          grep -q 'id="bulk-pairs"' frontend/index.html
           grep -q 'id="rerun-button"' frontend/index.html
           grep -q 'class="pit-chrome"' frontend/index.html
           ! grep -q 'Enter the Pit' frontend/index.html
