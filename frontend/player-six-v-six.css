@@ -30,16 +30,24 @@ body.player-mode #pit .battle-slots {
 }
 body.player-mode #pit .battle-slots > * { min-width: 0; }
 body.player-mode #pit .battle-card {
-  min-height: 168px;
-  padding: 8px 5px;
-  border-radius: 12px;
+  min-height: 268px;
+  padding: 12px;
+  border-radius: 15px;
 }
 body.player-mode #pit .battle-card.empty-slot {
-  min-height: 168px;
-  gap: 3px;
+  min-height: 220px;
+  gap: 7px;
 }
-body.player-mode #pit .battle-card .fighter-portrait,
-body.player-mode #pit .battle-card .stick-figure { max-height: 72px; }
+/* Keep portraits square at their original desktop scale; don't shrink art
+   when arranging the six slot nodes into mirrored formation columns. */
+body.player-mode #pit .battle-card .fighter-portrait {
+  width: min(100%,210px);
+  height: auto;
+  max-height: none;
+  aspect-ratio: 1 / 1;
+  margin-left: auto;
+  margin-right: auto;
+}
 body.player-mode #pit .card-name {
   font-size: .76rem;
   line-height: 1.2;
@@ -81,12 +89,14 @@ body.player-mode #monster-slots > :nth-child(6) { grid-area: 3 / 2; }
     width: 100%;
   }
   body.player-mode #pit .battle-controls .fight-button { max-width: 300px; }
-  body.player-mode #pit .battle-card,
-  body.player-mode #pit .battle-card.empty-slot { min-height: 138px; }
+  body.player-mode #pit .battle-card { min-height: 220px; }
+  body.player-mode #pit .battle-card.empty-slot { min-height: 180px; }
+  body.player-mode #pit .battle-card .fighter-portrait { width: min(100%,160px); }
 }
 @media (max-width: 480px) {
   body.player-mode #pit .battle-slots { gap: 5px; }
-  body.player-mode #pit .battle-card .fighter-portrait,
-  body.player-mode #pit .battle-card .stick-figure { max-height: 52px; }
+  body.player-mode #pit .battle-card { min-height: 188px; }
+  body.player-mode #pit .battle-card.empty-slot { min-height: 160px; }
+  body.player-mode #pit .battle-card .fighter-portrait { width: min(100%,140px); }
   body.player-mode #pit .card-name { font-size: .7rem; }
 }
