@@ -83,7 +83,7 @@
       }
       report.completed++;
       if (index % 20 === 0 || index === report.total - 1) {
-        window.IRON_PIT_BULK_COMBAT_UI.progress(report, mode);
+        window.IRON_PIT_BULK_COMBAT_UI.progress(report, mode, entry.label);
         await new Promise(resolve => setTimeout(resolve, 0));
       }
     }
