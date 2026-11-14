@@ -149,7 +149,7 @@
     const source = state.grapple_sources.find((item) => item.restrains) || state.grapple_sources[0];
     // Use the same universal skill-check resolver as all other ability checks:
     // missing proficiency means untrained ability modifier, not a missing action.
-    const shared = typeof A()?.skillBonus === "function";
+    const shared = Boolean(state.template.ability_scores) && typeof A()?.skillBonus === "function";
     // Explicit source skills remain legal in minimal fixtures. When scores
     // exist, the loaded universal skill runtime supplies missing untrained
     // ability modifiers and incorporates fight-local score reductions.
