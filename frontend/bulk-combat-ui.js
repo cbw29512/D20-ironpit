@@ -63,12 +63,25 @@
     }
   }
 
-  async function copyVisible() {
+  function visibleTranscript() {
     try {
       const battle = window.IRON_PIT_BULK_COMBAT_UI.lastBattle;
-      if (!battle) throw new Error("Run a battle before copying its log.");
-      const text = window.IRON_PIT_BATTLE_LOG_EXPORT.textFromBattle(battle);
-      await navigator.clipboard.writeText(text);
+      if (!battle?.events?.length) throw new Error("Run a fight before exporting its log.");
+      const readable = window.IRON_PIT_BATTLE_LOG_EXPORT.textFromBattle(battle);
+      return "IRON PIT — COMPLETE VISIBLE FIGHT\n" +
+        "Outcome: " + battle.outcome + " | Rounds: " + battle.rounds +
+        " | Events: " + battle.events.length + "\n" +
+        readable + "\n\nFULL RAW EVENTS (EVERY FIELD)\n" +
+        JSON.stringify(battle.events, null, 2) + "\n";
+    } catch (error) {
+      console.error("Visible fight log formatting failed", error);
+      throw error;
+    }
+  }
+
+  async function copyVisible() {
+    try {
+      await navigator.clipboard.writeText(visibleTranscript());
       $("bulk-status").textContent = "Complete visible fight log copied.";
     } catch (error) {
       console.error("Copy combat log failed", error);
@@ -76,16 +89,34 @@
     }
   }
 
+  function saveVisible() {
+    try {
+      const blob = new Blob([visibleTranscript()], {type: "text/plain;charset=utf-8"});
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "iron-pit-full-visible-fight-" + Date.now() + ".txt";
+      document.body.append(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    } catch (error) {
+      console.error("Visible fight log download failed", error);
+      $("bulk-status").textContent = "Download failed: " + error.message;
+    }
+  }
+
   function install(start, stop) {
     try {
       for (const id of ["bulk-bag", "bulk-pairs", "bulk-stop", "bulk-copy",
-        "bulk-progress", "bulk-status"]) {
+        "bulk-progress", "bulk-status", "bulk-save"]) {
         if (!$(id)) throw new Error("Missing simplified hero control " + id);
       }
       $("bulk-bag").addEventListener("click", () => { void start("bag"); });
       $("bulk-pairs").addEventListener("click", () => { void start("pairs"); });
       $("bulk-stop").addEventListener("click", stop);
       $("bulk-copy").addEventListener("click", () => { void copyVisible(); });
+      $("bulk-save").addEventListener("click", saveVisible);
     } catch (error) {
       console.error("Simplified bulk control installation failed", error);
       throw error;
