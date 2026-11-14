@@ -46,7 +46,8 @@
           throw new Error("Incompatible wound healing-removal semantics.");
         }
         const count = match.start_of_turn_hp_loss_dice_count + diceCount;
-        if (count > 40) throw new Error("HP-loss stack exceeds supported dice limit.");
+        // A legal cumulative wound may exceed one printed hit's dice cap.
+        if (!Number.isSafeInteger(count)) throw new Error("HP-loss stack count is not a safe integer.");
         match.start_of_turn_hp_loss_dice_count = count;
         return count;
       }
