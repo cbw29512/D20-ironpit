@@ -112,7 +112,7 @@ def resolve_hp_threshold_condition(
             animation=action.animation,
             description=(
                 f"{actor.state.template.name} uses {action.name} on {target.state.template.name}; "
-                (
+                + (
                     f"{target.state.template.name} is {action.condition_id.title()}."
                     if affected else f"{target.state.template.name} is unaffected."
                 )
