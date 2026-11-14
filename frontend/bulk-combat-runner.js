@@ -46,7 +46,7 @@
         }
         let problems = [];
         try { problems = window.IRON_PIT_BULK_COMBAT_VALIDATION.inspect(
-          battle, originals, bagActorId); }
+          battle, originals, bagActorId, entry, seed); }
         catch (error) { problems.push("validator_error: " + error.message); }
         if (auditFailure) problems.push("ability_coverage_error: " + auditFailure.message);
         // A raw, lossless transcript is written for EVERY completed fight,
