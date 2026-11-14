@@ -69,7 +69,8 @@ const click = async (id) => { await el(id).listeners.click(); };
   load("engine-test-lab-punching-bag.js"); load("engine-test-lab-bag-coverage.js");
   load("battlefield-bag-report.js"); load("battlefield-bag-runner.js");
   load("battlefield-bag-controls.js");
-  load("bulk-combat-validation.js"); load("bulk-combat-file.js"); load("bulk-combat-ui.js");
+  load("bulk-combat-validation.js"); load("bulk-combat-file.js");
+  load("bulk-combat-export.js"); load("bulk-combat-ui.js");
   load("bulk-combat-runner.js"); load("app.js");
   const presetButton = (id) => el("combat-presets").children.find((item) => item.dataset?.preset === id);
   // The 2024 catalog has a real async fetch/fallback during app boot.
@@ -78,7 +79,7 @@ const click = async (id) => { await el(id).listeners.click(); };
     !el("bulk-bag").listeners.click); i += 1)
     await new Promise(resolve => setTimeout(resolve, 10));
   assert.ok(api, `production app must initialize: ${JSON.stringify(errors)}`);
-  for (const id of ["bulk-bag", "bulk-pairs", "bulk-stop", "bulk-copy", "bulk-save"])
+  for (const id of ["bulk-bag", "bulk-pairs", "bulk-stop", "bulk-copy", "bulk-save", "bulk-export"])
     assert.ok(typeof el(id).listeners.click === "function",
       "The simplified player-facing button must be wired: " + id);
   assert.equal(el("combat-presets").children.filter((item) => item.dataset?.preset).length, 25);
