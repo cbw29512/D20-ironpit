@@ -10,7 +10,7 @@ body{max-width:1200px;margin:auto;padding:1rem;background:#111;color:#eee;font:1
 #bag-panel .bag-card .bag-stats{padding:.4rem .5rem .65rem;font:700 .77rem system-ui;color:#eee0c4}
 #bag-panel .bag-card .bag-test-only{display:block;color:#f1c36f;font:700 .64rem system-ui;letter-spacing:.1em;margin-top:.35rem}
 </style><link rel="stylesheet" href="test-workbench.css"><link rel="stylesheet" href="pregen-only.css"><script data-goatcounter="https://chrisgrowth-ironpit.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-</head><body class="pregen-only"><header><a href="./">← Back to Hero Battlefield</a><h1>Individual Pregen Fights</h1><p>Choose a prepared battle. Each card runs the canonical engine and produces a complete round-by-round log.</p></header><main>
+</head><body class="pregen-only"><header><a href="./">← Back to Hero Battlefield</a><h1>Individual Pregen Fights</h1><p>Choose a pregen card. Each fight uses the canonical engine and produces a complete round-by-round log.</p></header><main>
 <section class="workbench-banner" aria-labelledby="test-dashboard-heading">
 <h2 id="test-dashboard-heading">Battlefield testing</h2>
 <p>Choose a complete test below. All three use the existing Iron Pit combat resolver, immutable source cards and reproducible seeds.</p>
@@ -21,6 +21,15 @@ body{max-width:1200px;margin:auto;padding:1rem;background:#111;color:#eee;font:1
 </div>
 <p class="workbench-note">A pass means no detected violation in the observed fights; untriggered abilities are not automatically certified. The full pairing matrix can be large; Stop and JSON export remain available below.</p>
 <p id="test-dashboard-status" role="status" aria-live="polite"></p>
+</section>
+<section id="single-pregens" aria-labelledby="single-heading">
+<h2 id="single-heading">Choose an individual pregen</h2>
+<p>Every certified 2014 and 2024 pregen, levels 1–20. One button starts one real battle against the harmless 10,000-HP Punching Bag. Copy or download every round and raw combat event below.</p>
+<div class="single-filters"><label>Edition<select id="single-edition"></select></label>
+<label>Level<select id="single-level"></select></label>
+<label>Class<select id="single-class"></select></label></div>
+<p id="single-status" role="status" aria-live="polite">Loading certified pregen cards…</p>
+<div id="single-pregen-cards" class="test-preset-grid"></div>
 </section>
 <section id="test-fight-cards" aria-labelledby="test-fights-heading"><h2 id="test-fights-heading">Choose a pregen fight</h2><p>Each card contains the source matchup, edition, level, seed and expected ability. Press Run this fight to execute the actual engine and see its event log.</p><p id="test-preset-cards-status" role="status" aria-live="polite">Loading certified fights…</p><div id="test-preset-cards" class="test-preset-grid"></div></section>
 <details id="advanced-tests"><summary>Advanced single-fight and diagnostic controls</summary>
@@ -64,4 +73,4 @@ body{max-width:1200px;margin:auto;padding:1rem;background:#111;color:#eee;font:1
 <script defer src="battle-log-export.js"></script>
 <script defer src="engine-test-lab-bag-combat-log.js"></script>
 <script defer src="engine-test-lab-bag-combat-view.js"></script>
-<script defer src="engine-test-lab-bag-ui.js"></script><script defer src="engine-test-lab-dashboard.js"></script><script defer src="pregen-log-ui.js"></script></body></html>
+<script defer src="engine-test-lab-bag-ui.js"></script><script defer src="engine-test-lab-dashboard.js"></script><script defer src="pregen-log-ui.js"></script><script defer src="pregen-single.js"></script></body></html>
