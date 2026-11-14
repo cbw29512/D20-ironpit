@@ -31,6 +31,7 @@ const vm = require("node:vm");
       context, {filename: file});
     load("battle-log-format.js");
     load("battle-log-export.js");
+    load("bulk-combat-validation.js");
     load("bulk-combat-file.js");
     load("bulk-combat-ui.js");
     load("bulk-combat-runner.js");
@@ -43,7 +44,7 @@ const vm = require("node:vm");
       audit: {steps: [{rule: "Attack bonus", detail: "15 + 4 = 19"}]},
       unformatted_provenance: {source_id: "exact-card-id"}};
     const makeBattle = () => ({events: [event], rounds: 1,
-      outcome: "heroes_win", setup: {heroes: [], monsters: []}});
+      outcome: "heroes_win", setup: {heroes: [], monsters: [{combatant_id: "bag-1"}]}});
     const writer = await context.IRON_PIT_BULK_COMBAT_FILE.open("bag", 12345);
     await writer.fight(0, 1, {edition: "2014", label: "Hero vs Bag"},
       51, makeBattle(), "diag-51");
@@ -83,8 +84,12 @@ const vm = require("node:vm");
       return {total: 1, at: () => ({kind: "punching_bag", edition: "2014",
         source_kind: "pregen", source_id: "h14", label: "Hero vs Bag"})};
     }};
+    context.IRON_PIT_TEST_BAG_COVERAGE = {audit: () => ({
+      declared_count: 1, exercised_count: 0, not_observed_count: 1,
+      exercised: [], not_observed: [{id: "limited-ability"}]})};
     context.IRON_PIT_TEST_BAG_FIGHT = {
-      run: () => ({replay: {battle: makeBattle(), diagnostic_id: "bag"}}),
+      run: () => ({replay: {battle: makeBattle(), diagnostic_id: "bag"},
+        source: heroSource, source_actor_id: "h1", bag_actor_id: "bag-1"}),
     };
     context.IRON_PIT_BATTLEFIELD_BAG_RUNNER = {bagCard: () => bag};
     context.IRON_PIT_BATTLEFIELD_REPLAY = {async play() {}};
@@ -110,6 +115,7 @@ const vm = require("node:vm");
     assert.equal((files[1].parts.join("").match(/FIGHT \d+ OF 3/g) || []).length, 3,
       "All three Punching Bag attempts must be fully logged.");
     assert.match(files[1].parts.join(""), /"completed": 3/);
+    assert.match(files[1].parts.join(""), /limited-ability/);
     controls["bulk-pairs"].handlers.click();
     await waitForCompletion();
     assert.equal(files.length, 3);
