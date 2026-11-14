@@ -14,6 +14,8 @@
     try {
       if (!action || ARENA_WALLS.has(action.id) || action.actionCost === "reaction" || (action.castRounds || 1) > 1
         || !E().available(caster.state, action.actionCost)
+        || (action.verbalComponent !== false
+          && window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.verbalBlocked?.(caster, setup))
         || window.IRON_PIT_BROWSER_TEMPORARY_TERRAIN?.spellTerrainSupported?.(action) === false) return null;
       const scaled = H().scaledSpell(action, castLevel);
       const members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
@@ -70,10 +72,13 @@
   function choose(caster, setup, turnKey, protectedAllyIds = []) {
     try {
       const candidates = [], members = new Map([...setup.heroes, ...setup.monsters].map((member) => [member.combatant_id, member]));
+      const verbalBlocked = Boolean(
+        window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.verbalBlocked?.(caster, setup));
       for (const [index, action] of (caster.state.template.spell_save_actions || []).entries()) {
         // No wall creation, even from named/always-prepared save spells.
         if (ARENA_WALLS.has(action.id)) continue;
-        if (action.actionCost === "reaction" || (action.castRounds || 1) > 1
+        if ((verbalBlocked && action.verbalComponent !== false)
+          || action.actionCost === "reaction" || (action.castRounds || 1) > 1
           || action.repeatOnly
           || (action.concentration && caster.state.concentration)
           || !E().available(caster.state, action.actionCost)

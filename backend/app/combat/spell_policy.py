@@ -16,6 +16,7 @@ from app.combat.spell_policy_targeting import (
     single_target_spell_choice,
 )
 from app.combat.spellcasting import legal_slot_levels
+from app.combat.suppression_zone_geometry import verbal_casting_blocked
 from app.combat.temporary_terrain import spell_terrain_is_supported
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.spells import SpellSaveAction
@@ -96,12 +97,15 @@ def choose_spell(
     """Choose the highest-value legal non-Concentration save spell."""
     try:
         candidates: list[tuple[float, int, int, int, SpellChoice]] = []
+        verbal_blocked = verbal_casting_blocked(caster, setup)
         members = {
             member.combatant_id: member
             for member in [*setup.heroes, *setup.monsters]
         }
         for index, action in enumerate(caster.state.template.spell_save_actions):
             if is_arena_unavailable_wall_effect(action.id):
+                continue
+            if verbal_blocked and action.verbal_component:
                 continue
             if (
                 action.action_cost == "reaction"
