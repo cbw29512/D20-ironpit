@@ -30,10 +30,26 @@ try {
     "The art and live card metadata must both fit inside the fixed card.");
   assert.match(css, /aspect-ratio:\s*3\s*\/\s*4/,
     "Show complete 3:4 source portraits in the fixed card.");
+  const hpBar = css.match(/body\.player-mode #pit \.card-hp\s*\{([^}]*)\}/s)?.[1];
+  const hpText = css.match(/body\.player-mode #pit \.hp-text\s*\{([^}]*)\}/s)?.[1];
+  assert.ok(hpBar && hpText, "HP bar and HP label must be styled in player mode.");
+  assert.match(hpBar, /grid-column:\s*1\s*\/\s*-1/, "HP bar must span full card beneath portrait.");
+  assert.match(hpBar, /grid-row:\s*4/, "HP bar must appear in fourth row.");
+  assert.match(hpText, /grid-column:\s*1\s*\/\s*-1/, "HP text must align below full-width HP bar.");
+  assert.match(hpText, /grid-row:\s*5/, "HP text must appear in fifth row.");
   assert.match(css, /\.portrait-image\s*\{\s*object-fit:\s*contain/,
     "Keep full artwork visible rather than center-cropping.");
-  assert.match(css, /\.card-status-lanes\s*\{[^}]*overflow:\s*auto/s,
-    "An unusual number of effects cannot stretch its card or the battlefield.");
+  const statuses = css.match(/body\.player-mode #pit \.card-status-lanes\s*\{([^}]*)\}/s)?.[1];
+  assert.ok(statuses, "The live effect pane must appear inside each occupied battle card.");
+  assert.match(statuses, /grid-column:\s*2;\s*grid-row:\s*3/, "Effects stay beside the portrait.");
+  assert.match(statuses, /grid-template-columns:\s*minmax\(0,1fr\)/,
+    "Buffs and debuffs must each have the full readable metadata-column width.");
+  assert.match(statuses, /overflow-y:\s*auto/,
+    "Extra live effects must scroll inside the card, never enlarge its fixed slot.");
+  assert.match(css, /body\.player-mode #pit \.card-status-lane > small\s*\{[^}]*display:\s*block/s,
+    "Both BUFFS and DEBUFFS headings must remain visible on cards.");
+  assert.match(view, /card-status-buffs.*?<small>BUFFS<\/small>.*?card-buffs.*?card-status-debuffs.*?<small>DEBUFFS<\/small>.*?card-debuffs/s,
+    "Both effect badge containers must remain in every occupied combat card.");
   assert.doesNotMatch(css, /min-height:\s*(?:268|220|188)px/,
     "Old mismatched empty/occupied card minimums must not return.");
   assert.match(app, /const MAX_SLOTS = 6;/);
@@ -72,7 +88,7 @@ try {
       assert.equal((segment.match(new RegExp('class="battle-card empty-slot ' + side + '"', "g")) || []).length,
         6, pageName + " must offer exactly six initial combatant slots for " + side);
     }
-    assert.ok(html.indexOf('href="player-six-v-six.css?v=20261114-fixed12"') >
+    assert.ok(html.indexOf('href="player-six-v-six.css') >
       html.indexOf('href="bulk-combat.css"'), "Mirrored formation must override legacy board styles.");
   }
   console.log("Mirrored 6v6: 3 ranged + 3 melee per team, one Fight button, no engine edits.");
