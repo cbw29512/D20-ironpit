@@ -18,10 +18,14 @@ window.IRON_PIT_BROWSER_ROLLS = {
   modeFromSources: (adv, dis) => adv && !dis ? "advantage" : dis && !adv ? "disadvantage" : "normal",
 };
 window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
+window.IRON_PIT_BROWSER_MODIFIERS = {
+  removeSource: () => {}, d20TestAdvantage: () => 0,
+};
 load("browser-timed-conditions.js");
 load("browser-timed-size-override.js");
 load("browser-timed-condition-lifecycle.js");
 load("browser-ability-checks.js");
+load("browser-concentration.js");
 load("browser-timed-self-buffs.js");
 
 const original = { id: "renamed-fighter", name: "Renamed Fighter", size: "medium" };
@@ -54,7 +58,27 @@ try {
   assert.equal(state.template.size, "medium");
   assert.equal(mode(state, 0, 0, { ability: "strength" }), "normal");
   assert.equal(original.size, "medium");
-  console.log("Universal browser temporary size/check Advantage lifecycle passed.");
+  // Repeat with Concentration. On loss, the canonical effect cleanup must
+  // restore the previous size so a future cast can enlarge again.
+  const concentrating = { ...action, concentration: true };
+  window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.resolve(
+    2, 2, member, concentrating, { spendActionCost: false },
+  );
+  assert.equal(state.template.size, "large");
+  assert.equal(state.concentration.effect_id, "growth");
+  assert.equal(window.IRON_PIT_BROWSER_CONCENTRATION.end(state, [state]), true);
+  assert.equal(state.template.size, "medium");
+  assert.deepEqual(state.timed_effects, []);
+  assert.deepEqual(state.active_effect_ids, []);
+  assert.equal(state.concentration, null);
+  window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.resolve(
+    3, 3, member, concentrating, { spendActionCost: false },
+  );
+  assert.equal(state.template.size, "large");
+  assert.equal(original.size, "medium");
+  assert.equal(window.IRON_PIT_BROWSER_CONCENTRATION.end(state, [state]), true);
+  assert.equal(state.template.size, "medium");
+  console.log("Universal browser temporary size/check Advantage and Concentration lifecycle passed.");
 } catch (error) {
   console.error("Universal browser temporary size/check parity failed", error);
   throw error;

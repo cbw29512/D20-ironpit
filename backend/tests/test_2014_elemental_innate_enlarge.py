@@ -9,6 +9,7 @@ from app.combat.saving_throw_rolls import resolve_saving_throw
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
 from app.combat.timed_condition_lifecycle import remove_effect_group
+from app.combat.concentration import end_concentration
 from app.combat.timed_self_buffs import resolve_timed_self_buff
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
@@ -116,6 +117,25 @@ def test_compiled_real_buff_resource_size_strength_and_weapon_only_damage():
         assert state.template.size == CreatureSize.LARGE
         assert ability_check_roll_mode(state, ability="strength") == RollMode.NORMAL
         assert bonus_damage_modifiers(state, None, melee) == []
+        # Concentration interruption must also invoke source-owned size cleanup
+        # and permit another activation without altering the original card.
+        assert end_concentration(state, [state])
+        second = resolve_timed_self_buff(
+            2, 2, member, action, spend_action_cost=False,
+        )
+        assert second.feature_id == action.id
+        assert state.template.size == CreatureSize.HUGE
+        assert end_concentration(state, [state])
+        assert state.template.size == CreatureSize.LARGE
+        assert not state.timed_effects
+        assert action.id not in state.active_effect_ids
+        third = resolve_timed_self_buff(
+            3, 3, member, action, spend_action_cost=False,
+        )
+        assert third.feature_id == action.id
+        assert state.template.size == CreatureSize.HUGE
+        assert end_concentration(state, [state])
+        assert state.template.size == CreatureSize.LARGE
         assert source.model_dump_json() == before
     except Exception:
         logger.exception("2014 Enlarge activation, modifier or expiry failed.")
