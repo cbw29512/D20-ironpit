@@ -6,6 +6,8 @@ from app.combat.hit_points import effective_max_hp
 from app.combat.zero_hp import restore_hit_points
 from app.domain.encounters import EncounterCombatant
 from app.domain.actions import HealingAction
+from app.domain.traits import CombatTrait
+from app.combat.breathing import suffocation_blocks_recovery
 
 logger = logging.getLogger(__name__)
 
@@ -34,8 +36,15 @@ def pooled_healing_capacity(
     try:
         if cap_numerator <= 0 or cap_denominator <= 0 or cap_numerator > cap_denominator:
             raise ValueError("Pooled-healing HP cap must be a positive fraction no greater than 1.")
-        ceiling = effective_max_hp(target.state) * cap_numerator // cap_denominator
-        return max(0, ceiling - target.state.current_hp)
+        # Match the shared restore_hit_points eligibility before scheduling
+        # a resource-backed healing Action: curses can block actual HP gain.
+        state = target.state
+        if (state.is_dead or CombatTrait.SWARM in state.template.combat_traits
+                or any(effect.cannot_regain_hit_points for effect in state.timed_effects)
+                or suffocation_blocks_recovery(state)):
+            return 0
+        ceiling = effective_max_hp(state) * cap_numerator // cap_denominator
+        return max(0, ceiling - state.current_hp)
     except ValueError:
         raise
     except Exception as exc:
