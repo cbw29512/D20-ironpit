@@ -56,7 +56,11 @@ try {
   for (const pageName of ["index.html", "frontend/index.html"]) {
     const html = fs.readFileSync(path.join(__dirname, "..", pageName), "utf8");
     assert.equal((html.match(/id="fight-button"/g) || []).length, 1,
-      pageName + " must contain only one fight-start button.");
+      pageName + " must contain one shared Fight/Stop button.");
+    assert.ok(html.indexOf('src="battle-fight-stop.js"') < html.indexOf('src="battle-actions.js"'),
+      pageName + " must initialize the replay stop controller before actions.");
+    assert.ok(html.indexOf('src="player-control-state.js"') < html.indexOf('src="app.js"'),
+      pageName + " must initialize the control-state projection before app boot.");
     assert.equal((html.match(/class="lane-headers"/g) || []).length, 2,
       pageName + " requires two mirrored lane legends.");
     assert.match(html, /<span>RANGED<\/span><span>MELEE<\/span><\/div><div id="hero-slots"/);
