@@ -1,12 +1,10 @@
 (() => {
   "use strict";
   // State: {running, stopRequested}; only one bulk suite can own the
-  // battlefield and append-only transcript stream at any moment.
   const BASE_SEED = 12345;
   const BAG_ATTEMPTS = 3;
   const $ = id => document.getElementById(id);
   let control = null;
-
   function inspect(battle, originals) {
     try {
       const problems = [];
@@ -24,7 +22,6 @@
       throw error;
     }
   }
-
   function caseAt(plan, mode, index) {
     try {
       return mode === "bag" ? plan.at(Math.floor(index / BAG_ATTEMPTS)) : plan.at(index);
@@ -33,7 +30,6 @@
       throw error;
     }
   }
-
   async function execute(api, plan, mode, writer, report, flag) {
     const turbo = window.IRON_PIT_BROWSER_TURBO;
     const source = window.IRON_PIT_TEST_ALL_RUNNER?.sources;
@@ -92,7 +88,6 @@
       }
     }
   }
-
   function install(api) {
     try {
       if (!api?.state || !api.ensureRuleset || !api.load || !api.updateControls)
