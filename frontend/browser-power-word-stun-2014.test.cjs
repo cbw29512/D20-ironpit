@@ -86,4 +86,30 @@ assert.equal(target.state.timed_effects[0].repeat_save_ability, "constitution");
 assert.equal(target.state.timed_effects[0].repeat_save_dc, 18);
 assert.equal(target.state.timed_effects[0].repeat_save_timing, "target_turn_end");
 
+// Source-neutral HP-threshold conditions cannot crash on an immune target.
+// The same canonical stunned immunity applies to renamed monster/pregen actions.
+try {
+  const caster = member("Renamed caster", "heroes", 100);
+  const resistant = member("Stun-immune swarm", "monsters", 30);
+  const ability = {...varek.state.template.hp_threshold_condition_actions[0],
+    id:"source-neutral-stun",name:"Renamed Condition Ability",resourceId:"reserve"};
+  caster.state.template.hp_threshold_condition_actions = [ability];
+  caster.state.resources.reserve = 1;
+  resistant.state.template.condition_immunities = ["stunned"];
+  const chosen = P.choose(caster, {heroes:[caster],monsters:[resistant]});
+  assert.equal(chosen.action.id, ability.id);
+  const effect = P.resolve(2, 1, caster, resistant, ability,
+    {heroes:[caster],monsters:[resistant]});
+  assert.equal(effect.feature_id, ability.id);
+  assert.equal(effect.resource_remaining, 0);
+  assert.equal(caster.state.action_available, false);
+  assert.deepEqual(effect.applied_condition_ids, []);
+  assert.deepEqual(resistant.state.active_effect_ids, []);
+  assert.deepEqual(resistant.state.timed_effects, []);
+  assert.match(effect.description, /is unaffected/);
+} catch (error) {
+  console.error("Immune HP-threshold browser regression failed", error);
+  throw error;
+}
+
 console.log("2014 Power Word Stun browser regression passed.");
