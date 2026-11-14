@@ -72,7 +72,11 @@ const click = async (id) => { await el(id).listeners.click(); };
   load("bulk-combat-validation.js"); load("bulk-combat-file.js"); load("bulk-combat-ui.js");
   load("bulk-combat-runner.js"); load("app.js");
   const presetButton = (id) => el("combat-presets").children.find((item) => item.dataset?.preset === id);
-  for (let i = 0; i < 40 && !presetButton("goblins"); i += 1) await Promise.resolve();
+  // The 2024 catalog has a real async fetch/fallback during app boot.
+  // Wait for both the original preset panel and the new hero controls.
+  for (let i = 0; i < 200 && (!presetButton("goblins") ||
+    !el("bulk-bag").listeners.click); i += 1)
+    await new Promise(resolve => setTimeout(resolve, 10));
   assert.ok(api, `production app must initialize: ${JSON.stringify(errors)}`);
   for (const id of ["bulk-bag", "bulk-pairs", "bulk-stop", "bulk-copy", "bulk-save"])
     assert.ok(typeof el(id).listeners.click === "function",
