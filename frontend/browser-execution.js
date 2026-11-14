@@ -15,7 +15,6 @@
       event_count: session.battle.events?.length || 0,
       started: session.started,
       complete: session.complete,
-      stopped: session.stopped,
       seed: session.seed,
     };
   }
