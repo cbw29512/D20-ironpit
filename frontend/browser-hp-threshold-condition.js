@@ -49,16 +49,18 @@
       repeatSaveTiming: action.repeatSaveTiming || "target_turn_end",
       useDefaultPoisonRecovery: false,
     });
-    if (!applied) throw new Error(action.name + " could not apply " + action.conditionId + ".");
+    // A legal cast can be prevented by target immunity. Costs are still spent.
+    const affected = Boolean(applied);
     return {
       sequence, round_number: round, event_type: "feature",
       actor_id: member.combatant_id, actor_name: member.state.template.name,
       target_id: target.combatant_id, target_name: target.state.template.name,
-      applied_condition_ids: [applied], feature_id: action.id,
+      applied_condition_ids: affected ? [applied] : [], feature_id: action.id,
       resource_remaining: action.resourceId ? member.state.resources[action.resourceId] : null,
       animation: action.animation || "condition",
       description: member.state.template.name + " uses " + action.name + " on "
-        + target.state.template.name + "; " + target.state.template.name + " is " + action.conditionId + ".",
+        + target.state.template.name + "; " + target.state.template.name
+        + (affected ? " is " + action.conditionId + "." : " is unaffected."),
     };
   }
 
