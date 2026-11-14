@@ -23,13 +23,29 @@ from app.domain.weapons import WeaponAttack
 logger = logging.getLogger(__name__)
 
 
-def add_modifier(state: CombatantState, modifier: CombatModifier) -> None:
-    existing = next((item for item in state.active_modifiers if item.id == modifier.id), None)
-    if existing is not None:
-        if existing == modifier:
-            return
-        raise ValueError(f"Modifier id {modifier.id} already exists with different data.")
-    state.active_modifiers.append(modifier)
+def add_modifier(
+    state: CombatantState, modifier: CombatModifier, *, refresh_expiry: bool = False,
+) -> None:
+    """Add an owned modifier; optionally refresh only its source-turn expiry."""
+    try:
+        existing = next((item for item in state.active_modifiers if item.id == modifier.id), None)
+        if existing is not None:
+            if existing == modifier:
+                return
+            # Repeated source hits can extend a turn-limited modifier without
+            # stacking duplicate copies. Never overwrite a different payload.
+            old_expiry = existing.expires_source_turn_end_round
+            new_expiry = modifier.expires_source_turn_end_round
+            comparable = existing.model_copy(update={"expires_source_turn_end_round": new_expiry})
+            if (refresh_expiry and old_expiry is not None and new_expiry is not None
+                    and new_expiry >= old_expiry and comparable == modifier):
+                state.active_modifiers[state.active_modifiers.index(existing)] = modifier
+                return
+            raise ValueError(f"Modifier id {modifier.id} already exists with different data.")
+        state.active_modifiers.append(modifier)
+    except Exception:
+        logger.exception("Could not add or refresh source modifier %s.", modifier.id)
+        raise
 
 
 def remove_source_modifiers(
