@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  // State: {running, stopRequested}; only one bulk suite can own the
+  // State: one running suite, stop flag and source-neutral streamed evidence.
   const BASE_SEED = 12345;
   const BAG_ATTEMPTS = 3;
   const $ = id => document.getElementById(id);
@@ -23,7 +23,7 @@
       const entry = caseAt(plan, mode, index);
       const seed = entry.kind === "preset" ? entry.seed :
         turbo.deriveSeed(BASE_SEED, index + 1);
-      let battle = null, diagnostic = null, bagActorId = null, evidence = null;
+      let battle = null, diagnostic = null, bagActorId = null, evidence = null, auditFailure = null;
       try {
         let originals = [];
         if (mode === "bag") {
@@ -31,10 +31,12 @@
           battle = result.replay.battle;
           diagnostic = result.replay.diagnostic_id;
           bagActorId = result.bag_actor_id;
-          evidence = window.IRON_PIT_BULK_COMBAT_VALIDATION.abilityEvidence(
-            result.source, battle.events, result.source_actor_id);
-          if (evidence.not_observed_count)
-            report.bag_attempts_with_unobserved_abilities += 1;
+          try {
+            evidence = window.IRON_PIT_BULK_COMBAT_VALIDATION.abilityEvidence(
+              result.source, battle.events, result.source_actor_id);
+            if (evidence.not_observed_count)
+              report.bag_attempts_with_unobserved_abilities += 1;
+          } catch (error) { auditFailure = error; }
         } else {
           originals = source(entry.selection).map(([, card]) =>
             [card, JSON.stringify(card)]);
@@ -44,6 +46,7 @@
         }
         const problems = window.IRON_PIT_BULK_COMBAT_VALIDATION.inspect(
           battle, originals, bagActorId);
+        if (auditFailure) problems.push("ability_coverage_error: " + auditFailure.message);
         // A raw, lossless transcript is written for EVERY completed fight,
         // not just failures, samples, first rounds, or observed abilities.
         await writer.fight(index, report.total, entry, seed, battle, diagnostic, evidence);
