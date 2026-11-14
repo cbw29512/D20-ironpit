@@ -42,6 +42,7 @@ window.IRON_PIT_BATTLE_LAB = {summary:()=>"Test summary"};
 window.IRON_PIT_RULESET_UI = {syncDisabled(){}};
 window.IRON_PIT_COMBAT_PRESETS = {selected:()=>null,sync(){}};
 
+(async () => {
 try {
   load("browser-execution.js");
   load("player-control-state.js");
@@ -118,3 +119,4 @@ try {
   console.error("Player Fight/Stop regression failed",error);
   process.exitCode=1;
 }
+})();
