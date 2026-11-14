@@ -12,15 +12,15 @@ try {
   const originalPortraits = fs.readFileSync(path.join(__dirname, "figure-portraits.css"), "utf8");
   assert.match(originalPortraits, /max-height:210px/,
     "Original battlefield design must still support full-sized desktop artwork.");
-  assert.match(css, /min-height:\\s*268px/,
+  assert.match(css, /min-height:\s*268px/,
     "Mirrored layout must retain original full-size desktop card heights.");
-  assert.match(css, /width:\\s*min\\(100%,210px\\)/,
+  assert.match(css, /width:\s*min\(100%,210px\)/,
     "Desktop portraits need their full 210px picture area.");
-  assert.match(css, /aspect-ratio:\\s*1\\s*\\/\\s*1/,
+  assert.match(css, /aspect-ratio:\s*1\s*\/\s*1/,
     "Portrait art must remain square rather than stretched into a narrow strip.");
-  assert.match(css, /max-height:\\s*none/,
+  assert.match(css, /max-height:\s*none/,
     "Mirrored layout must not clamp portraits below the full frame.");
-  assert.doesNotMatch(css, /max-height:\\s*(?:52|72)px/,
+  assert.doesNotMatch(css, /max-height:\s*(?:52|72)px/,
     "Do not reintroduce the tiny portrait caps.");
   assert.match(app, /const MAX_SLOTS = 6;/);
   assert.match(view, /const MAX_SLOTS = 6;/);
