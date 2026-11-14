@@ -18,7 +18,9 @@ window.IRON_PIT_BROWSER_ROLLS = {
   modeFromSources: (adv, dis) => adv && !dis ? "advantage" : dis && !adv ? "disadvantage" : "normal",
 };
 window.IRON_PIT_BROWSER_CONDITION_IMMUNITY = { immune: () => false };
-window.IRON_PIT_BROWSER_MODIFIERS = { removeSource: () => {} };
+window.IRON_PIT_BROWSER_MODIFIERS = {
+  removeSource: () => {}, d20TestAdvantage: () => 0,
+};
 load("browser-timed-conditions.js");
 load("browser-timed-size-override.js");
 load("browser-timed-condition-lifecycle.js");
