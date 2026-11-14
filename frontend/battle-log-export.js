@@ -7,6 +7,10 @@
   function remember(battle) {
     try {
       lastBattle = battle && Array.isArray(battle.events) && battle.events.length ? battle : null;
+      // Copy/Save on the simplified hero page must work for manually run
+      // fights as well as the two automated suites.
+      if (window.IRON_PIT_BULK_COMBAT_UI)
+        window.IRON_PIT_BULK_COMBAT_UI.lastBattle = lastBattle;
       const button = el("download-log-button");
       if (button) button.disabled = !lastBattle;
     } catch (error) {
