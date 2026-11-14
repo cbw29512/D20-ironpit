@@ -1,10 +1,9 @@
-/* Six combatants per team: indexes 0–2 are the inner melee display,
-   indexes 3–5 the outer ranged display. The combat engine continues to
-   assign true front/back behavior from immutable source-card mechanics.
-   This stylesheet only places existing six slot DOM nodes. */
+/* Three melee and three ranged slots on each side, unchanged engine slots.
+   Slot dimensions are viewport-derived and NEVER depend on card content. */
 body.player-mode #pit {
+  --pit-slot-size: clamp(182px, calc((100dvh - 190px) / 3), 250px);
   grid-template-columns: minmax(0,1fr) minmax(136px,174px) minmax(0,1fr);
-  align-items: center;
+  align-items: start;
   gap: 10px;
   padding: 12px;
   min-height: 0;
@@ -24,55 +23,77 @@ body.player-mode #pit .lane-headers {
 body.player-mode #pit .battle-slots {
   display: grid;
   grid-template-columns: repeat(2,minmax(0,1fr));
-  grid-template-rows: repeat(3,minmax(0,1fr));
+  grid-template-rows: repeat(3,var(--pit-slot-size));
+  grid-auto-rows: var(--pit-slot-size);
   gap: 8px;
   align-items: stretch;
 }
 body.player-mode #pit .battle-slots > * { min-width: 0; }
 body.player-mode #pit .battle-card {
-  min-height: 268px;
-  padding: 12px;
-  border-radius: 15px;
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--pit-slot-size);
+  min-height: 0;
+  max-height: var(--pit-slot-size);
+  padding: 7px;
+  border-radius: 12px;
+  overflow: hidden;
 }
+/* Equal height for an empty button and a fully populated card. */
 body.player-mode #pit .battle-card.empty-slot {
-  min-height: 220px;
-  gap: 7px;
+  height: var(--pit-slot-size);
+  min-height: 0;
+  max-height: var(--pit-slot-size);
+  gap: 5px;
 }
-/* Match original 480x640 portrait art. A flex item with only aspect-ratio
-   still shrinks in a tall card; prevent that or the image becomes a strip. */
+/* Portrait and stats share the available card height: nothing stretches rows. */
+body.player-mode #pit .battle-card.occupied {
+  display: grid;
+  grid-template-columns: minmax(0,9fr) minmax(0,11fr);
+  grid-template-rows: 30px 26px minmax(0,1fr) 12px 16px;
+  column-gap: 5px;
+  align-items: start;
+}
 body.player-mode #pit .battle-card .fighter-portrait {
-  width: min(100%,210px);
+  grid-column: 1;
+  grid-row: 1 / 6;
+  width: 100%;
   height: auto;
-  max-height: none;
+  max-height: calc(var(--pit-slot-size) - 20px);
   aspect-ratio: 3 / 4;
-  flex: 0 0 auto;
+  flex: none;
   align-self: center;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0;
 }
-/* The whole source picture must be visible, not cropped to a square. */
 body.player-mode #pit .battle-card .portrait-image {
   object-fit: contain;
   object-position: center;
 }
 body.player-mode #pit .card-name {
-  font-size: .76rem;
-  line-height: 1.2;
-  padding: 4px 24px 1px;
+  grid-column: 2; grid-row: 1;
+  min-width: 0; max-height: 30px; overflow: hidden;
+  font-size: .76rem; line-height: 1.2; padding: 2px 22px 0 0;
 }
-body.player-mode #pit .card-meta { font-size: .58rem; min-height: 0; }
+body.player-mode #pit .card-meta {
+  grid-column: 2; grid-row: 2;
+  min-width: 0; min-height: 0; max-height: 26px; overflow: hidden;
+  font-size: .58rem; margin: 0;
+}
+body.player-mode #pit .card-status-lanes {
+  grid-column: 2; grid-row: 3;
+  min-width: 0; min-height: 0; max-height: 100%; overflow: auto;
+}
+body.player-mode #pit .card-hp {
+  grid-column: 2; grid-row: 4; width: 100%; margin: 2px 0;
+}
+body.player-mode #pit .hp-text { grid-column: 2; grid-row: 5; }
 body.player-mode #pit .battle-controls {
-  align-self: center;
-  justify-self: stretch;
-  min-height: 0;
-  padding: 8px 2px;
+  align-self: center; justify-self: stretch;
+  min-height: 0; padding: 8px 2px;
 }
 body.player-mode #pit .fight-button {
-  width: 100%;
-  max-width: 174px;
-  min-height: 64px;
-  padding: 14px 8px;
-  font-size: clamp(1.2rem,2vw,1.85rem);
+  width: 100%; max-width: 174px; min-height: 64px;
+  padding: 14px 8px; font-size: clamp(1.2rem,2vw,1.85rem);
 }
 /* Team A: ranged outside (left), melee inside (right). */
 body.player-mode #hero-slots > :nth-child(1) { grid-area: 1 / 2; }
@@ -89,21 +110,18 @@ body.player-mode #monster-slots > :nth-child(4) { grid-area: 1 / 2; }
 body.player-mode #monster-slots > :nth-child(5) { grid-area: 2 / 2; }
 body.player-mode #monster-slots > :nth-child(6) { grid-area: 3 / 2; }
 @media (max-width: 900px) {
-  body.player-mode #pit { grid-template-columns: 1fr; gap: 10px; }
+  body.player-mode #pit { --pit-slot-size: clamp(182px,26vh,220px); grid-template-columns: 1fr; gap: 10px; }
   body.player-mode #pit .battle-controls {
     grid-row: 2;
     padding: 8px;
     width: 100%;
   }
   body.player-mode #pit .battle-controls .fight-button { max-width: 300px; }
-  body.player-mode #pit .battle-card { min-height: 220px; }
-  body.player-mode #pit .battle-card.empty-slot { min-height: 180px; }
-  body.player-mode #pit .battle-card .fighter-portrait { width: min(100%,160px); }
+
 }
 @media (max-width: 480px) {
   body.player-mode #pit .battle-slots { gap: 5px; }
-  body.player-mode #pit .battle-card { min-height: 188px; }
-  body.player-mode #pit .battle-card.empty-slot { min-height: 160px; }
-  body.player-mode #pit .battle-card .fighter-portrait { width: min(100%,140px); }
+  body.player-mode #pit { --pit-slot-size: 182px; }
+  body.player-mode #pit .battle-card.occupied { column-gap:3px; padding:5px; }
   body.player-mode #pit .card-name { font-size: .7rem; }
 }

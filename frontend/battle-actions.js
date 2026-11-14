@@ -6,6 +6,7 @@
   const view = () => window.IRON_PIT_BATTLEFIELD_VIEW;
   const lab = () => window.IRON_PIT_BATTLE_LAB;
   const turboView = () => window.IRON_PIT_TURBO_VIEW;
+  const fightStop = () => window.IRON_PIT_FIGHT_STOP;
 
   function slotMap(match) {
     return { heroes: match.heroes.indexes, monsters: match.monsters.indexes };
@@ -45,22 +46,25 @@
   }
 
   async function startLive(api, mode) {
+    if (api.state.fighting || (api.state.session && !api.state.session.complete)) return;
     const match = api.matchup(); if (match.error) { el("status").textContent = match.error; return; }
     try {
       window.IRON_PIT_COMBAT_REVIEW?.hide?.();
-      api.state.session = null; api.state.fighting = true; api.render(); api.clearResult();
+      api.state.session = null; api.state.fighting = true; fightStop().begin(api.state, mode); api.render(); api.clearResult();
       el("status").textContent = mode === "step" ? "Preparing a stepped fight…" : "The fight is starting…";
       await new Promise((resolve) => requestAnimationFrame(resolve));
+      if (fightStop().beforeResolve(api.state)) return;
       const session = execution().resolveLive(match.selection, slotMap(match)); api.state.session = session;
       if (mode === "step") {
         await session.begin(); el("status").textContent = `Step ready · 0 / ${session.battle.events.length} events.`;
       } else {
-        await session.watch(); finishSession(api.state, session);
+        await session.watch();
+        if (!fightStop().afterWatch(api, session, writeProgress)) finishSession(api.state, session);
       }
     } catch (error) {
       console.error("Live execution failed", error);
       el("status").textContent = "Fight stopped because a required rule is not available yet.";
-    } finally { api.state.fighting = false; api.updateControls(); syncControls(api.state); }
+    } finally { fightStop().finish(api.state); api.state.fighting = false; api.updateControls(); syncControls(api.state); }
   }
 
   async function nextEvent(api) {
@@ -122,7 +126,7 @@
   }
 
   function install(api) {
-    el("fight-button").addEventListener("click", () => startLive(api, "watch"));
+    el("fight-button").addEventListener("click", () => fightStop().request(api) || startLive(api, "watch"));
     el("rerun-button").addEventListener("click", () => startLive(api, "watch"));
     el("step-fight-button").addEventListener("click", () => startLive(api, "step"));
     el("next-event-button").addEventListener("click", () => nextEvent(api));

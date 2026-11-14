@@ -11,26 +11,36 @@ try {
   const view = fs.readFileSync(path.join(__dirname, "battlefield-view.js"), "utf8");
   const originalPortraits = fs.readFileSync(path.join(__dirname, "figure-portraits.css"), "utf8");
   assert.match(originalPortraits, /max-height:210px/,
-    "Original battlefield design must still support full-sized desktop artwork.");
-  assert.match(css, /min-height:\s*268px/,
-    "Mirrored layout must retain original full-size desktop card heights.");
-  assert.match(css, /width:\s*min\(100%,210px\)/,
-    "Desktop portraits need their full 210px picture area.");
+    "The source art's maximum supported size must remain available outside the compact board.");
+  assert.match(css, /--pit-slot-size:\s*clamp\(/,
+    "Slot size must come from the viewport, never from a card's contents.");
+  assert.match(css, /grid-template-rows:\s*repeat\(3,var\(--pit-slot-size\)\)/,
+    "Both sides must have exactly three identical fixed-height rows.");
+  const slot = css.match(/body\.player-mode #pit \.battle-card\s*\{([^}]*)\}/s)?.[1];
+  const empty = css.match(/body\.player-mode #pit \.battle-card\.empty-slot\s*\{([^}]*)\}/s)?.[1];
+  assert.ok(slot && empty, "Both occupied and empty cards need the same sizing contract.");
+  for (const [kind, rule] of [["common",slot],["empty",empty]]) {
+    assert.match(rule, /height:\s*var\(--pit-slot-size\)/,kind+" cards must have fixed height.");
+    assert.match(rule, /min-height:\s*0/,kind+" cards must not retain the old min-height.");
+    assert.match(rule, /max-height:\s*var\(--pit-slot-size\)/,kind+" cards must not grow.");
+  }
+  assert.match(css, /\.battle-card\.occupied\s*\{\s*display:\s*grid/,
+    "Occupied cards must lay out art and text inside—not enlarge—their slot.");
+  assert.match(css, /grid-template-columns:\s*minmax\(0,9fr\)\s+minmax\(0,11fr\)/,
+    "The art and live card metadata must both fit inside the fixed card.");
   assert.match(css, /aspect-ratio:\s*3\s*\/\s*4/,
-    "Portrait frame must preserve the original 480x640 source proportions.");
-  assert.match(css, /flex:\s*0\s+0\s+auto/,
-    "Portraits must not collapse in the flex-column card.");
+    "Show complete 3:4 source portraits in the fixed card.");
   assert.match(css, /\.portrait-image\s*\{\s*object-fit:\s*contain/,
-    "Show the complete picture rather than center-cropping artwork.");
-  assert.match(css, /max-height:\s*none/,
-    "Mirrored layout must not clamp portraits below the full frame.");
-  assert.doesNotMatch(css, /max-height:\s*(?:52|72)px/,
-    "Do not reintroduce the tiny portrait caps.");
+    "Keep full artwork visible rather than center-cropping.");
+  assert.match(css, /\.card-status-lanes\s*\{[^}]*overflow:\s*auto/s,
+    "An unusual number of effects cannot stretch its card or the battlefield.");
+  assert.doesNotMatch(css, /min-height:\s*(?:268|220|188)px/,
+    "Old mismatched empty/occupied card minimums must not return.");
   assert.match(app, /const MAX_SLOTS = 6;/);
   assert.match(view, /const MAX_SLOTS = 6;/);
   assert.match(css, /grid-template-columns:\s*minmax\(0,1fr\)\s+minmax\(136px,174px\)\s+minmax\(0,1fr\)/,
     "Both teams must flank one central controls column.");
-  assert.match(css, /grid-template-rows:\s*repeat\(3,minmax\(0,1fr\)\)/,
+  assert.match(css, /grid-template-rows:\s*repeat\(3,var\(--pit-slot-size\)\)/,
     "Three paired rows show six combatants per side.");
   const placement = (side, index, col, row) => {
     const rx = new RegExp("#" + side + "-slots > :nth-child\\(" + index +
@@ -46,7 +56,11 @@ try {
   for (const pageName of ["index.html", "frontend/index.html"]) {
     const html = fs.readFileSync(path.join(__dirname, "..", pageName), "utf8");
     assert.equal((html.match(/id="fight-button"/g) || []).length, 1,
-      pageName + " must contain only one fight-start button.");
+      pageName + " must contain one shared Fight/Stop button.");
+    assert.ok(html.indexOf('src="battle-fight-stop.js"') < html.indexOf('src="battle-actions.js"'),
+      pageName + " must initialize the replay stop controller before actions.");
+    assert.ok(html.indexOf('src="player-control-state.js"') < html.indexOf('src="app.js"'),
+      pageName + " must initialize the control-state projection before app boot.");
     assert.equal((html.match(/class="lane-headers"/g) || []).length, 2,
       pageName + " requires two mirrored lane legends.");
     assert.match(html, /<span>RANGED<\/span><span>MELEE<\/span><\/div><div id="hero-slots"/);
