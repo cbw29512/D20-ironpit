@@ -11,10 +11,12 @@
   function selectableMonsters(state) {
     try {
       const factory = window.IRON_PIT_BATTLEFIELD_BAG_RUNNER;
-      if (!factory?.bagCard) throw new Error("Punching Bag runtime is unavailable.");
-      const bag = {...factory.bagCard(state.ruleset), test_only: true};
       const official = state.catalog.monsters;
       const saved = customCards("monster", state.ruleset);
+      // Standalone editors and old test fixtures omit the optional training
+      // module. Retain the official/custom picker rather than blocking it.
+      if (!factory?.bagCard) return [...official, ...saved];
+      const bag = {...factory.bagCard(state.ruleset), test_only: true};
       if ([...official, ...saved].some(card => card.id === bag.id))
         throw new Error("Punching Bag picker ID conflicts with an existing card.");
       return [...official, bag, ...saved];
