@@ -9,23 +9,12 @@ const vm = require("node:vm");
     // Test schema: canonical battle events, one stream per suite, all case seeds.
     const controls = {};
     for (const id of ["bulk-bag", "bulk-pairs", "bulk-stop", "bulk-copy",
-      "bulk-save", "bulk-progress", "bulk-status"]) {
+      "bulk-save", "bulk-export", "bulk-progress", "bulk-status"]) {
       controls[id] = {disabled: false, handlers: {},
         addEventListener(name, handler) { this.handlers[name] = handler; }};
     }
-    const files = [], messages = [];
-    const context = {console, setTimeout, clearTimeout, Blob, URL, Date,
-      document: {getElementById: id => controls[id] || null},
-      navigator: {clipboard: {async writeText(text) { messages.push(text); }}}};
-    context.window = context;
-    context.window.showSaveFilePicker = async () => {
-      const file = {parts: [], closed: false};
-      files.push(file);
-      return {async createWritable() { return {
-        async write(part) { file.parts.push(part); },
-        async close() { file.closed = true; },
-      }; }};
-    };
+    const {makeContext} = require("./bulk-combat-test-fixture.cjs");
+    const {context, files, picks, downloads} = makeContext(controls);
     const load = file => vm.runInNewContext(
       fs.readFileSync(path.join(__dirname, file), "utf8"),
       context, {filename: file});
@@ -33,6 +22,7 @@ const vm = require("node:vm");
     load("battle-log-export.js");
     load("bulk-combat-validation.js");
     load("bulk-combat-file.js");
+    load("bulk-combat-export.js");
     load("bulk-combat-ui.js");
     load("bulk-combat-runner.js");
 
@@ -49,6 +39,7 @@ const vm = require("node:vm");
     await writer.fight(0, 1, {edition: "2014", label: "Hero vs Bag"},
       51, makeBattle(), "diag-51");
     await writer.close({completed: 1, passed: 1});
+    assert.equal(picks.count, 0, "Opening a log must not open a file picker.");
     assert.equal(files.length, 1);
     assert.equal(files[0].closed, true);
     const full = files[0].parts.join("");
@@ -119,19 +110,27 @@ const vm = require("node:vm");
     controls["bulk-pairs"].handlers.click();
     await waitForCompletion();
     assert.equal(files.length, 3);
+    assert.equal(picks.count, 0, "Neither Fight button may open a file picker.");
     assert.equal((files[2].parts.join("").match(/FIGHT \d+ OF 2/g) || []).length, 2);
     assert.equal(state.fighting, false);
     assert.equal(files[2].closed, true);
     assert.ok(!controls["bulk-status"].textContent.includes("Test stopped"));
+    assert.equal(controls["bulk-export"].disabled, false);
+    controls["bulk-export"].handlers.click();
+    await new Promise(resolve => setTimeout(resolve, 5));
+    assert.equal(picks.count, 1, "Only explicit Download Full Logs requests saving.");
+    assert.ok(downloads[0].closed);
+    assert.match(downloads[0].parts.join(""), /FIGHT 2 OF 2/);
 
     for (const htmlName of ["index.html", "frontend/index.html"]) {
       const html = fs.readFileSync(path.join(__dirname, "..", htmlName), "utf8");
       for (const id of ["bulk-bag", "bulk-pairs", "bulk-stop",
-        "bulk-copy", "bulk-save", "bulk-progress", "bulk-status"]) {
+        "bulk-copy", "bulk-save", "bulk-export", "bulk-progress", "bulk-status"]) {
         assert.ok(html.includes('id="' + id + '"'), htmlName + " missing " + id);
       }
       for (const script of ["engine-test-lab-sweep-plan.js",
         "engine-test-lab-bag-fight.js", "bulk-combat-file.js",
+        "bulk-combat-export.js",
         "bulk-combat-runner.js", "app.js"]) {
         assert.ok(html.includes('src="' + script + '"'),
           htmlName + " missing script " + script);
@@ -142,7 +141,7 @@ const vm = require("node:vm");
     assert.match(individual, /pregen-only.css/);
     assert.match(individual, /id="pregen-copy"/);
     assert.match(individual, /id="pregen-save"/);
-    console.log("Two real seeded bulk modes, all-attempt streaming logs and mirrored hero pages passed.");
+    console.log("Immediate combat, automatic private logs, explicit export, and mirrored pages passed.");
   } catch (error) {
     console.error("Simplified Iron Pit bulk UI regression failed", error);
     process.exitCode = 1;
