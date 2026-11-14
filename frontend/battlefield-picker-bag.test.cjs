@@ -82,6 +82,16 @@ try {
     assert.equal(official.length,1,"Official catalog must remain unchanged.");
     assert.equal(state.catalog.monsters,official);
   }
+  // A standalone custom-monster editor may not load the optional test runner.
+  // Its normal CR picker must still function without hiding official monsters.
+  const runner = window.IRON_PIT_BATTLEFIELD_BAG_RUNNER;
+  delete window.IRON_PIT_BATTLEFIELD_BAG_RUNNER;
+  picker.open(state,"monsters",0,()=>{},()=>{});
+  el("picker-cr").value = "0";
+  el("picker-cr").onchange();
+  assert.ok(el("picker-monster").options.some(o => /Official CR Zero/.test(o.textContent)));
+  assert.ok(el("picker-monster").options.every(o => !/Punching Bag/.test(o.textContent)));
+  window.IRON_PIT_BATTLEFIELD_BAG_RUNNER = runner;
   console.log("CR 0 test-only Punching Bag selectable in both editions without roster mutation.");
 } catch (error) {
   console.error("Player-facing Punching Bag CR 0 picker regression failed",error);
