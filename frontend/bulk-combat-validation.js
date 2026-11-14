@@ -2,7 +2,7 @@
   "use strict";
   // Auditing is read-only. Per-fight mutable engine state and source templates
   // remain owned exclusively by the canonical combat resolver.
-  function inspect(battle, originals = [], bagActorId = null) {
+  function inspect(battle, originals = [], bagActorId = null, entry = null, seed = null) {
     try {
       const problems = [];
       const events = battle?.events;
@@ -12,6 +12,23 @@
         problems.push("invalid_outcome");
       if (events?.some(event => event.event_type === "movement"))
         problems.push("forbidden_tactical_movement");
+      // Source-backed preset checks reuse the existing verifier and seeded
+      // battle fingerprint. A completed battle is not proof the test fired.
+      if (entry?.kind === "preset") {
+        const aspectFired = window.IRON_PIT_COMBAT_PRESETS?.aspectFired;
+        const fingerprint = window.IRON_PIT_BATTLE_LAB?.fingerprint;
+        const runSeeded = window.IRON_PIT_BROWSER_TURBO?.runSeeded;
+        if (!aspectFired || !fingerprint || !runSeeded ||
+            !Array.isArray(entry.required_aspects))
+          throw new Error("Preset certification dependencies are unavailable.");
+        for (const aspect of entry.required_aspects)
+          if (!aspectFired(battle, aspect))
+            problems.push("preset_required_mechanic_not_observed: " +
+              JSON.stringify(aspect));
+        const repeated = runSeeded(entry.selection, seed).battle;
+        if (fingerprint(battle) !== fingerprint(repeated))
+          problems.push("seed_replay_mismatch");
+      }
       for (const [card, original] of originals)
         if (JSON.stringify(card) !== original)
           problems.push("source_card_mutation");
