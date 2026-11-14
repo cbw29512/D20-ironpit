@@ -17,12 +17,19 @@ def sync_hp_ended_self_buffs(state) -> list[str]:
             if action.ends_at_full_hp and action.id in state.active_effect_ids
         ]
         if ended:
+            # Source-owned cleanup must restore any fight-local size override,
+            # curses and modifiers instead of discarding the timed record.
+            from app.combat.timed_condition_lifecycle import remove_effect_group
+            for effect in list(state.timed_effects):
+                if effect not in state.timed_effects:
+                    continue
+                if effect.effect_id in ended or effect.source_effect_id in ended:
+                    remove_effect_group(state, effect)
+            # Some source-defined modes (e.g. Berserk) have an active sentinel
+            # even when no timed group remains. Clear only the ended mode.
             state.active_effect_ids = [
-                effect_id for effect_id in state.active_effect_ids if effect_id not in ended
-            ]
-            state.timed_effects = [
-                effect for effect in state.timed_effects
-                if effect.effect_id not in ended and effect.source_effect_id not in ended
+                effect_id for effect_id in state.active_effect_ids
+                if effect_id not in ended
             ]
         return ended
     except Exception as exc:
