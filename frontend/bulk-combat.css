@@ -19,7 +19,8 @@ body.player-mode #bulk-progress{display:block;width:100%;height:16px}
 body.player-mode #bulk-status{font-weight:700;min-height:1.5em}
 body.player-mode .log-panel .battle-log{height:clamp(300px,45vh,650px);overflow:auto}
 body.player-mode .log-panel .log-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-body.player-mode .log-panel .rules-note{display:none}
+body.player-mode .log-panel .rules-note,
+body.player-mode #download-log-button{display:none!important}
 @media(max-width:720px){
  body.player-mode .bulk-actions{display:grid}
  body.player-mode .bulk-actions button{width:100%}
