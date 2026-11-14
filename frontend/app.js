@@ -143,6 +143,9 @@
       window.IRON_PIT_BATTLEFIELD_BAG_CONTROLS.install({
         state, ensureRuleset: changeRuleset, load: loadCards, matchup, updateControls,
       });
+      window.IRON_PIT_BULK_COMBAT_RUNNER.install({
+        state, ensureRuleset: changeRuleset, load: loadCards, updateControls,
+      });
       rulesetUi().update(state); render();
       el("status").textContent = "Iron Pit ready. Pick heroes and monsters, then press Fight.";
     } catch (error) { console.error("Iron Pit initialization failed", error); el("status").textContent = "The Iron Pit failed to initialize."; }
