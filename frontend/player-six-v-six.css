@@ -79,9 +79,41 @@ body.player-mode #pit .card-meta {
   min-width: 0; min-height: 0; max-height: 26px; overflow: hidden;
   font-size: .58rem; margin: 0;
 }
+/* Keep live effects readable on the card instead of splitting a narrow column.
+   The status pane scrolls internally; it never changes the 12 slot heights. */
 body.player-mode #pit .card-status-lanes {
   grid-column: 2; grid-row: 3;
-  min-width: 0; min-height: 0; max-height: 100%; overflow: auto;
+  display: grid;
+  grid-template-columns: minmax(0,1fr);
+  align-content: start;
+  gap: 5px;
+  min-width: 0; min-height: 0; max-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+body.player-mode #pit .card-status-lane {
+  min-width: 0;
+  text-align: left;
+  padding: 3px 4px;
+}
+body.player-mode #pit .card-status-lane > small {
+  display: block;
+  font-size: .55rem;
+  margin-bottom: 4px;
+}
+body.player-mode #pit .card-buffs,
+body.player-mode #pit .card-debuffs {
+  justify-content: flex-start;
+}
+body.player-mode #pit .buff-badge,
+body.player-mode #pit .debuff-badge,
+body.player-mode #pit .condition-badge {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+  font-size: .55rem;
 }
 body.player-mode #pit .card-hp {
   grid-column: 1 / -1; grid-row: 4; width: 100%; margin: 2px 0;
