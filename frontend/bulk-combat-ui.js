@@ -109,7 +109,7 @@
 
   function install(start, stop) {
     try {
-      for (const id of ["bulk-bag", "bulk-pairs", "bulk-stop", "bulk-copy",
+      for (const id of ["bulk-bag", "bulk-pairs", "bulk-stop", "bulk-copy", "bulk-export",
         "bulk-progress", "bulk-status", "bulk-save"]) {
         if (!$(id)) throw new Error("Missing simplified hero control " + id);
       }
@@ -118,6 +118,12 @@
       $("bulk-stop").addEventListener("click", stop);
       $("bulk-copy").addEventListener("click", () => { void copyVisible(); });
       $("bulk-save").addEventListener("click", saveVisible);
+      if (!window.IRON_PIT_BULK_COMBAT_EXPORT?.download)
+        throw new Error("On-demand full test transcript exporter is missing.");
+      $("bulk-export").disabled = !window.IRON_PIT_BULK_COMBAT_FILE?.latestName();
+      $("bulk-export").addEventListener("click", () => {
+        void window.IRON_PIT_BULK_COMBAT_EXPORT.download();
+      });
     } catch (error) {
       console.error("Simplified bulk control installation failed", error);
       throw error;
