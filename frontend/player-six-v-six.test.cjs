@@ -30,13 +30,13 @@ try {
     "The art and live card metadata must both fit inside the fixed card.");
   assert.match(css, /aspect-ratio:\s*3\s*\/\s*4/,
     "Show complete 3:4 source portraits in the fixed card.");
-  const hpBar = css.match(/body\\.player-mode #pit \\.card-hp\\s*\\{([^}]*)\\}/s)?.[1];
-  const hpText = css.match(/body\\.player-mode #pit \\.hp-text\\s*\\{([^}]*)\\}/s)?.[1];
+  const hpBar = css.match(/body\.player-mode #pit \.card-hp\s*\{([^}]*)\}/s)?.[1];
+  const hpText = css.match(/body\.player-mode #pit \.hp-text\s*\{([^}]*)\}/s)?.[1];
   assert.ok(hpBar && hpText, "HP bar and HP label must be styled in player mode.");
-  assert.match(hpBar, /grid-column:\\s*1\\s*\\/\\s*-1/, "HP bar must span full card beneath portrait.");
-  assert.match(hpBar, /grid-row:\\s*4/, "HP bar must appear in fourth row.");
-  assert.match(hpText, /grid-column:\\s*1\\s*\\/\\s*-1/, "HP text must align below full-width HP bar.");
-  assert.match(hpText, /grid-row:\\s*5/, "HP text must appear in fifth row.");
+  assert.match(hpBar, /grid-column:\s*1\s*\/\s*-1/, "HP bar must span full card beneath portrait.");
+  assert.match(hpBar, /grid-row:\s*4/, "HP bar must appear in fourth row.");
+  assert.match(hpText, /grid-column:\s*1\s*\/\s*-1/, "HP text must align below full-width HP bar.");
+  assert.match(hpText, /grid-row:\s*5/, "HP text must appear in fifth row.");
   assert.match(css, /\.portrait-image\s*\{\s*object-fit:\s*contain/,
     "Keep full artwork visible rather than center-cropping.");
   assert.match(css, /\.card-status-lanes\s*\{[^}]*overflow:\s*auto/s,
