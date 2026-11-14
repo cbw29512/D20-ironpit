@@ -69,7 +69,7 @@ const click = async (id) => { await el(id).listeners.click(); };
   load("engine-test-lab-punching-bag.js"); load("engine-test-lab-bag-coverage.js");
   load("battlefield-bag-report.js"); load("battlefield-bag-runner.js");
   load("battlefield-bag-controls.js");
-  load("bulk-combat-file.js"); load("bulk-combat-ui.js");
+  load("bulk-combat-validation.js"); load("bulk-combat-file.js"); load("bulk-combat-ui.js");
   load("bulk-combat-runner.js"); load("app.js");
   const presetButton = (id) => el("combat-presets").children.find((item) => item.dataset?.preset === id);
   for (let i = 0; i < 40 && !presetButton("goblins"); i += 1) await Promise.resolve();
