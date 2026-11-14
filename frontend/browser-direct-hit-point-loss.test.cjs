@@ -96,4 +96,42 @@ load("browser-timed-condition-lifecycle.js");
   assert.equal(target.timed_effects[0].effect_id, "poisoned");
   assert.ok(target.active_effect_ids.includes("poisoned"));
 }
+{
+  // The 40-die limit applies to a source hit, never to repeat wounds.
+  // A 10,000-HP target is intentionally durable enough to accumulate them.
+  const target = state();
+  target.template.max_hp = 10000;
+  target.current_hp = 10000;
+  target.temporary_hp = 300;
+  for (let hit = 0; hit < 75; hit += 1) {
+    assert.equal(H.applyOrStackHpLoss(target, "generic-wound", "source-one",
+      "Printed Wound", 1, 10, true), hit + 1);
+  }
+  assert.equal(target.timed_effects.length, 1);
+  assert.equal(target.timed_effects[0].start_of_turn_hp_loss_dice_count, 75);
+  const originalRoll = window.IRON_PIT_DICE.roll;
+  try {
+    window.IRON_PIT_DICE.roll = () => 1;
+    const member = { combatant_id: "bag", state: target };
+    const tick = H.resolve(1, 1, member, { heroes: [member], monsters: [] });
+    assert.equal(tick.events.length, 1);
+    assert.equal(target.current_hp, 9925);
+    assert.equal(target.temporary_hp, 300);
+    assert.match(tick.events[0].description, /not damage/);
+  } finally {
+    window.IRON_PIT_DICE.roll = originalRoll;
+  }
+  assert.deepEqual(window.IRON_PIT_BROWSER_TIMED.removeOnMagicalHealing(target),
+    ["generic-wound"]);
+  assert.equal(target.timed_effects.length, 0);
+}
+{
+  const target = state();
+  for (let hit = 0; hit < 25; hit += 1) {
+    H.applyOrStackHpLoss(target, "wound", "attacker-one", "On Hit", 2, 6);
+  }
+  H.applyOrStackHpLoss(target, "wound", "attacker-two", "On Hit", 2, 6);
+  assert.deepEqual(target.timed_effects.map(e => e.start_of_turn_hp_loss_dice_count),
+    [50, 2]);
+}
 console.log("Direct HP loss, wound stacks, and magical-healing closure passed.");
