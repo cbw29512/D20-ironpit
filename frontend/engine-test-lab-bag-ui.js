@@ -30,7 +30,8 @@
         `${report.failed} fights reported engine/rule violations. ` +
         `${missingCards.length} cards still have unobserved declared abilities. ` +
         "A successful fight does NOT certify untriggered abilities. " +
-        "Download the full JSON to inspect every card, seed, branch and error.";
+        "Download the ability coverage JSON for seeds and errors. " +
+        "Select a card and replay its seed for real turn-by-turn combat logs.";
       const table = document.createElement("table");
       const head = document.createElement("tr");
       for (const name of ["Card / edition", "Attempts", "Ability evidence", "Result"]) {
@@ -54,13 +55,12 @@
           tr.append(td);
         }
         tr.addEventListener("click", () => {
-          $("bag-details").textContent = JSON.stringify(entry, null, 2);
+          window.IRON_PIT_TEST_BAG_COMBAT_VIEW.choose(entry);
         });
         table.append(tr);
       }
       $("bag-results").replaceChildren(table);
-      $("bag-details").textContent = JSON.stringify(
-        ordered[0] || {message: "No cases executed."}, null, 2);
+      window.IRON_PIT_TEST_BAG_COMBAT_VIEW.setCases(ordered);
       $("bag-download").disabled = false;
     } catch (error) {
       console.error("Could not render Punching Bag coverage report", error);
@@ -76,7 +76,8 @@
     $("bag-stop").disabled = false;
     $("bag-download").disabled = true;
     $("bag-results").replaceChildren();
-    $("bag-details").textContent = "Collecting reproducible combat logs…";
+    window.IRON_PIT_TEST_BAG_COMBAT_VIEW.setCases([]);
+    $("bag-details").textContent = "Collecting ability coverage and replay seeds…";
     try {
       const seed = Number($("seed").value);
       const attempts = Number($("bag-attempts").value);
@@ -114,6 +115,10 @@
     }
   }
 
+  // Validate and activate the independent, one-fight-at-a-time transcript UI.
+  if (!window.IRON_PIT_TEST_BAG_COMBAT_VIEW?.install)
+    throw new Error("The Punching Bag combat transcript controls are missing.");
+  window.IRON_PIT_TEST_BAG_COMBAT_VIEW.install();
   $("bag-run").addEventListener("click", () => { void start(); });
   $("bag-stop").addEventListener("click", () => {
     if (control) control.stopRequested = true;
