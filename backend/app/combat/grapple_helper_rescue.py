@@ -14,6 +14,7 @@ from app.combat.condition_rules import has_condition, is_incapacitated
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.exhaustion import ability_check_disadvantage_sources, d20_modifier
 from app.combat.grapple import release_grapple
+from app.combat.grapple_appendage_capacity import record_broken_grapple_appendage
 from app.combat.rolls import roll_d20
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.grapple_rescue import GrappleRescueRule
@@ -30,7 +31,7 @@ def eligible(
 ) -> bool:
     try:
         return (
-            helper.combatant_id != target.combatant_id
+            (rule.allow_held_target or helper.combatant_id != target.combatant_id)
             and helper.side == target.side != owner.side
             and helper.state.is_alive and not helper.state.is_dead
             and target.state.is_alive and not target.state.is_dead
@@ -38,11 +39,14 @@ def eligible(
             and not is_incapacitated(helper.state)
             and is_available(helper.state, rule.action_cost)
             and helper.state.template.ability_scores is not None
-            and combatant_distance(helper, owner) <= rule.helper_range_ft
+            and combatant_distance(
+                helper, target if rule.helper_range_anchor == "held_target" else owner,
+            ) <= rule.helper_range_ft
             and rule in owner.state.template.grapple_rescue_rules
             and any(
                 g.source_id == owner.combatant_id
                 and g.linked_effect_id == rule.source_action_id
+                and (not rule.requires_breakable_object or g.breakable_object is not None)
                 for g in target.state.grapple_sources
             )
         )
@@ -106,6 +110,10 @@ def resolve_grapple_helper_rescue(
         spend(helper.state, rule.action_cost)
         before_conditions = set(target.state.active_effect_ids)
         if succeeded:
+            if rule.requires_breakable_object:
+                record_broken_grapple_appendage(
+                    setup, owner.combatant_id, rule.source_action_id,
+                )
             release_grapple(target.state, owner.combatant_id)
         removed = sorted(before_conditions - set(target.state.active_effect_ids))
         return BattleEvent(
@@ -117,9 +125,10 @@ def resolve_grapple_helper_rescue(
             check_succeeded=succeeded,
             removed_condition_ids=removed,
             description=(
-                f"{helper.state.template.name} uses an Action to pull "
-                f"{target.state.template.name} out of {owner.state.template.name}'s "
-                f"{rule.source_name}; {ability.title()} DC {rule.check_dc} "
+                f"{helper.state.template.name} uses an Action to "
+                f"{rule.release_verb} {owner.state.template.name}'s "
+                f"{rule.source_name} holding {target.state.template.name}; "
+                f"{ability.title()} DC {rule.check_dc} "
                 f"{'succeeds' if succeeded else 'fails'}."
             ),
         )

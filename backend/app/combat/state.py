@@ -88,6 +88,8 @@ def terminate_turn(state: CombatantState, reason: str) -> None:
 def begin_turn(state: CombatantState) -> list[tuple[str, str, int]]:
     try:
         state.turns_started += 1
+        # Printed replacement-on-next-turn appendages become usable again.
+        state.broken_grapple_appendages.clear()
         state.turn_terminated = False
         state.turn_termination_reason = None
         state.disengaged_this_turn = False

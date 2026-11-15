@@ -41,14 +41,17 @@
       throw error;
     }
   }
-  function damageGrapple(state, grapple, attackTotal, rolledDamage, damageType) {
+  function damageGrapple(state, grapple, attackTotal, rolledDamage, damageType, setup) {
     try {
       if (!(state.grapple_sources || []).includes(grapple) || !grapple.breakable_object)
         throw new Error("The target has no active breakable Grapple object.");
+      const engine = window.IRON_PIT_BROWSER_GRAPPLE;
+      if (!setup || !grapple.linked_effect_id || !engine?.recordBrokenAppendage)
+        throw new Error("Breakable Grapple damage requires an encounter and linked source.");
       const result = damageState(grapple.breakable_object, attackTotal, rolledDamage, damageType);
       if (result.destroyed) {
-        const engine = window.IRON_PIT_BROWSER_GRAPPLE;
         if (!engine?.release) throw new Error("Canonical Grapple release is unavailable.");
+        engine.recordBrokenAppendage(setup, grapple.source_id, grapple.linked_effect_id);
         engine.release(state, grapple.source_id);
       }
       return result;

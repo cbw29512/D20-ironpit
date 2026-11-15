@@ -12,7 +12,7 @@
 
   function eligible(helper, target, owner, rule) {
     try {
-      return helper.combatant_id !== target.combatant_id
+      return (rule.allow_held_target || helper.combatant_id !== target.combatant_id)
         && helper.side === target.side && helper.side !== owner.side
         && helper.state.is_alive && !helper.state.is_dead
         && target.state.is_alive && !target.state.is_dead
@@ -20,11 +20,13 @@
         && !C().incapacitated(helper.state)
         && E().available(helper.state, rule.action_cost)
         && helper.state.template.ability_scores
-        && S().distance(helper, owner) <= rule.helper_range_ft
+        && S().distance(helper, rule.helper_range_anchor === "held_target" ? target : owner)
+          <= rule.helper_range_ft
         && (owner.state.template.grapple_rescue_rules || []).includes(rule)
         && (target.state.grapple_sources || []).some(
           (g) => g.source_id === owner.combatant_id
-            && g.linked_effect_id === rule.source_action_id);
+            && g.linked_effect_id === rule.source_action_id
+            && (!rule.requires_breakable_object || Boolean(g.breakable_object)));
     } catch (error) {
       console.error("Source-linked helper rescue eligibility failed.", error);
       throw error;
@@ -73,8 +75,13 @@
       const success = result.succeeded;
       E().spend(helper.state, rule.action_cost);
       const before = new Set(target.state.active_effect_ids);
-      if (success) window.IRON_PIT_BROWSER_GRAPPLE.release(
-        target.state, owner.combatant_id);
+      if (success) {
+        if (rule.requires_breakable_object) {
+          window.IRON_PIT_BROWSER_GRAPPLE.recordBrokenAppendage(
+            setup, owner.combatant_id, rule.source_action_id);
+        }
+        window.IRON_PIT_BROWSER_GRAPPLE.release(target.state, owner.combatant_id);
+      }
       const removed = [...before].filter(
         (id) => !target.state.active_effect_ids.includes(id));
       return {
@@ -84,9 +91,10 @@
         feature_id: rule.source_action_id, animation: "escape-check",
         ability_check_roll: check, check_ability: ability, check_dc: rule.check_dc,
         check_succeeded: success, removed_condition_ids: removed,
-        description: `${helper.state.template.name} uses an Action to pull `
-          + `${target.state.template.name} out of ${owner.state.template.name}'s `
-          + `${rule.source_name}; ${ability} DC ${rule.check_dc} `
+        description: `${helper.state.template.name} uses an Action to `
+          + `${rule.release_verb || "pull"} ${owner.state.template.name}'s `
+          + `${rule.source_name} holding ${target.state.template.name}; `
+          + `${ability} DC ${rule.check_dc} `
           + (success ? "succeeds." : "fails."),
       };
     } catch (error) {

@@ -27,7 +27,7 @@
       dash_uses_this_turn: 0, movement_remaining_ft: 0, voluntary_turn_activity: null, resources: { ...(template.resources || {}) },
       heroic_inspiration: Boolean(template.starts_with_heroic_inspiration),
       active_effect_ids: [...(template.innate_condition_ids || [])], suppressed_sense_ids: [], active_buff_effect_ids: (template.death_trigger_effect_ids?.length ? ["death-trigger"] : []), opening_buff_id: null,
-      grapple_sources: [], willing_attack_source_ids: [], breath_hold_rounds_remaining: null, breath_survival_rounds_remaining: null, suffocating_at_zero: false, swallowed: null, swallowed_target_ids: [], controlled_by: null, controlling_target_ids: [], timed_effects: [], deferred_effects: [], delayed_resource_refills: [], persistent_spell_attacks: [], active_modifiers: OM().build(template),
+      grapple_sources: [], broken_grapple_appendages: {}, willing_attack_source_ids: [], breath_hold_rounds_remaining: null, breath_survival_rounds_remaining: null, suffocating_at_zero: false, swallowed: null, swallowed_target_ids: [], controlled_by: null, controlling_target_ids: [], timed_effects: [], deferred_effects: [], delayed_resource_refills: [], persistent_spell_attacks: [], active_modifiers: OM().build(template),
       current_round: null, turns_started: 0, visual_aversion_windows: [], active_d20_bonus_dice: [], targeting_gate_immunity_keys: [], concentration: null, replacement_form: null,
       survival_save_uses: {}, pending_survival_save_logs: [], pending_zero_hp_replacement_logs: [],
       feature_last_turn_keys: {}, feature_use_counts: {}, spell_slot_expended_turn_key: null,
@@ -75,6 +75,7 @@
   }
   function beginTurn(state) {
     state.turns_started = (state.turns_started || 0) + 1;
+    state.broken_grapple_appendages = {}; // One-turn external appendage replacement
     state.turn_terminated = false; state.turn_termination_reason = null; state.disengaged_this_turn = false; state.voluntary_turn_activity = null; state.attacks_this_turn = 0;
     const incapacitated = Q().incapacitated(state);
     state.action_available = !incapacitated;
