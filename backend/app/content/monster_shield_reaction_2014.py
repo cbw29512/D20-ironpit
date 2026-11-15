@@ -44,13 +44,13 @@ def source_shield_reaction_2014(
         # after it, not merely mentioned by a different trait.
         raw = monster.source_traits or ""
         sections = re.split(
-            rf"<strong>{re.escape(heading)}\\.</strong>",
+            rf"<strong>{re.escape(heading)}\.</strong>",
             raw, maxsplit=1, flags=re.I,
         )
         if len(sections) != 2:
             return None
         trailing = sections[1].split("<strong>", 1)[0]
-        if re.search(r"\\bshield\\b", re.sub(r"<[^>]*>", " ", trailing), re.I) is None:
+        if re.search(r"\bshield\b", re.sub(r"<[^>]*>", " ", trailing), re.I) is None:
             return None
         return ReactionDefenseSpell(
             id="shield", name="Shield", minimum_slot_level=1, ac_bonus=5,
