@@ -6,6 +6,7 @@ from app.combat.action_economy import is_available, spend
 from app.combat.ability_checks import ability_check_roll_mode, resolve_ability_check_outcome
 from app.combat.dice import DiceProvider
 from app.combat.effect_removal_targets import TrackedSpellEffect, TaggedConditionTarget, removal_targets
+from app.combat.effect_removal_multi import resolve_target_spell_effects, apply_target_spell_effects
 from app.combat.effect_tag_conditions import apply_tagged_condition
 from app.combat.modifier_stack import remove_source_modifiers
 from app.combat.rolls import roll_d20
@@ -55,6 +56,15 @@ def resolve_effect_removal(
             raise ValueError("Effect-removal action or resource is no longer available.")
         if effect not in removal_targets(remover, setup, action):
             raise ValueError("Tracked spell effect is no longer a legal removal target.")
+        # Resolve the entire selected creature's spell set as one cast.
+        # Validate higher-level dice/scores before spending the Action or slot.
+        candidates = (
+            resolve_target_spell_effects(
+                remover, setup, action, effect.target, dice, round_number,
+            )
+            if action.remove_all_target_spells and isinstance(effect, TrackedSpellEffect)
+            else None
+        )
         spend(remover.state, action.action_cost)
         remaining = None
         if action.resource_id is not None:
@@ -65,6 +75,26 @@ def resolve_effect_removal(
             remaining = resource.current_uses
         if isinstance(effect, TaggedConditionTarget):
             return apply_tagged_condition(sequence, round_number, remover, setup, action, effect, remaining)
+        if candidates is not None:
+            removed, first_check, first_dc, audit, summary = apply_target_spell_effects(
+                remover, setup, action, effect.target, candidates, dice, round_number,
+            )
+            return BattleEvent(
+                sequence=sequence, round_number=round_number, event_type="feature",
+                actor_id=remover.combatant_id, actor_name=remover.state.template.name,
+                target_id=effect.target.combatant_id,
+                target_name=effect.target.state.template.name,
+                feature_id=action.id, resource_remaining=remaining,
+                removed_condition_ids=removed, animation=action.animation,
+                ability_check_roll=first_check, check_ability=action.casting_ability
+                if first_check is not None else None,
+                check_dc=first_dc,
+                audit=audit,
+                description=(
+                    f"{remover.state.template.name} uses {action.name} on "
+                    f"{effect.target.state.template.name}: {summary}."
+                ),
+            )
         check = None
         succeeded = True
         dc = None
