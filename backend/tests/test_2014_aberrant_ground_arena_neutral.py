@@ -82,3 +82,24 @@ def test_missing_source_or_trait_name_is_not_admitted():
     except Exception:
         logger.exception("Aberrant Ground missing-source isolation failed")
         raise
+
+
+def test_extra_source_damage_rider_fails_closed():
+    try:
+        card = _mouther()
+        source = card.source_traits or ""
+        original = "until the start of its next turn."
+        assert original in source
+        altered = card.model_copy(update={
+            "source_traits": source.replace(
+                original,
+                "until the start of its next turn. It also deals 2d6 acid damage.",
+            ),
+        })
+        # A trait that causes damage is not a movement-only exception,
+        # even though its name and original terrain sentence remain intact.
+        assert not verified_arena_inert_trait_2014(altered, "Aberrant Ground")
+        assert "Aberrant Ground" in unsupported_traits_2014(altered)
+    except Exception:
+        logger.exception("Unexpected added damage rider bypassed strict source proof")
+        raise
