@@ -27,6 +27,8 @@ jobs:
         run: pip install -e '.[dev]'
       - name: Audit all 17 blocked 2014 spellcasters by printed spell and shared binding
         run: PYTHONPATH=backend python scripts/report_spellcaster_gaps_2014.py
+      - name: Verify Python universal 2014 Shield reaction and source
+        run: PYTHONPATH=backend pytest -q backend/tests/test_2014_shield_reaction_universal.py
       - name: Validate standard Pit formation weapon engagement
         working-directory: backend
         run: PYTHONPATH=.:.. pytest -q tests/test_formation_weapon_engagement.py tests/test_formation_no_movement_turn.py tests/test_formation_cone_targeting.py tests/test_attack_action_event_label.py tests/test_formation_line_targeting.py tests/test_formation_atomic_promotion.py
@@ -593,10 +595,8 @@ jobs:
         run: |
           PYTHONPATH=backend:scripts python scripts/grick_sequence_parity_fixture.py > frontend/test-fixtures/grick-sequence.json
           PYTHONPATH=backend:scripts python scripts/fungus_sequence_parity_fixture.py > frontend/test-fixtures/fungus-sequence.json
-      - name: Verify universal 2014 Shield reaction parity
-        run: |
-          node frontend/browser-reaction-defense-spells.test.cjs
-          PYTHONPATH=backend pytest -q backend/tests/test_2014_shield_reaction_universal.py
+      - name: Verify browser universal Shield reaction parity
+        run: node frontend/browser-reaction-defense-spells.test.cjs
       - name: Run browser combat regressions
         run: |
           node frontend/browser-formation-weapon-engagement.test.cjs
