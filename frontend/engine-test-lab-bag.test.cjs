@@ -51,6 +51,8 @@ require("./browser-test-runtime.cjs").loadWebsite();
       assert.equal(bag.skill_bonuses.athletics, 0);
       assert.equal(bag.skill_bonuses.acrobatics, 0);
       assert.equal(bag.attacks.length, 1);
+      assert.equal(bag.attacks[0].bonus, 0,
+        "Harmless Tap uses the universal +0 attack modifier.");
       assert.equal(bag.attacks[0].damageBonus, 0);
       assert.equal(bag.attacks[0].fixedDamage, 0,
         "Even critical hits must use native fixed zero damage.");
