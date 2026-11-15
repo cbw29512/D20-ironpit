@@ -1,8 +1,7 @@
 (() => {
   "use strict";
   // State: one running suite, stop flag and source-neutral streamed evidence.
-  const BASE_SEED = 12345;
-  const BAG_ATTEMPTS = 3;
+  const BASE_SEED = 12345, BAG_ATTEMPTS = 3;
   const $ = id => document.getElementById(id);
   let control = null;
   function caseAt(plan, mode, index) {
