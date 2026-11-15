@@ -54,12 +54,12 @@ def source_proven_prepared_utility_spells_2014(
         # traits or an unrelated later list for evidence of a known spell.
         source_text = monster.source_traits or ""
         header = re.search(
-            r"<p>[^<]*(?:<em>)?<strong>Spellcasting\\.</strong>.*?</p>",
+            r"<p>[^<]*(?:<em>)?<strong>Spellcasting\.</strong>.*?</p>",
             source_text, flags=re.S | re.I,
         )
         if header is not None:
             tail = source_text[header.end():]
-            adjacent_list = re.match(r"\\s*<ul>.*?</ul>", tail, flags=re.S)
+            adjacent_list = re.match(r"\s*<ul>.*?</ul>", tail, flags=re.S)
             if adjacent_list is not None:
                 printed += " " + re.sub(r"<[^>]*>", " ", adjacent_list.group())
         printed = " ".join(printed.casefold().split())
