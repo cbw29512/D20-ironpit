@@ -10,7 +10,7 @@
       if (action === "start") {
         if (handle) throw new Error("Another bulk transcript is already active.");
         const name = String(data.name || "");
-        if (!/^iron-pit-(bag|pairs)-complete-\d+-\d+\.txt$/.test(name))
+        if (!/^iron-pit-(bag|monsters|pairs)-complete-\d+-\d+\.txt$/.test(name))
           throw new Error("Invalid private combat transcript filename.");
         const root = await navigator.storage.getDirectory();
         const file = await root.getFileHandle(name, {create: true});

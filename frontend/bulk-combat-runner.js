@@ -1,13 +1,13 @@
 (() => {
   "use strict";
   // State: one running suite, stop flag and source-neutral streamed evidence.
-  const BASE_SEED = 12345;
-  const BAG_ATTEMPTS = 3;
+  const BASE_SEED = 12345, BAG_ATTEMPTS = 3;
   const $ = id => document.getElementById(id);
   let control = null;
   function caseAt(plan, mode, index) {
     try {
-      return mode === "bag" ? plan.at(Math.floor(index / BAG_ATTEMPTS)) : plan.at(index);
+      return (mode === "bag" || mode === "monsters")
+        ? plan.at(Math.floor(index / BAG_ATTEMPTS)) : plan.at(index);
     } catch (error) {
       console.error("Bulk suite matchup lookup failed", {mode, index, error});
       throw error;
@@ -26,7 +26,7 @@
       let battle = null, diagnostic = null, bagActorId = null, evidence = null, auditFailure = null;
       try {
         let originals = [];
-        if (mode === "bag") {
+        if (mode === "bag" || mode === "monsters") {
           const result = window.IRON_PIT_TEST_BAG_FIGHT.run(entry, seed);
           battle = result.replay.battle;
           diagnostic = result.replay.diagnostic_id;
@@ -92,7 +92,7 @@
         const flag = {running: true, stopRequested: false};
         control = flag;
         api.state.fighting = true;
-        $("bulk-bag").disabled = $("bulk-pairs").disabled = true;
+        $("bulk-bag").disabled = $("bulk-monsters").disabled = $("bulk-pairs").disabled = true;
         $("bulk-stop").disabled = false; $("bulk-export").disabled = true;
         let writer = null, report = null, exportClosed = true;
         try {
@@ -100,14 +100,15 @@
           writer = await window.IRON_PIT_BULK_COMBAT_FILE.open(mode, BASE_SEED);
           await api.ensureRuleset("2024", true);
           await api.ensureRuleset("2014", true);
-          const plan = mode === "bag"
-            ? window.IRON_PIT_TEST_BAG_PLAN.create()
+          const plan = mode === "bag" || mode === "monsters"
+            ? window.IRON_PIT_TEST_BAG_PLAN.create(mode === "monsters" ? "monsters" : "all")
             : await window.IRON_PIT_TEST_ALL_PLAN.create("pairs");
           report = {mode, seed: BASE_SEED,
-            total: mode === "bag" ? plan.total * BAG_ATTEMPTS : plan.total,
+            total: mode === "bag" || mode === "monsters"
+              ? plan.total * BAG_ATTEMPTS : plan.total,
             completed: 0, passed: 0, failed: 0, stopped: false,
             bag_attempts_with_unobserved_abilities: 0,
-            failure_samples: [], attempts_per_card: mode === "bag" ? BAG_ATTEMPTS : 1};
+            failure_samples: [], attempts_per_card: mode === "bag" || mode === "monsters" ? BAG_ATTEMPTS : 1};
           window.IRON_PIT_BULK_COMBAT_UI.progress(report, mode);
           await execute(api, plan, mode, writer, report, flag);
         } catch (error) {
@@ -127,7 +128,7 @@
           }
           control = null;
           api.state.fighting = false;
-          $("bulk-bag").disabled = $("bulk-pairs").disabled = false;
+          $("bulk-bag").disabled = $("bulk-monsters").disabled = $("bulk-pairs").disabled = false;
           $("bulk-stop").disabled = true; $("bulk-export").disabled = !window.IRON_PIT_BULK_COMBAT_FILE.latestName();
           api.updateControls();
           if (report && !report.fatal_error && exportClosed)

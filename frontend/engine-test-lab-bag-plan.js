@@ -4,8 +4,10 @@
   // Each certified monster and pregen appears exactly once per edition.
   const EDITIONS = ["2014", "2024"];
 
-  function create() {
+  function create(scope = "all") {
     try {
+      if (!["all", "monsters"].includes(scope))
+        throw new Error("Punching Bag scope must be all or monsters.");
       const roster = window.IRON_PIT_TEST_ALL_PLAN?.roster;
       if (!roster) throw new Error("The certified source-roster planner is missing.");
       const groups = EDITIONS.flatMap(edition => {
@@ -15,14 +17,16 @@
           {edition, kind: "pregen", ids: source.hero_ids},
         ];
       });
-      const total = groups.reduce((sum, group) => sum + group.ids.length, 0);
+      const selected = scope === "monsters"
+        ? groups.filter(group => group.kind === "monster") : groups;
+      const total = selected.reduce((sum, group) => sum + group.ids.length, 0);
       if (!total) throw new Error("No source cards found for Punching Bag testing.");
       function at(index) {
         try {
           if (!Number.isInteger(index) || index < 0 || index >= total)
             throw new RangeError("Punching Bag test index out of bounds.");
           let remaining = index;
-          for (const group of groups) {
+          for (const group of selected) {
             if (remaining >= group.ids.length) {
               remaining -= group.ids.length;
               continue;
@@ -41,7 +45,7 @@
           throw error;
         }
       }
-      return {total, groups, at};
+      return {total, groups: selected, scope, at};
     } catch (error) {
       console.error("Could not construct all-monster-and-pregen bag plan", error);
       throw error;

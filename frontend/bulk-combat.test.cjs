@@ -8,7 +8,7 @@ const vm = require("node:vm");
   try {
     // Test schema: canonical battle events, one stream per suite, all case seeds.
     const controls = {};
-    for (const id of ["bulk-bag", "bulk-pairs", "bulk-stop", "bulk-copy",
+    for (const id of ["bulk-bag", "bulk-monsters", "bulk-pairs", "bulk-stop", "bulk-copy",
       "bulk-save", "bulk-export", "bulk-progress", "bulk-status"]) {
       controls[id] = {disabled: false, handlers: {},
         addEventListener(name, handler) { this.handlers[name] = handler; }};
@@ -71,9 +71,12 @@ const vm = require("node:vm");
       return {total: 2, at: index => ({kind: "duel", label: "Hero vs Monster " + index,
         selection: {ruleset: "2014", hero_ids: ["h14"], monster_ids: ["m14"]}})};
     }};
-    context.IRON_PIT_TEST_BAG_PLAN = {create() {
+    context.IRON_PIT_TEST_BAG_PLAN = {create(scope = "all") {
+      assert.ok(["all", "monsters"].includes(scope));
       return {total: 1, at: () => ({kind: "punching_bag", edition: "2014",
-        source_kind: "pregen", source_id: "h14", label: "Hero vs Bag"})};
+        source_kind: scope === "monsters" ? "monster" : "pregen",
+        source_id: scope === "monsters" ? "m14" : "h14",
+        label: scope === "monsters" ? "Monster vs Bag" : "Hero vs Bag"})};
     }};
     context.IRON_PIT_TEST_BAG_COVERAGE = {audit: () => ({
       declared_count: 1, exercised_count: 0, not_observed_count: 1,
@@ -107,13 +110,22 @@ const vm = require("node:vm");
       "All three Punching Bag attempts must be fully logged.");
     assert.match(files[1].parts.join(""), /"completed": 3/);
     assert.match(files[1].parts.join(""), /limited-ability/);
+    controls["bulk-monsters"].handlers.click();
+    await waitForCompletion();
+    assert.equal(files.length, 3, "Monster-only run must create its own transcript.");
+    const monsterLog = files[2].parts.join("");
+    assert.match(files[2].name, /iron-pit-monsters-complete-/);
+    assert.equal((monsterLog.match(/FIGHT \d+ OF 3/g) || []).length, 3);
+    assert.match(monsterLog, /MATCHUP: Monster vs Bag/);
+    assert.doesNotMatch(monsterLog, /MATCHUP: Hero vs Bag/);
+    assert.match(monsterLog, /"attempts_per_card": 3/);
     controls["bulk-pairs"].handlers.click();
     await waitForCompletion();
-    assert.equal(files.length, 3);
-    assert.equal(picks.count, 0, "Neither Fight button may open a file picker.");
-    assert.equal((files[2].parts.join("").match(/FIGHT \d+ OF 2/g) || []).length, 2);
+    assert.equal(files.length, 4);
+    assert.equal(picks.count, 0, "Bulk fight buttons must not open a file picker.");
+    assert.equal((files[3].parts.join("").match(/FIGHT \d+ OF 2/g) || []).length, 2);
     assert.equal(state.fighting, false);
-    assert.equal(files[2].closed, true);
+    assert.equal(files[3].closed, true);
     assert.ok(!controls["bulk-status"].textContent.includes("Test stopped"));
     assert.equal(controls["bulk-export"].disabled, false);
     controls["bulk-export"].handlers.click();
@@ -124,7 +136,7 @@ const vm = require("node:vm");
 
     for (const htmlName of ["index.html", "frontend/index.html"]) {
       const html = fs.readFileSync(path.join(__dirname, "..", htmlName), "utf8");
-      for (const id of ["bulk-bag", "bulk-pairs", "bulk-stop",
+      for (const id of ["bulk-bag", "bulk-monsters", "bulk-pairs", "bulk-stop",
         "bulk-copy", "bulk-save", "bulk-export", "bulk-progress", "bulk-status"]) {
         assert.ok(html.includes('id="' + id + '"'), htmlName + " missing " + id);
       }
