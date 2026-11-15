@@ -77,6 +77,14 @@ def apply_target_spell_effects(remover, setup, action, target, candidates, dice,
                 remove_source_modifiers(
                     [target.state], item.source.combatant_id, item.effect_id,
                 )
+                # A timed spell debuff must be removed through the canonical
+                # lifecycle so owned conditions, curses and form changes end.
+                # This affects this creature only; source concentration and
+                # effects on other creatures continue.
+                for timed in list(getattr(target.state, "timed_effects", ())):
+                    if (timed.source_id == item.source.combatant_id
+                            and timed.source_effect_id == item.effect_id):
+                        remove_effect_instance(target.state, timed)
                 # Only the targeted creature loses this spell's instance.
                 # Other creatures affected by the same concentration remain.
                 target.state.active_buff_effect_ids = [
