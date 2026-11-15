@@ -109,3 +109,22 @@ def test_absent_printed_source_or_incomplete_metadata_fails_closed(mutation):
     except Exception:
         logger.exception("Missing source proof was incorrectly accepted")
         raise
+
+
+
+def test_flameskull_spell_list_must_be_immediately_adjacent():
+    try:
+        card = _card("Flameskull")
+        assert "mage-hand" in source_proven_prepared_utility_spells_2014(card)
+        source = card.source_traits or ""
+        assert "<ul>" in source and "</ul>" in source
+        altered = card.model_copy(update={
+            "source_traits": source.replace(
+                "</p><ul>", "</p><p>Unrelated intervening text.</p><ul>",
+            ),
+        })
+        assert altered.source_traits != source
+        assert "mage-hand" not in source_proven_prepared_utility_spells_2014(altered)
+    except Exception:
+        logger.exception("Nonadjacent HTML spell list passed source proof")
+        raise
