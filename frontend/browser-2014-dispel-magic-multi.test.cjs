@@ -84,6 +84,7 @@ try {
   assert.match(event.description, /greater-invisibility: resisted/);
   assert.equal(event.audit.steps.length, 4);
   assert.equal(event.check_dc, 14);
+  assert.equal(event.check_succeeded, false);
   assert.equal(actor.state.action_available, false);
   assert.equal(actor.state.resources["spell-slot-3"], 0);
   assert.equal(actor.state.slot_spell_cast, true);
