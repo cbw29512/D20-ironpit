@@ -19,7 +19,9 @@ def dispel_magic_2014(casting_ability: AbilityName) -> EffectRemovalAction:
             action_cost="action",
             range_ft=120,
             casting_ability=casting_ability,
-            target_mode="enemy",
+            # RAW targets a creature, object, or magical effect regardless of side.
+            # The automated chooser separately prefers hostile eligible effects.
+            target_mode="any",
             auto_remove_max_level=3,
             effect_tags=["spell_dispelling"],
             resource_id="spell-slot-3",
