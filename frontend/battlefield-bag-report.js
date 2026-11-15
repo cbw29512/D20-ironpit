@@ -41,7 +41,7 @@
       if (events.some(event => event.event_type === "movement"))
         problems.push("forbidden_tactical_movement");
       if (bag.state.template.armor_class !== 10 ||
-          bag.state.template.max_hp !== 10000)
+          bag.state.template.max_hp !== 1000)
         problems.push("invalid_punching_bag_stats");
       if (events.some(event => event.actor_id === bag.combatant_id &&
           ((event.damage_roll?.total || 0) > 0 ||
