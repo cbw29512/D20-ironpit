@@ -10,6 +10,7 @@ import logging
 from app.combat.ability_checks import ability_check_roll_mode, resolve_ability_check_outcome
 from app.combat.effect_removal_targets import TrackedSpellEffect, removal_targets
 from app.combat.modifier_stack import remove_source_modifiers
+from app.combat.timed_condition_lifecycle import remove_effect_instance
 from app.combat.rolls import roll_d20
 from app.domain.events import AuditPhase, AuditStep, EventAudit
 
