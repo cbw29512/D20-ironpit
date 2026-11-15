@@ -35,8 +35,12 @@ def choose_effect_removal_action(
         if not action_available(remover, action, turn_key):
             continue
         effects = removal_targets(remover, setup, action)
-        if effects:
-            return action, effects[0]
+        # Automated dispelling should only remove enemy-owned magic:
+        # an enemy's ward or an enemy spell affecting our allies.
+        # The legal resolver remains unchanged for deliberate/manual removal.
+        for effect in effects:
+            if isinstance(effect, TaggedConditionTarget) or effect.source.side != remover.side:
+                return action, effect
     return None
 
 
