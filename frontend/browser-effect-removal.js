@@ -61,7 +61,10 @@
     for (const action of remover.state.template.effect_removal_actions || []) {
       if (!available(remover, action, turnKey)) continue;
       const candidates = effects(remover, setup, action);
-      if (candidates.length) return { action, effect: candidates[0] };
+      // Auto-select hostile-source magic only; manual resolution keeps RAW legality.
+      const selected = candidates.find((candidate) => candidate.grant
+        || candidate.source.side !== remover.side);
+      if (selected) return { action, effect: selected };
     }
     return null;
   }
