@@ -62,11 +62,13 @@
       let preAdjustmentHit = parry.hit;
       const defenderMember = setup && [...setup.heroes, ...setup.monsters]
         .find((member) => member.state === defenderState);
+      let defenseUsed = false;
       if (preAdjustmentHit && window.IRON_PIT_BROWSER_REACTION_DEFENSE_SPELLS?.trigger(
         defenderState, defenderMember?.combatant_id || defenderState.template.id,
         {attackTotal: attackRoll.total, natural: originalNatural},
       )) {
         targetAc += defenderState.template.reaction_defense_spell.acBonus;
+        defenseUsed = true;
         preAdjustmentHit = false;
       }
       const attackBonusRules = (attackerState.template.resource_backed_d20_bonus_dice || [])
@@ -100,7 +102,7 @@
       const revisedHit = d20.featureId ? (natural === 20 || roll.total >= targetAc) : adjustedHit;
       const miss = window.IRON_PIT_BROWSER_MISS_TO_HIT_OVERRIDE?.apply(attackerState, revisedHit)
         || { hit: revisedHit, featureId: null, sourceName: null };
-      return { roll, natural, targetAc, hit: miss.hit, parry, adjustment, d20, miss };
+      return { roll, natural, targetAc, hit: miss.hit, parry, defenseUsed, adjustment, d20, miss };
     } catch (error) {
       console.error("Browser attack D20 outcome failed", { attacker: attackerState?.template?.name, error });
       throw error;
