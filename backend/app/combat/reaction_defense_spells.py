@@ -17,7 +17,6 @@ def active_reaction_defense(state: CombatantState) -> bool:
         return bool(defense and any(
             modifier.kind is ModifierKind.ARMOR_CLASS
             and modifier.source_effect_id == defense.id
-            and modifier.source_id == state.template.id
             for modifier in state.active_modifiers
         ))
     except Exception:
@@ -30,6 +29,7 @@ def trigger_reaction_defense(
     incoming_attack_total: int | None = None,
     natural_roll: int | None = None,
     incoming_auto_hit_id: str | None = None,
+    source_id: str | None = None,
 ) -> bool:
     """Cast when the reaction changes an attack result or blocks an auto-hit."""
     try:
@@ -62,8 +62,8 @@ def trigger_reaction_defense(
         spend(state, "reaction")
         slot.current_uses -= 1
         add_modifier(state, CombatModifier(
-            id=f"{state.template.id}:{defense.id}:reaction",
-            source_id=state.template.id, source_effect_id=defense.id,
+            id=f"{source_id or state.template.id}:{defense.id}:reaction",
+            source_id=source_id or state.template.id, source_effect_id=defense.id,
             source_name=defense.name, source_is_magical=True,
             kind=ModifierKind.ARMOR_CLASS, flat_bonus=defense.ac_bonus,
             expires_at_start_of_source_turn=True,
@@ -74,14 +74,18 @@ def trigger_reaction_defense(
         raise
 
 
-def reaction_defense_blocks_auto_hit(state: CombatantState, spell_id: str) -> bool:
+def reaction_defense_blocks_auto_hit(
+    state: CombatantState, spell_id: str, *, source_id: str | None = None,
+) -> bool:
     try:
         defense = state.template.reaction_defense_spell
         if defense is None or spell_id not in defense.blocked_auto_hit_spell_ids:
             return False
         if active_reaction_defense(state):
             return True
-        return trigger_reaction_defense(state, incoming_auto_hit_id=spell_id)
+        return trigger_reaction_defense(
+            state, incoming_auto_hit_id=spell_id, source_id=source_id,
+        )
     except Exception:
         logger.exception("Failed to inspect auto-hit immunity for %s", state.template.name)
         raise
