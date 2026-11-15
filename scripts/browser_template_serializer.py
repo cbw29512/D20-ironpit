@@ -1463,6 +1463,7 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["reaction_defense_spell"] = {
                 "id": defense.id, "name": defense.name,
                 "minimumSlotLevel": defense.minimum_slot_level,
+                "resourceId": defense.resource_id,
                 "acBonus": defense.ac_bonus,
                 "blockedAutoHitSpellIds": list(defense.blocked_auto_hit_spell_ids),
             }
