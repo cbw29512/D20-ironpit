@@ -13,7 +13,7 @@
         armor_class: 10, max_hp: 10000, speed_ft: 0, initiative_bonus: -10,
         attacks: [{
           id: "harmless-tap", name: "Harmless Tap", attack_kind: "melee",
-          attack_bonus: -50, damage: {count: 1, size: 2, bonus: 0},
+          attack_bonus: 0, damage: {count: 1, size: 2, bonus: 0},
           damage_type: "bludgeoning", animation: "slash",
         }],
         primary_attack_id: "harmless-tap",
@@ -55,9 +55,9 @@
           compiled.saving_throw_bonuses[ability] !== 1))
         throw new Error("Punching Bag must have six base-10 stats and +1 saves.");
       const attack = compiled.attacks[0];
-      if (attack.diceCount !== 1 || attack.diceSize !== 2
+      if (attack.bonus !== 0 || attack.diceCount !== 1 || attack.diceSize !== 2
           || attack.damageBonus !== 0 || attack.fixedDamage !== 0 || attack.onHitDamage?.length)
-        throw new Error("Punching Bag attack must remain harmless.");
+        throw new Error("Punching Bag must attack at +0 for exactly 0 damage.");
       return compiled;
     } catch (error) {
       console.error("Could not compile test-only homebrew Punching Bag", {edition, error});
