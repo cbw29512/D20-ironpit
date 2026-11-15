@@ -109,11 +109,12 @@
 
   function install(start, stop) {
     try {
-      for (const id of ["bulk-bag", "bulk-pairs", "bulk-stop", "bulk-copy", "bulk-export",
+      for (const id of ["bulk-bag", "bulk-monsters", "bulk-pairs", "bulk-stop", "bulk-copy", "bulk-export",
         "bulk-progress", "bulk-status", "bulk-save"]) {
         if (!$(id)) throw new Error("Missing simplified hero control " + id);
       }
       $("bulk-bag").addEventListener("click", () => { void start("bag"); });
+      $("bulk-monsters").addEventListener("click", () => { void start("monsters"); });
       $("bulk-pairs").addEventListener("click", () => { void start("pairs"); });
       $("bulk-stop").addEventListener("click", stop);
       $("bulk-copy").addEventListener("click", () => { void copyVisible(); });
