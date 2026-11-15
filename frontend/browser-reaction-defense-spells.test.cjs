@@ -68,4 +68,20 @@ for (const options of [
   assert.equal(D.trigger(s, "mage-1", {attackTotal: 15, natural: 10}), false);
   assert.equal(D.blocksAutoHit(s, "mage-1", "magic-missile"), false);
 }
+
+// Verify real shared browser attack-outcome integration, not only the helper.
+load("browser-attack-outcome.js");
+{
+  const defender = state();
+  const attacker = {template: {id: "attacker", name: "Attacker", resource_backed_d20_bonus_dice: []}};
+  const incoming = {selected_roll: 12, total: 15, rolls: [12], modifier: 3};
+  const attack = {id: "strike", name: "Strike"};
+  const result = window.IRON_PIT_BROWSER_ATTACK_OUTCOME.resolveD20(
+    attacker, defender, attack, incoming, 12,
+  );
+  assert.equal(result.hit, false);
+  assert.equal(result.defenseUsed, true);
+  assert.equal(result.targetAc, 17);
+  assert.equal(defender.resources["spell-slot-1"], 0);
+}
 console.log("Universal Shield reaction browser parity passed");
