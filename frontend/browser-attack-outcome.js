@@ -57,9 +57,18 @@
       const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(
         defenderState, attack, attackRoll, initialHit, baseTargetAc,
       ) || { hit: initialHit, used: false };
-      const targetAc = baseTargetAc + (parry.used ? defenderState.template.parry_reaction.ac_bonus : 0);
+      let targetAc = baseTargetAc + (parry.used ? defenderState.template.parry_reaction.ac_bonus : 0);
       let preAdjustmentRoll = attackRoll;
       let preAdjustmentHit = parry.hit;
+      const defenderMember = setup && [...setup.heroes, ...setup.monsters]
+        .find((member) => member.state === defenderState);
+      if (preAdjustmentHit && window.IRON_PIT_BROWSER_REACTION_DEFENSE_SPELLS?.trigger(
+        defenderState, defenderMember?.combatant_id || defenderState.template.id,
+        {attackTotal: attackRoll.total, natural: originalNatural},
+      )) {
+        targetAc += defenderState.template.reaction_defense_spell.acBonus;
+        preAdjustmentHit = false;
+      }
       const attackBonusRules = (attackerState.template.resource_backed_d20_bonus_dice || [])
         .filter((rule) => (rule.test_kinds || []).includes("attack"));
       if (!preAdjustmentHit && ![1, 20].includes(originalNatural) && attackBonusRules.length) {
