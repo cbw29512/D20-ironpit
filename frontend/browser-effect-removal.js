@@ -39,11 +39,17 @@
         if (!T()) throw new Error("Effect-tag condition runtime is not loaded.");
         tagged.push(...T().candidates(remover, target, action));
       }
-      for (const modifier of target.state.active_modifiers || []) {
-        const source = byId[modifier.source_id]; if (!source) continue;
-        const level = spellLevel(source, modifier.source_effect_id); if (level == null) continue;
-        const key = [target.combatant_id, source.combatant_id, modifier.source_effect_id].join(":");
-        found.set(key, { target, source, effectId: modifier.source_effect_id, spellLevel: level });
+      // A spell can own a timed condition without owning an AC modifier.
+      // Only a spell ID declared on the source card is dispellable.
+      const ownership = [
+        ...(target.state.active_modifiers || []),
+        ...(target.state.timed_effects || []).filter((item) => item.source_effect_id != null),
+      ];
+      for (const instance of ownership) {
+        const source = byId[instance.source_id]; if (!source) continue;
+        const level = spellLevel(source, instance.source_effect_id); if (level == null) continue;
+        const key = [target.combatant_id, source.combatant_id, instance.source_effect_id].join(":");
+        found.set(key, { target, source, effectId: instance.source_effect_id, spellLevel: level });
       }
     }
     tagged.sort((a, b) => S().distance(remover, a.target) - S().distance(remover, b.target)
