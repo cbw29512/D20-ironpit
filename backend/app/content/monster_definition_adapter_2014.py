@@ -90,7 +90,9 @@ from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014, fetid_cl
 from app.content.monster_leadership_2014 import leadership_actions_2014, leadership_resources_2014
 from app.content.monster_senses_2014 import special_senses_2014, bounded_blindsight_2014
 from app.content.monster_spell_slot_resources_2014 import monster_spell_slot_resources_2014
-from app.content.monster_shield_reaction_2014 import source_shield_reaction_2014
+from app.content.monster_shield_reaction_2014 import (
+    source_shield_reaction_2014, source_shield_reaction_resources_2014,
+)
 from app.content.monster_priest_spells_2014 import priest_spell_actions_2014
 from app.content.monster_prepared_cleric_spells_2014 import (
     prepared_cleric_spell_actions_2014, merge_unique_spell_actions,
@@ -271,6 +273,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
                      for key, uses in attack_ammunition_2014(monster).items())
     resources.extend(healing_resources_2014(monster))
     resources.extend(innate_spell_resources_2014(monster))
+    resources.extend(source_shield_reaction_resources_2014(monster))
     resources.extend(monster_spell_slot_resources_2014(monster))
     resources.extend(zero_hp_prevention_resources_2014(monster))
     resources.extend(recharge_self_buff_resources_2014(monster))
