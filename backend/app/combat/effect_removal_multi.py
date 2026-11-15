@@ -43,6 +43,7 @@ def apply_target_spell_effects(remover, setup, action, target, candidates, dice,
         audits = []
         summaries = []
         first_check = None
+        first_success = None
         first_dc = None
         for item in candidates:
             check, dc, succeeded = None, None, True
@@ -59,7 +60,7 @@ def apply_target_spell_effects(remover, setup, action, target, candidates, dice,
                     encounter_roller=remover, setup=setup,
                 )
                 if first_check is None:
-                    first_check, first_dc = check, dc
+                    first_check, first_dc, first_success = check, dc, succeeded
                 audits.append(AuditStep(
                     phase=AuditPhase.HIT_OR_SAVE_CHECK, kind="check",
                     label=(f"{item.effect_id} level {item.spell_level}: "
@@ -83,7 +84,7 @@ def apply_target_spell_effects(remover, setup, action, target, candidates, dice,
                 ]
                 removed.append(item.effect_id)
             summaries.append(f"{item.effect_id}: {'ended' if succeeded else 'resisted'}")
-        return removed, first_check, first_dc, EventAudit(steps=audits), "; ".join(summaries)
+        return removed, first_check, first_dc, first_success, EventAudit(steps=audits), "; ".join(summaries)
     except Exception:
         logger.exception("Failed to resolve multiple tracked spell effects")
         raise
