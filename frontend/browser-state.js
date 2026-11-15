@@ -136,7 +136,9 @@
   const opponents = (member, setup) => member.side === "heroes" ? setup.monsters : setup.heroes;
   function targetPriority(member) {
     const state = member.state;
-    if (!state.is_alive || state.is_dead) return null;
+    // An exiled creature is absent even when it still has positive HP.
+    if (!state.is_alive || state.is_dead
+      || (state.timed_effects || []).some((effect) => effect.removed_from_battlefield)) return null;
     if (state.current_hp > 0) {
       if (!Q().incapacitated(state)) return 0;
       const sleepLike = (state.timed_effects || []).some(effect =>
