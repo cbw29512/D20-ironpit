@@ -27,7 +27,7 @@
       const R = window.IRON_PIT_BROWSER_ROLLS;
       const M = window.IRON_PIT_BROWSER_MODIFIERS;
       const removed = [], steps = [], summary = [];
-      let firstCheck = null, firstDc = null;
+      let firstCheck = null, firstDc = null, firstSuccess = null;
       for (const item of candidates) {
         let check = null, dc = null, succeeded = true;
         if (item.spellLevel > (action.autoRemoveMaxLevel ?? 3)) {
@@ -40,7 +40,7 @@
             : {roll: check, succeeded: check.total >= dc};
           check = result.roll;
           succeeded = result.succeeded;
-          if (!firstCheck) {firstCheck = check; firstDc = dc;}
+          if (!firstCheck) {firstCheck = check; firstDc = dc; firstSuccess = succeeded;}
           steps.push({phase: "hit_or_save_check", kind: "check",
             label: `${item.effectId} level ${item.spellLevel}: Dispel Magic check ${check.total} vs DC ${dc}; ${succeeded ? "success" : "failure"}`});
         } else {
@@ -60,7 +60,8 @@
         actor_id: remover.combatant_id, actor_name: remover.state.template.name,
         target_id: target.combatant_id, target_name: target.state.template.name,
         ability_check_roll: firstCheck, check_ability: firstCheck ? action.castingAbility : null,
-        check_dc: firstDc, feature_id: action.id, resource_remaining: remaining,
+        check_dc: firstDc, check_succeeded: firstSuccess,
+        feature_id: action.id, resource_remaining: remaining,
         removed_condition_ids: removed, animation: action.animation || "effect-removal",
         audit: {steps},
         description: `${remover.state.template.name} uses ${action.name} on ${target.state.template.name}: ${summary.join("; ")}.`,
