@@ -224,6 +224,7 @@
     if (recklessStarted) description += ` ${attacker.state.template.name} uses Reckless Attack.`; if (outcome.brutalStrikeEffects?.length) description += ` Brutal Strike applies ${outcome.brutalStrikeEffects.map((item) => item.replaceAll("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())).join(", ")}.`;
     if (redirected) description += ` ${target.state.template.name} uses Redirect Attack; ${actualTarget.state.template.name} becomes the target.`;
     if (parry.used) description += ` ${actualTarget.state.template.name} uses Parry.`;
+    if (resolved.defenseUsed) description += ` ${actualTarget.state.template.name} casts ${actualTarget.state.template.reaction_defense_spell.name} as a Reaction (+5 AC).`;
     if (sapApplied === "weapon") description += ` Sap mastery affects ${actualTarget.state.template.name}.`;
     if (sapApplied === "tactical") description += ` Tactical Master applies Sap to ${actualTarget.state.template.name}.`;
     if (vexApplied) description += ` Vex primes the next attack against ${actualTarget.state.template.name}.`;
