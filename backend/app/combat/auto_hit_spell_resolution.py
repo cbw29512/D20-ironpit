@@ -4,6 +4,7 @@ import logging
 
 from app.combat.owner_action_expiry import expire_on_owner_event
 from app.combat.action_economy import is_available, spend
+from app.combat.reaction_defense_spells import reaction_defense_blocks_auto_hit
 from app.combat.alternate_spell_casts import spend_alternate_cast
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.encounter_targeting import combatant_distance
@@ -61,6 +62,9 @@ def resolve_auto_hit_spell(
         expire_on_owner_event(caster.state, "spell_cast", [
             member.state for member in [*setup.heroes, *setup.monsters]
         ])
+        blocked_by_defense = reaction_defense_blocks_auto_hit(
+            target.state, action.id, source_id=target.combatant_id,
+        )
         rolls: list[int] = []
         raw_total = 0
         components: list[DamageRollComponent] = []
@@ -90,7 +94,12 @@ def resolve_auto_hit_spell(
 
         hp_before = target.state.current_hp
         temp_before = target.state.temporary_hp
-        applied_total, applied_components = apply_damage_defenses(target.state, components)
+        if blocked_by_defense:
+            applied_total = 0
+            applied_components = [item.model_copy(update={"applied_total": 0})
+                                  for item in components]
+        else:
+            applied_total, applied_components = apply_damage_defenses(target.state, components)
         affected_states = [entry.state for entry in [*setup.heroes, *setup.monsters]]
         apply_damage(
             target.state,
@@ -130,7 +139,10 @@ def resolve_auto_hit_spell(
             animation=action.animation,
             description=(
                 f"{caster.state.template.name} casts {action.name}: "
-                f"{projectile_count} projectiles automatically strike {target.state.template.name}."
+                f"{projectile_count} projectiles "
+                + (f"are blocked by {target.state.template.reaction_defense_spell.name}."
+                   if blocked_by_defense else
+                   f"automatically strike {target.state.template.name}.")
             ),
         )
     except ValueError:
