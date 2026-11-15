@@ -57,7 +57,7 @@
               branchTotals[key] = (branchTotals[key] || 0) + count;
             detail.ability_ids_seen = evidence.exercised.map(item => item.id);
             if (battle.outcome === "draw" && battle.rounds === 100)
-              detail.round_limit = true; // Expected for 10,000-HP targets.
+              detail.round_limit = true; // Possible for lower-damage sources even at 1,000 HP.
           } catch (error) {
             console.error("Punching Bag case attempt failed", {entry, testSeed, error});
             const message = `engine_error: ${error?.message || String(error)}`;
