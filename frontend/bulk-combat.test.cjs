@@ -115,15 +115,15 @@ const vm = require("node:vm");
     assert.equal(files.length, 3, "Monster-only run must create its own transcript.");
     const monsterLog = files[2].parts.join("");
     assert.match(files[2].name, /iron-pit-monsters-complete-/);
-    assert.equal((monsterLog.match(/FIGHT \\d+ OF 3/g) || []).length, 3);
+    assert.equal((monsterLog.match(/FIGHT \d+ OF 3/g) || []).length, 3);
     assert.match(monsterLog, /MATCHUP: Monster vs Bag/);
     assert.doesNotMatch(monsterLog, /MATCHUP: Hero vs Bag/);
     assert.match(monsterLog, /"attempts_per_card": 3/);
     controls["bulk-pairs"].handlers.click();
     await waitForCompletion();
     assert.equal(files.length, 4);
-    assert.equal(picks.count, 0, "Neither Fight button may open a file picker.");
-    assert.equal((files[2].parts.join("").match(/FIGHT \d+ OF 2/g) || []).length, 2);
+    assert.equal(picks.count, 0, "Bulk fight buttons must not open a file picker.");
+    assert.equal((files[3].parts.join("").match(/FIGHT \d+ OF 2/g) || []).length, 2);
     assert.equal(state.fighting, false);
     assert.equal(files[3].closed, true);
     assert.ok(!controls["bulk-status"].textContent.includes("Test stopped"));
@@ -136,7 +136,7 @@ const vm = require("node:vm");
 
     for (const htmlName of ["index.html", "frontend/index.html"]) {
       const html = fs.readFileSync(path.join(__dirname, "..", htmlName), "utf8");
-      for (const id of ["bulk-bag", "bulk-pairs", "bulk-stop",
+      for (const id of ["bulk-bag", "bulk-monsters", "bulk-pairs", "bulk-stop",
         "bulk-copy", "bulk-save", "bulk-export", "bulk-progress", "bulk-status"]) {
         assert.ok(html.includes('id="' + id + '"'), htmlName + " missing " + id);
       }
