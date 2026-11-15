@@ -84,4 +84,13 @@ load("browser-attack-outcome.js");
   assert.equal(result.targetAc, 17);
   assert.equal(defender.resources["spell-slot-1"], 0);
 }
+{
+  const s = state();
+  s.resources = {shield: 3};
+  s.template.reaction_defense_spell.minimumSlotLevel = null;
+  s.template.reaction_defense_spell.resourceId = "shield";
+  assert.equal(D.blocksAutoHit(s, "couatl-1", "magic-missile"), true);
+  assert.equal(s.resources.shield, 2);
+  assert.equal(s.reaction_available, false);
+}
 console.log("Universal Shield reaction browser parity passed");
