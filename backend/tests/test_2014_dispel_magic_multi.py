@@ -75,14 +75,14 @@ def test_one_cast_dispels_multiple_low_spells_and_checks_each_high(monkeypatch):
             actor, setup, action, target, dice, 1,
         )
         assert len(candidates) == 4
-        removed, first, dc, audit, description = multi.apply_target_spell_effects(
+        removed, first, dc, first_success, audit, description = multi.apply_target_spell_effects(
             actor, setup, action, target, candidates, dice, 1,
         )
         assert removed == ["stoneskin", "haste", "bless"] or set(removed) == {
             "stoneskin", "haste", "bless",
         }
         assert "greater-invisibility: resisted" in description
-        assert first.total == 4 and dc == 14
+        assert first.total == 4 and dc == 14 and first_success is False
         assert len(audit.steps) == 4
         assert [m.source_effect_id for m in target.state.active_modifiers] == [
             "greater-invisibility", "natural-armor",
