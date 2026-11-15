@@ -47,20 +47,30 @@ def trigger_reaction_defense(
             ac = effective_armor_class(state)
             if not ac <= incoming_attack_total < ac + defense.ac_bonus:
                 return False
-        slots = sorted(
-            (int(resource.id.removeprefix("spell-slot-")), resource)
-            for resource in state.resources
-            if resource.id.startswith("spell-slot-")
-            and resource.id.removeprefix("spell-slot-").isdecimal()
-            and int(resource.id.removeprefix("spell-slot-")) >= defense.minimum_slot_level
-            and resource.current_uses > 0
-        )
-        if not slots:
-            return False
-        _, slot = slots[0]
-        # Check all eligibility before changing fight state.
+        resource = None
+        if defense.resource_id is not None:
+            # Innate spell: source card supplies its daily-use pool.
+            resource = next((item for item in state.resources
+                             if item.id == defense.resource_id), None)
+            if resource is None or resource.current_uses < 1:
+                return False
+        elif defense.minimum_slot_level is not None:
+            # Prepared spell: consume the lowest legal available spell slot.
+            slots = sorted(
+                (int(item.id.removeprefix("spell-slot-")), item)
+                for item in state.resources
+                if item.id.startswith("spell-slot-")
+                and item.id.removeprefix("spell-slot-").isdecimal()
+                and int(item.id.removeprefix("spell-slot-")) >= defense.minimum_slot_level
+                and item.current_uses > 0
+            )
+            if not slots:
+                return False
+            resource = slots[0][1]
+        # At-will innate spells spend the Reaction but no finite resource.
         spend(state, "reaction")
-        slot.current_uses -= 1
+        if resource is not None:
+            resource.current_uses -= 1
         add_modifier(state, CombatModifier(
             id=f"{source_id or state.template.id}:{defense.id}:reaction",
             source_id=source_id or state.template.id, source_effect_id=defense.id,
