@@ -27,6 +27,10 @@ jobs:
         run: pip install -e '.[dev]'
       - name: Audit all 17 blocked 2014 spellcasters by printed spell and shared binding
         run: PYTHONPATH=backend python scripts/report_spellcaster_gaps_2014.py
+      - name: Verify 2014 Dispel Magic RAW target scope (Python and browser)
+        run: |
+          PYTHONPATH=backend pytest -q backend/tests/test_2014_dispel_magic_target_scope.py
+          node frontend/browser-2014-dispel-magic-target-scope.test.cjs
       - name: Validate standard Pit formation weapon engagement
         working-directory: backend
         run: PYTHONPATH=.:.. pytest -q tests/test_formation_weapon_engagement.py tests/test_formation_no_movement_turn.py tests/test_formation_cone_targeting.py tests/test_attack_action_event_label.py tests/test_formation_line_targeting.py tests/test_formation_atomic_promotion.py
