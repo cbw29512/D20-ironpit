@@ -75,3 +75,26 @@ def source_shield_reaction_2014(
     except Exception:
         logger.exception("Failed 2014 Shield source proof for %s", monster.id)
         raise
+
+
+def source_shield_reaction_resources_2014(
+    monster: SourceMonster2014,
+) -> list[ResourceDefinition]:
+    """Create the immutable printed innate daily-use pool only when needed."""
+    try:
+        defense = source_shield_reaction_2014(monster)
+        if defense is None or defense.resource_id is None:
+            return []
+        source = innate_spellcasting_source_2014(monster)
+        if not isinstance(source, dict):
+            raise ValueError("Innate Shield source is missing")
+        entry = next(item for item in source["spells"] if item["id"] == defense.id)
+        uses = entry.get("uses_per_day")
+        if type(uses) is not int or uses < 1:
+            raise ValueError("Innate Shield daily uses must match source")
+        return [ResourceDefinition(
+            id=defense.resource_id, name=defense.name, max_uses=uses,
+        )]
+    except Exception:
+        logger.exception("Could not bind 2014 innate Shield resource for %s", monster.id)
+        raise
