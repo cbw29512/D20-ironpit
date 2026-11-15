@@ -27,15 +27,22 @@
         if (!Number.isFinite(options.attackTotal) || [1, 20].includes(options.natural)
           || !(ac <= options.attackTotal && options.attackTotal < ac + defense.acBonus)) return false;
       }
-      const slots = Object.keys(state.resources || {})
-        .filter((id) => /^spell-slot-[1-9]$/.test(id))
-        .map((id) => ({ id, level: Number(id.split("-")[2]) }))
-        .filter((item) => item.level >= defense.minimumSlotLevel && state.resources[item.id] > 0)
-        .sort((a, b) => a.level - b.level);
-      if (!slots.length) return false;
-      const slot = slots[0];
+      let resourceId = defense.resourceId || null;
+      if (resourceId) {
+        // Innate spell: daily uses are printed source parameters, not slots.
+        if (!(state.resources?.[resourceId] > 0)) return false;
+      } else if (Number.isInteger(defense.minimumSlotLevel)) {
+        const slots = Object.keys(state.resources || {})
+          .filter((id) => /^spell-slot-[1-9]$/.test(id))
+          .map((id) => ({ id, level: Number(id.split("-")[2]) }))
+          .filter((item) => item.level >= defense.minimumSlotLevel && state.resources[item.id] > 0)
+          .sort((a, b) => a.level - b.level);
+        if (!slots.length) return false;
+        resourceId = slots[0].id;
+      }
+      // At-will innate casts have no finite resource; the Reaction still costs.
       E().spend(state, "reaction");
-      state.resources[slot.id] -= 1;
+      if (resourceId) state.resources[resourceId] -= 1;
       M().add(state, {
         id: `${sourceId}:${defense.id}:reaction`, source_id: sourceId,
         source_effect_id: defense.id, source_name: defense.name,
