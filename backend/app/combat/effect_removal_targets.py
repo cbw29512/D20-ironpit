@@ -85,15 +85,26 @@ def tracked_spell_effects(
     for target in members:
         if not _target_allowed(remover, target, action):
             continue
-        for modifier in target.state.active_modifiers:
-            source = by_id.get(modifier.source_id)
+        # Both modifier-backed buffs and timed spell conditions are source
+        # effects on the selected creature. Do not treat generic magical
+        # monster traits as spells without a printed source spell action.
+        ownership = [
+            (item.source_id, item.source_effect_id)
+            for item in target.state.active_modifiers
+        ] + [
+            (item.source_id, item.source_effect_id)
+            for item in getattr(target.state, "timed_effects", ())
+            if item.source_effect_id is not None
+        ]
+        for source_id, effect_id in ownership:
+            source = by_id.get(source_id)
             if source is None:
                 continue
-            level = _spell_level(source, modifier.source_effect_id)
+            level = _spell_level(source, effect_id)
             if level is None:
                 continue
-            key = (target.combatant_id, source.combatant_id, modifier.source_effect_id)
-            found[key] = TrackedSpellEffect(target, source, modifier.source_effect_id, level)
+            key = (target.combatant_id, source.combatant_id, effect_id)
+            found[key] = TrackedSpellEffect(target, source, effect_id, level)
     return sorted(
         found.values(),
         # Automated combat seeks hostile spell effects first. Manual/explicit
