@@ -103,3 +103,38 @@ def test_source_spell_cannot_remove_buff_on_different_creature():
         raise AssertionError("Missing higher-spell dice should have failed preflight")
     except ValueError as error:
         assert "checks require dice" in str(error)
+
+
+
+def test_spell_owned_timed_condition_removed_but_innate_trait_survives():
+    try:
+        from app.domain.timed_effects import TimedEffect
+
+        action, actor, source, target, setup = fixture()
+        source.state.template.defensive_spell_actions.append(spell("hold-person", 2))
+        # Remove the other tracked buffs to make the timed spell the sole
+        # dispellable effect; nonspell natural armor must survive.
+        target.state.active_modifiers = [modifier("enemy-caster", "natural-armor")]
+        target.state.active_buff_effect_ids = []
+        target.state.template.innate_condition_ids = []
+        target.state.active_effect_ids = ["paralyzed"]
+        target.state.active_curses = []
+        target.state.timed_effects = [TimedEffect(
+            effect_id="paralyzed", source_id="enemy-caster",
+            source_effect_id="hold-person", source_is_magical=True,
+        )]
+        candidates = multi.resolve_target_spell_effects(
+            actor, setup, action, target, None, 1,
+        )
+        assert len(candidates) == 1 and candidates[0].effect_id == "hold-person"
+        removed, check, dc, success, audit, _ = multi.apply_target_spell_effects(
+            actor, setup, action, target, candidates, None, 1,
+        )
+        assert removed == ["hold-person"] and check is None and dc is None
+        assert target.state.timed_effects == []
+        assert target.state.active_effect_ids == []
+        assert [m.source_effect_id for m in target.state.active_modifiers] == ["natural-armor"]
+        assert len(audit.steps) == 1
+    except Exception:
+        logger.exception("Dispel Magic did not use canonical timed spell cleanup")
+        raise
