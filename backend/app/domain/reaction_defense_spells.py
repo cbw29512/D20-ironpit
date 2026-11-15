@@ -11,7 +11,8 @@ from pydantic import BaseModel, Field
 class ReactionDefenseSpell(BaseModel):
     id: str = Field(min_length=1)
     name: str = Field(min_length=1)
-    minimum_slot_level: int = Field(ge=1, le=9)
+    minimum_slot_level: int | None = Field(default=None, ge=1, le=9)
+    resource_id: str | None = Field(default=None, min_length=1)
     ac_bonus: int = Field(gt=0, le=20)
     blocked_auto_hit_spell_ids: list[str] = Field(default_factory=list)
     duration: str = "source-turn-start"
