@@ -45,9 +45,24 @@ def source_proven_prepared_utility_spells_2014(
         sections = source_sections_2014(
             monster.source_traits, include_continuations=True,
         )
-        printed = " ".join(sections.get("Spellcasting", "").casefold().split())
+        printed = sections.get("Spellcasting", "")
         if not printed:
             return frozenset()
+        # Some printed 2014 spell lists (e.g. Flameskull) are a sibling
+        # <ul> following the Spellcasting <p>, not a continuation paragraph.
+        # Accept ONLY the immediately adjacent list. Never search other
+        # traits or an unrelated later list for evidence of a known spell.
+        source_text = monster.source_traits or ""
+        header = re.search(
+            r"<p>[^<]*(?:<em>)?<strong>Spellcasting\\.</strong>.*?</p>",
+            source_text, flags=re.S | re.I,
+        )
+        if header is not None:
+            tail = source_text[header.end():]
+            adjacent_list = re.match(r"\\s*<ul>.*?</ul>", tail, flags=re.S)
+            if adjacent_list is not None:
+                printed += " " + re.sub(r"<[^>]*>", " ", adjacent_list.group())
+        printed = " ".join(printed.casefold().split())
 
         accepted: set[str] = set()
         seen: set[str] = set()
