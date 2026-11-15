@@ -145,10 +145,11 @@ def resolve_spell_attack(
         if spend_cast_costs:
             apply_spell_cast_timed_resistance(caster, spell, round_number)
         natural = attack_roll.selected_roll or 0
-        if trigger_reaction_defense(
+        defense_used = trigger_reaction_defense(
             target.state, incoming_attack_total=attack_roll.total,
             natural_roll=natural, source_id=target.combatant_id,
-        ):
+        )
+        if defense_used:
             target_ac += target.state.template.reaction_defense_spell.ac_bonus
         hit = natural != 1 and (natural == 20 or attack_roll.total >= target_ac)
         critical = bool(hit and (natural == 20 or (close_hit_is_automatic_critical(target.state) and distance <= 5)))
@@ -163,6 +164,10 @@ def resolve_spell_attack(
         remaining = resource.current_uses if resource is not None else alternate_remaining
         outcome = "CRITICAL HIT" if critical else "HIT" if hit else "MISS"
         description = f"{caster.state.template.name}: {outcome} with {spell.name}."
+        if defense_used:
+            description += (f" {target.state.template.name} casts "
+                            f"{target.state.template.reaction_defense_spell.name} "
+                            "as a Reaction (+5 AC).")
         if range_modifier is not None:
             description += f" {caster.state.template.name} uses {range_modifier.name}."
         if heroic_reroll:
