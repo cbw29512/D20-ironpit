@@ -48,7 +48,9 @@
     }
     tagged.sort((a, b) => S().distance(remover, a.target) - S().distance(remover, b.target)
       || a.target.combatant_id.localeCompare(b.target.combatant_id) || a.grant.source_id.localeCompare(b.grant.source_id));
-    return [...tagged, ...[...found.values()].sort((a, b) => b.spellLevel - a.spellLevel
+    return [...tagged, ...[...found.values()].sort((a, b) =>
+      Number(a.target.side === remover.side) - Number(b.target.side === remover.side)
+      || b.spellLevel - a.spellLevel
       || S().distance(remover, a.target) - S().distance(remover, b.target)
       || a.effectId.localeCompare(b.effectId))];
   }
