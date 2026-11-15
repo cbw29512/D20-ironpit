@@ -84,6 +84,13 @@
         throw new Error("Tracked spell effect is no longer a legal removal target.");
       }
       if (effect.grant) T().validateRuntime();
+      const multi = action.removeAllTargetSpells && !effect.grant
+        ? window.IRON_PIT_BROWSER_EFFECT_REMOVAL_MULTI
+        : null;
+      if (action.removeAllTargetSpells && !effect.grant && !multi)
+        throw new Error("Multi-effect Dispel Magic runtime is not loaded.");
+      const candidates = multi?.preflight(remover, setup, action, effect.target,
+        effects(remover, setup, action)) || null;
       E().spend(remover.state, action.actionCost);
       let remaining = null;
       if (action.resourceId) {
@@ -92,6 +99,9 @@
         remaining = remover.state.resources[action.resourceId];
       }
       if (effect.grant) return T().apply(sequence, round, remover, setup, action, effect, remaining);
+      if (candidates) return multi.apply(
+        sequence, round, remover, setup, action, effect.target, candidates, remaining,
+      );
       let check = null, succeeded = true, dc = null;
       if (effect.spellLevel > (action.autoRemoveMaxLevel ?? 3)) {
         const score = remover.state.template.ability_scores?.[action.castingAbility];
