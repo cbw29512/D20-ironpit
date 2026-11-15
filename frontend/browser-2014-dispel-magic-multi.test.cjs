@@ -91,6 +91,31 @@ try {
   assert.deepEqual(target.state.active_modifiers.map((m) => m.source_effect_id),
     ["greater-invisibility", "natural-armor"]);
   assert.deepEqual(other.state.active_modifiers.map((m) => m.source_effect_id), ["haste"]);
+  // Spell-owned timed condition without a modifier is a valid target.
+  const timedTarget = member("timed-target", "monsters");
+  timedTarget.state.timed_effects = [{
+    effect_id: "paralyzed", source_id: "source",
+    source_effect_id: "hold-person", source_is_magical: true,
+  }];
+  timedTarget.state.active_effect_ids = ["paralyzed"];
+  source.state.template.defensive_spell_actions.push(spell("hold-person", 2));
+  const affected = [];
+  window.IRON_PIT_BROWSER_TIMED = {removeEffect: (state, effect) => {
+    affected.push(effect.effect_id);
+    state.timed_effects = state.timed_effects.filter((item) => item !== effect);
+    state.active_effect_ids = state.active_effect_ids.filter((id) => id !== effect.effect_id);
+  }};
+  const timedOnly = api.effects(actor,
+    {heroes: [actor], monsters: [source, timedTarget]}, action);
+  assert.deepEqual(timedOnly.map((item) => item.effectId), ["hold-person"]);
+  const timedEvent = window.IRON_PIT_BROWSER_EFFECT_REMOVAL_MULTI.apply(
+    2, 1, actor, {heroes: [actor], monsters: [source, timedTarget]},
+    action, timedTarget, timedOnly, 0,
+  );
+  assert.deepEqual(timedEvent.removed_condition_ids, ["hold-person"]);
+  assert.deepEqual(affected, ["paralyzed"]);
+  assert.deepEqual(timedTarget.state.active_effect_ids, []);
+  assert.deepEqual(timedTarget.state.timed_effects, []);
   console.log("2014 Dispel Magic browser multi-effect checks and resource parity passed");
 } catch (error) {
   console.error("2014 Dispel Magic multi-effect browser regression failed", error);
