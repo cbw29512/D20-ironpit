@@ -114,7 +114,7 @@
   function monsterNote(state, rows, chosen) {
     const certified = rows.filter(ready).length;
     if (!rows.length) return "No monsters exist at this Challenge Rating.";
-    if (chosen?.test_only) return "TEST ONLY · CR 0 · AC 10 · 10,000 HP · zero-damage training opponent (not an official monster).";
+    if (chosen?.test_only) return "TEST ONLY · CR 0 · AC 10 · 1,000 HP · zero-damage training opponent (not an official monster).";
     if (chosen?.custom) return ready(chosen) ? `✦ CUSTOM MONSTER · ${chosen.name} · ready for homebrew battle (not official RAW-certified).` : `✦ CUSTOM MONSTER · ${chosen.name} · ${chosen.compile_error || "draft not ready for combat"}`;
     if (chosen && !ready(chosen)) return `${chosen.name} is listed, but is not ready to fight yet.`;
     if (state.ruleset === "2014") return `${rows.length} 2014 monster${rows.length === 1 ? "" : "s"} at this Challenge Rating.`;
