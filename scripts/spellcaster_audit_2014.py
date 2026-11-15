@@ -17,7 +17,7 @@ from app.content.monster_prepared_spells_2014 import (
 from app.content.monster_prepared_cleric_spells_2014 import prepared_cleric_spell_actions_2014
 from app.content.monster_prepared_nature_spells_2014 import prepared_nature_spells_2014
 from app.content.monster_source_tier1_cleric_2014 import source_proves_tier1_cleric_spells_2014
-from app.content.monster_source_priest_spellcasting_2014 import priest_proven_spell_ids_2014
+from app.content.monster_priest_spells_2014 import priest_proven_spell_ids_2014
 from app.content.monster_command_spell_2014 import prepared_command_spell_actions_2014
 from app.content.monster_innate_support_2014 import (
     supports_innate_spellcasting_2014, innate_timed_self_buffs_2014,
