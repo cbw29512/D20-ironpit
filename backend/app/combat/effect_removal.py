@@ -76,7 +76,7 @@ def resolve_effect_removal(
         if isinstance(effect, TaggedConditionTarget):
             return apply_tagged_condition(sequence, round_number, remover, setup, action, effect, remaining)
         if candidates is not None:
-            removed, first_check, first_dc, audit, summary = apply_target_spell_effects(
+            removed, first_check, first_dc, first_success, audit, summary = apply_target_spell_effects(
                 remover, setup, action, effect.target, candidates, dice, round_number,
             )
             return BattleEvent(
@@ -88,7 +88,7 @@ def resolve_effect_removal(
                 removed_condition_ids=removed, animation=action.animation,
                 ability_check_roll=first_check, check_ability=action.casting_ability
                 if first_check is not None else None,
-                check_dc=first_dc,
+                check_dc=first_dc, check_succeeded=first_success,
                 audit=audit,
                 description=(
                     f"{remover.state.template.name} uses {action.name} on "
