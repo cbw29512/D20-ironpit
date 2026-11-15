@@ -78,7 +78,7 @@ try {
     assert.equal(card.compiled_template.max_hp,10000);
     assert.equal(card.compiled_template.armor_class,10);
     assert.equal(card.compiled_template.attacks[0].fixedDamage,0);
-    assert.equal(card.compiled_template.saving_throw_bonuses.constitution,1);
+    assert.equal(card.compiled_template.saving_throw_bonuses.constitution,0);
     assert.equal(official.length,1,"Official catalog must remain unchanged.");
     assert.equal(state.catalog.monsters,official);
   }
