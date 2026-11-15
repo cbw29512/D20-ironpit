@@ -35,7 +35,15 @@ def removal_targets(remover, setup, action):
                 continue
             tagged.append(TaggedConditionTarget(target, grant))
     tagged.sort(key=lambda item: (combatant_distance(remover, item.target), item.target.combatant_id, item.grant.source_id))
-    return [*tagged, *tracked_spell_effects(remover, setup, action)]
+    spells = tracked_spell_effects(remover, setup, action)
+    # Hostile targets first across *both* sources: tagged susceptibility
+    # effects must not make AI Dispel Magic incapacitate an eligible ally.
+    return [
+        *(item for item in tagged if item.target.side != remover.side),
+        *(item for item in spells if item.target.side != remover.side),
+        *(item for item in tagged if item.target.side == remover.side),
+        *(item for item in spells if item.target.side == remover.side),
+    ]
 
 
 def _spell_level(source: EncounterCombatant, effect_id: str) -> int | None:
