@@ -4,6 +4,7 @@ from app.combat.undead_fortitude import consume_survival_save_log
 from app.combat.zero_hp_replacement import consume_zero_hp_replacement_log
 import logging
 from app.combat.action_economy import is_available, spend
+from app.combat.reaction_defense_spells import trigger_reaction_defense
 from app.combat.alternate_spell_casts import spend_alternate_cast
 from app.combat.concentration import start_concentration
 from app.combat.condition_rules import close_hit_is_automatic_critical
@@ -144,6 +145,11 @@ def resolve_spell_attack(
         if spend_cast_costs:
             apply_spell_cast_timed_resistance(caster, spell, round_number)
         natural = attack_roll.selected_roll or 0
+        if trigger_reaction_defense(
+            target.state, incoming_attack_total=attack_roll.total,
+            natural_roll=natural, source_id=target.combatant_id,
+        ):
+            target_ac += target.state.template.reaction_defense_spell.ac_bonus
         hit = natural != 1 and (natural == 20 or attack_roll.total >= target_ac)
         critical = bool(hit and (natural == 20 or (close_hit_is_automatic_critical(target.state) and distance <= 5)))
         hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
