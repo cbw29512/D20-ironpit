@@ -41,16 +41,18 @@ require("./browser-test-runtime.cjs").loadWebsite();
       const bag = bagApi.template(edition);
       assert.equal(bag.name, "Punching Bag");
       assert.equal(bag.armor_class, 10);
-      assert.equal(bag.max_hp, 10000);
+      assert.equal(bag.max_hp, 1000);
       // The training opponent must be a legal target for every save family.
       for (const ability of ["strength", "dexterity", "constitution",
         "intelligence", "wisdom", "charisma"]) {
         assert.equal(bag.ability_scores[ability], 10);
-        assert.equal(bag.saving_throw_bonuses[ability], 1);
+        assert.equal(bag.saving_throw_bonuses[ability], 0);
       }
       assert.equal(bag.skill_bonuses.athletics, 0);
       assert.equal(bag.skill_bonuses.acrobatics, 0);
       assert.equal(bag.attacks.length, 1);
+      assert.equal(bag.attacks[0].bonus, 0,
+        "Harmless Tap uses the universal +0 attack modifier.");
       assert.equal(bag.attacks[0].damageBonus, 0);
       assert.equal(bag.attacks[0].fixedDamage, 0,
         "Even critical hits must use native fixed zero damage.");
@@ -89,7 +91,7 @@ require("./browser-test-runtime.cjs").loadWebsite();
           ...executed.replay.battle.setup.monsters].find(
             member => member.state.template.name === "Punching Bag");
         assert.ok(dummy);
-        assert.equal(dummy.state.template.max_hp, 10000);
+        assert.equal(dummy.state.template.max_hp, 1000);
         assert.ok(!executed.replay.battle.events.some(e =>
           e.actor_id === executed.bag_actor_id && (e.damage_roll?.total || 0) > 0),
           "The harmless Punching Bag must not damage anyone.");

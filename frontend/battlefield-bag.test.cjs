@@ -32,7 +32,7 @@ require("./browser-test-runtime.cjs").loadWebsite();
     const runner = window.IRON_PIT_BATTLEFIELD_BAG_RUNNER;
     const bag = runner.bagCard("2014");
     assert.equal(bag.coverage_status, "custom_ready");
-    assert.equal(bag.compiled_template.max_hp, 10000);
+    assert.equal(bag.compiled_template.max_hp, 1000);
     assert.equal(bag.compiled_template.armor_class, 10);
     // Both entrypoints compile the same full-stat Punching Bag template.
     for (const edition of ["2014", "2024"]) {
@@ -40,7 +40,7 @@ require("./browser-test-runtime.cjs").loadWebsite();
       for (const ability of ["strength", "dexterity", "constitution",
         "intelligence", "wisdom", "charisma"]) {
         assert.equal(template.ability_scores[ability], 10);
-        assert.equal(template.saving_throw_bonuses[ability], 1);
+        assert.equal(template.saving_throw_bonuses[ability], 0);
       }
       assert.equal(template.skill_bonuses.athletics, 0);
       assert.equal(template.skill_bonuses.acrobatics, 0);

@@ -55,7 +55,7 @@
       if (JSON.stringify(source) !== before)
         throw new Error("The certified source card mutated during a bag fight.");
       if (dummy.state.template.armor_class !== 10 ||
-          dummy.state.template.max_hp !== 10000)
+          dummy.state.template.max_hp !== 1000)
         throw new Error("Punching Bag combat state has incorrect source stats.");
       return {replay, source, source_actor_id: fighter.combatant_id,
         bag_actor_id: dummy.combatant_id, selection};

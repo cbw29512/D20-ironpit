@@ -66,7 +66,7 @@ try {
     choices.value = bagOption.value;
     choices.onchange();
     assert.equal(el("confirm-card").disabled,false);
-    assert.match(el("picker-note").textContent,/10,000 HP/);
+    assert.match(el("picker-note").textContent,/1,000 HP/);
     el("confirm-card").click();
     const card = selected.at(-1);
     assert.equal(card.ruleset,edition);
@@ -75,10 +75,10 @@ try {
     assert.equal(card.test_only,true);
     assert.equal(card.coverage_status,"custom_ready");
     assert.equal(card.compiled_template.id,card.runnable_template_id);
-    assert.equal(card.compiled_template.max_hp,10000);
+    assert.equal(card.compiled_template.max_hp,1000);
     assert.equal(card.compiled_template.armor_class,10);
     assert.equal(card.compiled_template.attacks[0].fixedDamage,0);
-    assert.equal(card.compiled_template.saving_throw_bonuses.constitution,1);
+    assert.equal(card.compiled_template.saving_throw_bonuses.constitution,0);
     assert.equal(official.length,1,"Official catalog must remain unchanged.");
     assert.equal(state.catalog.monsters,official);
   }

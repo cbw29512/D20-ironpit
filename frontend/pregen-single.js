@@ -47,7 +47,7 @@
         title.textContent = card.name;
         const info = document.createElement("p");
         info.textContent = edition + " · " + card.class_id +
-          " · level " + card.level + " · Punching Bag (AC 10 / HP 10,000)";
+          " · level " + card.level + " · Punching Bag (AC 10 / HP 1,000)";
         const button = document.createElement("button");
         button.type = "button";
         button.textContent = "Fight Punching Bag";
