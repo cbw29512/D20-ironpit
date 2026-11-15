@@ -24,6 +24,18 @@ require("./browser-test-runtime.cjs").loadWebsite();
     const fight = window.IRON_PIT_TEST_BAG_FIGHT;
     const coverage = window.IRON_PIT_TEST_BAG_COVERAGE;
     const plan = window.IRON_PIT_TEST_BAG_PLAN.create();
+    const monstersOnly = window.IRON_PIT_TEST_BAG_PLAN.create("monsters");
+    assert.equal(monstersOnly.groups.length, 2,
+      "Monster-only plan must cover both editions without pregens.");
+    assert.ok(monstersOnly.groups.every(group => group.kind === "monster"));
+    assert.equal(monstersOnly.total,
+      plan.groups.filter(group => group.kind === "monster")
+        .reduce((sum, group) => sum + group.ids.length, 0));
+    assert.equal(new Set(Array.from({length: monstersOnly.total}, (_, index) => {
+      const entry = monstersOnly.at(index);
+      assert.equal(entry.source_kind, "monster");
+      return entry.edition + ":" + entry.source_id;
+    })).size, monstersOnly.total, "Each monster must appear exactly once.");
     const initialHeroes = window.IRON_PIT_BROWSER_HEROES;
     const heroSnapshot = JSON.stringify(initialHeroes);
     const groupCounts = plan.groups.map(g => g.ids.length);
