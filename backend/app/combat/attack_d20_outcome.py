@@ -9,6 +9,7 @@ from app.combat.dice import DiceProvider
 from app.combat.failed_d20_test_override import apply_failed_d20_test_override
 from app.combat.miss_to_hit_override import apply_miss_to_hit_override
 from app.combat.parry import resolve_parry_hit
+from app.combat.reaction_defense_spells import trigger_reaction_defense
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import CombatantState, DiceRoll, WeaponAttack
 
@@ -52,6 +53,18 @@ def resolve_attack_d20_outcome(
         )
         if parry_used:
             target_ac += defender.template.parry_reaction.ac_bonus
+        # Generic reaction defense changes the triggering hit and persists
+        # until the defending source's next turn. Natural 20 cannot be negated.
+        if hit and trigger_reaction_defense(
+            defender, incoming_attack_total=attack_roll.total,
+            natural_roll=original_natural,
+            source_id=next((member.combatant_id for member in
+                            [*setup.heroes, *setup.monsters]
+                            if member.state is defender), None)
+            if setup is not None else None,
+        ):
+            target_ac += defender.template.reaction_defense_spell.ac_bonus
+            hit = False
 
         attack_bonus_rules = [
             rule
