@@ -139,7 +139,9 @@ def test_hurl_through_hell_triggers_from_eldritch_blast() -> None:
         FixedDiceProvider([20, 5, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5]),
     )
     assert event.hit is True
-    assert removed_from_battlefield(enemy.state) is True
+    assert removed_from_battlefield(enemy.state) is False
+    assert "hurl-through-hell" in enemy.state.active_effect_ids
+    assert any(effect.all_damage_immunity for effect in enemy.state.timed_effects)
     assert "incapacitated" in enemy.state.active_effect_ids
     hurl = next(item for item in varek.state.resources if item.id == "hurl-through-hell")
     assert hurl.current_uses == 0
@@ -178,5 +180,5 @@ def test_hurl_through_hell_accepts_a_spell_attack_hit() -> None:
         dice=FixedDiceProvider([1, 5, 5, 5, 5, 5, 5, 5, 5]),
         turn_key="1:varek",
     )
-    assert applied == ("banished", 0)
+    assert applied == ("hurl-through-hell", 0)
     assert removed_from_battlefield(enemy.state) is True
