@@ -432,7 +432,6 @@ Blocked monsters: **30**. These are grouped by printed ability name so the roste
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
-| Aberrant Ground | Gibbering Mouther | 1 |
 | Damage Transfer | Cloaker, Rug of Smothering | 2 |
 | Gibbering | Gibbering Mouther | 1 |
 | Grasping Tendrils | Roper | 1 |

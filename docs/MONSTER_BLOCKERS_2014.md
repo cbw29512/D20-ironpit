@@ -48,7 +48,7 @@ the underlying ability is already implemented or trivial.
 | Frog | arena:neutral | — |
 | Gelatinous Cube | source:extra-action, source:trait | Ooze Cube, Transparent |
 | Ghost | mechanic:recharge, source:extra-action | — |
-| Gibbering Mouther | multiattack:complex, source:trait | Aberrant Ground, Gibbering |
+| Gibbering Mouther | multiattack:complex, source:trait | Gibbering |
 | Glabrezu | mechanic:spellcasting, source:trait | Innate Spellcasting |
 | Guardian Naga | mechanic:spellcasting, source:trait | Spellcasting |
 | Gynosphinx | mechanic:legendary, mechanic:spellcasting, source:legendary, source:trait | Spellcasting |

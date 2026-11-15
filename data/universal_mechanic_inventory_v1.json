@@ -5880,13 +5880,6 @@
     },
     "unresolved_printed_abilities": [
       {
-        "demand_count": 1,
-        "monsters": [
-          "Gibbering Mouther"
-        ],
-        "printed_name": "Aberrant Ground"
-      },
-      {
         "demand_count": 2,
         "monsters": [
           "Cloaker",
