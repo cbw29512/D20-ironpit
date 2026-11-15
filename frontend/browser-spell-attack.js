@@ -121,10 +121,11 @@
     const rangeRemaining = spendCastCosts ? spendRangeModifier(caster.state, rangeModifier) : null;
     if (spendCastCosts) CE()?.applyTimedResistance(caster, spell, round);
     const natural = attackRoll.selected_roll;
-    if (window.IRON_PIT_BROWSER_REACTION_DEFENSE_SPELLS?.trigger(
+    const defenseUsed = window.IRON_PIT_BROWSER_REACTION_DEFENSE_SPELLS?.trigger(
       target.state, target.combatant_id,
       {attackTotal: attackRoll.total, natural},
-    )) targetAc += target.state.template.reaction_defense_spell.acBonus;
+    );
+    if (defenseUsed) targetAc += target.state.template.reaction_defense_spell.acBonus;
     const hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
     const critical = Boolean(hit && (natural === 20 || (Q().autoCritical(target.state) && distance <= 5)));
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
@@ -225,6 +226,7 @@
     const outcome = critical ? "CRITICAL HIT" : hit ? "HIT" : "MISS";
     const survivalLog = window.IRON_PIT_BROWSER_UNDEAD_FORTITUDE?.consumeLog(target.state) || "";
     let description = `${caster.state.template.name}: ${outcome} with ${spell.name}.`;
+    if (defenseUsed) description += ` ${target.state.template.name} casts ${target.state.template.reaction_defense_spell.name} as a Reaction (+5 AC).`;
     if (rangeModifier) description += ` ${caster.state.template.name} uses ${rangeModifier.name}.`;
     if (heroic.used) description += " Heroic Inspiration rerolls one d20."; if (rollPenalty?.restorationName) description += ` ${rollPenalty.sourceName} uses ${rollPenalty.restorationName}.`; if (rollPenalty) description += ` ${rollPenalty.sourceName} uses ${rollPenalty.actionId} to subtract ${rollPenalty.penaltyTotal} from the attack roll.`;
     const event = {
