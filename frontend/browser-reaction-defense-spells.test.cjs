@@ -73,7 +73,7 @@ for (const options of [
 load("browser-attack-outcome.js");
 {
   const defender = state();
-  const attacker = {template: {id: "attacker", name: "Attacker", resource_backed_d20_bonus_dice: []}};
+  const attacker = {template: {id: "attacker", name: "Attacker", progression_features: {resource_backed_d20_bonus_dice: []}, resource_backed_d20_bonus_dice: []}};
   const incoming = {selected_roll: 12, total: 15, rolls: [12], modifier: 3};
   const attack = {id: "strike", name: "Strike"};
   const result = window.IRON_PIT_BROWSER_ATTACK_OUTCOME.resolveD20(
