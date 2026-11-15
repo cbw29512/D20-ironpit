@@ -49,6 +49,11 @@
         }
         if (succeeded) {
           M.removeSource([target.state], item.source.combatant_id, item.effectId);
+          const timed = (target.state.timed_effects || []).filter((entry) =>
+            entry.source_id === item.source.combatant_id && entry.source_effect_id === item.effectId);
+          if (timed.length && typeof window.IRON_PIT_BROWSER_TIMED?.removeEffect !== "function")
+            throw new Error("Spell-owned timed-effect cleanup requires the canonical lifecycle.");
+          for (const entry of timed) window.IRON_PIT_BROWSER_TIMED.removeEffect(target.state, entry);
           target.state.active_buff_effect_ids = (target.state.active_buff_effect_ids || [])
             .filter((id) => id !== item.effectId);
           removed.push(item.effectId);
