@@ -109,7 +109,7 @@
       conditions.disadvantage + SAP().disadvantage(caster.state)
         + (T()?.nextAttackDisadvantage(caster.state) || 0) + (closeThreat ? 1 : 0),
     );
-    const targetAc = M().effectiveArmorClass(target.state);
+    let targetAc = M().effectiveArmorClass(target.state);
     const heroic = HI().rerollFailedAttack(caster.state, R().d20(spell.attackBonus, mode), targetAc);
     let attackRoll = M().applyD20Bonus(caster.state, "attack-roll-bonus-die", heroic.roll); const rollPenalty = window.IRON_PIT_BROWSER_REACTION_ROLL_PENALTIES?.applyIfUseful(caster, setup, "attack", attackRoll, targetAc); if (rollPenalty) attackRoll = rollPenalty.roll;
     M().consumeNextAttackAgainstAdvantage(caster.state, target.combatant_id);
@@ -121,6 +121,10 @@
     const rangeRemaining = spendCastCosts ? spendRangeModifier(caster.state, rangeModifier) : null;
     if (spendCastCosts) CE()?.applyTimedResistance(caster, spell, round);
     const natural = attackRoll.selected_roll;
+    if (window.IRON_PIT_BROWSER_REACTION_DEFENSE_SPELLS?.trigger(
+      target.state, target.combatant_id,
+      {attackTotal: attackRoll.total, natural},
+    )) targetAc += target.state.template.reaction_defense_spell.acBonus;
     const hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
     const critical = Boolean(hit && (natural === 20 || (Q().autoCritical(target.state) && distance <= 5)));
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
