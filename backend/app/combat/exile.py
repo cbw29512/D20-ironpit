@@ -111,8 +111,8 @@ def resolve_source_exile_returns(
         expiring = [
             effect for effect in list(target.state.timed_effects)
             if effect.source_id == source.combatant_id
-            and effect.effect_id == HURL_EFFECT_ID
-            and effect.all_damage_immunity
+            and (effect.removed_from_battlefield or
+                 (effect.effect_id == HURL_EFFECT_ID and effect.all_damage_immunity))
             and effect.expiry_timing == "source_turn_end"
             and (effect.expires_round is None or round_number >= effect.expires_round)
         ]
@@ -172,7 +172,9 @@ def resolve_source_exile_returns(
                 temporary_hp_before=temp_before,
                 temporary_hp_after=target.state.temporary_hp,
                 description=(
-                    f"{effect.source_effect_id or effect.effect_id} ends on {target.state.template.name}; delayed damage resolves."
+                    (f"{effect.source_effect_id or effect.effect_id} ends on {target.state.template.name}; delayed damage resolves."
+                     if effect.all_damage_immunity else
+                     f"{target.state.template.name} returns from {effect.source_effect_id or effect.effect_id}.")
                     + (" The return damage is suppressed by creature type." if excluded else "")
                 ),
             ))
