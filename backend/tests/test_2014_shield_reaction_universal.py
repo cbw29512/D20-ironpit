@@ -124,3 +124,29 @@ def test_shield_blocks_magic_missile_but_not_other_auto_hit_spells():
     except Exception:
         logger.exception("Shield Magic Missile immunity failed")
         raise
+
+
+def test_weapon_attack_outcome_triggers_shield_and_logs_reaction_status():
+    try:
+        from app.combat.attack_d20_outcome import resolve_attack_d20_outcome
+        from app.content.demo import build_goblin_warrior
+        from app.domain.event_support import DiceRoll
+
+        defender = _state()
+        attacker = build_combatant_state(build_goblin_warrior())
+        incoming = effective_armor_class(defender) + 2
+        roll = DiceRoll(
+            notation="1d20", rolls=[12], modifier=incoming - 12,
+            selected_roll=12, total=incoming,
+        )
+        outcome = resolve_attack_d20_outcome(
+            attacker, defender, build_goblin_warrior().weapon_attack,
+            roll, effective_armor_class(defender),
+        )
+        assert not outcome.hit
+        assert outcome.reaction_defense_used
+        assert outcome.target_ac == effective_armor_class(defender)
+        assert defender.resources[0].current_uses == 0
+    except Exception:
+        logger.exception("Shield weapon D20 outcome integration failed")
+        raise
