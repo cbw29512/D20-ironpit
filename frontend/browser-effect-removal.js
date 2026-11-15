@@ -48,9 +48,17 @@
     }
     tagged.sort((a, b) => S().distance(remover, a.target) - S().distance(remover, b.target)
       || a.target.combatant_id.localeCompare(b.target.combatant_id) || a.grant.source_id.localeCompare(b.grant.source_id));
-    return [...tagged, ...[...found.values()].sort((a, b) => b.spellLevel - a.spellLevel
+    const spells = [...found.values()].sort((a, b) => b.spellLevel - a.spellLevel
       || S().distance(remover, a.target) - S().distance(remover, b.target)
-      || a.effectId.localeCompare(b.effectId))];
+      || a.effectId.localeCompare(b.effectId));
+    // Preserve tagged-effect priority within a side while never choosing a
+    // friendly susceptibility target before an enemy spell effect.
+    return [
+      ...tagged.filter((item) => item.target.side !== remover.side),
+      ...spells.filter((item) => item.target.side !== remover.side),
+      ...tagged.filter((item) => item.target.side === remover.side),
+      ...spells.filter((item) => item.target.side === remover.side),
+    ];
   }
 
   const available = (remover, action, turnKey) => E().available(remover.state, action.actionCost)
