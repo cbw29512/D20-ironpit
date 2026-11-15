@@ -88,5 +88,12 @@ def tracked_spell_effects(
             found[key] = TrackedSpellEffect(target, source, modifier.source_effect_id, level)
     return sorted(
         found.values(),
-        key=lambda item: (-item.spell_level, combatant_distance(remover, item.target), item.effect_id),
+        # Automated combat seeks hostile spell effects first. Manual/explicit
+        # selection may still target an ally or the caster under 2014 rules.
+        key=lambda item: (
+            item.target.side == remover.side,
+            -item.spell_level,
+            combatant_distance(remover, item.target),
+            item.effect_id,
+        ),
     )
