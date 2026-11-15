@@ -90,7 +90,8 @@
     for (const target of [...ctx.setup.heroes, ...ctx.setup.monsters]) {
       const effects = [...(target.state.timed_effects || [])].filter((effect) =>
         effect.source_id === ctx.member.combatant_id
-        && effect.effect_id === EFFECT && effect.all_damage_immunity
+        && (effect.removed_from_battlefield ||
+          (effect.effect_id === EFFECT && effect.all_damage_immunity))
         && effect.expiry_timing === "source_turn_end"
         && (effect.expires_round == null || ctx.round >= effect.expires_round)
       );
@@ -133,7 +134,9 @@
           hp_before: hpBefore, hp_after: target.state.current_hp,
           is_dead: target.state.is_dead, is_stable: target.state.is_stable,
           temporary_hp_before: tempBefore, temporary_hp_after: target.state.temporary_hp || 0,
-          description: `${effect.source_effect_id || effect.effect_id} ends on ${target.state.template.name}; delayed damage resolves.`
+          description: (effect.all_damage_immunity
+            ? `${effect.source_effect_id || effect.effect_id} ends on ${target.state.template.name}; delayed damage resolves.`
+            : `${target.state.template.name} returns from ${effect.source_effect_id || effect.effect_id}.`)
             + (excluded ? " The return damage is suppressed by creature type." : ""),
         });
       }
@@ -156,8 +159,9 @@
         id: "exile-return", priority: 80, rulesets: ["2014", "2024"],
         appliesTo: (_member, ctx) => [...ctx.setup.heroes, ...ctx.setup.monsters]
           .some((target) => (target.state.timed_effects || []).some((effect) =>
-            effect.source_id === ctx.member.combatant_id && effect.effect_id === EFFECT
-            && effect.all_damage_immunity)),
+            effect.source_id === ctx.member.combatant_id &&
+            (effect.removed_from_battlefield || (effect.effect_id === EFFECT
+              && effect.all_damage_immunity)))),
         resolve: returnAtSourceEnd,
       });
     }
