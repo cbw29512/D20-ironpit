@@ -46,7 +46,7 @@ require("./browser-test-runtime.cjs").loadWebsite();
       for (const ability of ["strength", "dexterity", "constitution",
         "intelligence", "wisdom", "charisma"]) {
         assert.equal(bag.ability_scores[ability], 10);
-        assert.equal(bag.saving_throw_bonuses[ability], 1);
+        assert.equal(bag.saving_throw_bonuses[ability], 0);
       }
       assert.equal(bag.skill_bonuses.athletics, 0);
       assert.equal(bag.skill_bonuses.acrobatics, 0);
