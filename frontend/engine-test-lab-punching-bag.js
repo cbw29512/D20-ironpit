@@ -10,7 +10,7 @@
         schema_version: 1, id: "punching-bag", name: "Punching Bag",
         archetype: "Homebrew Training Opponent", kind: "monster", ruleset: edition,
         size: "medium", creature_type: "humanoid", challenge_rating: "0",
-        armor_class: 10, max_hp: 10000, speed_ft: 0, initiative_bonus: -10,
+        armor_class: 10, max_hp: 1000, speed_ft: 0, initiative_bonus: -10,
         attacks: [{
           id: "harmless-tap", name: "Harmless Tap", attack_kind: "melee",
           attack_bonus: 0, damage: {count: 1, size: 2, bonus: 0},
@@ -47,7 +47,7 @@
       // for ordinary Grapple escape contests and are not save modifiers.
       compiled.skill_bonuses = {...compiled.skill_bonuses,
         athletics: 0, acrobatics: 0};
-      if (compiled.armor_class !== 10 || compiled.max_hp !== 10000
+      if (compiled.armor_class !== 10 || compiled.max_hp !== 1000
           || compiled.ruleset !== edition || compiled.kind !== "monster")
         throw new Error("Punching Bag did not compile to its locked test stats.");
       if (abilityNames.some(ability =>
