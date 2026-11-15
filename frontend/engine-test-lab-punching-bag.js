@@ -42,7 +42,7 @@
       compiled.ability_scores = Object.fromEntries(
         abilityNames.map(ability => [ability, 10]));
       compiled.saving_throw_bonuses = Object.fromEntries(
-        abilityNames.map(ability => [ability, 1]));
+        abilityNames.map(ability => [ability, 0]));
       // STR/DEX 10 are +0 checks without proficiency. They are needed
       // for ordinary Grapple escape contests and are not save modifiers.
       compiled.skill_bonuses = {...compiled.skill_bonuses,
@@ -52,8 +52,8 @@
         throw new Error("Punching Bag did not compile to its locked test stats.");
       if (abilityNames.some(ability =>
           compiled.ability_scores[ability] !== 10 ||
-          compiled.saving_throw_bonuses[ability] !== 1))
-        throw new Error("Punching Bag must have six base-10 stats and +1 saves.");
+          compiled.saving_throw_bonuses[ability] !== 0))
+        throw new Error("Punching Bag must have six base-10 stats and +0 saves.");
       const attack = compiled.attacks[0];
       if (attack.bonus !== 0 || attack.diceCount !== 1 || attack.diceSize !== 2
           || attack.damageBonus !== 0 || attack.fixedDamage !== 0 || attack.onHitDamage?.length)
