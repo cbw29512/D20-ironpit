@@ -51,6 +51,24 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             return True
         # Equipment-only corrosion is excluded by the locked Pit policy.
         # Require the full printed trait, including continuation clauses.
+        if trait_name == "Aberrant Ground":
+            # Exact 2014 source proof. Formation combat has neither terrain
+            # movement costs nor movement-speed gates, so this trait's only
+            # outcomes cannot affect a standard Pit fight. Its adjacent
+            # Gibbering trait is independently outcome-changing and stays blocked.
+            from app.content.monster_source_sections_2014 import source_sections_2014
+
+            printed = source_sections_2014(
+                monster.source_traits, include_continuations=True
+            ).get("Aberrant Ground", "")
+            expected = (
+                "The ground in a 10-foot radius around the mouther is "
+                "doughlike difficult terrain. Each creature that starts its "
+                "turn in that area must succeed on a DC 10 Strength saving "
+                "throw or have its speed reduced to 0 until the start of "
+                "its next turn."
+            )
+            return printed == expected
         if trait_name == "Corrode Metal":
             return source_weapon_corrosion_2014(monster) is not None
         if source_proves_equipment_only_trait_2014(monster, trait_name):
