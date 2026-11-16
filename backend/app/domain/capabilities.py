@@ -138,7 +138,9 @@ class CombatantDefinition(BaseModel):
     turn_start_save_condition_reaction: TurnStartSaveConditionReaction | None = None
     parry_reaction: ParryReaction | None = None
     reaction_defense_spell: ReactionDefenseSpell | None = None
-    spell_interrupt_reactions: list[SpellInterruptReaction] = Field(default_factory=list)
+    spell_interrupt_reactions: list[SpellInterruptReaction] = Field(
+        default_factory=list, exclude_if=lambda items: not items,
+    )
     redirect_attack_reaction: RedirectAttackReaction | None = None
     fighting_style: str | None = None
     fighting_styles: list[str] = Field(default_factory=list)

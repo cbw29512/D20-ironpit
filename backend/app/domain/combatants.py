@@ -167,7 +167,9 @@ class CombatantTemplate(BaseModel):
     visual_disguise_action: VisualDisguiseAction | None = None
     parry_reaction: ParryReaction | None = None
     reaction_defense_spell: ReactionDefenseSpell | None = None
-    spell_interrupt_reactions: list[SpellInterruptReaction] = Field(default_factory=list)
+    spell_interrupt_reactions: list[SpellInterruptReaction] = Field(
+        default_factory=list, exclude_if=lambda items: not items,
+    )
     redirect_attack_reaction: RedirectAttackReaction | None = None
     damage_reaction_attack: DamageReactionAttack | None = None
     reaction_roll_penalty_actions: list[ReactionRollPenaltyAction] = Field(default_factory=list)
