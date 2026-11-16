@@ -45,6 +45,8 @@ jobs:
         run: |
           PYTHONPATH=backend pytest -q backend/tests/test_2014_spell_interrupt_foundation.py
           node frontend/browser-2014-spell-interrupt-foundation.test.cjs
+      - name: Verify Python universal 2014 Shield reaction and source
+        run: PYTHONPATH=backend pytest -q backend/tests/test_2014_shield_reaction_universal.py backend/tests/test_2014_innate_shield_resource.py
       - name: Validate standard Pit formation weapon engagement
         working-directory: backend
         run: PYTHONPATH=.:.. pytest -q tests/test_formation_weapon_engagement.py tests/test_formation_no_movement_turn.py tests/test_formation_cone_targeting.py tests/test_attack_action_event_label.py tests/test_formation_line_targeting.py tests/test_formation_atomic_promotion.py
@@ -611,6 +613,8 @@ jobs:
         run: |
           PYTHONPATH=backend:scripts python scripts/grick_sequence_parity_fixture.py > frontend/test-fixtures/grick-sequence.json
           PYTHONPATH=backend:scripts python scripts/fungus_sequence_parity_fixture.py > frontend/test-fixtures/fungus-sequence.json
+      - name: Verify browser universal Shield reaction parity
+        run: node frontend/browser-reaction-defense-spells.test.cjs
       - name: Run browser combat regressions
         run: |
           node frontend/browser-formation-weapon-engagement.test.cjs
