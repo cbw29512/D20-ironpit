@@ -36,6 +36,9 @@
       if (!expiry) throw new Error("Auto-hit spell owner-effect expiry is unavailable.");
       expiry(caster.state, "spell_cast", [...setup.heroes, ...setup.monsters].map((m) => m.state));
     }
+    const blockedByDefense = window.IRON_PIT_BROWSER_REACTION_DEFENSE_SPELLS?.blocksAutoHit(
+      target.state, target.combatant_id, action.id,
+    ) || false;
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const components = [], allRolls = [];
     let total = 0;
@@ -44,7 +47,9 @@
         ? C().maximizedRolls(action.damageDiceCount || 1, action.damageDiceSize || 4)
         : window.IRON_PIT_DICE.rollMany(action.damageDiceCount || 1, action.damageDiceSize || 4);
       const raw = rolls.reduce((sum, value) => sum + value, 0) + (action.damageBonus || 0);
-      const resolved = DD().resolveDamage(target.state, raw, action.damageType);
+      const resolved = blockedByDefense
+        ? {applied: 0, healed: 0, sourceName: null}
+        : DD().resolveDamage(target.state, raw, action.damageType);
       const applied = resolved.applied;
       allRolls.push(...rolls);
       total += applied;
@@ -81,7 +86,7 @@
       temporary_hp_before: temporaryHpBefore, temporary_hp_after: target.state.temporary_hp,
       resource_remaining: alternate && !alternate.resource_id ? null : caster.state.resources[resourceId],
       animation: action.animation || "spell-projectile",
-      description: `${caster.state.template.name} casts ${action.name}: ${choice.projectileCount} projectiles automatically strike ${target.state.template.name}.`,
+      description: `${caster.state.template.name} casts ${action.name}: ${choice.projectileCount} projectiles ${blockedByDefense ? `are blocked by ${target.state.template.reaction_defense_spell.name}.` : `automatically strike ${target.state.template.name}.`}`,
     };
   }
 
