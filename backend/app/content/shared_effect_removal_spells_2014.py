@@ -23,6 +23,7 @@ def dispel_magic_2014(casting_ability: AbilityName) -> EffectRemovalAction:
             # The automated chooser separately prefers hostile eligible effects.
             target_mode="any",
             auto_remove_max_level=3,
+            remove_all_target_spells=True,
             effect_tags=["spell_dispelling"],
             resource_id="spell-slot-3",
             resource_cost=1,

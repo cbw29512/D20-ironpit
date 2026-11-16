@@ -19,6 +19,7 @@ def effect_removal_row(action: Any) -> dict[str, Any]:
             "actionCost": action.action_cost, "range": action.range_ft,
             "castingAbility": action.casting_ability, "targetMode": action.target_mode,
             "autoRemoveMaxLevel": action.auto_remove_max_level,
+            "removeAllTargetSpells": action.remove_all_target_spells,
             "effectTags": list(action.effect_tags),
             "resourceId": action.resource_id, "resourceCost": action.resource_cost,
             "expendsSpellSlot": action.expends_spell_slot, "animation": action.animation,
