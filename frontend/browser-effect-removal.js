@@ -69,7 +69,9 @@
 
   const available = (remover, action, turnKey) => E().available(remover.state, action.actionCost)
     && (!action.expendsSpellSlot || P().slotSpellAvailable(remover.state, turnKey))
-    && (!action.resourceId || (remover.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1));
+    && (action.upcastSlotLevel
+      ? Boolean(window.IRON_PIT_BROWSER_EFFECT_REMOVAL_SLOTS?.choose(remover, action, turnKey))
+      : (!action.resourceId || (remover.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1)));
 
   function choose(remover, setup, turnKey) {
     for (const action of remover.state.template.effect_removal_actions || []) {
@@ -90,26 +92,38 @@
         throw new Error("Tracked spell effect is no longer a legal removal target.");
       }
       if (effect.grant) T().validateRuntime();
+      const candidatesOnTarget = action.upcastSlotLevel
+        ? effects(remover, setup, action).filter((item) =>
+            !item.grant && item.target.combatant_id === effect.target.combatant_id)
+        : [];
+      const slot = window.IRON_PIT_BROWSER_EFFECT_REMOVAL_SLOTS?.choose(
+        remover, action, turnKey, candidatesOnTarget.map((item) => item.spellLevel),
+      );
+      if (action.upcastSlotLevel && !slot)
+        throw new Error("No legal spell slot remains for upcast effect removal.");
+      const resolvedAction = slot && action.upcastSlotLevel
+        ? {...action, autoRemoveMaxLevel: slot.level} : action;
       const multi = action.removeAllTargetSpells && !effect.grant
         ? window.IRON_PIT_BROWSER_EFFECT_REMOVAL_MULTI
         : null;
       if (action.removeAllTargetSpells && !effect.grant && !multi)
         throw new Error("Multi-effect Dispel Magic runtime is not loaded.");
-      const candidates = multi?.preflight(remover, setup, action, effect.target,
+      const candidates = multi?.preflight(remover, setup, resolvedAction, effect.target,
         effects(remover, setup, action)) || null;
       E().spend(remover.state, action.actionCost);
       let remaining = null;
-      if (action.resourceId) {
+      const actualResourceId = action.upcastSlotLevel ? slot?.id : action.resourceId;
+      if (actualResourceId) {
         if (action.expendsSpellSlot) P().markSlotSpellCast(remover.state, turnKey);
-        remover.state.resources[action.resourceId] -= action.resourceCost || 1;
-        remaining = remover.state.resources[action.resourceId];
+        remover.state.resources[actualResourceId] -= action.resourceCost || 1;
+        remaining = remover.state.resources[actualResourceId];
       }
       if (effect.grant) return T().apply(sequence, round, remover, setup, action, effect, remaining);
       if (candidates) return multi.apply(
-        sequence, round, remover, setup, action, effect.target, candidates, remaining,
+        sequence, round, remover, setup, resolvedAction, effect.target, candidates, remaining,
       );
       let check = null, succeeded = true, dc = null;
-      if (effect.spellLevel > (action.autoRemoveMaxLevel ?? 3)) {
+      if (effect.spellLevel > (resolvedAction.autoRemoveMaxLevel ?? 3)) {
         const score = remover.state.template.ability_scores?.[action.castingAbility];
         if (!Number.isInteger(score)) throw new Error("Effect removal requires a certified casting ability.");
         dc = 10 + effect.spellLevel;

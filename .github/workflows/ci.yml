@@ -35,6 +35,10 @@ jobs:
         run: |
           PYTHONPATH=backend pytest -q backend/tests/test_2014_dispel_magic_multi.py
           node frontend/browser-2014-dispel-magic-multi.test.cjs
+      - name: Verify 2014 Dispel Magic higher-level slot parity
+        run: |
+          PYTHONPATH=backend pytest -q backend/tests/test_2014_dispel_magic_upcast.py
+          node frontend/browser-2014-dispel-magic-upcast.test.cjs
       - name: Validate standard Pit formation weapon engagement
         working-directory: backend
         run: PYTHONPATH=.:.. pytest -q tests/test_formation_weapon_engagement.py tests/test_formation_no_movement_turn.py tests/test_formation_cone_targeting.py tests/test_attack_action_event_label.py tests/test_formation_line_targeting.py tests/test_formation_atomic_promotion.py

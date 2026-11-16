@@ -32,6 +32,8 @@ class EffectRemovalAction(BaseModel):
     auto_remove_max_level: int = Field(default=3, ge=0, le=9)
     # One cast affects every independently tracked spell on the chosen creature.
     remove_all_target_spells: bool = False
+    # A source-declared levelled spell may expend a higher-level slot.
+    upcast_slot_level: bool = False
     effect_tags: list[str] = Field(default_factory=list)
     resource_id: str | None = None
     resource_cost: int = Field(default=1, ge=1, le=20)
