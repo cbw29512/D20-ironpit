@@ -9,6 +9,7 @@ from app.combat.effect_removal_slot_choice import choose_effect_removal_slot
 from app.combat.modifier_stack import add_modifier
 from app.combat.state import build_combatant_state
 from app.content.monsters import build_commoner
+from app.content.paladin_devotion_2014_runtime import build_aurelia_brightshield_2014
 from app.content.shared_effect_removal_spells_2014 import dispel_magic_2014
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.models import ResourceDefinition
@@ -31,6 +32,7 @@ def _fixture(slots):
         caster = base.model_copy(update={
             "name": "Dispel Caster",
             "effect_removal_actions": [dispel_magic_2014("wisdom")],
+            "ability_scores": build_aurelia_brightshield_2014(9).ability_scores,
             "resources": [
                 ResourceDefinition(id=f"spell-slot-{level}", name=f"Slot {level}", max_uses=uses)
                 for level, uses in slots.items()
