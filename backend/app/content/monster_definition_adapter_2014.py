@@ -90,6 +90,7 @@ from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014, fetid_cl
 from app.content.monster_leadership_2014 import leadership_actions_2014, leadership_resources_2014
 from app.content.monster_senses_2014 import special_senses_2014, bounded_blindsight_2014
 from app.content.monster_spell_slot_resources_2014 import monster_spell_slot_resources_2014
+from app.content.monster_counterspell_source_2014 import source_counterspell_reactions_2014
 from app.content.monster_shield_reaction_2014 import (
     source_shield_reaction_2014, source_shield_reaction_resources_2014,
 )
@@ -434,6 +435,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         attack_damage_reduction_reaction=source_rock_catching_reaction_2014(monster),
         turn_start_save_condition_reaction=source_unnerving_mask_reaction_2014(monster),
         reaction_defense_spell=source_shield_reaction_2014(monster),
+        spell_interrupt_reactions=source_counterspell_reactions_2014(monster),
         parry_reaction=ParryReaction(ac_bonus=monster.parry_ac_bonus)
             if supports_parry_reaction_2014(monster) else None,
         **defenses,
