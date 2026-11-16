@@ -30,6 +30,9 @@ def resolve_damage_amount(
     try:
         if amount < 0:
             raise ValueError("Damage cannot be negative.")
+        # A timed full-immunity effect suppresses absorption/healing too.
+        if any(effect.all_damage_immunity for effect in target.timed_effects):
+            return 0, 0, None
         absorption = matching_absorption(target, damage_type)
         if absorption is not None:
             if amount == 0:
