@@ -39,7 +39,7 @@ def fixture(slots=(3,)):
                 item.current_uses = int(level in slots)
             elif level in slots:
                 caster.state.resources.append(ResourceState(
-                    id=f"spell-slot-{level}", current_uses=1, max_uses=1,
+                    id=f"spell-slot-{level}", name=f"Slot {level}", current_uses=1, max_uses=1,
                 ))
         action = SpellInterruptReaction(
             id="counterspell", name="Counterspell", printed_level=3,
