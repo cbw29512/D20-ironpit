@@ -1467,6 +1467,18 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
                 "acBonus": defense.ac_bonus,
                 "blockedAutoHitSpellIds": list(defense.blocked_auto_hit_spell_ids),
             }
+        if template.spell_interrupt_reactions:
+            row["spell_interrupt_reactions"] = [
+                {
+                    "id": action.id, "name": action.name,
+                    "printedLevel": action.printed_level,
+                    "trigger": action.trigger, "range": action.range_ft,
+                    "castingAbility": action.casting_ability,
+                    "resourcePrefix": action.resource_prefix,
+                    "allowsHigherSlots": action.allows_higher_slots,
+                }
+                for action in template.spell_interrupt_reactions
+            ]
         if template.parry_reaction:
             row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}
         if template.redirect_attack_reaction:

@@ -27,6 +27,7 @@ from app.domain.teleport_actions import TeleportAction
 from app.domain.persistent_spell_attacks import PersistentSpellAttackAction
 from app.domain.progression import ProgressionCombatFeatures
 from app.domain.reaction_defense_spells import ReactionDefenseSpell
+from app.domain.spell_interrupt_reactions import SpellInterruptReaction
 from app.domain.reactions import (AttackDamageReductionReaction, DamageReactionAttack, IncomingDamageTypeResistanceReaction, ParryReaction, RedirectAttackReaction, TurnStartSaveConditionReaction)
 from app.domain.reaction_roll_penalties import ReactionRollPenaltyAction
 from app.domain.concentration_repeat_saves import ConcentrationRepeatSaveAction
@@ -166,6 +167,9 @@ class CombatantTemplate(BaseModel):
     visual_disguise_action: VisualDisguiseAction | None = None
     parry_reaction: ParryReaction | None = None
     reaction_defense_spell: ReactionDefenseSpell | None = None
+    spell_interrupt_reactions: list[SpellInterruptReaction] = Field(
+        default_factory=list, exclude_if=lambda items: not items,
+    )
     redirect_attack_reaction: RedirectAttackReaction | None = None
     damage_reaction_attack: DamageReactionAttack | None = None
     reaction_roll_penalty_actions: list[ReactionRollPenaltyAction] = Field(default_factory=list)
