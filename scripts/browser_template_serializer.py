@@ -1458,6 +1458,15 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             }
             if rule.failed_save_timed_effect is not None:
                 row["visualTurnStartRule"]["failedSaveTimedEffect"] = _failed_save_timed_effect(rule.failed_save_timed_effect)
+        if template.reaction_defense_spell:
+            defense = template.reaction_defense_spell
+            row["reaction_defense_spell"] = {
+                "id": defense.id, "name": defense.name,
+                "minimumSlotLevel": defense.minimum_slot_level,
+                "resourceId": defense.resource_id,
+                "acBonus": defense.ac_bonus,
+                "blockedAutoHitSpellIds": list(defense.blocked_auto_hit_spell_ids),
+            }
         if template.parry_reaction:
             row["parry_reaction"] = {"ac_bonus": template.parry_reaction.ac_bonus}
         if template.redirect_attack_reaction:
