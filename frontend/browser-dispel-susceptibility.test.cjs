@@ -9,6 +9,7 @@ for (const name of [
   'browser-modifiers.js', 'browser-concentration.js', 'browser-replacement-forms.js',
   'browser-timed-conditions.js', 'browser-timed-condition-lifecycle.js', 'browser-action-economy.js', 'browser-spellcasting.js',
   'browser-effect-tag-conditions.js', 'browser-effect-removal.js',
+  'browser-effect-removal-slots.js',
 ]) vm.runInThisContext(fs.readFileSync(path.join(__dirname, name), 'utf8'), { filename: name });
 const armor = Object.values(window.IRON_PIT_BROWSER_MONSTERS_2014).find(item => item.name === 'Animated Armor');
 const casterTemplate = Object.values(window.IRON_PIT_BROWSER_HEROES).find(item =>
