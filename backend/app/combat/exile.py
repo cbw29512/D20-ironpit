@@ -14,7 +14,6 @@ from app.domain.models import BattleEvent, CombatantState, DamageRollComponent, 
 logger = logging.getLogger(__name__)
 
 EXILED_EFFECT_ID = "banished"
-HURL_EFFECT_ID = "hurl-through-hell"
 
 
 def removed_from_battlefield(state: CombatantState) -> bool:
@@ -65,7 +64,7 @@ def apply_on_hit_exile(
         or rule.hit_damage_excluded_creature_types
     )
     applied = apply_timed_condition(
-        defender, HURL_EFFECT_ID, attacker_id,
+        defender, rule.source_id, attacker_id,
         source_effect_id=rule.source_id, source_template=attacker.template,
         source_is_magical=True, suppress_action=True,
         suppress_bonus_action=True, suppress_reactions=True,
@@ -112,7 +111,8 @@ def resolve_source_exile_returns(
             effect for effect in list(target.state.timed_effects)
             if effect.source_id == source.combatant_id
             and (effect.removed_from_battlefield or
-                 (effect.effect_id == HURL_EFFECT_ID and effect.all_damage_immunity))
+                 (effect.all_damage_immunity and effect.return_damage_dice_count > 0
+                  and effect.return_damage_type is not None))
             and effect.expiry_timing == "source_turn_end"
             and (effect.expires_round is None or round_number >= effect.expires_round)
         ]

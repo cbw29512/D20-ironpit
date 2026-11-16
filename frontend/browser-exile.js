@@ -1,7 +1,6 @@
 (() => {
   "use strict";
 
-  const EFFECT = "hurl-through-hell";
   const DD = () => window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.resolveDamage
     ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES
     : (() => { throw new Error("Exile damage requires the shared damage resolver."); })();
@@ -25,7 +24,7 @@
     const cost = rule.resource_cost || 1;
     if (available < cost || removed(target.state)
       || (target.state.timed_effects || []).some((effect) =>
-        effect.effect_id === EFFECT && effect.all_damage_immunity)) {
+        effect.source_effect_id === rule.source_id && effect.all_damage_immunity)) {
       return window.IRON_PIT_BROWSER_ATTACK_OUTCOME.noEventResult(ctx.sequence);
     }
     member.state.resources[rule.resource_id] -= cost;
@@ -39,7 +38,7 @@
         throw new Error(rule.source_name + " requires a save DC and the saving-throw runtime.");
       }
       const save = saves.resolveSavingThrow(target.state, rule.save_ability, rule.save_dc, {
-        condition_id: EFFECT,
+        condition_id: rule.source_id,
       });
       if (save.succeeded) return window.IRON_PIT_BROWSER_ATTACK_OUTCOME.noEventResult(ctx.sequence);
     }
@@ -51,7 +50,7 @@
     const exclusions = rule.return_damage_excluded_creature_types?.length
       ? rule.return_damage_excluded_creature_types
       : (rule.hit_damage_excluded_creature_types || []);
-    window.IRON_PIT_BROWSER_TIMED.apply(target.state, EFFECT, member.combatant_id, {
+    window.IRON_PIT_BROWSER_TIMED.apply(target.state, rule.source_id, member.combatant_id, {
       sourceEffectId: rule.source_id,
       sourceTemplate: member.state.template,
       sourceIsMagical: true,
@@ -91,7 +90,8 @@
       const effects = [...(target.state.timed_effects || [])].filter((effect) =>
         effect.source_id === ctx.member.combatant_id
         && (effect.removed_from_battlefield ||
-          (effect.effect_id === EFFECT && effect.all_damage_immunity))
+          (effect.all_damage_immunity && effect.return_damage_dice_count > 0
+            && effect.return_damage_type != null))
         && effect.expiry_timing === "source_turn_end"
         && (effect.expires_round == null || ctx.round >= effect.expires_round)
       );
@@ -160,12 +160,12 @@
         appliesTo: (_member, ctx) => [...ctx.setup.heroes, ...ctx.setup.monsters]
           .some((target) => (target.state.timed_effects || []).some((effect) =>
             effect.source_id === ctx.member.combatant_id &&
-            (effect.removed_from_battlefield || (effect.effect_id === EFFECT
-              && effect.all_damage_immunity)))),
+            (effect.removed_from_battlefield || (effect.all_damage_immunity
+              && effect.return_damage_dice_count > 0 && effect.return_damage_type != null)))),
         resolve: returnAtSourceEnd,
       });
     }
   }
 
-  window.IRON_PIT_BROWSER_EXILE = { EFFECT, applyOnHit, installAbilityHooks, removed };
+  window.IRON_PIT_BROWSER_EXILE = { applyOnHit, installAbilityHooks, removed };
 })();
