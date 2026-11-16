@@ -47,6 +47,10 @@ jobs:
           node frontend/browser-2014-spell-interrupt-foundation.test.cjs
       - name: Verify Python universal 2014 Shield reaction and source
         run: PYTHONPATH=backend pytest -q backend/tests/test_2014_shield_reaction_universal.py backend/tests/test_2014_innate_shield_resource.py
+      - name: Verify 2014 Counterspell universal initiative-priority parity
+        run: |
+          PYTHONPATH=backend pytest -q backend/tests/test_2014_spell_interrupt_priority.py
+          node frontend/browser-2014-spell-interrupt-priority.test.cjs
       - name: Validate standard Pit formation weapon engagement
         working-directory: backend
         run: PYTHONPATH=.:.. pytest -q tests/test_formation_weapon_engagement.py tests/test_formation_no_movement_turn.py tests/test_formation_cone_targeting.py tests/test_attack_action_event_label.py tests/test_formation_line_targeting.py tests/test_formation_atomic_promotion.py
