@@ -61,7 +61,8 @@
     try {
       if (amount < 0) throw new Error("Damage cannot be negative.");
       const conditional = conditionalKinds(target, type, sourceQualifiers);
-      if (absorptionRule(target, type) || target.template.damage_immunities?.includes(type)
+      if ((target.timed_effects || []).some((effect) => effect.all_damage_immunity)
+          || absorptionRule(target, type) || target.template.damage_immunities?.includes(type)
           || (target.zone_damage_immunities || []).includes(type) || conditional.has("immunity")) return 0;
       let value = amount;
       const timed = window.IRON_PIT_BROWSER_TIMED;
@@ -85,6 +86,9 @@
   function resolveDamage(target, amount, type, allowVulnerability = true, sourceQualifiers = [], ignoreResistance = false) {
     try {
       if (amount < 0) throw new Error("Damage cannot be negative.");
+      if ((target.timed_effects || []).some((effect) => effect.all_damage_immunity)) {
+        return { applied: 0, healed: 0, sourceName: null };
+      }
       const absorption = absorptionRule(target, type);
       if (absorption) {
         if (amount <= 0) return { applied: 0, healed: 0, sourceName: absorption.sourceName };

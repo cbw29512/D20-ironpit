@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const EFFECT = "banished";
+  const EFFECT = "hurl-through-hell";
   const DD = () => window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES?.resolveDamage
     ? window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES
     : (() => { throw new Error("Exile damage requires the shared damage resolver."); })();
@@ -23,7 +23,9 @@
     }
     const available = member.state.resources?.[rule.resource_id] || 0;
     const cost = rule.resource_cost || 1;
-    if (available < cost || removed(target.state)) {
+    if (available < cost || removed(target.state)
+      || (target.state.timed_effects || []).some((effect) =>
+        effect.effect_id === EFFECT && effect.all_damage_immunity)) {
       return window.IRON_PIT_BROWSER_ATTACK_OUTCOME.noEventResult(ctx.sequence);
     }
     member.state.resources[rule.resource_id] -= cost;
@@ -41,53 +43,39 @@
       });
       if (save.succeeded) return window.IRON_PIT_BROWSER_ATTACK_OUTCOME.noEventResult(ctx.sequence);
     }
-    const creatureType = String(target.state.template.creature_type || "").toLowerCase();
-    const hitExcluded = (rule.hit_damage_excluded_creature_types || [])
-      .map((item) => String(item).toLowerCase())
-      .includes(creatureType);
-    if (rule.hit_damage_type && rule.hit_damage_dice_count && !hitExcluded) {
-      const rolls = window.IRON_PIT_DICE.rollMany(rule.hit_damage_dice_count, rule.hit_damage_dice_size);
-      const raw = rolls.reduce((sum, roll) => sum + roll, 0);
-      const applied = DD().resolveDamage(target.state, raw, rule.hit_damage_type).applied;
-      if (applied) {
-        const affected = [...(ctx.setup?.heroes || []), ...(ctx.setup?.monsters || [])]
-          .map((item) => item.state);
-        window.IRON_PIT_BROWSER_ZERO_HP.applyDamage(
-          target.state, applied, false, [rule.hit_damage_type], affected, ctx.setup, [],
-          member.combatant_id,
-        );
-      }
-    }
-    for (const conditionId of rule.apply_condition_ids || []) {
-      window.IRON_PIT_BROWSER_TIMED.apply(target.state, conditionId, member.combatant_id, {
-        sourceEffectId: rule.source_id,
-        sourceTemplate: member.state.template,
-        sourceIsMagical: true,
-        appliedRound: ctx.round,
-        expiresRound: ctx.round + (rule.duration_rounds || 1),
-        expiryTiming: rule.expiry_timing || "source_turn_end",
-        useDefaultPoisonRecovery: false,
-      });
-    }
+    // The target stays in the arena: one source-turn interval of all-damage
+    // immunity replaces banishment; the psychic damage resolves after expiry.
+    const delayedCount = rule.return_damage_dice_count || rule.hit_damage_dice_count || 0;
+    const delayedSize = rule.return_damage_dice_size || rule.hit_damage_dice_size || 0;
+    const delayedType = rule.return_damage_type || rule.hit_damage_type || null;
+    const exclusions = rule.return_damage_excluded_creature_types?.length
+      ? rule.return_damage_excluded_creature_types
+      : (rule.hit_damage_excluded_creature_types || []);
     window.IRON_PIT_BROWSER_TIMED.apply(target.state, EFFECT, member.combatant_id, {
       sourceEffectId: rule.source_id,
       sourceTemplate: member.state.template,
       sourceIsMagical: true,
-      appliedRound: ctx.round,
-      expiresRound: ctx.round + (rule.duration_rounds || 1),
+      appliedRound: ctx.round, expiresRound: ctx.round + (rule.duration_rounds || 1),
       expiryTiming: rule.expiry_timing || "source_turn_end",
-      suppressAction: true,
-      suppressBonusAction: true,
-      suppressReactions: true,
-      suppressMovement: true,
-      useDefaultPoisonRecovery: false,
-      removedFromBattlefield: true,
-      returnDamageDiceCount: rule.return_damage_dice_count || 0,
-      returnDamageDiceSize: rule.return_damage_dice_size || 0,
+      suppressAction: true, suppressBonusAction: true,
+      suppressReactions: true, suppressMovement: true,
+      allDamageImmunity: true, removedFromBattlefield: false,
+      returnDamageDiceCount: delayedCount, returnDamageDiceSize: delayedSize,
       returnDamageBonus: rule.return_damage_bonus || 0,
-      returnDamageType: rule.return_damage_type || null,
-      returnDamageExcludedCreatureTypes: rule.return_damage_excluded_creature_types || [],
+      returnDamageType: delayedType, returnDamageExcludedCreatureTypes: exclusions,
+      useDefaultPoisonRecovery: false,
     });
+    for (const conditionId of rule.apply_condition_ids || []) {
+      window.IRON_PIT_BROWSER_TIMED.apply(target.state, conditionId, member.combatant_id, {
+        sourceEffectId: rule.source_id, sourceTemplate: member.state.template,
+        sourceIsMagical: true,
+        appliedRound: ctx.round, expiresRound: ctx.round + (rule.duration_rounds || 1),
+        expiryTiming: rule.expiry_timing || "source_turn_end",
+        suppressAction: true, suppressBonusAction: true,
+        suppressReactions: true, suppressMovement: true,
+        useDefaultPoisonRecovery: false,
+      });
+    }
     ctx.attackOutcome.exileApplied = {
       sourceId: rule.source_id,
       sourceName: rule.source_name,
@@ -102,7 +90,8 @@
     for (const target of [...ctx.setup.heroes, ...ctx.setup.monsters]) {
       const effects = [...(target.state.timed_effects || [])].filter((effect) =>
         effect.source_id === ctx.member.combatant_id
-        && effect.removed_from_battlefield
+        && (effect.removed_from_battlefield ||
+          (effect.effect_id === EFFECT && effect.all_damage_immunity))
         && effect.expiry_timing === "source_turn_end"
         && (effect.expires_round == null || ctx.round >= effect.expires_round)
       );
@@ -145,7 +134,9 @@
           hp_before: hpBefore, hp_after: target.state.current_hp,
           is_dead: target.state.is_dead, is_stable: target.state.is_stable,
           temporary_hp_before: tempBefore, temporary_hp_after: target.state.temporary_hp || 0,
-          description: `${target.state.template.name} returns from ${effect.source_effect_id || effect.effect_id}.`
+          description: (effect.all_damage_immunity
+            ? `${effect.source_effect_id || effect.effect_id} ends on ${target.state.template.name}; delayed damage resolves.`
+            : `${target.state.template.name} returns from ${effect.source_effect_id || effect.effect_id}.`)
             + (excluded ? " The return damage is suppressed by creature type." : ""),
         });
       }
@@ -168,7 +159,9 @@
         id: "exile-return", priority: 80, rulesets: ["2014", "2024"],
         appliesTo: (_member, ctx) => [...ctx.setup.heroes, ...ctx.setup.monsters]
           .some((target) => (target.state.timed_effects || []).some((effect) =>
-            effect.source_id === ctx.member.combatant_id && effect.removed_from_battlefield)),
+            effect.source_id === ctx.member.combatant_id &&
+            (effect.removed_from_battlefield || (effect.effect_id === EFFECT
+              && effect.all_damage_immunity)))),
         resolve: returnAtSourceEnd,
       });
     }
