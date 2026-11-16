@@ -7,6 +7,7 @@ from app.combat.ability_checks import ability_check_roll_mode, resolve_ability_c
 from app.combat.dice import DiceProvider
 from app.combat.effect_removal_targets import TrackedSpellEffect, TaggedConditionTarget, removal_targets
 from app.combat.effect_removal_multi import resolve_target_spell_effects, apply_target_spell_effects
+from app.combat.effect_removal_slot_choice import choose_effect_removal_slot
 from app.combat.effect_tag_conditions import apply_tagged_condition
 from app.combat.modifier_stack import remove_source_modifiers
 from app.combat.rolls import roll_d20
@@ -23,6 +24,9 @@ def action_available(remover, action, turn_key):
         return False
     if action.expends_spell_slot and not slot_spell_available(remover.state, turn_key):
         return False
+    if action.upcast_slot_level:
+        resource_id, cast_level = choose_effect_removal_slot(remover, action, turn_key)
+        return resource_id is not None and cast_level is not None
     resource = next((item for item in remover.state.resources if item.id == action.resource_id), None)
     return action.resource_id is None or (resource is not None and resource.current_uses >= action.resource_cost)
 
@@ -56,19 +60,37 @@ def resolve_effect_removal(
             raise ValueError("Effect-removal action or resource is no longer available.")
         if effect not in removal_targets(remover, setup, action):
             raise ValueError("Tracked spell effect is no longer a legal removal target.")
+        # Determine the actual cast slot before consuming resources. Its
+        # level controls the automatic-removal threshold for THIS cast.
+        target_levels = (
+            [item.spell_level for item in removal_targets(remover, setup, action)
+             if isinstance(item, TrackedSpellEffect)
+             and item.target.combatant_id == effect.target.combatant_id]
+            if action.upcast_slot_level else []
+        )
+        slot_id, cast_level = choose_effect_removal_slot(
+            remover, action, turn_key, target_levels,
+        )
+        if action.upcast_slot_level and slot_id is None:
+            raise ValueError("No legal spell slot remains for upcast effect removal.")
+        resolved_action = (
+            action.model_copy(update={"auto_remove_max_level":cast_level})
+            if action.upcast_slot_level else action
+        )
         # Resolve the entire selected creature's spell set as one cast.
         # Validate higher-level dice/scores before spending the Action or slot.
         candidates = (
             resolve_target_spell_effects(
-                remover, setup, action, effect.target, dice, round_number,
+                remover, setup, resolved_action, effect.target, dice, round_number,
             )
             if action.remove_all_target_spells and isinstance(effect, TrackedSpellEffect)
             else None
         )
         spend(remover.state, action.action_cost)
         remaining = None
-        if action.resource_id is not None:
-            resource = next(item for item in remover.state.resources if item.id == action.resource_id)
+        resource_id = slot_id if action.upcast_slot_level else action.resource_id
+        if resource_id is not None:
+            resource = next(item for item in remover.state.resources if item.id == resource_id)
             if action.expends_spell_slot:
                 mark_slot_spell_cast(remover.state, turn_key)
             resource.current_uses -= action.resource_cost
@@ -77,7 +99,7 @@ def resolve_effect_removal(
             return apply_tagged_condition(sequence, round_number, remover, setup, action, effect, remaining)
         if candidates is not None:
             removed, first_check, first_dc, first_success, audit, summary = apply_target_spell_effects(
-                remover, setup, action, effect.target, candidates, dice, round_number,
+                remover, setup, resolved_action, effect.target, candidates, dice, round_number,
             )
             return BattleEvent(
                 sequence=sequence, round_number=round_number, event_type="feature",
@@ -98,7 +120,7 @@ def resolve_effect_removal(
         check = None
         succeeded = True
         dc = None
-        if effect.spell_level > action.auto_remove_max_level:
+        if effect.spell_level > resolved_action.auto_remove_max_level:
             scores = remover.state.template.ability_scores
             if scores is None:
                 raise ValueError("Effect-removal ability check requires certified ability scores.")
