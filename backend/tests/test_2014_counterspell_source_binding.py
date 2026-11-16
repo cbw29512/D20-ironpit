@@ -80,3 +80,18 @@ def test_malformed_casting_ability_never_grants_reaction():
     except Exception:
         logger.exception("Counterspell source ability mutation accepted")
         raise
+
+
+def test_unrelated_monsters_do_not_serialize_empty_interrupt_lists():
+    try:
+        commoner = next(m for m in load_monster_source_2014() if m.name == "Commoner")
+        definition = adapt_monster_mechanics_2014(commoner)
+        assert not definition.spell_interrupt_reactions
+        assert "spell_interrupt_reactions" not in definition.model_dump(mode="json")
+        template = compile_combatant(definition)
+        assert not template.spell_interrupt_reactions
+        assert "spell_interrupt_reactions" not in template.model_dump(mode="json")
+        assert "spell_interrupt_reactions" not in template_row(template)
+    except Exception:
+        logger.exception("Counterspell created an empty browser/source reaction field")
+        raise
