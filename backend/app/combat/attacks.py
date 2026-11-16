@@ -154,6 +154,10 @@ def resolve_attack(
             topple=topple, damage_outcome=damage_outcome, applied_conditions=applied_conditions,
             deferred_effect_armed=deferred_effect_armed,
         )
+        if d20_outcome.reaction_defense_used:
+            description += (f" {actual_defender.template.name} casts "
+                            f"{actual_defender.template.reaction_defense_spell.name} "
+                            "as a Reaction (+5 AC).")
         description += attack_damage_reduction_description(effects, actual_defender.template.name)
         if effects.typed_drain is not None and effects.typed_drain.damage_taken:
             drain = effects.typed_drain
