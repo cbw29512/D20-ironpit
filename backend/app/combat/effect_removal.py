@@ -40,8 +40,11 @@ def choose_effect_removal_action(
         if not action_available(remover, action, turn_key):
             continue
         effects = removal_targets(remover, setup, action)
-        if effects:
-            return action, effects[0]
+        # Automated dispelling targets enemy-owned magic, not friendly wards.
+        # The generic resolver keeps deliberate/manual legal removal intact.
+        for effect in effects:
+            if isinstance(effect, TaggedConditionTarget) or effect.source.side != remover.side:
+                return action, effect
     return None
 
 
