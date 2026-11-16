@@ -181,4 +181,9 @@ def test_hurl_through_hell_accepts_a_spell_attack_hit() -> None:
         turn_key="1:varek",
     )
     assert applied == ("hurl-through-hell", 0)
-    assert removed_from_battlefield(enemy.state) is True
+    assert removed_from_battlefield(enemy.state) is False
+    # This source-owned timed debuff stays on the field, suppressing all damage.
+    assert any(
+        effect.effect_id == "hurl-through-hell" and effect.all_damage_immunity
+        for effect in enemy.state.timed_effects
+    )
