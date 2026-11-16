@@ -106,7 +106,7 @@ def source_counterspell_reactions_2014(
         ).get("Spellcasting", "")
         printed = " ".join(printed.casefold().split())
         if re.search(
-            rf"\\bspellcasting ability is {re.escape(ability)}\\b", printed,
+            rf"\bspellcasting ability is {re.escape(ability)}\b", printed,
         ) is None:
             return []
         return [SpellInterruptReaction(
