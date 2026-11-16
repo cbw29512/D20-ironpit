@@ -56,6 +56,12 @@ def test_prepared_counterspell_compiles_and_serializes_without_casting():
         assert any(resource.id == "spell-slot-3" and resource.current_uses > 0
                    for resource in state.resources)
         assert all(x.id != "counterspell" for x in template.spell_save_actions)
+        # The same immutable template must create independent fight resources.
+        state.reaction_available = False
+        state.resources[0].current_uses = 0
+        fresh = build_combatant_state(template)
+        assert fresh.reaction_available
+        assert next(item for item in fresh.resources if item.id == state.resources[0].id).current_uses > 0
     except Exception:
         logger.exception("Prepared Counterspell schema/serialization parity failed")
         raise
