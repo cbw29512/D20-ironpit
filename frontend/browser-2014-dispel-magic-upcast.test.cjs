@@ -85,6 +85,18 @@ try {
   assert.equal(fail.check_dc, 14);
   assert.equal(fail.check_succeeded, false);
   assert.equal(second.state.active_modifiers.length, 1);
+  // A legal 4th-level slot works even when no level-3 slot remains.
+  const onlyFourth = member("only-fourth", "heroes", [], [], {"spell-slot-3": 0, "spell-slot-4": 1});
+  onlyFourth.state.template.effect_removal_actions = [action];
+  const fourthWard = member("fourth-ward", "monsters", [{id: "ward", level: 4}],
+    [{source_id: "fourth-ward", source_effect_id: "ward"}]);
+  const fourthSetup = {heroes: [onlyFourth], monsters: [fourthWard]};
+  const fourthPick = api.choose(onlyFourth, fourthSetup, "1:only-fourth");
+  assert.ok(fourthPick, "Missing 3rd-level slot must not block a higher-slot cast");
+  const fourthEvent = api.resolve(3, 1, onlyFourth, fourthSetup, fourthPick.action,
+    fourthPick.effect, "1:only-fourth");
+  assert.deepEqual(fourthEvent.removed_condition_ids, ["ward"]);
+  assert.equal(onlyFourth.state.resources["spell-slot-4"], 0);
   console.log("2014 Dispel Magic upcast slot/threshold browser parity passed");
 } catch (error) {
   console.error("2014 Dispel Magic upcast browser parity failed", error);
