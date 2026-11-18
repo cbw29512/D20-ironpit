@@ -36,6 +36,28 @@ class MeleeHitRetaliation(BaseModel):
     on_contact: bool = Field(default=False, exclude_if=lambda enabled: not enabled)
 
 
+class IllusoryDuplicateDefense(BaseModel):
+    """Attack-only interception by a finite set of source-declared duplicates."""
+
+    initial_duplicates: int = Field(default=3, ge=1, le=20)
+    redirect_minimum_by_duplicates: list[int] = Field(default_factory=lambda: [0, 11, 8, 6])
+    armor_class_base: int = Field(default=10, ge=0, le=40)
+    armor_class_ability: AbilityName = "dexterity"
+    bypass_attacker_senses: list[Literal["blindsight", "truesight"]] = Field(
+        default_factory=lambda: ["blindsight", "truesight"]
+    )
+
+    @model_validator(mode="after")
+    def validate_thresholds(self) -> "IllusoryDuplicateDefense":
+        if len(self.redirect_minimum_by_duplicates) != self.initial_duplicates + 1:
+            raise ValueError("Duplicate redirection thresholds must cover zero through the initial count.")
+        if self.redirect_minimum_by_duplicates[0] != 0:
+            raise ValueError("Zero duplicates must have a zero redirection threshold sentinel.")
+        if any(not 1 <= value <= 20 for value in self.redirect_minimum_by_duplicates[1:]):
+            raise ValueError("Duplicate redirection thresholds must be valid d20 results.")
+        return self
+
+
 class TimedSelfBuffAction(BaseModel):
     """Declarative timed self effect composed from universal combat primitives."""
 
@@ -62,6 +84,7 @@ class TimedSelfBuffAction(BaseModel):
     ends_on_owner_action_ids: list[str] = Field(default_factory=list)
     damage_resistances: list[DamageType] = Field(default_factory=list)
     melee_hit_retaliation: MeleeHitRetaliation | None = None
+    illusory_duplicate_defense: IllusoryDuplicateDefense | None = None
     creature_space_entry_damage: CreatureSpaceEntryDamage | None = None
     debuff_counters: list[DebuffCounter] = Field(default_factory=list)
     saving_throw_advantage_grants: list[SavingThrowAdvantageGrant] = Field(default_factory=list)
@@ -175,6 +198,7 @@ class TimedSelfBuffAction(BaseModel):
                 or self.start_turn_emanation_damage is not None
                 or self.emitted_environment_contexts
                 or self.melee_hit_retaliation is not None
+                or self.illusory_duplicate_defense is not None
                 or self.creature_space_entry_damage is not None
                 or self.spell_save_dc_bonus
                 or self.spell_attack_advantage

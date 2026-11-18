@@ -36,6 +36,8 @@ from app.content.bard_2014_vicious_mockery import vicious_mockery_action_2014
 from app.domain.auto_hit_spells import AutoHitSpellAction
 from app.domain.persistent_save_zones import PersistentSaveZoneAction
 from app.domain.spells import SpellAttackAction, SpellSaveAction
+from app.domain.timed_self_buffs import TimedSelfBuffAction
+from app.content.shared_mirror_image_2014 import mirror_image_2014
 
 logger = logging.getLogger(__name__)
 
@@ -164,6 +166,22 @@ def prepared_persistent_save_zone_actions_2014(
         raise
 
 
+def prepared_timed_self_buffs_2014(
+    monster: SourceMonster2014,
+) -> list[TimedSelfBuffAction]:
+    """Bind source-declared prepared self buffs to ordinary printed spell slots."""
+    try:
+        return [
+            mirror_image_2014("spell-slot-2")
+            for spell in _prepared_spells(monster)
+            if str(spell.get("id") or "") == "mirror-image"
+            and spell.get("level") == 2
+        ]
+    except Exception:
+        logger.exception("Failed to compile 2014 prepared timed buffs for %s.", monster.name)
+        raise
+
+
 def supports_prepared_spellcasting_2014(monster: SourceMonster2014) -> bool:
     """True when every printed prepared spell is bound or arena-neutral."""
     try:
@@ -183,6 +201,8 @@ def supports_prepared_spellcasting_2014(monster: SourceMonster2014) -> bool:
             action.id for action in prepared_auto_hit_spell_actions_2014(monster)
         } | {
             action.id for action in prepared_persistent_save_zone_actions_2014(monster)
+        } | {
+            action.id for action in prepared_timed_self_buffs_2014(monster)
         }
         # Only a complete, source-proven utility clause is arena-neutral.
         # Other unrecognized spells continue blocking their entire caster.

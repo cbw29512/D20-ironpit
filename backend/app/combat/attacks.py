@@ -20,6 +20,7 @@ from app.combat.condition_rules import close_hit_is_automatic_critical, is_incap
 from app.combat.damage import BonusDamageSpec
 from app.combat.dice import DiceProvider
 from app.combat.modifier_stack import effective_armor_class
+from app.combat.illusory_duplicates import intercept_attack, consume_hit
 from app.combat.reaction_roll_penalties import apply_reaction_roll_penalty_if_useful, reaction_penalty_description
 from app.domain.models import BattleEvent, CombatantState, WeaponAttack
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -54,14 +55,17 @@ def resolve_attack(
             raise ValueError(f"{attack.id} has insufficient ammunition or other attack resources.")
         ammunition_remaining = spend_action_resource(attacker, attack)
         register_turn_attack(attacker, off_turn=off_turn)
-        auto_hit = owned_grapple_auto_hit(attack, attacker_event_id, defender)
+        interception = intercept_attack(attacker, defender, distance_ft, dice)
+        auto_hit = owned_grapple_auto_hit(attack, attacker_event_id, defender) and interception is None
         roll_resolution = automatic_hit_roll() if auto_hit else resolve_attack_roll(
             attacker, defender, attack, distance_ft, dice,
             defender_event_id=defender_event_id, attacker_event_id=attacker_event_id,
             round_number=round_number, turn_key=turn_key,
             advantage_sources=advantage_sources,
             other_disadvantage_sources=other_disadvantage_sources,
-            close_enemy_active=close_enemy_active, setup=reaction_setup,
+            close_enemy_active=close_enemy_active,
+            target_ac_override=interception.target_ac if interception else None,
+            setup=reaction_setup,
         )
         attack_roll = roll_resolution.roll
         mode = roll_resolution.mode
@@ -76,11 +80,59 @@ def resolve_attack(
                 "attack",
                 attack_roll,
                 dice,
-                threshold=effective_armor_class(defender),
+                threshold=interception.target_ac if interception else effective_armor_class(defender),
             )
             if reaction_penalty is not None:
                 attack_roll = reaction_penalty.roll
         if spend_action: spend(attacker, "action")
+        if interception is not None:
+            duplicate_outcome = resolve_attack_d20_outcome(
+                attacker, defender, attack, attack_roll, interception.target_ac,
+                encounter_roller=reaction_roller, setup=reaction_setup, dice=dice,
+                defensive_reactions=False,
+            )
+            remaining = (
+                consume_hit(defender, interception)
+                if duplicate_outcome.hit
+                else interception.effect.illusory_duplicates_remaining
+            )
+            if not duplicate_outcome.hit:
+                clear_brutal_strike_pending(attacker, turn_key)
+            expired = expire_on_owner_event(attacker, "attack", affected_states)
+            description = (
+                f"{attacker.template.name}: {'HIT' if duplicate_outcome.hit else 'MISS'} "
+                f"with {weapon.name} against {defender.template.name}'s "
+                f"{interception.feature_name} duplicate."
+            )
+            if duplicate_outcome.hit:
+                description += f" One duplicate is destroyed; {remaining} remain."
+            else:
+                description += f" The duplicate remains; {remaining} remain."
+            if ammunition_remaining is not None:
+                description += f" {weapon.name}: {ammunition_remaining} ammunition remaining."
+            if expired:
+                description += f" {attacker.template.name}'s {', '.join(expired)} ends after the attack."
+            return BattleEvent(
+                sequence=sequence, round_number=round_number, event_type="attack",
+                actor_id=attacker_event_id, actor_name=attacker.template.name,
+                target_id=defender_event_id, target_name=defender.template.name,
+                attack_name=weapon.name, target_ac=interception.target_ac,
+                attack_roll=duplicate_outcome.roll,
+                feature_roll=interception.redirection_roll,
+                hit=duplicate_outcome.hit, critical=False,
+                hp_before=defender.current_hp, hp_after=defender.current_hp,
+                temporary_hp_before=defender.temporary_hp,
+                temporary_hp_after=defender.temporary_hp,
+                death_save_successes_before=defender.death_save_successes,
+                death_save_failures_before=defender.death_save_failures,
+                death_save_successes=defender.death_save_successes,
+                death_save_failures=defender.death_save_failures,
+                is_stable=defender.is_stable, is_dead=defender.is_dead,
+                attack_id=attack.id, weapon_id=weapon.id,
+                projectile=weapon.projectile, feature_id=interception.feature_id,
+                resource_remaining=remaining, animation="mirror-image",
+                description=description,
+            )
         actual_defender, actual_event_id, redirect_used = defender, defender_event_id, False
         if redirect_target is not None and redirect_target is not defender and defender.template.redirect_attack_reaction is not None and is_available(defender, "reaction"):
             spend(defender, "reaction"); actual_defender = redirect_target

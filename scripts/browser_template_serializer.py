@@ -1007,6 +1007,15 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         }
         if action.melee_hit_retaliation.on_contact:
             row["meleeHitRetaliation"]["onContact"] = True
+    if action.illusory_duplicate_defense is not None:
+        defense = action.illusory_duplicate_defense
+        row["illusoryDuplicateDefense"] = {
+            "initialDuplicates": defense.initial_duplicates,
+            "redirectMinimumByDuplicates": list(defense.redirect_minimum_by_duplicates),
+            "armorClassBase": defense.armor_class_base,
+            "armorClassAbility": defense.armor_class_ability,
+            "bypassAttackerSenses": list(defense.bypass_attacker_senses),
+        }
     return row
 
 

@@ -932,6 +932,22 @@
         "backend/tests/test_warlock_fiend_2014_endgame.py",
         "frontend/browser-eldritch-master-2014.test.cjs"
       ]
+    },
+    {
+      "id": "illusory-duplicate-defense",
+      "status": "supported",
+      "python": [
+        "backend/app/combat/illusory_duplicates.py",
+        "backend/app/combat/attacks.py"
+      ],
+      "browser": [
+        "frontend/browser-illusory-duplicates.js",
+        "frontend/browser-attack.js"
+      ],
+      "tests": [
+        "backend/tests/test_2014_mirror_image.py",
+        "frontend/browser-2014-mirror-image.test.cjs"
+      ]
     }
   ]
 }

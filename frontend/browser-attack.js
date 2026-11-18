@@ -60,6 +60,9 @@
     const ammunitionRemaining = attack.resourceId
       ? resources.spend(attacker.state, attack.resourceId, attack.resourceCost || 1) : null;
     window.IRON_PIT_BROWSER_TIMED_CONTROL?.registerTurnAttack(attacker.state, extra.offTurn === true);
+    const duplicateInterception = window.IRON_PIT_BROWSER_ILLUSORY_DUPLICATES?.intercept(
+      attacker.state, target.state, distance,
+    ) || null;
     const recklessStarted = extra.allowReckless === true && B2().activate(attacker, attack, round);
     if (recklessStarted) window.IRON_PIT_BROWSER_BARBARIAN3?.markRecklessUse(attacker.state, extra.turnKey);
     const conditions = conditionSources(attacker.state, target.state, distance, target.combatant_id, extra.setup);
@@ -84,14 +87,51 @@
       + (attacker.state.template.advantage_against_marked_effect_id && attacker.state.active_modifiers?.some((item) => item.source_effect_id === attacker.state.template.advantage_against_marked_effect_id && item.target_id === target.combatant_id) ? 1 : 0);
     const advantage = Q().suppressAttackAdvantage?.(target.state) ? 0 : unsuppressedAdvantage;
     const mode = R().attackMode(attack, distance, advantage, disadvantage, closeThreat);
-    const heroic = autoHit ? { roll: null, used: false } : HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + (window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION?.abilityModifierDelta(attacker.state, attack.attackAbility) || 0) + M().attackRollFlat(attacker.state, attack.weaponId || attack.id) + (M().nextIncomingAttackRollFlat?.(target.state, attacker.combatant_id) || 0), mode), M().effectiveArmorClass(target.state));
-    let attackRoll = autoHit ? null : M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll); const d20Bonus = autoHit || [1, 20].includes(heroic.roll.selected_roll) ? null : DB()?.applyIfUseful(attacker.state, "attack", attackRoll, M().effectiveArmorClass(target.state), round); if (d20Bonus) attackRoll = d20Bonus.roll; const rollPenalty = autoHit ? null : window.IRON_PIT_BROWSER_REACTION_ROLL_PENALTIES?.applyIfUseful(attacker, extra.setup, "attack", attackRoll, M().effectiveArmorClass(target.state)); if (rollPenalty) attackRoll = rollPenalty.roll;
-    if (!autoHit) { M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); M().consumeNextIncomingAttackRollFlat?.(target.state, attacker.combatant_id);
+    const rollTargetAc = duplicateInterception?.targetAc ?? M().effectiveArmorClass(target.state);
+    const duplicateAutoHit = autoHit && !duplicateInterception;
+    const heroic = duplicateAutoHit ? { roll: null, used: false } : HI().rerollFailedAttack(attacker.state, R().d20(attack.bonus + (window.IRON_PIT_BROWSER_ABILITY_SCORE_REDUCTION?.abilityModifierDelta(attacker.state, attack.attackAbility) || 0) + M().attackRollFlat(attacker.state, attack.weaponId || attack.id) + (M().nextIncomingAttackRollFlat?.(target.state, attacker.combatant_id) || 0), mode), rollTargetAc);
+    let attackRoll = duplicateAutoHit ? null : M().applyD20Bonus(attacker.state, "attack-roll-bonus-die", heroic.roll); const d20Bonus = duplicateAutoHit || [1, 20].includes(heroic.roll.selected_roll) ? null : DB()?.applyIfUseful(attacker.state, "attack", attackRoll, rollTargetAc, round); if (d20Bonus) attackRoll = d20Bonus.roll; const rollPenalty = duplicateAutoHit ? null : window.IRON_PIT_BROWSER_REACTION_ROLL_PENALTIES?.applyIfUseful(attacker, extra.setup, "attack", attackRoll, rollTargetAc); if (rollPenalty) attackRoll = rollPenalty.roll;
+    if (!duplicateAutoHit) { M().consumeNextAttackAgainstAdvantage(attacker.state, target.combatant_id); M().consumeNextIncomingAttackRollFlat?.(target.state, attacker.combatant_id);
       T()?.consumeNextAttackDisadvantage(attacker.state); SAP().consume(attacker.state); M().consumeAttacksAgainstAdvantage(target.state); }
     window.IRON_PIT_BROWSER_RAGE?.extendFromAttack(attacker.state, round);
     if (spendAction) E().spend(attacker.state, "action");
+    if (duplicateInterception) {
+      const duplicateOutcome = O().resolveD20(attacker.state, target.state, attack, attackRoll,
+        duplicateInterception.targetAc, attacker, extra.setup, { defensiveReactions: false });
+      const remaining = duplicateOutcome.hit
+        ? window.IRON_PIT_BROWSER_ILLUSORY_DUPLICATES.consumeHit(target.state, duplicateInterception)
+        : duplicateInterception.effect.illusory_duplicates_remaining;
+      if (!duplicateOutcome.hit) BS()?.clearPending?.(attacker.state, extra.turnKey);
+      const ownerExpiryRequired = (attacker.state.timed_effects || []).some((effect) => effect.ends_on_owner_attack);
+      const expiry = window.IRON_PIT_BROWSER_TIMED?.expireOnOwnerEvent;
+      if (ownerExpiryRequired && !expiry) throw new Error("Browser owner-effect expiry is unavailable.");
+      const expired = ownerExpiryRequired
+        ? expiry(attacker.state, "attack", extra.affectedStates || states(extra.setup)) : [];
+      let description = `${attacker.state.template.name}: ${duplicateOutcome.hit ? "HIT" : "MISS"} with ${attack.name} against ${target.state.template.name}'s ${duplicateInterception.featureName} duplicate.`;
+      description += duplicateOutcome.hit ? ` One duplicate is destroyed; ${remaining} remain.`
+        : ` The duplicate remains; ${remaining} remain.`;
+      if (ammunitionRemaining !== null) description += ` ${attack.name}: ${ammunitionRemaining} ammunition remaining.`;
+      if (expired.length) description += ` ${attacker.state.template.name}'s ${expired.join(", ")} ends after the attack.`;
+      return { sequence, round_number: round, event_type: "attack",
+        actor_id: attacker.combatant_id, actor_name: attacker.state.template.name,
+        target_id: target.combatant_id, target_name: target.state.template.name,
+        attack_name: attack.name, target_ac: duplicateInterception.targetAc,
+        attack_roll: duplicateOutcome.roll, feature_roll: duplicateInterception.redirectionRoll,
+        damage_roll: null, damage_components: [], applied_condition_ids: [],
+        hit: duplicateOutcome.hit, critical: false,
+        hp_before: target.state.current_hp, hp_after: target.state.current_hp,
+        temporary_hp_before: target.state.temporary_hp, temporary_hp_after: target.state.temporary_hp,
+        death_save_successes_before: target.state.death_save_successes,
+        death_save_failures_before: target.state.death_save_failures,
+        death_save_successes: target.state.death_save_successes,
+        death_save_failures: target.state.death_save_failures,
+        is_stable: target.state.is_stable, is_dead: target.state.is_dead,
+        attack_id: attack.id, weapon_id: attack.weaponId || attack.id,
+        projectile: attack.projectile || null, feature_id: duplicateInterception.featureId,
+        resource_remaining: remaining, animation: "mirror-image", description };
+    }
     const redirected = window.IRON_PIT_BROWSER_REACTIONS?.redirectAttack?.(target, extra.setup) || null, actualTarget = redirected || target;
-    const resolved = autoHit ? O().automaticHit(M().effectiveArmorClass(actualTarget.state))
+    const resolved = duplicateAutoHit ? O().automaticHit(M().effectiveArmorClass(actualTarget.state))
       : O().resolveD20(attacker.state, actualTarget.state, attack, attackRoll, M().effectiveArmorClass(actualTarget.state), attacker, extra.setup);
     const resolvedAttackRoll = resolved.roll, natural = resolved.natural, targetAc = resolved.targetAc;
     const parry = resolved.parry, outcomeAdjustment = resolved.adjustment, d20Override = resolved.d20, override = resolved.miss, hit = resolved.hit; if (!hit) BS()?.clearPending?.(attacker.state, extra.turnKey);

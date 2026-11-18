@@ -66,6 +66,7 @@ from app.content.monster_prepared_spells_2014 import (
     prepared_persistent_save_zone_actions_2014,
     prepared_spell_attack_actions_2014,
     prepared_spell_save_actions_2014,
+    prepared_timed_self_buffs_2014,
 )
 from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014, source_invisibility_resources_2014
 from app.content.monster_source_enlarge_2014 import (
@@ -370,6 +371,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *prepared_persistent_save_zone_actions_2014(monster),
         ],
         timed_self_buff_actions=[*innate_timed_self_buffs_2014(monster),
+            *prepared_timed_self_buffs_2014(monster),
             *nature_spells.buffs,
             *source_invisibility_action_2014(monster),
             *source_enlarge_action_2014(monster),

@@ -49,21 +49,22 @@
   }
   function resolveD20(
     attackerState, defenderState, attack, attackRoll, baseTargetAc,
-    attackerMember = null, setup = null,
+    attackerMember = null, setup = null, options = {},
   ) {
     try {
       const originalNatural = attackRoll.selected_roll;
       const initialHit = originalNatural !== 1 && (originalNatural === 20 || attackRoll.total >= baseTargetAc);
-      const parry = window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(
+      const defensiveReactions = options.defensiveReactions !== false;
+      const parry = defensiveReactions ? (window.IRON_PIT_BROWSER_REACTIONS?.parryHit?.(
         defenderState, attack, attackRoll, initialHit, baseTargetAc,
-      ) || { hit: initialHit, used: false };
+      ) || { hit: initialHit, used: false }) : { hit: initialHit, used: false };
       let targetAc = baseTargetAc + (parry.used ? defenderState.template.parry_reaction.ac_bonus : 0);
       let preAdjustmentRoll = attackRoll;
       let preAdjustmentHit = parry.hit;
       const defenderMember = setup && [...setup.heroes, ...setup.monsters]
         .find((member) => member.state === defenderState);
       let defenseUsed = false;
-      if (preAdjustmentHit && window.IRON_PIT_BROWSER_REACTION_DEFENSE_SPELLS?.trigger(
+      if (defensiveReactions && preAdjustmentHit && window.IRON_PIT_BROWSER_REACTION_DEFENSE_SPELLS?.trigger(
         defenderState, defenderMember?.combatant_id || defenderState.template.id,
         {attackTotal: attackRoll.total, natural: originalNatural},
       )) {

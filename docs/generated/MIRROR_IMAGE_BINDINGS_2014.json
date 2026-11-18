@@ -1,0 +1,27 @@
+{
+  "applicable_card_count": 3,
+  "applicable_cards": [
+    "archmage",
+    "lamia",
+    "lich"
+  ],
+  "exceptions": [
+    {
+      "ability": "Phantasms",
+      "disposition": "incompatible distinct mechanic",
+      "monster": "cloaker",
+      "reason": "also changes AC/saves and harmful-spell targeting; not equivalent to Mirror Image"
+    }
+  ],
+  "remaining": [],
+  "remaining_card_count": 0,
+  "source_cards_scanned": 327,
+  "status": "complete",
+  "wired_browser_card_count": 3,
+  "wired_cards": [
+    "archmage",
+    "lamia",
+    "lich"
+  ],
+  "wired_python_card_count": 3
+}

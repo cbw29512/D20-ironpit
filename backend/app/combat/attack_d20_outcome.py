@@ -42,6 +42,7 @@ def resolve_attack_d20_outcome(
     encounter_roller: EncounterCombatant | None = None,
     setup: EncounterSetup | None = None,
     dice: DiceProvider | None = None,
+    defensive_reactions: bool = True,
 ) -> AttackD20Outcome:
     """Resolve post-roll defensive and resource-backed attack outcome revisions."""
     try:
@@ -49,15 +50,16 @@ def resolve_attack_d20_outcome(
         hit = original_natural != 1 and (
             original_natural == 20 or attack_roll.total >= target_ac
         )
-        hit, parry_used = resolve_parry_hit(
-            defender, attack, attack_roll.total, original_natural, hit,
+        hit, parry_used = (
+            resolve_parry_hit(defender, attack, attack_roll.total, original_natural, hit)
+            if defensive_reactions else (hit, False)
         )
         if parry_used:
             target_ac += defender.template.parry_reaction.ac_bonus
         # Generic reaction defense changes the triggering hit and persists
         # until the defending source's next turn. Natural 20 cannot be negated.
         reaction_defense_used = False
-        if hit and trigger_reaction_defense(
+        if defensive_reactions and hit and trigger_reaction_defense(
             defender, incoming_attack_total=attack_roll.total,
             natural_roll=original_natural,
             source_id=next((member.combatant_id for member in

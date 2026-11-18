@@ -81,6 +81,7 @@ def resolve_attack_roll(
     advantage_sources: int,
     other_disadvantage_sources: int,
     close_enemy_active: bool,
+    target_ac_override: int | None = None,
     setup=None,
 ) -> AttackRollResolution:
     """Resolve the shared attack-roll source stack and consume roll-scoped modifiers."""
@@ -141,8 +142,13 @@ def resolve_attack_roll(
             + next_incoming_attack_roll_flat_bonus(defender, attacker_event_id),
             mode,
         )
+        target_ac = (
+            target_ac_override
+            if target_ac_override is not None
+            else effective_armor_class(defender)
+        )
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(
-            attacker, base_roll, effective_armor_class(defender), dice,
+            attacker, base_roll, target_ac, dice,
         )
         roll = apply_d20_bonus_dice(
             attacker, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice,
@@ -150,7 +156,7 @@ def resolve_attack_roll(
         d20_bonus_source_name = None
         if base_roll.selected_roll not in {1, 20}:
             roll, d20_bonus_source_name = apply_d20_bonus_die_if_useful(
-                attacker, "attack", roll, effective_armor_class(defender), dice, round_number,
+                attacker, "attack", roll, target_ac, dice, round_number,
             )
         consume_next_attack_against_advantage(attacker, defender_event_id)
         consume_next_incoming_attack_roll_flat_bonus(defender, attacker_event_id)
