@@ -66,6 +66,7 @@ class TimedEffect(BaseModel):
     # timed effect clean up only the resistance contribution it owns while an
     # overlapping effect that grants the same type remains active.
     owned_damage_resistances: list[DamageType] = Field(default_factory=list)
+    all_damage_immunity: bool = False
     # Buff-owned counters describe which debuffs this effect prevents or can
     # clear, including source qualifiers and conditional movement costs.
     owned_debuff_counters: list[DebuffCounter] = Field(default_factory=list)

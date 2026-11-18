@@ -538,7 +538,7 @@ def test_varek_level_thirteen_progression_adds_seventh_level_arcanum() -> None:
     assert audits["mystic-arcanum-7"].automated is True
 
 
-def test_varek_level_fourteen_hurl_through_hell_exiles_then_damages_on_return() -> None:
+def test_varek_level_fourteen_hurl_protects_then_damages_on_expiry() -> None:
     from app.combat.attacks import resolve_attack
     from app.combat.encounter_targeting import living_opponents
     from app.combat.exile import removed_from_battlefield, resolve_source_exile_returns
@@ -561,9 +561,11 @@ def test_varek_level_fourteen_hurl_through_hell_exiles_then_damages_on_return() 
 
     assert event.hit is True
     assert event.resource_remaining == 0
-    assert removed_from_battlefield(enemy.state) is True
-    assert "banished" in enemy.state.active_effect_ids
-    assert living_opponents(varek, setup) == []
+    assert removed_from_battlefield(enemy.state) is False
+    assert "banished" not in enemy.state.active_effect_ids
+    assert "hurl-through-hell" in enemy.state.active_effect_ids
+    assert any(effect.all_damage_immunity for effect in enemy.state.timed_effects)
+    assert living_opponents(varek, setup) == [enemy]
 
     hp_before_return = enemy.state.current_hp
     events, _ = resolve_source_exile_returns(
@@ -572,7 +574,8 @@ def test_varek_level_fourteen_hurl_through_hell_exiles_then_damages_on_return() 
     )
 
     assert removed_from_battlefield(enemy.state) is False
-    assert "banished" not in enemy.state.active_effect_ids
+    assert "hurl-through-hell" not in enemy.state.active_effect_ids
+    assert not any(effect.all_damage_immunity for effect in enemy.state.timed_effects)
     assert len(events) == 1
     assert events[0].feature_id == "hurl-through-hell"
     assert events[0].damage_roll is not None and events[0].damage_roll.total == 50
@@ -595,7 +598,7 @@ def test_varek_level_fourteen_hurl_through_hell_fiend_returns_without_psychic_da
         attacker_id="varek", round_number=1,
         affected_states=[varek.state, enemy.state],
     )
-    assert applied == ("banished", 0)
+    assert applied == ("hurl-through-hell", 0)
 
     events, _ = resolve_source_exile_returns(
         1, 2, varek, setup, FixedDiceProvider([10] * 10),

@@ -151,7 +151,8 @@
 
   function applyDamage(state, amount, critical = false, damageTypes = [], affectedStates = [], setup = null, damageComponents = [], sourceId = null) {
     const incoming = amount;
-    if (!incoming || state.is_dead) return "damaged";
+    if (!incoming || state.is_dead || (state.timed_effects || []).some(
+      (effect) => effect.all_damage_immunity)) return "unchanged";
     noteRegenTypes(state, damageTypes);
     const damageBefore = { ...(state.damage_taken_this_turn_by_type || {}) };
     noteTurnDamage(state, incoming, damageTypes, damageComponents);
