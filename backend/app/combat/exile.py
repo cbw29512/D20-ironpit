@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.damage_defenses import apply_damage_defenses
-from app.combat.exile_hit_effects import apply_exile_hit_riders, exile_save_succeeded
+from app.combat.exile_hit_effects import exile_save_succeeded
 from app.combat.resources import resource_state
 from app.combat.timed_condition_lifecycle import remove_effect_group
 from app.combat.timed_conditions import apply_timed_condition
@@ -31,9 +31,12 @@ def apply_on_hit_exile(
     dice=None,
     turn_key: str | None = None,
 ) -> tuple[str, int] | None:
-    """Spend a declarative resource after a hit and exile a living target."""
+    """Spend a declared hit resource and start an in-arena damage-immunity interval."""
     rule = attacker.template.progression_features.resource_backed_on_hit_exile
     if rule is None or defender.is_dead or not defender.is_alive or defender.current_hp <= 0:
+        return None
+    if any(effect.source_effect_id == rule.source_id and effect.all_damage_immunity
+           for effect in defender.timed_effects):
         return None
     if rule.once_per_turn:
         if not turn_key:
@@ -50,38 +53,46 @@ def apply_on_hit_exile(
         attacker.feature_last_turn_keys[rule.source_id] = turn_key
     if exile_save_succeeded(defender, rule, dice):
         return None
-    apply_exile_hit_riders(
-        attacker,
-        defender,
-        rule,
-        attacker_id=attacker_id,
-        round_number=round_number,
-        dice=dice,
-        affected_states=affected_states,
+    # Arena policy: Hurl Through Hell never moves or banishes its target.
+    # The existing timed-effect lifecycle owns immunity and delayed damage.
+    # The 2024 hit damage is deferred to match the locked arena policy.
+    delayed_count = rule.return_damage_dice_count or rule.hit_damage_dice_count
+    delayed_size = rule.return_damage_dice_size or rule.hit_damage_dice_size
+    delayed_type = rule.return_damage_type or rule.hit_damage_type
+    excluded_types = (
+        rule.return_damage_excluded_creature_types
+        or rule.hit_damage_excluded_creature_types
     )
     applied = apply_timed_condition(
-        defender,
-        EXILED_EFFECT_ID,
-        attacker_id,
-        source_effect_id=rule.source_id,
-        source_template=attacker.template,
-        source_is_magical=True,
-        suppress_action=True,
-        suppress_bonus_action=True,
-        suppress_reactions=True,
-        suppress_movement=True,
+        defender, rule.source_id, attacker_id,
+        source_effect_id=rule.source_id, source_template=attacker.template,
+        source_is_magical=True, suppress_action=True,
+        suppress_bonus_action=True, suppress_reactions=True,
+        suppress_movement=True, all_damage_immunity=True,
         applied_round=round_number,
         expires_round=round_number + rule.duration_rounds,
-        expiry_timing=rule.expiry_timing,
-        affected_states=affected_states,
-        use_default_poison_recovery=False,
-        removed_from_battlefield=True,
-        return_damage_dice_count=rule.return_damage_dice_count,
-        return_damage_dice_size=rule.return_damage_dice_size,
+        expiry_timing=rule.expiry_timing, affected_states=affected_states,
+        use_default_poison_recovery=False, removed_from_battlefield=False,
+        return_damage_dice_count=delayed_count,
+        return_damage_dice_size=delayed_size,
         return_damage_bonus=rule.return_damage_bonus,
-        return_damage_type=rule.return_damage_type,
-        return_damage_excluded_creature_types=rule.return_damage_excluded_creature_types,
+        return_damage_type=delayed_type,
+        return_damage_excluded_creature_types=excluded_types,
     )
+    if applied:
+        for condition_id in rule.apply_condition_ids:
+            apply_timed_condition(
+                defender, condition_id, attacker_id,
+                source_effect_id=rule.source_id,
+                source_template=attacker.template, source_is_magical=True,
+                suppress_action=True, suppress_bonus_action=True,
+                suppress_reactions=True, suppress_movement=True,
+                applied_round=round_number,
+                expires_round=round_number + rule.duration_rounds,
+                expiry_timing=rule.expiry_timing,
+                affected_states=affected_states,
+                use_default_poison_recovery=False,
+            )
     return (applied, resource.current_uses) if applied else None
 
 
@@ -92,14 +103,16 @@ def resolve_source_exile_returns(
     setup: EncounterSetup,
     dice,
 ) -> tuple[list[BattleEvent], int]:
-    """Return source-owned exiles at source turn end and apply declared delayed damage."""
+    """Expire source-owned protected intervals, then apply their delayed damage."""
     events: list[BattleEvent] = []
     states = [member.state for member in [*setup.heroes, *setup.monsters]]
     for target in [*setup.heroes, *setup.monsters]:
         expiring = [
             effect for effect in list(target.state.timed_effects)
             if effect.source_id == source.combatant_id
-            and effect.removed_from_battlefield
+            and (effect.removed_from_battlefield or
+                 (effect.all_damage_immunity and effect.return_damage_dice_count > 0
+                  and effect.return_damage_type is not None))
             and effect.expiry_timing == "source_turn_end"
             and (effect.expires_round is None or round_number >= effect.expires_round)
         ]
@@ -159,7 +172,9 @@ def resolve_source_exile_returns(
                 temporary_hp_before=temp_before,
                 temporary_hp_after=target.state.temporary_hp,
                 description=(
-                    f"{target.state.template.name} returns from {effect.source_effect_id or effect.effect_id}."
+                    (f"{effect.source_effect_id or effect.effect_id} ends on {target.state.template.name}; delayed damage resolves."
+                     if effect.all_damage_immunity else
+                     f"{target.state.template.name} returns from {effect.source_effect_id or effect.effect_id}.")
                     + (" The return damage is suppressed by creature type." if excluded else "")
                 ),
             ))

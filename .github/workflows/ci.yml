@@ -929,6 +929,7 @@ jobs:
           node frontend/browser-conditional-damage-defenses.test.cjs
           node frontend/browser-damage-absorption.test.cjs
           node frontend/browser-exile-2014.test.cjs
+          node frontend/browser-hurl-hell-arena-2024.test.cjs
           node frontend/browser-eldritch-master-2014.test.cjs
           node frontend/browser-magical-cunning-2024.test.cjs
           node frontend/browser-power-word-stun-2014.test.cjs

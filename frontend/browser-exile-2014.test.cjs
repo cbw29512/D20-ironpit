@@ -69,8 +69,11 @@ H.runPhase(H.PHASES.ON_HIT, {
 });
 
 assert.equal(source.state.resources["hurl-through-hell"], 0);
-assert.equal(window.IRON_PIT_BROWSER_EXILE.removed(target.state), true);
-assert.ok(target.state.active_effect_ids.includes("banished"));
+assert.equal(window.IRON_PIT_BROWSER_EXILE.removed(target.state), false);
+assert.ok(target.state.active_effect_ids.includes("hurl-through-hell"));
+assert.ok(target.state.timed_effects.some((e) => e.all_damage_immunity));
+assert.equal(window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.adjustedDamage(target.state, 40, "fire"), 0);
+assert.equal(window.IRON_PIT_BROWSER_DAMAGE_DEFENSE_RULES.resolveDamage(target.state, 40, "force").applied, 0);
 assert.equal(outcome.exileApplied.resourceRemaining, 0);
 
 const result = H.runPhase(H.PHASES.TURN_END_LIFECYCLE, {
@@ -78,6 +81,8 @@ const result = H.runPhase(H.PHASES.TURN_END_LIFECYCLE, {
 });
 assert.equal(result.events.length, 1);
 assert.equal(window.IRON_PIT_BROWSER_EXILE.removed(target.state), false);
+assert.ok(!target.state.active_effect_ids.includes("hurl-through-hell"));
+assert.ok(!target.state.timed_effects.some((e) => e.all_damage_immunity));
 assert.equal(result.events[0].damage_roll.total, 50);
 assert.equal(target.state.current_hp, 150);
 
@@ -95,4 +100,4 @@ const fiendReturn = H.runPhase(H.PHASES.TURN_END_LIFECYCLE, {
 assert.equal(fiendReturn.events[0].damage_roll, null);
 assert.equal(fiend.state.current_hp, 200);
 
-console.log("2014 Hurl Through Hell universal exile browser regression passed.");
+console.log("2014 Hurl Through Hell in-arena immunity and expiry damage regression passed.");

@@ -151,7 +151,9 @@ def apply_damage(
     try:
         if amount < 0:
             raise ValueError("Damage cannot be negative.")
-        if amount == 0 or state.is_dead:
+        if amount == 0 or state.is_dead or any(
+            effect.all_damage_immunity for effect in state.timed_effects
+        ):
             return "unchanged"
 
         incoming = amount

@@ -1,5 +1,17 @@
 # Iron Pit locked rules
 
+## Hurl Through Hell — visible damage-immunity simulation (2026-11-15)
+
+The standard Iron Pit never banishes or removes a combatant from its battlefield when **Hurl Through Hell** hits. Preserve the source name and resources on the immutable card. The universal timed-effect engine applies a visible **Hurl Through Hell** debuff in place of planar removal:
+
+- The target remains present and targetable. The effect grants **immunity to all incoming damage types** during the protected interval, with no damage-to-healing absorption; the interval also suppresses Action, Bonus Action, Reaction and Movement to simulate the absence without banishment.
+- The protection lasts one source-turn cycle: through the **end of the Warlock's next turn**. The expiry handler **first removes** the protection and its owned conditions, **then** applies the feature's psychic damage through normal universal damage defenses. Never log a return from a plane or apply the `Banished` condition.
+- **2014:** after a successful hit, no save; delayed **10d10 Psychic**, except Fiends. **2024:** retain the edition's Charisma saving throw and incapacitation; defer its **8d10 Psychic** to the debuff expiry (except Fiends) under this Iron Pit house rule. 2024 use/recovery and both editions' resource limits stay source-derived.
+- No source-specific damage or immunity resolver: reuse generic timed-effect ownership, unified damage immunity and damage processing. Losing the debuff removes this grant without touching permanent immunities. A completed bout is not equivalent to ability certification.
+
+This is an **Iron Pit arena house rule**, not a claim of standard tabletop RAW. A change to the global no-banishment policy requires separate approval.
+
+
 ## Formation-only battle; grid is display capacity — latest clarification 2026-11-12
 
 - **Grid is visual capacity only.** The 24 × 16 board accommodates up to six creatures per side (including six dragons), each in exactly one display slot regardless of size; it is not an arena for tactical movement, attack range, reach, or distance calculations.
