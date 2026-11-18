@@ -58,3 +58,32 @@ def harm_2014(save_dc: int) -> SpellSaveAction:
     except Exception:
         logger.exception("Failed to build shared 2014 Harm.")
         raise
+
+
+def finger_of_death_spell_2014(save_dc: int) -> SpellSaveAction:
+    """Build the shared 2014 Finger of Death save/damage spell.
+
+    The printed Humanoid zombie rider is arena-inert under the locked
+    no-extra-combatants rule; damage remains fully executable.
+    """
+    try:
+        return SpellSaveAction(
+            id="finger-of-death",
+            name="Finger of Death",
+            level=7,
+            action_cost="action",
+            range_ft=60,
+            save_ability="constitution",
+            dc=save_dc,
+            damage_dice_count=7,
+            damage_dice_size=8,
+            damage_bonus=30,
+            damage_type="necrotic",
+            success_damage="half",
+            requires_target_sight=True,
+            animation="spell-save",
+        )
+    except Exception:
+        logger.exception("Failed to build shared 2014 Finger of Death.")
+        raise
+
