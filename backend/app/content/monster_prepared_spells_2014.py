@@ -7,6 +7,9 @@ from app.content.monster_command_spell_2014 import prepared_command_spell_action
 from app.content.monster_source_tier1_cleric_2014 import source_proves_tier1_cleric_spells_2014
 from app.content.monster_prepared_cleric_spells_2014 import prepared_cleric_spell_actions_2014
 from app.content.monster_prepared_nature_spells_2014 import prepared_nature_spells_2014
+from app.content.monster_archmage_arena_loadout_2014 import (
+    source_proven_archmage_arena_finger_of_death_2014,
+)
 from app.content.monster_priest_spells_2014 import (
     priest_proven_spell_ids_2014, priest_spell_actions_2014,
 )
@@ -99,6 +102,9 @@ def prepared_spell_save_actions_2014(monster: SourceMonster2014) -> list[SpellSa
                 actions.append(blindness_deafness_2014(dc))
             elif spell_id == "vicious-mockery":
                 actions.append(vicious_mockery_action_2014(dc))
+        arena_finger = source_proven_archmage_arena_finger_of_death_2014(monster)
+        if arena_finger is not None:
+            actions.append(arena_finger)
         actions.extend(tier1_cleric_save_spells_2014(monster))
         actions.extend(priest_spell_actions_2014(monster).saves)
         return actions
@@ -190,3 +196,4 @@ def supports_prepared_spellcasting_2014(monster: SourceMonster2014) -> bool:
     except Exception:
         logger.exception("Failed to classify 2014 prepared spellcasting for %s.", monster.name)
         raise
+
