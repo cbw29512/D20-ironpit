@@ -15,7 +15,7 @@ This is the lookup surface for monsters, pregens, and future homebrew. **Engine 
 
 ## Engine capability catalog
 
-Capabilities: **66**. partial **10**, supported **54**, unsupported **2**.
+Capabilities: **67**. partial **10**, supported **55**, unsupported **2**.
 
 | Universal mechanic ID | Status | Python | Browser | Tests |
 |---|---|---:|---:|---:|
@@ -47,6 +47,7 @@ Capabilities: **66**. partial **10**, supported **54**, unsupported **2**.
 | `healing` | supported | 1 | 1 | 2 |
 | `hp-threshold-condition` | supported | 2 | 2 | 2 |
 | `hp-threshold-instant-death` | supported | 2 | 2 | 2 |
+| `illusory-duplicate-defense` | supported | 2 | 2 | 2 |
 | `indomitable` | supported | 2 | 2 | 2 |
 | `initiative-resource-refill` | supported | 2 | 2 | 5 |
 | `legendary-actions` | supported | 3 | 1 | 2 |

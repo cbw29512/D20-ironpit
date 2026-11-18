@@ -73,6 +73,7 @@ class TimedEffect(BaseModel):
     owned_previous_size: CreatureSize | None = None
     owned_override_size: CreatureSize | None = None
     ability_check_advantage_abilities: list[AbilityName] = Field(default_factory=list)
+    illusory_duplicates_remaining: int = Field(default=0, ge=0, le=20)
     removed_from_battlefield: bool = False
     return_damage_dice_count: int = Field(default=0, ge=0)
     return_damage_dice_size: int = Field(default=0, ge=0)

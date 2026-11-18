@@ -108,6 +108,7 @@ def resolve_timed_self_buff(
             or action.start_turn_emanation_damage is not None
             or action.emitted_environment_contexts
             or action.melee_hit_retaliation is not None
+            or action.illusory_duplicate_defense is not None
             or action.spell_save_dc_bonus
             or action.spell_attack_advantage
             or action.modifier_effects
@@ -138,6 +139,18 @@ def resolve_timed_self_buff(
 
         if action.target_policy != "normal" and action.id not in member.state.active_effect_ids:
             member.state.active_effect_ids.append(action.id)
+
+        if action.illusory_duplicate_defense is not None:
+            owned = [
+                effect for effect in member.state.timed_effects
+                if effect.source_id == member.combatant_id
+                and effect.source_effect_id == action.id
+            ]
+            if len(owned) != 1:
+                raise ValueError("Illusory duplicate defenses require one source-owned timed group.")
+            owned[0].illusory_duplicates_remaining = (
+                action.illusory_duplicate_defense.initial_duplicates
+            )
 
         if action.friendly_recovery_aura is not None:
             from app.combat.friendly_recovery_auras import activate_source_recovery_aura

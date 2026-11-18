@@ -33,6 +33,7 @@ from app.domain.combatants import ResourceDefinition
 from app.domain.movement import MovementModeGrant
 from app.domain.spell_modifiers import SpellModifierEffect
 from app.domain.timed_self_buffs import TimedSelfBuffAction
+from app.content.shared_mirror_image_2014 import mirror_image_2014
 
 logger = logging.getLogger(__name__)
 
@@ -111,6 +112,10 @@ def innate_timed_self_buffs_2014(monster) -> list[TimedSelfBuffAction]:
                     )],
                     priority=70,
                     animation="blur",
+                ))
+            elif spell_id == "mirror-image":
+                actions.append(mirror_image_2014(
+                    "mirror-image" if spell.get("usage") == "per_day" else None
                 ))
         # Use the same generic timed buff for source-proven self Enlarge.
         # An unverified spell package must not gain this damage bonus.

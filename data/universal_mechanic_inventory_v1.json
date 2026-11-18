@@ -379,6 +379,22 @@
       },
       {
         "browser": [
+          "frontend/browser-illusory-duplicates.js",
+          "frontend/browser-attack.js"
+        ],
+        "id": "illusory-duplicate-defense",
+        "python": [
+          "backend/app/combat/illusory_duplicates.py",
+          "backend/app/combat/attacks.py"
+        ],
+        "status": "supported",
+        "tests": [
+          "backend/tests/test_2014_mirror_image.py",
+          "frontend/browser-2014-mirror-image.test.cjs"
+        ]
+      },
+      {
+        "browser": [
           "frontend/browser-indomitable.js",
           "frontend/browser-saves.js"
         ],
@@ -933,7 +949,7 @@
     ],
     "summary": {
       "partial": 10,
-      "supported": 54,
+      "supported": 55,
       "unsupported": 2
     }
   },

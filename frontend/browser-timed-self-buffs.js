@@ -76,6 +76,7 @@
         || action.startTurnEmanationDamage
         || (action.emittedEnvironmentContexts || []).length
         || action.meleeHitRetaliation
+        || action.illusoryDuplicateDefense
         || action.spellSaveDcBonus || action.spellAttackAdvantage || (action.modifierEffects || []).length
         || action.sizeOverride || (action.abilityCheckAdvantageAbilities || []).length
         || (action.targetPolicy || "normal") !== "normal"
@@ -101,6 +102,12 @@
       if ((action.targetPolicy || "normal") !== "normal"
         && !(member.state.active_effect_ids || []).includes(action.id)) {
         member.state.active_effect_ids.push(action.id);
+      }
+      if (action.illusoryDuplicateDefense) {
+        const owned = (member.state.timed_effects || []).filter((effect) =>
+          effect.source_id === member.combatant_id && effect.source_effect_id === action.id);
+        if (owned.length !== 1) throw new Error("Illusory duplicate defenses require one source-owned timed group.");
+        owned[0].illusory_duplicates_remaining = action.illusoryDuplicateDefense.initialDuplicates;
       }
       if (action.friendlyRecoveryAura) {
         window.IRON_PIT_BROWSER_FRIENDLY_RECOVERY_AURAS?.activate(member, action, options.setup, round);
