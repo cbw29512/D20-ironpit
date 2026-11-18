@@ -40,6 +40,7 @@ from app.content.monsters_low_cr import build_giant_rat, build_giant_weasel, bui
 from app.content.monsters_mixed_multiattack import build_giant_constrictor_snake
 from app.content.monsters_parry import build_parry_monsters
 from app.content.monsters_poison import build_poison_monsters
+from app.content.monsters_recharge_giant_spider import build_giant_spider
 from app.content.monsters_recharge_save import build_recharge_save_monsters
 from app.content.monsters_recharge_wyrmlings import build_recharge_wyrmlings
 from app.content.monsters_recharge_young_dragons import build_recharge_young_dragons
@@ -79,6 +80,7 @@ def build_legacy_monster_templates(*, include_capability_migrated: bool = True) 
         *build_expansion_four(), build_giant_crocodile(), *snake_entries, build_tyrannosaurus_rex(),
         *build_zero_engine_monsters(), *build_target_not_full_hp_monsters(), *build_recharge_save_monsters(),
         *build_recharge_wyrmlings(), *build_recharge_young_dragons(),
+        build_giant_spider(),
         build_worg(), *build_swarm_candidates(), *build_parry_monsters(),
     ]
     monsters = complete_monster_movement_modes(monsters)
