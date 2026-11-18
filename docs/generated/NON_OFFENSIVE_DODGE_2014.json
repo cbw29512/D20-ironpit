@@ -11,8 +11,7 @@
     {
       "blockers": [
         "attack:none",
-        "source:extra-action",
-        "source:trait"
+        "source:extra-action"
       ],
       "monster_id": "rug-of-smothering",
       "monster_name": "Rug of Smothering"
