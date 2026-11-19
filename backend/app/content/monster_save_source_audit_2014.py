@@ -27,6 +27,9 @@ from app.content.monster_source_grappled_poison_2014 import source_proven_grappl
 from app.content.monster_source_limited_audible_conditions_2014 import (
     source_proven_limited_audible_conditions_2014,
 )
+from app.content.monster_source_audible_turn_conditions_2014 import (
+    source_proven_audible_turn_conditions_2014,
+)
 from app.content.monster_source_visual_save_bindings_2014 import source_proven_visual_saves_2014
 from app.content.monster_multiattack_variants_2014 import (
     source_form_qualified_multiattack_labels_2014,
@@ -73,6 +76,9 @@ def unsupported_source_actions_2014(
         )
         allowed.update(
             item.name.casefold() for item in source_proven_limited_audible_conditions_2014(monster)
+        )
+        allowed.update(
+            item.name.casefold() for item in source_proven_audible_turn_conditions_2014(monster)
         )
         if (
             monster.multiattack_slots

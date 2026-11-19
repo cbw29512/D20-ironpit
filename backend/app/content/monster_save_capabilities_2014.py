@@ -26,6 +26,9 @@ from app.content.monster_source_limited_audible_conditions_2014 import (
     limited_audible_resource_uses_2014,
     source_proven_limited_audible_conditions_2014,
 )
+from app.content.monster_source_audible_turn_conditions_2014 import (
+    source_proven_audible_turn_conditions_2014,
+)
 from app.content.monster_save_capability_support_2014 import supports_recharge_rules_2014, supports_save_action_2014
 from app.content.monster_save_source_audit_2014 import unsupported_save_actions_2014, unsupported_source_actions_2014
 from app.content.monster_audible_maintained_control_2014 import source_proven_audible_maintained_controls_2014
@@ -95,6 +98,7 @@ def save_capabilities_2014(monster: SourceMonster2014) -> list[SaveCapabilityDef
         result.extend(source_proven_opening_area_saves_2014(monster))
         result.extend(source_proven_audible_maintained_controls_2014(monster))
         result.extend(source_proven_limited_audible_conditions_2014(monster))
+        result.extend(source_proven_audible_turn_conditions_2014(monster))
         result.extend(source_proven_grapple_owner_saves_2014(monster))
         result.extend(source_proven_grappled_poison_saves_2014(monster))
         result.extend(source_proven_owned_condition_drains_2014(monster))

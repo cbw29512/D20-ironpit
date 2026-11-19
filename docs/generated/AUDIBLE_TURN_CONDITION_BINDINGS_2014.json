@@ -1,0 +1,33 @@
+{
+  "applicable_card_count": 1,
+  "applicable_cards": [
+    "cloaker"
+  ],
+  "bindings": [
+    {
+      "ability_name": "Moan",
+      "browser_wired": true,
+      "card_id": "cloaker",
+      "card_name": "Cloaker",
+      "parameters": {
+        "condition": "frightened",
+        "dc": 13,
+        "excluded_target_creature_types": [
+          "aberration"
+        ],
+        "radius_ft": 60,
+        "save_ability": "wisdom",
+        "source_text": "Each creature within 60 feet of the cloaker that can hear its moan and that isn't an aberration must succeed on a DC 13 Wisdom saving throw or become frightened until the end of the cloaker's next turn. If a creature's saving throw is successful, the creature is immune to the cloaker's moan for the next 24 hours."
+      },
+      "python_wired": true
+    }
+  ],
+  "exceptions": [],
+  "remaining_card_count": 0,
+  "source_cards_scanned": 327,
+  "wired_browser_card_count": 1,
+  "wired_cards": [
+    "cloaker"
+  ],
+  "wired_python_card_count": 1
+}
