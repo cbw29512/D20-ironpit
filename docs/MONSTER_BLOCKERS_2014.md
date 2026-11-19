@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 24 |
+| `source:trait` | 23 |
 | `mechanic:spellcasting` | 17 |
 | `source:extra-action` | 16 |
 | `mechanic:legendary` | 9 |
@@ -40,7 +40,7 @@ the underlying ability is already implemented or trivial.
 | Aboleth | mechanic:legendary, source:extra-action, source:legendary | — |
 | Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Spellcasting |
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
-| Cloaker | attack:incomplete, source:extra-action, source:trait | Damage Transfer, Light Sensitivity |
+| Cloaker | attack:incomplete, source:extra-action, source:trait | Light Sensitivity |
 | Couatl | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Darkmantle | attack:incomplete, source:extra-action | — |
 | Djinni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
@@ -61,7 +61,7 @@ the underlying ability is already implemented or trivial.
 | Oni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Rakshasa | mechanic:spellcasting, source:trait | Limited Magic Immunity, Innate Spellcasting |
 | Roper | source:extra-action, source:trait | Grasping Tendrils |
-| Rug of Smothering | attack:none, source:extra-action, source:trait | Damage Transfer |
+| Rug of Smothering | attack:none, source:extra-action | — |
 | Solar | attack:incomplete, mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Innate Spellcasting |
 | Spectator | source:extra-action, source:reaction | — |
 | Spirit Naga | mechanic:spellcasting, source:trait | Spellcasting |

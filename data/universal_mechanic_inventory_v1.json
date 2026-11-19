@@ -5892,17 +5892,9 @@
       "source:extra-action": 16,
       "source:legendary": 9,
       "source:reaction": 1,
-      "source:trait": 24
+      "source:trait": 23
     },
     "unresolved_printed_abilities": [
-      {
-        "demand_count": 2,
-        "monsters": [
-          "Cloaker",
-          "Rug of Smothering"
-        ],
-        "printed_name": "Damage Transfer"
-      },
       {
         "demand_count": 1,
         "monsters": [
