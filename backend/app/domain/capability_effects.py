@@ -118,6 +118,7 @@ class GrappleEffectDefinition(BaseModel):
         default=1, ge=1, le=20, exclude_if=lambda value: value == 1,
     )
     prevents_breathing: bool = Field(default=False, exclude_if=lambda value: not value)
+    blinds: bool = Field(default=False, exclude_if=lambda value: not value)
     breathing_exempt_medium: Literal["water"] | None = None
     periodic_damage: GrapplePeriodicDamage | None = None
 

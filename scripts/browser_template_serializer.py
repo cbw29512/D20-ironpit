@@ -53,8 +53,15 @@ def _control(effect: Any) -> dict[str, Any] | None:
         periodic = effect.grapple_periodic_damage
         row["grapplePeriodicDamage"] = {
             "source_name": periodic.source_name, "dice_count": periodic.dice_count,
-            "dice_size": periodic.dice_size, "damage_type": periodic.damage_type,
+            "dice_size": periodic.dice_size, "damage_bonus": periodic.damage_bonus,
+            "damage_type": periodic.damage_type,
         }
+    if effect.grapple_blinds:
+        row["grappleBlinds"] = True
+    if effect.grapple_prevents_breathing:
+        row["grapplePreventsBreathing"] = True
+    if effect.grapple_breathing_exempt_medium is not None:
+        row["grappleBreathingExemptMedium"] = effect.grapple_breathing_exempt_medium
     if effect.condition_id:
         row["conditionId"] = effect.condition_id
         if effect.expires_at_start_of_source_turn:

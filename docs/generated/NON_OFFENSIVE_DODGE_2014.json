@@ -7,21 +7,17 @@
       ],
       "monster_id": "frog",
       "monster_name": "Frog"
-    },
-    {
-      "blockers": [
-        "attack:none",
-        "source:extra-action"
-      ],
-      "monster_id": "rug-of-smothering",
-      "monster_name": "Rug of Smothering"
     }
   ],
   "mechanic": "non-offensive-dodge-fallback",
-  "remaining_card_count": 2,
+  "remaining_card_count": 1,
   "schema_version": 1,
   "source_card_count": 327,
   "wired": [
+    {
+      "monster_id": "rug-of-smothering",
+      "monster_name": "Rug of Smothering"
+    },
     {
       "monster_id": "sea-horse",
       "monster_name": "Sea Horse"
@@ -31,5 +27,5 @@
       "monster_name": "Shrieker"
     }
   ],
-  "wired_card_count": 2
+  "wired_card_count": 3
 }

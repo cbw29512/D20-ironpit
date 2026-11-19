@@ -19,7 +19,7 @@ from scripts.browser_template_serializer import template_row
 
 _TRAIT = "Antimagic Susceptibility"
 _FAMILY = {"Animated Armor", "Flying Sword", "Rug of Smothering"}
-_NEWLY_READY = {"Animated Armor", "Flying Sword"}
+_NEWLY_READY = {"Animated Armor", "Flying Sword", "Rug of Smothering"}
 
 
 def _source_by_name():
@@ -42,7 +42,7 @@ def test_antimagic_susceptibility_binds_exact_2014_source_family() -> None:
         assert _TRAIT not in unsupported_traits_2014(monster)
 
 
-def test_antimagic_family_unlocks_only_the_two_single_blocker_constructs() -> None:
+def test_antimagic_family_remains_supported_for_all_three_constructs() -> None:
     source = _source_by_name()
     for name in _NEWLY_READY:
         monster = source[name]
@@ -53,9 +53,7 @@ def test_antimagic_family_unlocks_only_the_two_single_blocker_constructs() -> No
         assert template_row(template)["terminal_effect_tags"] == ["antimagic"]
         assert template_row(template)["effect_tag_condition_grants"] == [grant.model_dump(mode="json") for grant in template.effect_tag_condition_grants]
 
-    rug = source["Rug of Smothering"]
-    assert basic_blockers_2014(rug)
-    assert _TRAIT not in unsupported_traits_2014(rug)
+    assert _TRAIT not in unsupported_traits_2014(source["Rug of Smothering"])
 
 
 def test_antimagic_tag_immediately_applies_terminal_dead_state() -> None:

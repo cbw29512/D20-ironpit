@@ -24,6 +24,7 @@ class GrapplePeriodicDamage(BaseModel):
     source_name: str = Field(min_length=1)
     dice_count: int = Field(ge=1, le=40)
     dice_size: int = Field(ge=2, le=100)
+    damage_bonus: int = 0
     damage_type: DamageTypeName
 
 
@@ -51,6 +52,9 @@ class HitControlEffect(BaseModel):
     grapple_breakable_object: BreakableObjectSpec | None = None
     grapple_check_save_disadvantage_abilities: list[AbilityName] = Field(default_factory=list)
     grapple_periodic_damage: GrapplePeriodicDamage | None = None
+    grapple_blinds: bool = False
+    grapple_prevents_breathing: bool = False
+    grapple_breathing_exempt_medium: Literal["water"] | None = None
     condition_id: ConditionName | None = None
     expires_at_start_of_source_turn: bool = False
     expiry_timing: ConditionTiming | None = None

@@ -21,15 +21,14 @@ def test_327_card_non_offensive_inventory_is_complete() -> None:
     report = non_offensive_dodge_inventory_2014(load_monster_source_2014())
     assert report["source_card_count"] == 327
     assert report["applicable_card_count"] == 4
-    assert report["wired_card_count"] == 2
-    assert report["remaining_card_count"] == 2
+    assert report["wired_card_count"] == 3
+    assert report["remaining_card_count"] == 1
     assert report["wired"] == [
+        {"monster_id": "rug-of-smothering", "monster_name": "Rug of Smothering"},
         {"monster_id": "sea-horse", "monster_name": "Sea Horse"},
         {"monster_id": "shrieker", "monster_name": "Shrieker"},
     ]
-    assert {item["monster_id"] for item in report["exceptions"]} == {
-        "frog", "rug-of-smothering",
-    }
+    assert {item["monster_id"] for item in report["exceptions"]} == {"frog"}
 
 
 def test_sea_horse_compiles_and_serializes_without_fabricated_attack() -> None:

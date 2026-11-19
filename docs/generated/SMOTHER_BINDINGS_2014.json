@@ -1,0 +1,36 @@
+{
+  "applicable_card_count": 1,
+  "applicable_cards": [
+    "rug-of-smothering"
+  ],
+  "bindings": [
+    {
+      "browser_wired": true,
+      "card_id": "rug-of-smothering",
+      "card_name": "Rug of Smothering",
+      "parameters": {
+        "attack_bonus": 5,
+        "escape_dc": 13,
+        "max_target_size": "medium",
+        "periodic_damage": {
+          "damage_bonus": 3,
+          "damage_type": "bludgeoning",
+          "dice_count": 2,
+          "dice_size": 6,
+          "source_name": "Smother"
+        },
+        "reach_ft": 5,
+        "source_text": "Melee Weapon Attack: +5 to hit, reach 5 ft., one Medium or smaller creature. Hit: The creature is grappled (escape DC 13). Until this grapple ends, the target is restrained, blinded, and at risk of suffocating, and the rug can't smother another target. In addition, at the start of each of the target's turns, the target takes 10 (2d6 + 3) bludgeoning damage."
+      },
+      "python_wired": true
+    }
+  ],
+  "exceptions": [],
+  "remaining_card_count": 0,
+  "source_cards_scanned": 327,
+  "wired_browser_card_count": 1,
+  "wired_cards": [
+    "rug-of-smothering"
+  ],
+  "wired_python_card_count": 1
+}

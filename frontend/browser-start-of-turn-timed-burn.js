@@ -125,7 +125,8 @@
         if (!grappler || grappler.state.is_dead || grappler.state.is_unconscious
           || !grappler.state.is_alive || grappler.state.current_hp <= 0) continue;
         if (Math.abs(grappler.position_ft - member.position_ft) > grapple.range_ft) continue;
-        const total = D().rollMany(spec.dice_count, spec.dice_size).reduce((sum, roll) => sum + roll, 0);
+        const total = D().rollMany(spec.dice_count, spec.dice_size).reduce((sum, roll) => sum + roll, 0)
+          + Number(spec.damage_bonus || 0);
         const hpBefore = member.state.current_hp;
         const resolved = DD().resolveDamage(member.state, total, spec.damage_type);
         A().applyDamage(

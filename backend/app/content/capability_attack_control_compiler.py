@@ -22,6 +22,9 @@ def compile_attack_control(
                 grapple_breakable_object=effect.breakable_object,
                 grapple_check_save_disadvantage_abilities=list(effect.check_save_disadvantage_abilities),
                 grapple_periodic_damage=effect.periodic_damage,
+                grapple_blinds=effect.blinds,
+                grapple_prevents_breathing=effect.prevents_breathing,
+                grapple_breathing_exempt_medium=effect.breathing_exempt_medium,
             )
         return HitControlEffect(
             max_target_size=effect.max_target_size,
