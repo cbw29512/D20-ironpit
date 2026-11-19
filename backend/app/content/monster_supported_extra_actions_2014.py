@@ -30,6 +30,7 @@ from app.content.monster_source_etherealness_2014 import verified_unavailable_et
 from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014
 from app.content.monster_source_enlarge_2014 import source_enlarge_action_2014
 from app.content.monster_source_ranged_save_only_hit_2014 import source_ranged_save_only_hit_attacks_2014
+from app.content.monster_source_smother_2014 import source_proven_smother_attacks_2014
 from app.content.monster_source_scare_2014 import source_scare_2014
 from app.content.monster_source_limited_audible_conditions_2014 import (
     source_proven_limited_audible_conditions_2014,
@@ -89,6 +90,7 @@ def source_supported_extra_action_labels_2014(monster: SourceMonster2014) -> set
             | {_label(action.name) for action in source_invisibility_action_2014(monster)}
             | {_label(action.name) for action in source_enlarge_action_2014(monster)}
             | {_label(action.name) for action in source_ranged_save_only_hit_attacks_2014(monster)}
+            | {_label(action.name) for action in source_proven_smother_attacks_2014(monster)}
             | {
                 _label(action.name)
                 for action in source_proven_limited_audible_conditions_2014(monster)

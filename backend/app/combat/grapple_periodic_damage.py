@@ -31,7 +31,7 @@ def grapple_turn_start_damage(
                 continue
             if not member.state.is_alive or member.state.is_dead:
                 break
-            total = roll_dice(dice, spec.dice_count, spec.dice_size)
+            total = roll_dice(dice, spec.dice_count, spec.dice_size) + spec.damage_bonus
             packets.append((spec.source_name, total, spec.damage_type, source.source_id))
         return packets
     except Exception:

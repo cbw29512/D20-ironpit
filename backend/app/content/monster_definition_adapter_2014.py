@@ -76,6 +76,7 @@ from app.content.monster_source_enlarge_2014 import (
 )
 from app.content.monster_source_ranged_save_only_hit_2014 import source_ranged_save_only_hit_attacks_2014
 from app.content.monster_source_damage_free_grapple_2014 import source_proven_damage_free_grapple_attacks_2014
+from app.content.monster_source_smother_2014 import source_proven_smother_attacks_2014
 from app.content.monster_source_damage_or_grapple_2014 import source_proven_damage_or_grapple_2014
 from app.content.monster_source_necrotic_drain_2014 import source_proven_typed_drain_2014
 from app.content.monster_innate_support_2014 import (
@@ -254,6 +255,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         )],
         *source_ranged_save_only_hit_attacks_2014(monster),
         *source_proven_damage_free_grapple_attacks_2014(monster),
+        *source_proven_smother_attacks_2014(monster),
         *source_proven_damage_or_grapple_2014(monster),
     ]
     for source_weapon in monster.attacks:
