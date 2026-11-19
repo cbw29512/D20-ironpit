@@ -1,3 +1,5 @@
+> **Superseded historical evidence.** Not the live execution cursor. See [MONSTER_ABILITY_WORK_QUEUE.md](MONSTER_ABILITY_WORK_QUEUE.md). Old Actions URLs in this file will age out.
+
 # Included weapon damage audit
 
 2026-10-07. Owner: ChatGPT. Base main: `b63cbfb2e2432b1f8c37fb365500c895f4efb08e`.

@@ -1,3 +1,5 @@
+> **Superseded historical evidence.** Not the live execution cursor. See [MONSTER_ABILITY_WORK_QUEUE.md](MONSTER_ABILITY_WORK_QUEUE.md). Old Actions URLs in this file will age out.
+
 # 2024 Barbarian follow-up audit
 
 Anchor: `44c0bca5c814f01ea01013a83380046f86cd7e07`, both main and

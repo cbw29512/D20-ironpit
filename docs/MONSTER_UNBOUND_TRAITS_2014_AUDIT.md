@@ -1,3 +1,5 @@
+> **Superseded historical evidence.** Not the live execution cursor. See [MONSTER_ABILITY_WORK_QUEUE.md](MONSTER_ABILITY_WORK_QUEUE.md). Old Actions URLs in this file will age out.
+
 # 2014 monster trait audit — 82 currently blocked monsters
 
 Audit basis: generated `docs/MONSTER_BLOCKERS_2014.md` on `main` and `docs/UNIVERSAL_MECHANIC_INVENTORY.md`, October 12, 2026. This is **semantic triage**, not a claim that all 82 source wordings, individual runtime bindings or Python/browser certification tests have been exhaustively verified. **REUSE / VERIFY** means a matching shared capability exists conceptually but source-specific binding/coverage must be inspected and tested, not that the monster is certified. **NEUTRAL** means the trait appears inactive under locked standard-arena rules; validate full printed clause before compiler exemption. **NEW** means a missing shared semantic/lifecycle requiring implementation or verified composition of partial primitives. No monster has been promoted by this audit.
