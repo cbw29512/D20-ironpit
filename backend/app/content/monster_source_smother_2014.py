@@ -13,6 +13,7 @@ from app.domain.size import CreatureSize
 from app.domain.weapons_base import DamageType
 
 _SMOTHER = re.compile(
+    # Full action shape, not heading or card identity, owns admission.
     r"Melee Weapon Attack: \+(?P<bonus>\d+) to hit, reach (?P<reach>\d+) ft\., "
     r"one (?P<size>\w+) or smaller creature\. Hit: The creature is grappled "
     r"\(escape DC (?P<dc>\d+)\)\. Until this grapple ends, the target is "
