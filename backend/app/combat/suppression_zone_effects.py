@@ -57,6 +57,12 @@ def sync_suppression_zone_effects(setup: EncounterSetup, round_number: int = 1) 
                 and owner.concentration.effect_id == zone.action_id
             )
         ]
+        for zone in live:
+            if not zone.follows_source:
+                continue
+            owner = sources.get(zone.source_id)
+            if owner is not None and owner.position is not None:
+                zone.position = owner.position.model_copy(deep=True)
         sight_zones = [
             zone for zone in live if zone.obscuration_kind != "none"
         ]

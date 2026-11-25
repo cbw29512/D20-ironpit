@@ -98,6 +98,10 @@ jobs:
         run: python scripts/report_swallow_bindings_2014.py --check
       - name: Audit 327-card source-linked attachment coverage
         run: python scripts/report_attachment_bindings_2014.py --check
+      - name: Audit 327-card moving magical-darkness Action coverage
+        run: |
+          python scripts/report_moving_darkness_actions_2014.py --check
+          PYTHONPATH=scripts pytest -q scripts/test_report_moving_darkness_actions_2014.py
       - name: Audit 327-card repeated-choice Multiattack coverage
         run: python scripts/report_monster_multiattack_2014.py --check
       - name: Audit 327-card form-qualified Charge coverage

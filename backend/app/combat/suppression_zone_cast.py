@@ -31,6 +31,8 @@ def choose_suppression_zone_center(
     try:
         if setup.map_definition is None or caster.state.position is None:
             return None
+        if action.center_on_source:
+            return caster.state.position.model_copy(deep=True)
         enemies = setup.monsters if caster.side == "heroes" else setup.heroes
         living = [
             enemy for enemy in enemies
@@ -53,9 +55,9 @@ def choose_suppression_zone_action(
     turn_key: str,
 ) -> tuple[PersistentSuppressionZoneAction, GridPosition] | None:
     try:
-        if verbal_casting_blocked(caster, setup):
-            return None
         for action in caster.state.template.suppression_zone_actions:
+            if action.is_spell and verbal_casting_blocked(caster, setup):
+                continue
             if not is_available(caster.state, action.action_cost):
                 continue
             if action.concentration and caster.state.concentration is not None:
@@ -86,10 +88,12 @@ def cast_suppression_zone(
     turn_key: str,
 ) -> tuple[BattleEvent, int]:
     try:
-        if verbal_casting_blocked(caster, setup):
+        if action.is_spell and verbal_casting_blocked(caster, setup):
             raise ValueError(f"{action.name} cannot be cast inside a Silence effect.")
         if not is_available(caster.state, action.action_cost):
             raise ValueError(f"{action.action_cost} is unavailable for {action.name}.")
+        if action.center_on_source and position != caster.state.position:
+            raise ValueError(f"{action.name} must be centered on its source.")
         if not zone_center_legal(setup, position, action.cast_range_ft, caster):
             raise ValueError(f"{action.name} placement exceeds its cast range.")
         resource = _resource(caster, action.resource_id)
@@ -117,10 +121,12 @@ def cast_suppression_zone(
             position=position.model_copy(deep=True),
             radius_ft=action.radius_ft,
             expires_round=round_number + action.duration_rounds,
+            follows_source=action.follows_source,
             deafens=action.deafens,
             blocks_verbal_spells=action.blocks_verbal_spells,
             thunder_immunity=action.thunder_immunity,
             obscuration_kind=action.obscuration_kind,
+            dispel_light_spell_max_level=action.dispel_light_spell_max_level,
             concentration=action.concentration,
         ))
         sync_suppression_zone_effects(setup, round_number)
@@ -134,7 +140,10 @@ def cast_suppression_zone(
             resource_remaining=resource.current_uses if resource is not None else None,
             concentration_started_effect_id=action.id if action.concentration else None,
             animation=action.animation,
-            description=f"{caster.state.template.name} casts {action.name}.",
+            description=(
+                f"{caster.state.template.name} casts {action.name}."
+                if action.is_spell else f"{caster.state.template.name} uses {action.name}."
+            ),
         ), sequence + 1
     except ValueError:
         raise

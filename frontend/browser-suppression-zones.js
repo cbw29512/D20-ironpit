@@ -33,6 +33,17 @@
     });
   }
 
+  function syncFollowingPositions(setup, zones) {
+    const owners = new Map([...setup.heroes, ...setup.monsters].map(
+      (member) => [member.combatant_id, member.state]));
+    for (const zone of zones) {
+      const owner = owners.get(zone.source_id);
+      if ((zone.follows_source || zone.followsSource) && owner?.position) {
+        zone.position = { ...owner.position };
+      }
+    }
+  }
+
   function expire(setup, round) {
     setup.suppression_zones = liveZones(setup).filter(
       (zone) => zone.expires_round > round);
@@ -52,6 +63,7 @@
 
   function sync(setup, round = 1) {
     const live = liveZones(setup);
+    syncFollowingPositions(setup, live);
     window.IRON_PIT_BROWSER_OBSCURATION_VISIBILITY?.syncProjection(setup, live);
     for (const member of [...setup.heroes, ...setup.monsters]) {
       const zones = live.filter((zone) => memberInZone(member, zone));
@@ -65,6 +77,7 @@
 
   function chooseCenter(caster, setup, action) {
     if (!setup.map_definition || !caster.state.position) return null;
+    if (action.centerOnSource) return { ...caster.state.position };
     const enemies = caster.side === "heroes" ? setup.monsters : setup.heroes;
     const living = enemies.filter((enemy) => enemy.state.is_alive && !enemy.state.is_dead && enemy.state.position);
     if (!living.length) return null;
@@ -95,8 +108,8 @@
     } catch (error) { console.error("Physical-fog tactical valuation failed.", error); throw error; }
   }
   function choose(caster, setup, turnKey) {
-    if (verbalBlocked(caster, setup)) return null;
     for (const action of caster.state.template.suppression_zone_actions || []) {
+      if (action.isSpell !== false && verbalBlocked(caster, setup)) continue;
       if (!E().available(caster.state, action.actionCost)) continue;
       if (action.concentration && caster.state.concentration) continue;
       if (action.expendsSpellSlot && !P()?.slotSpellAvailable(caster.state, turnKey)) continue;
@@ -109,8 +122,11 @@
   }
 
   function cast(sequence, round, caster, setup, action, position, turnKey) {
-    if (verbalBlocked(caster, setup)) throw new Error(`${action.name} cannot be cast inside a Silence effect.`);
+    if (action.isSpell !== false && verbalBlocked(caster, setup)) throw new Error(`${action.name} cannot be cast inside a Silence effect.`);
     if (!E().available(caster.state, action.actionCost)) throw new Error(`${action.actionCost} is unavailable for ${action.name}.`);
+    if (action.centerOnSource && (
+      !caster.state.position || position.x !== caster.state.position.x || position.y !== caster.state.position.y
+    )) throw new Error(`${action.name} must be centered on its source.`);
     if (action.expendsSpellSlot) P().markSlotSpellCast(caster.state, turnKey);
     E().spend(caster.state, action.actionCost);
     if (action.resourceId) caster.state.resources[action.resourceId] -= action.resourceCost || 1;
@@ -126,8 +142,10 @@
       zone_id: `${caster.combatant_id}:${action.id}:${round}:${setup.suppression_zones.length + 1}`,
       source_id: caster.combatant_id, action_id: action.id, action_name: action.name,
       position: { ...position }, radius_ft: action.radiusFt, expires_round: round + action.durationRounds,
+      follows_source: Boolean(action.followsSource),
       deafens: action.deafens !== false, blocks_verbal_spells: action.blocksVerbalSpells !== false,
       thunder_immunity: action.thunderImmunity !== false, obscuration_kind: action.obscurationKind || "none",
+      dispel_light_spell_max_level: action.dispelLightSpellMaxLevel ?? null,
       concentration: Boolean(action.concentration),
     });
     sync(setup, round);
@@ -138,7 +156,7 @@
       resource_remaining: action.resourceId ? caster.state.resources[action.resourceId] : null,
       concentration_started_effect_id: action.concentration ? action.id : null,
       animation: action.animation || "silence",
-      description: `${caster.state.template.name} casts ${action.name}.`,
+      description: `${caster.state.template.name} ${action.isSpell === false ? "uses" : "casts"} ${action.name}.`,
     };
   }
 

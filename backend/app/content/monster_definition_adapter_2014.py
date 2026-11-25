@@ -47,6 +47,9 @@ from app.content.monster_hp_pool_spell_bindings_2014 import (
     innate_hp_pool_spells_2014, prepared_hp_pool_spells_2014,
 )
 from app.content.monster_innate_darkness_2014 import source_proven_innate_darkness_2014
+from app.content.monster_source_darkness_aura_2014 import (
+    darkness_aura_resources_2014, source_proven_darkness_aura_2014,
+)
 from app.content.monster_innate_fog_cloud_2014 import source_proven_innate_fog_cloud_2014
 from app.content.monster_innate_misty_step_2014 import (
     source_proven_innate_misty_step_2014,
@@ -276,7 +279,10 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         }))
     blindsight_ft, truesight_ft = special_senses_2014(monster)
     bounded = bounded_blindsight_2014(monster)
-    resources = [*save_resources_2014(monster), *fetid_cloud_resources_2014(monster), *leadership_resources_2014(monster)]
+    resources = [
+        *save_resources_2014(monster), *fetid_cloud_resources_2014(monster),
+        *darkness_aura_resources_2014(monster), *leadership_resources_2014(monster),
+    ]
     resources.extend(ResourceDefinition(id=key, name=key.replace('-', ' ').title(), max_uses=uses)
                      for key, uses in attack_ammunition_2014(monster).items())
     resources.extend(healing_resources_2014(monster))
@@ -369,6 +375,8 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         suppression_zone_actions=[
             *source_proven_innate_darkness_2014(monster),
             *source_proven_innate_fog_cloud_2014(monster),
+            *[action for action in [source_proven_darkness_aura_2014(monster)]
+              if action is not None],
         ],
         teleport_actions=source_proven_innate_misty_step_2014(monster),
         persistent_save_zone_actions=[
