@@ -30,6 +30,10 @@ def build_combatant_state(template: CombatantTemplate) -> CombatantState:
                 for r in template.resources
             ],
             active_effect_ids=list(template.innate_condition_ids),
+            environment_context_modes={
+                action.id: action.initial_mode_id
+                for action in template.environment_context_control_actions
+            },
             active_buff_effect_ids=(["death-trigger"] if template.death_trigger_effect_ids else []),
             active_modifiers=opening_modifiers(template),
         )

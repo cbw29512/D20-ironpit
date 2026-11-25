@@ -5891,7 +5891,7 @@
       "source:extra-action": 15,
       "source:legendary": 9,
       "source:reaction": 1,
-      "source:trait": 23
+      "source:trait": 22
     },
     "unresolved_printed_abilities": [
       {
@@ -5921,13 +5921,6 @@
           "Solar"
         ],
         "printed_name": "Innate Spellcasting"
-      },
-      {
-        "demand_count": 1,
-        "monsters": [
-          "Cloaker"
-        ],
-        "printed_name": "Light Sensitivity"
       },
       {
         "demand_count": 1,

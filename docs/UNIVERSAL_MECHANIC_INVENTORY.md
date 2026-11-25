@@ -436,7 +436,6 @@ Blocked monsters: **29**. These are grouped by printed ability name so the roste
 | Gibbering | Gibbering Mouther | 1 |
 | Grasping Tendrils | Roper | 1 |
 | Innate Spellcasting | Couatl, Djinni, Glabrezu, Lamia, Magma Mephit, Oni, Rakshasa, Solar | 8 |
-| Light Sensitivity | Cloaker | 1 |
 | Limited Magic Immunity | Rakshasa | 1 |
 | Misty Escape | Vampire | 1 |
 | Ooze Cube | Gelatinous Cube | 1 |
@@ -449,7 +448,7 @@ Blocked monsters: **29**. These are grouped by printed ability name so the roste
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 23 |
+| `source:trait` | 22 |
 | `mechanic:spellcasting` | 17 |
 | `source:extra-action` | 15 |
 | `mechanic:legendary` | 9 |

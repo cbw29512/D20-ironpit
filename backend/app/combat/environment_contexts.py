@@ -30,6 +30,24 @@ def _active_emitting_actions(source: EncounterCombatant):
         raise RuntimeError("Environment context discovery failed.") from exc
 
 
+def _active_emitted_contexts(source: EncounterCombatant):
+    """Combine immutable emissions with currently active effect emissions."""
+    yield from source.state.template.emitted_environment_contexts
+    for action in source.state.template.environment_context_control_actions:
+        mode_id = source.state.environment_context_modes.get(action.id, action.initial_mode_id)
+        mode = next((item for item in action.modes if item.id == mode_id), None)
+        if mode is None:
+            raise ValueError(f"Unknown environment mode {mode_id} for {action.name}.")
+        yield from mode.emitted_contexts
+    for action in _active_emitting_actions(source):
+        yield from action.emitted_environment_contexts
+
+
+def _context_satisfies(emitted: EnvironmentContextId, requested: EnvironmentContextId) -> bool:
+    # Sunlight is always bright light, while ordinary bright light is not sunlight.
+    return emitted == requested or (requested == "bright_light" and emitted == "sunlight")
+
+
 def actor_inside_environment_context(
     actor: EncounterCombatant,
     setup: EncounterSetup | None,
@@ -42,12 +60,11 @@ def actor_inside_environment_context(
         for source in [*setup.heroes, *setup.monsters]:
             if _removed_from_battlefield(source.state):
                 continue
-            for action in _active_emitting_actions(source):
-                for context in action.emitted_environment_contexts:
-                    if context.context_id != context_id:
-                        continue
-                    if combatant_distance(source, actor) <= context.radius_ft:
-                        return True
+            for context in _active_emitted_contexts(source):
+                if not _context_satisfies(context.context_id, context_id):
+                    continue
+                if combatant_distance(source, actor) <= context.radius_ft:
+                    return True
         return False
     except (ValueError, RuntimeError):
         raise

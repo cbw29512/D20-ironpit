@@ -13,7 +13,7 @@ from app.combat.saving_throws import resolve_save_action
 from app.combat.state import build_combatant_state
 from app.combat.timed_self_buffs import resolve_timed_self_buff
 from app.content.capability_compiler import compile_combatant
-from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
+from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monsters import build_commoner
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -24,7 +24,9 @@ logger = logging.getLogger(__name__)
 def _encounter():
     try:
         source = next(m for m in load_monster_source_2014() if m.id == "will-o-wisp")
-        template = compile_combatant(adapt_basic_monster_2014(source))
+        # Exercise the already-complete finisher primitive directly while the
+        # independent Variable Illumination fight-state action blocks roster admission.
+        template = compile_combatant(adapt_monster_mechanics_2014(source))
         wisp = EncounterCombatant(
             combatant_id="wisp", side="monsters", position_ft=0,
             state=build_combatant_state(template),

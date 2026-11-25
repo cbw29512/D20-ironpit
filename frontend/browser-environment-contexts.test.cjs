@@ -164,6 +164,45 @@ S.beginTurn(paladin.state);
 assert.equal(E.disadvantageSources(plain, activeSetup, "attack_rolls"), 0);
 
 load("browser-monsters-2014.js");
+const azerTemplate = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-azer"];
+assert.ok(azerTemplate);
+assert.deepEqual(azerTemplate.emitted_environment_contexts, [
+  { context_id: "bright_light", radius_ft: 10 },
+]);
+const lightSensitiveTemplate = targetTemplate();
+lightSensitiveTemplate.id = "synthetic-light-sensitive-card";
+lightSensitiveTemplate.environment_context_reactions = [{
+  source_id: "light-sensitivity",
+  source_name: "Light Sensitivity",
+  context_id: "bright_light",
+  disadvantage_on: ["attack_rolls", "sight_based_perception_checks"],
+}];
+const brightSource = member("azer-light", "heroes", azerTemplate, 0);
+const lightSensitive = member("light-sensitive", "monsters", lightSensitiveTemplate, 10);
+const brightSetup = { heroes: [brightSource], monsters: [lightSensitive], ruleset: "2014" };
+assert.equal(E.inside(lightSensitive, brightSetup, "bright_light"), true);
+assert.equal(E.inside(lightSensitive, brightSetup, "sunlight"), false);
+assert.equal(E.disadvantageSources(lightSensitive, brightSetup, "attack_rolls"), 1);
+assert.equal(E.disadvantageSources(lightSensitive, brightSetup, "sight_based_perception_checks"), 1);
+assert.equal(C.mode(lightSensitive.state, 0, 0, {
+  member: lightSensitive, setup: brightSetup, skill: "perception", reliesOnSight: true,
+}), "disadvantage");
+assert.equal(C.mode(lightSensitive.state, 0, 0, {
+  member: lightSensitive, setup: brightSetup, skill: "perception", reliesOnSight: false,
+}), "normal");
+lightSensitive.position_ft = 15;
+assert.equal(E.inside(lightSensitive, brightSetup, "bright_light"), false);
+
+// Sunlight is a subtype of bright light; the inverse is false.
+lightSensitive.position_ft = 25;
+const sunlightSource = member("sunlight-source", "heroes", hero, 0);
+const sunlightSetup = { heroes: [sunlightSource], monsters: [lightSensitive], ruleset: "2014" };
+S.beginTurn(sunlightSource.state);
+B.resolve(1, 1, sunlightSource, nimbus);
+assert.equal(E.inside(lightSensitive, sunlightSetup, "sunlight"), true);
+assert.equal(E.inside(lightSensitive, sunlightSetup, "bright_light"), true);
+assert.equal(E.disadvantageSources(lightSensitive, sunlightSetup, "attack_rolls"), 1);
+
 const koboldTemplate = window.IRON_PIT_BROWSER_MONSTERS_2014["2014-kobold"];
 assert.ok(koboldTemplate);
 assert.deepEqual(koboldTemplate.environment_context_reactions, [sunlightReaction]);

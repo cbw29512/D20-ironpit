@@ -35,7 +35,8 @@ def test_moan_is_wired_without_clearing_unresolved_cloaker_obligations() -> None
     assert "moan" in {action.id for action in save_capabilities_2014(monster)}
     blockers = set(basic_blockers_2014(monster))
     assert "source:extra-action" in blockers
-    assert {"attack:incomplete", "source:trait"} <= blockers
+    assert "attack:incomplete" in blockers
+    assert "source:trait" not in blockers
 
 
 def test_complete_327_card_scan_and_source_mutation_fail_closed() -> None:

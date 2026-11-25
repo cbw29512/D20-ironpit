@@ -14,7 +14,9 @@ from app.domain.damage_absorption import DamageAbsorptionRule
 from app.domain.damage_transfer import DamageTransferRule
 from app.domain.damage_sources import ConditionalDamageDefense, DamageTakenTimedEffect
 from app.domain.effect_removal import EffectRemovalAction, EffectTagConditionGrant
-from app.domain.environment_contexts import EnvironmentContextReaction
+from app.domain.environment_contexts import (
+    EmittedEnvironmentContext, EnvironmentContextControlAction, EnvironmentContextReaction,
+)
 from app.domain.d20_bonus_dice import D20BonusDieAction
 from app.domain.initiative_resources import InitiativeResourceRefillGrant
 from app.domain.movement import MovementModes
@@ -101,6 +103,8 @@ class CombatantTemplate(BaseModel):
     blindsight_requires_smell_when_deafened: bool = False
     progression_features: ProgressionCombatFeatures = Field(default_factory=ProgressionCombatFeatures)
     environment_context_reactions: list[EnvironmentContextReaction] = Field(default_factory=list)
+    emitted_environment_contexts: list[EmittedEnvironmentContext] = Field(default_factory=list)
+    environment_context_control_actions: list[EnvironmentContextControlAction] = Field(default_factory=list)
     passive_modifier_grants: list[PassiveModifierGrant] = Field(default_factory=list)
     weapon_attack: WeaponAttack | None = None
     alternate_weapon_attacks: list[WeaponAttack] = Field(default_factory=list)

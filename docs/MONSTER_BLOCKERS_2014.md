@@ -10,7 +10,7 @@ Blocker categories overlap: a monster may require several fixes.
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 23 |
+| `source:trait` | 22 |
 | `mechanic:spellcasting` | 17 |
 | `source:extra-action` | 15 |
 | `mechanic:legendary` | 9 |
@@ -39,7 +39,7 @@ the underlying ability is already implemented or trivial.
 | Aboleth | mechanic:legendary, source:extra-action, source:legendary | — |
 | Androsphinx | mechanic:legendary, mechanic:spellcasting, source:extra-action, source:legendary, source:trait | Spellcasting |
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
-| Cloaker | attack:incomplete, source:extra-action, source:trait | Light Sensitivity |
+| Cloaker | attack:incomplete, source:extra-action | — |
 | Couatl | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Darkmantle | attack:incomplete, source:extra-action | — |
 | Djinni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |

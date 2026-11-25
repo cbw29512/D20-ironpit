@@ -105,6 +105,9 @@ from app.content.monster_tier1_cleric_actions_2014 import (
     tier1_cleric_defensive_spells_2014, tier1_cleric_healing_spells_2014,
 )
 from app.content.monster_multiattack_2014 import multiattack_2014
+from app.content.monster_bright_light_contexts_2014 import (
+    mutable_bright_light_actions_2014, permanent_bright_light_contexts_2014,
+)
 from app.content.monster_death_triggers_2014 import death_trigger_actions_2014
 from app.content.monster_attack_ammunition_2014 import attack_ammunition_2014
 from app.content.monster_zero_hp_prevention_2014 import (
@@ -411,6 +414,8 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
         save_success_overrides=[legendary_override] if legendary_override else [],
         combat_traits=modeled_combat_traits_2014(monster),
         environment_context_reactions=environment_context_reactions_2014(monster),
+        emitted_environment_contexts=permanent_bright_light_contexts_2014(monster),
+        environment_context_control_actions=mutable_bright_light_actions_2014(monster),
         progression_features=features, passive_modifier_grants=conditional_immunity_grants_2014(monster),
         bonus_attack_grants=[
             *bonus_attack_grants_2014(monster),
