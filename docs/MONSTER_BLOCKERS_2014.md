@@ -12,7 +12,7 @@ Blocker categories overlap: a monster may require several fixes.
 |---|---:|
 | `source:trait` | 22 |
 | `mechanic:spellcasting` | 17 |
-| `source:extra-action` | 15 |
+| `source:extra-action` | 14 |
 | `mechanic:legendary` | 9 |
 | `source:legendary` | 9 |
 | `attack:incomplete` | 7 |
@@ -26,11 +26,12 @@ Blocker categories overlap: a monster may require several fixes.
 Generated from current source cards; one blocker category does not imply
 the underlying ability is already implemented or trivial.
 
-**1** monsters have exactly one remaining blocker category.
+**2** monsters have exactly one remaining blocker category.
 
 | Remaining blocker | Monsters | Count |
 |---|---|---:|
 | `arena:neutral` | Frog | 1 |
+| `attack:incomplete` | Darkmantle | 1 |
 
 ## Every blocked monster
 
@@ -41,7 +42,7 @@ the underlying ability is already implemented or trivial.
 | Archmage | mechanic:spellcasting, source:trait | Spellcasting |
 | Cloaker | attack:incomplete, source:extra-action | — |
 | Couatl | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
-| Darkmantle | attack:incomplete, source:extra-action | — |
+| Darkmantle | attack:incomplete | — |
 | Djinni | attack:incomplete, mechanic:spellcasting, source:extra-action, source:trait | Innate Spellcasting |
 | Flameskull | mechanic:spellcasting, source:trait | Spellcasting |
 | Frog | arena:neutral | — |
