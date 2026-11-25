@@ -1,16 +1,23 @@
+## [x] 2014 bright-light contexts and Cloaker Light Sensitivity (merged PR #1095)
+
+- **Merged evidence:** [PR #1095](https://github.com/cbw29512/D20-ironpit/pull/1095) passed CI, 2014 Basic Roster, 2014 Hero Certification, Paired Edition Monster Report, generated-artifact sync, and exact-head technical review on `349db669c8fa2a0591585abd9dbcad23e3c3a26d`; it squash-merged as `e74692862c59b001af4d50469447d137d976fa0e`.
+- **Universal mechanic:** Immutable source data declares permanent emission or Action/Bonus Action light modes; fresh fight-local state owns the active mode and resets each encounter. Shared Python/browser action economy, owner-action expiry, context lookup, and roll modifiers resolve the printed behavior without monster-name or ability-name runtime dispatch.
+- **327-card source scan:** **8 applicable / 8 Python-wired / 8 browser-wired / 0 remaining / 0 exceptions**: Azer, Cloaker, Fire Elemental, Flameskull, Giant Fire Beetle, Magmin, Nightmare, and Will-o'-Wisp. Generated main remains **298/327 source-admitted, 29 blocked** because Cloaker retains independent Bite attachment/Phantasms obligations and Flameskull retains Spellcasting. This merge does not claim a separately certified real webpage fight; production Netlify remained locked.
+- **Next unresolved item:** Cloaker Bite attachment and Phantasms remain `attack:incomplete` / `source:extra-action`; Light Sensitivity is complete and must not remain active.
+
 ## [x] 2014 Cloaker Moan — universal audible one-turn condition (merged PR #1351)
 
 - **Merged evidence:** [PR #1351](https://github.com/cbw29512/D20-ironpit/pull/1351) passed CI, 2014 Basic Roster, 2014 Hero Certification, Paired Edition Monster Report, and generated-artifact sync on exact final head `789b68f453075caab7769ceca6373069a36918e1`; it squash-merged as `728e44208b6b5b797a528f39bafcf3ebfca8c940`.
 - **Universal mechanic:** The immutable source supplies a 60-foot self emanation affecting every other hearing creature except aberrations, DC 13 Wisdom, Frightened until the end of the source's next turn, and source-scoped immunity on a successful save. Shared Python/browser save targeting, timed debuff, immunity, and fresh-fight state own execution; there is no monster-name or ability-name runtime dispatch.
 - **327-card source scan:** **1 applicable / 1 Python-wired / 1 browser-wired / 0 remaining / 0 exceptions**: Cloaker. Generated main remains **298/327 source-admitted, 29 blocked** because Cloaker retains independent Bite attachment, Phantasms, and Light Sensitivity obligations. This merge does not claim a separately certified real webpage fight; production Netlify remained locked.
-- **Next unresolved item:** Cloaker Light Sensitivity needs shared bright-light emission/context behavior; Bite attachment and Phantasms remain independent unresolved attack/action obligations.
+- **Historical next item at that merge:** Cloaker Light Sensitivity was subsequently completed by merged PR #1095. Bite attachment and Phantasms remain independent unresolved attack/action obligations.
 
 ## [x] 2014 Smother — universal source-linked control lifecycle (merged PR #1349)
 
 - **Merged evidence:** [PR #1349](https://github.com/cbw29512/D20-ironpit/pull/1349) passed CI, 2014 Basic Roster, 2014 Hero Certification, Paired Edition Monster Report, and generated-artifact sync on exact final head `44341c40698b1f0865e9a14734fc33dd3059d3d6`; it squash-merged as `7c9705c50cddbcd23127ff45d7e836d44323c255`.
 - **Universal mechanic:** The immutable attack supplies +5 to hit, 5-foot reach, Medium-or-smaller eligibility, escape DC 13, Restrained, Blinded, breath denial, single-target capacity, and victim-turn 2d6+3 Bludgeoning. Shared Python/browser grapple, escape, timed damage, typed defenses, death cleanup, and fresh-fight reset own execution; no monster-name or ability-name runtime dispatch exists.
 - **327-card source scan:** **1 applicable / 1 Python-wired / 1 browser-wired / 0 remaining / 0 exceptions**: Rug of Smothering. Generated main is **298/327 source-admitted, 29 blocked**. This merge does not claim a separately certified real webpage fight; production Netlify remained locked.
-- **Next unresolved item:** Cloaker remains blocked by Light Sensitivity plus incomplete attack/extra-action obligations; the generated report, not the archival queue order, controls subsequent selection.
+- **Historical next item at that merge:** Cloaker Light Sensitivity was subsequently completed by merged PR #1095; incomplete attack/extra-action obligations remain. The generated report, not the archival queue order, controls subsequent selection.
 
 ## [x] 2014 Damage Transfer — source-linked grapple damage split (merged PR #1347)
 
