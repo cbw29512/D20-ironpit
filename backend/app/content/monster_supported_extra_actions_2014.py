@@ -35,6 +35,9 @@ from app.content.monster_source_scare_2014 import source_scare_2014
 from app.content.monster_source_limited_audible_conditions_2014 import (
     source_proven_limited_audible_conditions_2014,
 )
+from app.content.monster_source_audible_turn_conditions_2014 import (
+    source_proven_audible_turn_conditions_2014,
+)
 from app.content.monster_visual_disguise_2014 import visual_disguise_action_2014
 from app.content.monster_grapple_swallow_source_2014 import source_grapple_swallow_2014
 from app.content.monster_multi_hit_engulf_source_2014 import source_two_hit_engulf_2014
@@ -94,6 +97,10 @@ def source_supported_extra_action_labels_2014(monster: SourceMonster2014) -> set
             | {
                 _label(action.name)
                 for action in source_proven_limited_audible_conditions_2014(monster)
+            }
+            | {
+                _label(action.name)
+                for action in source_proven_audible_turn_conditions_2014(monster)
             }
             | {_label(action.name) for action in source_scare_2014(monster)}
             # The source-proven Charm Action already runs the universal Charmed
