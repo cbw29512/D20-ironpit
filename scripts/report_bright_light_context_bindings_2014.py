@@ -14,6 +14,7 @@ if str(BACKEND) not in sys.path:
 
 from app.content.monster_bright_light_contexts_2014 import (
     light_sensitivity_reaction_2014,
+    mutable_bright_light_actions_2014,
     permanent_bright_light_contexts_2014,
 )
 from app.content.monster_source_2014 import load_monster_source_2014
@@ -43,13 +44,18 @@ def build_report() -> dict[str, object]:
                 continue
             reaction = light_sensitivity_reaction_2014(card) if kind == "reaction" else None
             emissions = permanent_bright_light_contexts_2014(card) if kind == "emitter" else []
-            wired = reaction is not None or bool(emissions)
+            actions = mutable_bright_light_actions_2014(card) if kind == "emitter" else []
+            wired = reaction is not None or bool(emissions) or bool(actions)
             parameters: dict[str, object] = {"source_text": source_text}
             if reaction is not None:
                 parameters.update(reaction.model_dump(mode="json"))
             if emissions:
                 parameters["emitted_environment_contexts"] = [
                     item.model_dump(mode="json") for item in emissions
+                ]
+            if actions:
+                parameters["environment_context_control_actions"] = [
+                    item.model_dump(mode="json") for item in actions
                 ]
             reason = None
             if not wired:

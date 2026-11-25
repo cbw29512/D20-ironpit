@@ -7,6 +7,7 @@ from app.content.monster_source_sunlight_hypersensitivity_2014 import source_pro
 from app.content.monster_environment_context_bindings_2014 import environment_context_reactions_2014
 from app.content.monster_bright_light_contexts_2014 import (
     light_sensitivity_reaction_2014,
+    mutable_bright_light_actions_2014,
     permanent_bright_light_contexts_2014,
 )
 from app.content.monster_berserk_2014 import berserk_self_buffs_2014
@@ -204,6 +205,7 @@ def bound_trait_names_2014(monster: SourceMonster2014) -> frozenset[str]:
             bound.add("Light Sensitivity")
         if permanent_bright_light_contexts_2014(monster):
             bound.add("Illumination")
+        bound.update(action.name for action in mutable_bright_light_actions_2014(monster))
         if verified_sunlight_weakness_2014(monster):
             bound.add("Sunlight Weakness")
         if source_proven_sunlight_hypersensitivity_2014(monster) is not None:

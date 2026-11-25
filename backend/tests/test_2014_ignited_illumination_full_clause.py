@@ -26,8 +26,8 @@ def test_327_cards_have_one_full_light_only_source_match():
         card = _magmin()
         original = card.model_dump_json()
         assert not verified_arena_inert_trait_2014(card, "Ignited Illumination")
-        assert "Ignited Illumination" in unsupported_traits_2014(card)
-        assert basic_blockers_2014(card) == ("source:trait",)
+        assert "Ignited Illumination" not in unsupported_traits_2014(card)
+        assert basic_blockers_2014(card) == ()
         assert card.model_dump_json() == original
         assert source_proves_ignited_illumination_2014(
             card.model_copy(update={"id": "renamed-homebrew", "name": "Renamed Light Creature"})

@@ -3,6 +3,9 @@ from __future__ import annotations
 import logging
 
 from app.combat.emanation_speed import sync_emanation_speed
+from app.combat.environment_context_actions import (
+    choose_environment_context_action, resolve_environment_context_action,
+)
 from app.combat.friendly_save_auras import sync_friendly_save_auras
 from app.combat.persistent_save_zone_cast import choose_save_zone_action, cast_save_zone
 from app.combat.suppression_zone_cast import (
@@ -29,6 +32,14 @@ def resolve_control_support(
     """Cast a still-free support Action. Teleport movement stays arena-unavailable."""
     try:
         events: list[BattleEvent] = []
+        context_choice = choose_environment_context_action(member, setup)
+        if context_choice is not None:
+            action, mode = context_choice
+            events.append(resolve_environment_context_action(
+                sequence, round_number, member, action, mode,
+                affected_states=[entry.state for entry in [*setup.heroes, *setup.monsters]],
+            ))
+            return events, sequence + 1
         teleport = choose_teleport_action(member, setup, turn_key)
         if teleport is not None:
             action, destination = teleport

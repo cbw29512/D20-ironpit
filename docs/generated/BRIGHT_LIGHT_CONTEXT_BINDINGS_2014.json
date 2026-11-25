@@ -68,15 +68,39 @@
     },
     {
       "ability_name": "Illumination",
-      "browser_wired": false,
+      "browser_wired": true,
       "card_id": "flameskull",
       "card_name": "Flameskull",
-      "exception": "requires_mutable_fight_state_light_action",
+      "exception": null,
       "kind": "emitter",
       "parameters": {
+        "environment_context_control_actions": [
+          {
+            "action_cost": "action",
+            "ai_mode_id": "bright-15",
+            "id": "illumination",
+            "initial_mode_id": "bright-15",
+            "modes": [
+              {
+                "emitted_contexts": [],
+                "id": "dim-15"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 15
+                  }
+                ],
+                "id": "bright-15"
+              }
+            ],
+            "name": "Illumination"
+          }
+        ],
         "source_text": "The flameskull sheds either dim light in a 15-foot radius, or bright light in a 15-foot radius and dim light for an additional 15 feet. It can switch between the options as an action."
       },
-      "python_wired": false
+      "python_wired": true
     },
     {
       "ability_name": "Illumination",
@@ -98,15 +122,39 @@
     },
     {
       "ability_name": "Ignited Illumination",
-      "browser_wired": false,
+      "browser_wired": true,
       "card_id": "magmin",
       "card_name": "Magmin",
-      "exception": "requires_mutable_fight_state_light_action",
+      "exception": null,
       "kind": "emitter",
       "parameters": {
+        "environment_context_control_actions": [
+          {
+            "action_cost": "bonus_action",
+            "ai_mode_id": "ablaze",
+            "id": "ignited-illumination",
+            "initial_mode_id": "extinguished",
+            "modes": [
+              {
+                "emitted_contexts": [],
+                "id": "extinguished"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 10
+                  }
+                ],
+                "id": "ablaze"
+              }
+            ],
+            "name": "Ignited Illumination"
+          }
+        ],
         "source_text": "As a bonus action, the magmin can set itself ablaze or extinguish its flames. While ablaze, the magmin sheds bright light in a 10-foot radius and dim light for an additional 10 feet."
       },
-      "python_wired": false
+      "python_wired": true
     },
     {
       "ability_name": "Illumination",
@@ -128,43 +176,185 @@
     },
     {
       "ability_name": "Variable Illumination",
-      "browser_wired": false,
+      "browser_wired": true,
       "card_id": "will-o-wisp",
       "card_name": "Will-o'-Wisp",
-      "exception": "requires_mutable_fight_state_light_action",
+      "exception": null,
       "kind": "emitter",
       "parameters": {
+        "environment_context_control_actions": [
+          {
+            "action_cost": "bonus_action",
+            "ai_mode_id": "bright-20",
+            "id": "variable-illumination",
+            "initial_mode_id": "bright-20",
+            "modes": [
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 5
+                  }
+                ],
+                "id": "bright-5"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 6
+                  }
+                ],
+                "id": "bright-6"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 7
+                  }
+                ],
+                "id": "bright-7"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 8
+                  }
+                ],
+                "id": "bright-8"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 9
+                  }
+                ],
+                "id": "bright-9"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 10
+                  }
+                ],
+                "id": "bright-10"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 11
+                  }
+                ],
+                "id": "bright-11"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 12
+                  }
+                ],
+                "id": "bright-12"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 13
+                  }
+                ],
+                "id": "bright-13"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 14
+                  }
+                ],
+                "id": "bright-14"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 15
+                  }
+                ],
+                "id": "bright-15"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 16
+                  }
+                ],
+                "id": "bright-16"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 17
+                  }
+                ],
+                "id": "bright-17"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 18
+                  }
+                ],
+                "id": "bright-18"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 19
+                  }
+                ],
+                "id": "bright-19"
+              },
+              {
+                "emitted_contexts": [
+                  {
+                    "context_id": "bright_light",
+                    "radius_ft": 20
+                  }
+                ],
+                "id": "bright-20"
+              }
+            ],
+            "name": "Variable Illumination"
+          }
+        ],
         "source_text": "The will-o'-wisp sheds bright light in a 5- to 20-foot radius and dim light for an additional number of feet equal to the chosen radius. The will-o'-wisp can alter the radius as a bonus action."
       },
-      "python_wired": false
+      "python_wired": true
     }
   ],
-  "exceptions": [
-    {
-      "ability_name": "Illumination",
-      "card_id": "flameskull",
-      "reason": "requires_mutable_fight_state_light_action"
-    },
-    {
-      "ability_name": "Ignited Illumination",
-      "card_id": "magmin",
-      "reason": "requires_mutable_fight_state_light_action"
-    },
-    {
-      "ability_name": "Variable Illumination",
-      "card_id": "will-o-wisp",
-      "reason": "requires_mutable_fight_state_light_action"
-    }
-  ],
-  "remaining_card_count": 3,
+  "exceptions": [],
+  "remaining_card_count": 0,
   "source_cards_scanned": 327,
-  "wired_browser_card_count": 5,
+  "wired_browser_card_count": 8,
   "wired_cards": [
     "azer",
     "cloaker",
     "fire-elemental",
+    "flameskull",
     "giant-fire-beetle",
-    "nightmare"
+    "magmin",
+    "nightmare",
+    "will-o-wisp"
   ],
-  "wired_python_card_count": 5
+  "wired_python_card_count": 8
 }

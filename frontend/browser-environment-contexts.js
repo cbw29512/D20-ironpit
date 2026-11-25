@@ -40,8 +40,15 @@
   }
 
   function activeEmissions(source) {
+    const controlled = (source.state.template.environment_context_control_actions || []).flatMap((action) => {
+      const modeId = source.state.environment_context_modes?.[action.id] || action.initial_mode_id;
+      const mode = (action.modes || []).find((item) => item.id === modeId);
+      if (!mode) throw new Error(`Unknown environment mode ${modeId} for ${action.name}.`);
+      return mode.emitted_contexts || [];
+    });
     return [
       ...permanentEmissions(source),
+      ...controlled,
       ...activeActions(source).flatMap((action) => emitted(action)),
     ];
   }

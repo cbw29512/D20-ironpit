@@ -5,11 +5,13 @@ from app.combat.environment_contexts import (
     actor_inside_environment_context,
     environment_context_disadvantage_sources,
 )
+from app.combat.environment_context_actions import resolve_environment_context_action
 from app.combat.state import build_combatant_state
 from app.content.capability_compiler import compile_combatant
 from app.content.monster_basic_candidates_2014 import unsupported_traits_2014
 from app.content.monster_bright_light_contexts_2014 import (
     light_sensitivity_reaction_2014,
+    mutable_bright_light_actions_2014,
     permanent_bright_light_contexts_2014,
 )
 from app.content.monster_definition_adapter_2014 import adapt_basic_monster_2014
@@ -32,7 +34,7 @@ def _member(template, ident: str, side: str, position: int) -> EncounterCombatan
     )
 
 
-def test_complete_327_card_scan_binds_only_fixed_emitters_and_exact_reaction() -> None:
+def test_complete_327_card_scan_binds_fixed_and_mutable_emitters_and_exact_reaction() -> None:
     sources = _sources()
     emitters = {
         monster.id: [item.radius_ft for item in permanent_bright_light_contexts_2014(monster)]
@@ -48,6 +50,15 @@ def test_complete_327_card_scan_binds_only_fixed_emitters_and_exact_reaction() -
         "giant-fire-beetle": [10], "nightmare": [10],
     }
     assert reactors == {"cloaker"}
+    mutable = {
+        monster.id: [action.name for action in mutable_bright_light_actions_2014(monster)]
+        for monster in sources.values() if mutable_bright_light_actions_2014(monster)
+    }
+    assert mutable == {
+        "flameskull": ["Illumination"],
+        "magmin": ["Ignited Illumination"],
+        "will-o-wisp": ["Variable Illumination"],
+    }
 
     for monster_id in emitters:
         source = sources[monster_id]
@@ -56,10 +67,32 @@ def test_complete_327_card_scan_binds_only_fixed_emitters_and_exact_reaction() -
     assert "Light Sensitivity" in bound_trait_names_2014(sources["cloaker"])
     assert "Light Sensitivity" not in unsupported_traits_2014(sources["cloaker"])
 
-    # Mutable light is not silently approximated as permanent or arena-neutral.
-    assert "Illumination" in unsupported_traits_2014(sources["flameskull"])
-    assert "Ignited Illumination" in unsupported_traits_2014(sources["magmin"])
-    assert "Variable Illumination" in unsupported_traits_2014(sources["will-o-wisp"])
+    for monster_id, names in mutable.items():
+        for name in names:
+            assert name in bound_trait_names_2014(sources[monster_id])
+            assert name not in unsupported_traits_2014(sources[monster_id])
+
+
+def test_mutable_light_modes_are_fight_local_and_spend_printed_economy() -> None:
+    sources = _sources()
+    magmin_template = compile_combatant(adapt_basic_monster_2014(sources["magmin"]))
+    action = magmin_template.environment_context_control_actions[0]
+    magmin = _member(magmin_template, "magmin", "heroes", 0)
+    second_fight = _member(magmin_template, "magmin-2", "heroes", 0)
+    assert magmin.state.environment_context_modes[action.id] == "extinguished"
+    assert second_fight.state.environment_context_modes[action.id] == "extinguished"
+
+    ablaze = next(mode for mode in action.modes if mode.id == "ablaze")
+    event = resolve_environment_context_action(1, 1, magmin, action, ablaze)
+    assert magmin.state.environment_context_modes[action.id] == "ablaze"
+    assert magmin.state.bonus_action_available is False
+    assert second_fight.state.environment_context_modes[action.id] == "extinguished"
+    assert event.feature_id == "Ignited Illumination"
+
+    wisp = compile_combatant(adapt_basic_monster_2014(sources["will-o-wisp"]))
+    variable = wisp.environment_context_control_actions[0]
+    assert [mode.emitted_contexts[0].radius_ft for mode in variable.modes] == list(range(5, 21))
+    assert variable.initial_mode_id == "bright-20"
 
 
 def test_light_sensitivity_uses_permanent_bright_light_and_sunlight_implication() -> None:

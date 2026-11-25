@@ -38,10 +38,10 @@ def test_equipment_only_ability_is_unique_without_suppressing_other_combat():
         assert "Ephemeral" not in unsupported_traits_2014(source)
         # Ephemeral is arena-neutral, but source-proven Consume Life and
         # Invisibility must be independently bound to actual combat.
-        assert unsupported_traits_2014(source) == ("Variable Illumination",)
+        assert unsupported_traits_2014(source) == ()
         assert source_proven_zero_hp_finisher_2014(source)
         assert source_invisibility_action_2014(source)
-        assert basic_blockers_2014(source) == ("source:trait",)
+        assert basic_blockers_2014(source) == ()
         assert source.model_dump_json() == old
         # Card identity is not an ability dispatch rule.
         renamed = source.model_copy(update={

@@ -75,7 +75,7 @@ def test_327_card_source_proof_renames_and_unknown_clauses() -> None:
         completed = source_completed_end_turn_ignition_attack_2014(card, source_attack)
         assert completed.source_complete
         assert "attack:incomplete" not in basic_blockers_2014(card)
-        assert basic_blockers_2014(card) == ("source:trait",)
+        assert basic_blockers_2014(card) == ()
         assert card.model_dump_json() == original
     except Exception:
         logger.exception("2014 end-turn source scan or fail-closed test failed.")

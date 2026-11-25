@@ -9,6 +9,7 @@ from app.domain.weapons_base import DamageType
 logger = logging.getLogger(__name__)
 
 EnvironmentContextId = Literal["sunlight", "bright_light"]
+EnvironmentContextActionCost = Literal["action", "bonus_action"]
 EnvironmentContextRollKind = Literal[
     "attack_rolls", "ability_checks", "saving_throws",
     "sight_based_perception_checks",
@@ -30,6 +31,33 @@ class EmittedEnvironmentContext(BaseModel):
         except Exception:
             logger.exception("Emitted environment context schema validation failed.")
             raise
+
+
+class EnvironmentContextMode(BaseModel):
+    """One source-declared fight-local environment mode."""
+
+    id: str = Field(min_length=1)
+    emitted_contexts: list[EmittedEnvironmentContext] = Field(default_factory=list)
+
+
+class EnvironmentContextControlAction(BaseModel):
+    """An Action or Bonus Action that changes a source-owned context mode."""
+
+    id: str = Field(min_length=1)
+    name: str = Field(min_length=1)
+    action_cost: EnvironmentContextActionCost
+    initial_mode_id: str = Field(min_length=1)
+    ai_mode_id: str = Field(min_length=1)
+    modes: list[EnvironmentContextMode] = Field(min_length=2)
+
+    @model_validator(mode="after")
+    def validate_modes(self) -> "EnvironmentContextControlAction":
+        ids = [mode.id for mode in self.modes]
+        if len(ids) != len(set(ids)):
+            raise ValueError("Environment context modes must have unique ids.")
+        if self.initial_mode_id not in ids or self.ai_mode_id not in ids:
+            raise ValueError("Initial and AI environment modes must reference declared modes.")
+        return self
 
 
 class EnvironmentContextReaction(BaseModel):

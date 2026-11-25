@@ -24,6 +24,14 @@
 
   function resolve(sequence, round, member, setup, turnKey) {
     const events = [];
+    const contextChoice = window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXT_ACTIONS?.choose(member, setup);
+    if (contextChoice) {
+      events.push(window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXT_ACTIONS.resolve(
+        sequence++, round, member, contextChoice.action, contextChoice.mode,
+        [...setup.heroes, ...setup.monsters].map((entry) => entry.state),
+      ));
+      return { events, sequence };
+    }
     let bonusBefore = member.state.bonus_action_available;
     let healing = H()?.chooseAction(member, setup, turnKey);
     if (healing?.target.state.current_hp === 0) {

@@ -909,6 +909,7 @@ jobs:
           node frontend/browser-condition-removal.test.cjs
           node frontend/browser-timed-self-buffs.test.cjs
           node frontend/browser-environment-contexts.test.cjs
+          node frontend/browser-environment-context-actions.test.cjs
           node frontend/browser-typed-hit-drain.test.cjs
           node frontend/browser-vampire-sunlight.test.cjs
           node frontend/browser-movement-mode-grants.test.cjs

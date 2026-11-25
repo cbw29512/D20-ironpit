@@ -429,14 +429,12 @@ Canonical roster: **12 classes / 37 subclasses**. Open entries below exclude sup
 
 ## 2014 monster unresolved printed abilities
 
-Blocked monsters: **31**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
+Blocked monsters: **29**. These are grouped by printed ability name so the roster never has to be rescanned just to find consumers. Printed names are **not** assumed mechanically equivalent unless an audit proves it.
 
 | Printed ability | Monsters waiting | Count |
 |---|---|---:|
 | Gibbering | Gibbering Mouther | 1 |
 | Grasping Tendrils | Roper | 1 |
-| Ignited Illumination | Magmin | 1 |
-| Illumination | Flameskull | 1 |
 | Innate Spellcasting | Couatl, Djinni, Glabrezu, Lamia, Magma Mephit, Oni, Rakshasa, Solar | 8 |
 | Limited Magic Immunity | Rakshasa | 1 |
 | Misty Escape | Vampire | 1 |
@@ -445,13 +443,12 @@ Blocked monsters: **31**. These are grouped by printed ability name so the roste
 | Shapechanger | Vampire | 1 |
 | Spellcasting | Androsphinx, Archmage, Flameskull, Guardian Naga, Gynosphinx, Lich, Mage, Mummy Lord, Spirit Naga | 9 |
 | Transparent | Gelatinous Cube | 1 |
-| Variable Illumination | Will-o'-Wisp | 1 |
 
 ## Monster blocker categories
 
 | Blocker | Monsters |
 |---|---:|
-| `source:trait` | 24 |
+| `source:trait` | 22 |
 | `mechanic:spellcasting` | 17 |
 | `source:extra-action` | 15 |
 | `mechanic:legendary` | 9 |

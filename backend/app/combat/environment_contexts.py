@@ -33,6 +33,12 @@ def _active_emitting_actions(source: EncounterCombatant):
 def _active_emitted_contexts(source: EncounterCombatant):
     """Combine immutable emissions with currently active effect emissions."""
     yield from source.state.template.emitted_environment_contexts
+    for action in source.state.template.environment_context_control_actions:
+        mode_id = source.state.environment_context_modes.get(action.id, action.initial_mode_id)
+        mode = next((item for item in action.modes if item.id == mode_id), None)
+        if mode is None:
+            raise ValueError(f"Unknown environment mode {mode_id} for {action.name}.")
+        yield from mode.emitted_contexts
     for action in _active_emitting_actions(source):
         yield from action.emitted_environment_contexts
 
