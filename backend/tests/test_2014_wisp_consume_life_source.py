@@ -48,7 +48,7 @@ def test_source_proven_families_and_admission():
         assert invisibility.ends_on_owner_attack
         assert invisibility.ends_on_owner_action_ids == ["consume-life"]
         assert not invisibility.ends_on_owner_spell_cast
-        assert basic_blockers_2014(card) == ()
+        assert basic_blockers_2014(card) == ("source:trait",)
         assert card.model_dump_json() == original
         renamed = card.model_copy(update={"id": "synthetic-druid", "name": "Other Source"})
         assert source_proven_zero_hp_finisher_2014(renamed) == [action]

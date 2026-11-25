@@ -18,7 +18,6 @@ from __future__ import annotations
 import logging
 
 from app.content.monster_source_2014 import SourceMonster2014
-from app.content.monster_ignited_illumination_2014 import source_proves_light_only_2014
 from app.content.monster_source_weapon_corrosion_2014 import source_weapon_corrosion_2014
 from app.content.monster_equipment_only_traits_2014 import source_proves_equipment_only_trait_2014
 from app.content.monster_informational_trait_proofs_2014 import verified_nonactionable_information_2014
@@ -30,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 ARENA_NEUTRAL_TRAITS_2014 = frozenset({
     "Siege Monster", "Amorphous", "Standing Leap", "Amphibious", "Beast of Burden", "Echolocation", "False Appearance", "Flyby", "Hold Breath",
-    "Ice Walk", "Illumination", "Keen Hearing", "Keen Hearing and Smell", "Keen Hearing and Sight",
+    "Ice Walk", "Keen Hearing", "Keen Hearing and Smell", "Keen Hearing and Sight",
     "Keen Sight", "Keen Sight and Smell", "Keen Smell", "Labyrinthine Recall", "Limited Amphibiousness",
     "Mimicry", "Earth Glide", "Running Leap", "Shark Telepathy", "Snow Camouflage", "Stone Camouflage",
     "Spider Climb", "Treasure Sense", "Tunneler", "Water Breathing",
@@ -75,8 +74,6 @@ def verified_arena_inert_trait_2014(monster: SourceMonster2014, trait_name: str)
             return True
         if trait_name == "Shapechanger":
             return source_proven_arena_inert_shapechanger_2014(monster)
-        if trait_name in {"Ignited Illumination", "Variable Illumination"}:
-            return source_proves_light_only_2014(monster, trait_name)
         source = monster.source_traits or ""
         # Context-driven exclusion: this trait only operates underwater, a
         # context absent from the standard Iron Pit. Keep the printed trait.

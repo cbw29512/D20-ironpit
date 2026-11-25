@@ -32,8 +32,8 @@ def test_complete_327_card_light_only_source_family():
         ]
         card = _wisp()
         before = card.model_dump_json()
-        assert verified_arena_inert_trait_2014(card, "Variable Illumination")
-        assert "Variable Illumination" not in unsupported_traits_2014(card)
+        assert not verified_arena_inert_trait_2014(card, "Variable Illumination")
+        assert "Variable Illumination" in unsupported_traits_2014(card)
         assert card.model_dump_json() == before
         renamed = card.model_copy(update={"id": "other-light-source", "name": "Other Source"})
         assert source_proves_light_only_2014(renamed, "Variable Illumination")

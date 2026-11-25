@@ -56,6 +56,7 @@ def _strip_extension_defaults(value):
             "passive_debuff_counter_grants",
             "area_weapon_attack_actions",
             "environment_context_reactions",
+            "emitted_environment_contexts",
             "bonus_attack_grants",
             "bonus_tactical_action_grants",
             "conditional_damage_defenses",

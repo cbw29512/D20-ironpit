@@ -1,0 +1,170 @@
+{
+  "applicable_card_count": 8,
+  "applicable_cards": [
+    "azer",
+    "cloaker",
+    "fire-elemental",
+    "flameskull",
+    "giant-fire-beetle",
+    "magmin",
+    "nightmare",
+    "will-o-wisp"
+  ],
+  "bindings": [
+    {
+      "ability_name": "Illumination",
+      "browser_wired": true,
+      "card_id": "azer",
+      "card_name": "Azer",
+      "exception": null,
+      "kind": "emitter",
+      "parameters": {
+        "emitted_environment_contexts": [
+          {
+            "context_id": "bright_light",
+            "radius_ft": 10
+          }
+        ],
+        "source_text": "The azer sheds bright light in a 10-\u00adfoot radius and dim light for an additional 10 feet."
+      },
+      "python_wired": true
+    },
+    {
+      "ability_name": "Light Sensitivity",
+      "browser_wired": true,
+      "card_id": "cloaker",
+      "card_name": "Cloaker",
+      "exception": null,
+      "kind": "reaction",
+      "parameters": {
+        "context_id": "bright_light",
+        "disadvantage_on": [
+          "attack_rolls",
+          "sight_based_perception_checks"
+        ],
+        "source_id": "light-sensitivity",
+        "source_name": "Light Sensitivity",
+        "source_text": "While in bright light, the cloaker has disadvantage on attack rolls and Wisdom (Perception) checks that rely on sight."
+      },
+      "python_wired": true
+    },
+    {
+      "ability_name": "Illumination",
+      "browser_wired": true,
+      "card_id": "fire-elemental",
+      "card_name": "Fire Elemental",
+      "exception": null,
+      "kind": "emitter",
+      "parameters": {
+        "emitted_environment_contexts": [
+          {
+            "context_id": "bright_light",
+            "radius_ft": 30
+          }
+        ],
+        "source_text": "The elemental sheds bright light in a 30-foot radius and dim light in an additional 30 feet."
+      },
+      "python_wired": true
+    },
+    {
+      "ability_name": "Illumination",
+      "browser_wired": false,
+      "card_id": "flameskull",
+      "card_name": "Flameskull",
+      "exception": "requires_mutable_fight_state_light_action",
+      "kind": "emitter",
+      "parameters": {
+        "source_text": "The flameskull sheds either dim light in a 15-foot radius, or bright light in a 15-foot radius and dim light for an additional 15 feet. It can switch between the options as an action."
+      },
+      "python_wired": false
+    },
+    {
+      "ability_name": "Illumination",
+      "browser_wired": true,
+      "card_id": "giant-fire-beetle",
+      "card_name": "Giant Fire Beetle",
+      "exception": null,
+      "kind": "emitter",
+      "parameters": {
+        "emitted_environment_contexts": [
+          {
+            "context_id": "bright_light",
+            "radius_ft": 10
+          }
+        ],
+        "source_text": "The beetle sheds bright light in a 10-foot radius and dim light for an additional 10 feet."
+      },
+      "python_wired": true
+    },
+    {
+      "ability_name": "Ignited Illumination",
+      "browser_wired": false,
+      "card_id": "magmin",
+      "card_name": "Magmin",
+      "exception": "requires_mutable_fight_state_light_action",
+      "kind": "emitter",
+      "parameters": {
+        "source_text": "As a bonus action, the magmin can set itself ablaze or extinguish its flames. While ablaze, the magmin sheds bright light in a 10-foot radius and dim light for an additional 10 feet."
+      },
+      "python_wired": false
+    },
+    {
+      "ability_name": "Illumination",
+      "browser_wired": true,
+      "card_id": "nightmare",
+      "card_name": "Nightmare",
+      "exception": null,
+      "kind": "emitter",
+      "parameters": {
+        "emitted_environment_contexts": [
+          {
+            "context_id": "bright_light",
+            "radius_ft": 10
+          }
+        ],
+        "source_text": "The nightmare sheds bright light in a 10-foot radius and dim light for an additional 10 feet."
+      },
+      "python_wired": true
+    },
+    {
+      "ability_name": "Variable Illumination",
+      "browser_wired": false,
+      "card_id": "will-o-wisp",
+      "card_name": "Will-o'-Wisp",
+      "exception": "requires_mutable_fight_state_light_action",
+      "kind": "emitter",
+      "parameters": {
+        "source_text": "The will-o'-wisp sheds bright light in a 5- to 20-foot radius and dim light for an additional number of feet equal to the chosen radius. The will-o'-wisp can alter the radius as a bonus action."
+      },
+      "python_wired": false
+    }
+  ],
+  "exceptions": [
+    {
+      "ability_name": "Illumination",
+      "card_id": "flameskull",
+      "reason": "requires_mutable_fight_state_light_action"
+    },
+    {
+      "ability_name": "Ignited Illumination",
+      "card_id": "magmin",
+      "reason": "requires_mutable_fight_state_light_action"
+    },
+    {
+      "ability_name": "Variable Illumination",
+      "card_id": "will-o-wisp",
+      "reason": "requires_mutable_fight_state_light_action"
+    }
+  ],
+  "remaining_card_count": 3,
+  "source_cards_scanned": 327,
+  "wired_browser_card_count": 5,
+  "wired_cards": [
+    "azer",
+    "cloaker",
+    "fire-elemental",
+    "giant-fire-beetle",
+    "nightmare"
+  ],
+  "wired_python_card_count": 5
+}

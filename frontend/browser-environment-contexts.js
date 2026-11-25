@@ -30,6 +30,22 @@
     }
   }
 
+  function permanentEmissions(source) {
+    const template = source?.state?.template || {};
+    return template.emitted_environment_contexts || template.emittedEnvironmentContexts || [];
+  }
+
+  function contextSatisfies(emittedId, requestedId) {
+    return emittedId === requestedId || (requestedId === "bright_light" && emittedId === "sunlight");
+  }
+
+  function activeEmissions(source) {
+    return [
+      ...permanentEmissions(source),
+      ...activeActions(source).flatMap((action) => emitted(action)),
+    ];
+  }
+
   function inside(actor, setup, contextId) {
     try {
       if (!setup) return false;
@@ -37,11 +53,9 @@
       if (!distance) throw new Error("Environment context coverage requires browser-state distance.");
       for (const source of [...(setup.heroes || []), ...(setup.monsters || [])]) {
         if (removed(source.state)) continue;
-        for (const action of activeActions(source)) {
-          for (const context of emitted(action)) {
-            if ((context.context_id || context.contextId) !== contextId) continue;
-            if (distance(source, actor) <= (context.radius_ft || context.radiusFt)) return true;
-          }
+        for (const context of activeEmissions(source)) {
+          if (!contextSatisfies(context.context_id || context.contextId, contextId)) continue;
+          if (distance(source, actor) <= (context.radius_ft || context.radiusFt)) return true;
         }
       }
       return false;

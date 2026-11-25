@@ -8,7 +8,7 @@ from app.domain.weapons_base import DamageType
 
 logger = logging.getLogger(__name__)
 
-EnvironmentContextId = Literal["sunlight"]
+EnvironmentContextId = Literal["sunlight", "bright_light"]
 EnvironmentContextRollKind = Literal[
     "attack_rolls", "ability_checks", "saving_throws",
     "sight_based_perception_checks",

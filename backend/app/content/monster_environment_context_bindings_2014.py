@@ -8,6 +8,7 @@ from app.content.environment_context_reactions import (
     verified_sunlight_weakness_2014,
 )
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_bright_light_contexts_2014 import light_sensitivity_reaction_2014
 from app.content.monster_source_sunlight_hypersensitivity_2014 import source_proven_sunlight_hypersensitivity_2014
 from app.domain.environment_contexts import EnvironmentContextReaction
 
@@ -20,6 +21,9 @@ def environment_context_reactions_2014(
     """Bind only source-proven permanent environmental passives."""
     try:
         reactions = []
+        light_sensitivity = light_sensitivity_reaction_2014(monster)
+        if light_sensitivity is not None:
+            reactions.append(light_sensitivity)
         if "Sunlight Sensitivity" in monster.trait_names:
             reactions.append(sunlight_sensitivity_2014())
         if verified_sunlight_weakness_2014(monster):

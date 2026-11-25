@@ -1317,6 +1317,10 @@ def template_row(template: CombatantTemplate) -> dict[str, Any]:
             row["environment_context_reactions"] = [
                 item.model_dump(mode="json") for item in template.environment_context_reactions
             ]
+        if template.emitted_environment_contexts:
+            row["emitted_environment_contexts"] = [
+                item.model_dump(mode="json") for item in template.emitted_environment_contexts
+            ]
         # Preserve established immutable browser fixtures for ordinary forms:
         # only source-enabled hostile-space passage needs an explicit flag.
         if template.source_allows_hostile_overlap:
