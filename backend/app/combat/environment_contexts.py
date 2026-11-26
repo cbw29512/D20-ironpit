@@ -73,6 +73,35 @@ def actor_inside_environment_context(
         raise RuntimeError("Environment context coverage could not be evaluated.") from exc
 
 
+def expire_prohibited_timed_self_buffs(setup: EncounterSetup) -> list[str]:
+    """End source-owned buffs as soon as their prohibited context covers the owner."""
+    try:
+        expired: list[str] = []
+        for member in [*setup.heroes, *setup.monsters]:
+            actions = {
+                action.id: action
+                for action in member.state.template.timed_self_buff_actions
+                if action.prohibited_environment_context_id is not None
+            }
+            for effect in list(member.state.timed_effects):
+                action = actions.get(effect.source_effect_id)
+                if action is None or effect.source_id != member.combatant_id:
+                    continue
+                if not actor_inside_environment_context(
+                    member, setup, action.prohibited_environment_context_id,
+                ):
+                    continue
+                from app.combat.timed_condition_lifecycle import remove_effect_group
+                remove_effect_group(member.state, effect)
+                expired.append(f"{member.state.template.name}'s {action.name}")
+        return expired
+    except (ValueError, RuntimeError):
+        raise
+    except Exception as exc:
+        logger.exception("Failed prohibited-context timed-buff expiry.")
+        raise RuntimeError("Prohibited-context timed buffs could not be expired.") from exc
+
+
 def environment_context_disadvantage_sources(
     actor: EncounterCombatant,
     setup: EncounterSetup | None,

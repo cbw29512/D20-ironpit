@@ -40,6 +40,7 @@ def source_phantasms_action_2014(monster: SourceMonster2014) -> list[TimedSelfBu
         return [TimedSelfBuffAction(
             id="phantasms", name=heading.split(" (", 1)[0], action_cost="action",
             resource_id="phantasms", resource_cost=1, magical_effect=True,
+            prohibited_environment_context_id="bright_light",
             expiry_timing=None,
             illusory_duplicate_defense=IllusoryDuplicateDefense(
                 initial_duplicates=3,

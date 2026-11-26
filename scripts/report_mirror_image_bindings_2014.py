@@ -75,8 +75,8 @@ def report() -> dict:
         "monster": cloaker.id, "ability": "Phantasms",
         "disposition": "incompatible distinct mechanic; partial independent binding",
         "reason": (
-            "uniform weapon-attack selection and source AC are wired independently; "
-            "harmful-spell save/attack targeting and bright-light activation/expiry remain"
+            "uniform weapon-attack selection, source AC, and bright-light lifecycle are wired "
+            "independently; harmful-spell save/attack targeting and duplicate saves remain"
         ),
     }] if "Phantasms" in cloaker.source_actions else []
     return {

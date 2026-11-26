@@ -10,6 +10,11 @@ from app.content.monster_source_phantasms_2014 import source_phantasms_action_20
 from app.content.monsters import build_commoner
 from app.domain.encounters import EncounterCombatant
 from app.domain.combatants import ResourceDefinition
+from app.domain.environment_contexts import (
+    EmittedEnvironmentContext, EnvironmentContextControlAction, EnvironmentContextMode,
+)
+from app.domain.encounters import EncounterSetup
+from app.combat.environment_context_actions import resolve_environment_context_action
 
 
 def _cards():
@@ -25,6 +30,7 @@ def test_semantic_327_card_scan_binds_only_complete_printed_phantasms():
     action, = source_phantasms_action_2014(applicable[0])
     assert action.name == "Phantasms"
     assert action.resource_id == "phantasms"
+    assert action.prohibited_environment_context_id == "bright_light"
     compiled = adapt_monster_mechanics_2014(applicable[0])
     assert action in compiled.timed_self_buff_actions
     assert ResourceDefinition(id="phantasms", name="Phantasms", max_uses=1) in compiled.resources
@@ -85,3 +91,61 @@ def test_phantasms_weapon_interception_uses_uniform_selection_and_source_ac():
     assert original.feature_id != "phantasms"
     assert cloaker.state.current_hp < before
     assert cloaker.state.timed_effects[0].illusory_duplicates_remaining == 2
+
+
+def test_phantasms_cannot_start_in_bright_light_and_expires_when_light_appears():
+    card = next(card for card in _cards() if card.id == "cloaker")
+    action, = source_phantasms_action_2014(card)
+    cloaker_template = build_commoner().model_copy(update={
+        "id": "cloaker", "name": "Cloaker", "timed_self_buff_actions": [action],
+        "resources": [ResourceDefinition(id="phantasms", name="Phantasms", max_uses=1)],
+    })
+    light_action = EnvironmentContextControlAction(
+        id="illumination", name="Illumination", action_cost="bonus_action",
+        initial_mode_id="dark", ai_mode_id="bright",
+        modes=[
+            EnvironmentContextMode(id="dark"),
+            EnvironmentContextMode(id="bright", emitted_contexts=[
+                EmittedEnvironmentContext(context_id="bright_light", radius_ft=30),
+            ]),
+        ],
+    )
+    light_template = build_commoner().model_copy(update={
+        "id": "light-source", "name": "Light Source",
+        "environment_context_control_actions": [light_action],
+    })
+    cloaker = EncounterCombatant(
+        combatant_id="cloaker", side="monsters", position_ft=10,
+        state=build_combatant_state(cloaker_template),
+    )
+    light = EncounterCombatant(
+        combatant_id="light", side="heroes", position_ft=0,
+        state=build_combatant_state(light_template),
+    )
+    setup = EncounterSetup(
+        heroes=[light], monsters=[cloaker], hero_total_levels=1, monster_total_cr="8",
+    )
+    resolve_timed_self_buff(1, 1, cloaker, action, setup=setup, affected_states=[cloaker.state, light.state])
+    assert cloaker.state.timed_effects[0].illusory_duplicates_remaining == 3
+
+    bright = next(mode for mode in light_action.modes if mode.id == "bright")
+    event = resolve_environment_context_action(
+        2, 1, light, light_action, bright,
+        affected_states=[light.state, cloaker.state], setup=setup,
+    )
+    assert cloaker.state.timed_effects == []
+    assert "Cloaker's Phantasms ends" in event.description
+
+    cloaker.state.action_available = True
+    next(resource for resource in cloaker.state.resources if resource.id == "phantasms").current_uses = 1
+    light.state.bonus_action_available = True
+    light.state.environment_context_modes[light_action.id] = "bright"
+    try:
+        resolve_timed_self_buff(
+            3, 1, cloaker, action, setup=setup,
+            affected_states=[cloaker.state, light.state],
+        )
+    except ValueError as exc:
+        assert "cannot be activated in bright light" in str(exc)
+    else:
+        raise AssertionError("Phantasms must fail closed in bright light")

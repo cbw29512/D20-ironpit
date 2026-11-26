@@ -9,6 +9,7 @@ from app.combat.condition_rules import has_condition
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.spellcasting import slot_spell_available
 from app.combat.suppression_zone_geometry import verbal_casting_blocked
+from app.combat.environment_contexts import actor_inside_environment_context
 from app.domain.encounters import EncounterCombatant, EncounterSetup
 from app.domain.timed_self_buffs import TimedSelfBuffAction
 
@@ -177,6 +178,13 @@ def choose_timed_self_buff_action(
                     or member.state.current_hp <= action.start_turn_max_current_hp
                 )
                 and not timed_self_buff_active(member, action)
+                and not (
+                    action.prohibited_environment_context_id is not None
+                    and setup is not None
+                    and actor_inside_environment_context(
+                        member, setup, action.prohibited_environment_context_id,
+                    )
+                )
                 and (not action.concentration or member.state.concentration is None)
                 and not (
                     action.resource_id

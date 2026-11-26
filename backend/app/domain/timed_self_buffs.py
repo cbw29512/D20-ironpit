@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.domain.actions import AbilityName, ActionCost, ConditionName, ConditionTiming
 from app.domain.debuffs import DebuffCounter
-from app.domain.environment_contexts import EmittedEnvironmentContext
+from app.domain.environment_contexts import EmittedEnvironmentContext, EnvironmentContextId
 from app.domain.creature_space_entry_damage import CreatureSpaceEntryDamage
 from app.domain.friendly_combat_auras import (
     TimedFriendlyRecoveryAura,
@@ -83,6 +83,9 @@ class TimedSelfBuffAction(BaseModel):
     size_override: CreatureSize | None = None
     ability_check_advantage_abilities: list[AbilityName] = Field(default_factory=list)
     magical_effect: bool = False
+    prohibited_environment_context_id: EnvironmentContextId | None = Field(
+        default=None, exclude_if=lambda value: value is None,
+    )
     ends_on_owner_attack: bool = False
     ends_on_owner_spell_cast: bool = False
     ends_on_owner_action_ids: list[str] = Field(default_factory=list)

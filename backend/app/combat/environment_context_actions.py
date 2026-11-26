@@ -48,6 +48,7 @@ def resolve_environment_context_action(
     mode: EnvironmentContextMode,
     *,
     affected_states=None,
+    setup: EncounterSetup | None = None,
 ) -> BattleEvent:
     """Spend printed economy and update only fight-local mode state."""
     try:
@@ -63,6 +64,10 @@ def resolve_environment_context_action(
             member.state, "action", affected_states or [member.state], action_id=action.id,
         )
         member.state.environment_context_modes[action.id] = mode.id
+        expired: list[str] = []
+        if setup is not None:
+            from app.combat.environment_contexts import expire_prohibited_timed_self_buffs
+            expired = expire_prohibited_timed_self_buffs(setup)
         return BattleEvent(
             sequence=sequence,
             round_number=round_number,
@@ -71,7 +76,10 @@ def resolve_environment_context_action(
             actor_name=member.state.template.name,
             feature_id=action.name,
             animation="buff",
-            description=f"{member.state.template.name} uses {action.name} and selects {mode.id}.",
+            description=(
+                f"{member.state.template.name} uses {action.name} and selects {mode.id}."
+                + (f" {', '.join(expired)} ends." if expired else "")
+            ),
         )
     except (ValueError, RuntimeError):
         raise

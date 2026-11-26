@@ -1029,6 +1029,8 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
             "armorClassAbility": defense.armor_class_ability,
             "bypassAttackerSenses": list(defense.bypass_attacker_senses),
         }
+    if action.prohibited_environment_context_id:
+        row["prohibitedEnvironmentContextId"] = action.prohibited_environment_context_id
     return row
 
 

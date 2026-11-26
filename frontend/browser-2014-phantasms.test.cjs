@@ -12,6 +12,7 @@ const load = (name) => vm.runInThisContext(
 for (const file of [
   "browser-action-economy.js", "browser-modifier-validation.js", "browser-modifiers.js",
   "browser-timed-conditions.js", "browser-concentration.js", "browser-spell-modifiers.js",
+  "browser-state.js", "browser-environment-contexts.js", "browser-environment-context-actions.js",
   "browser-timed-self-buff-policy.js", "browser-timed-self-buffs.js",
   "browser-effective-senses.js", "browser-condition-rules.js", "browser-rolls.js",
   "browser-attack-outcome.js", "browser-illusory-duplicates.js", "browser-attack.js",
@@ -30,6 +31,7 @@ function queuedDice(values) {
 const phantasms = {
   id: "phantasms", name: "Phantasms", actionCost: "action", activationTiming: "action",
   resourceId: "phantasms", resourceCost: 1, conditionIds: [], magicalEffect: true,
+  prohibitedEnvironmentContextId: "bright_light",
   expiryTiming: null, animation: "mirror-image",
   illusoryDuplicateDefense: {
     initialDuplicates: 3, redirectionMode: "uniform_original_and_duplicates",
@@ -64,4 +66,36 @@ assert.equal(event.target_ac, 14);
 assert.equal(event.hp_before, event.hp_after);
 assert.equal(defender.state.timed_effects[0].illusory_duplicates_remaining, 2);
 
-console.log("2014 Phantasms browser uniform interception and source AC passed.");
+defender.state.action_available = true;
+defender.state.resources.phantasms = 1;
+defender.state.timed_effects = [];
+defender.state.active_effect_ids = [];
+const lightAction = {
+  id: "illumination", name: "Illumination", action_cost: "bonus_action",
+  initial_mode_id: "dark", ai_mode_id: "bright",
+  modes: [
+    { id: "dark", emitted_contexts: [] },
+    { id: "bright", emitted_contexts: [{ context_id: "bright_light", radius_ft: 30 }] },
+  ],
+};
+const light = { combatant_id: "light", side: "heroes", position_ft: 0, state: state("light") };
+light.state.template.environment_context_control_actions = [lightAction];
+light.state.environment_context_modes = { illumination: "dark" };
+const setup = { heroes: [light], monsters: [defender] };
+window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.resolve(3, 1, defender, phantasms, {
+  setup, affectedStates: [light.state, defender.state],
+});
+assert.equal(defender.state.timed_effects[0].illusory_duplicates_remaining, 3);
+const bright = lightAction.modes[1];
+const lightEvent = window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXT_ACTIONS.resolve(
+  4, 1, light, lightAction, bright, [light.state, defender.state], setup,
+);
+assert.equal(defender.state.timed_effects.length, 0);
+assert.match(lightEvent.description, /cloaker's Phantasms ends/i);
+defender.state.action_available = true;
+defender.state.resources.phantasms = 1;
+assert.throws(() => window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.resolve(5, 1, defender, phantasms, {
+  setup, affectedStates: [light.state, defender.state],
+}), /cannot be activated in bright light/);
+
+console.log("2014 Phantasms browser interception and bright-light lifecycle passed.");

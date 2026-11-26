@@ -29,6 +29,7 @@
       events.push(window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXT_ACTIONS.resolve(
         sequence++, round, member, contextChoice.action, contextChoice.mode,
         [...setup.heroes, ...setup.monsters].map((entry) => entry.state),
+        setup,
       ));
       return { events, sequence };
     }

@@ -22,7 +22,7 @@
     return null;
   }
 
-  function resolve(sequence, round, member, action, mode, affectedStates = []) {
+  function resolve(sequence, round, member, action, mode, affectedStates = [], setup = null) {
     if (!(action.modes || []).some((item) => item.id === mode.id)) {
       throw new Error(`${mode.id} is not a declared mode for ${action.name}.`);
     }
@@ -37,11 +37,15 @@
     );
     member.state.environment_context_modes ||= {};
     member.state.environment_context_modes[action.id] = mode.id;
+    const expired = setup
+      ? window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS?.expireProhibitedBuffs?.(setup) || []
+      : [];
     return {
       sequence, round_number: round, event_type: "feature",
       actor_id: member.combatant_id, actor_name: member.state.template.name,
       feature_id: action.name, animation: "buff",
-      description: `${member.state.template.name} uses ${action.name} and selects ${mode.id}.`,
+      description: `${member.state.template.name} uses ${action.name} and selects ${mode.id}.`
+        + (expired.length ? ` ${expired.join(", ")} ends.` : ""),
     };
   }
 

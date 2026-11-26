@@ -105,6 +105,10 @@
         && (action.resourceId == null || (member.state.resources[action.resourceId] || 0) >= (action.resourceCost || 1))
         && (action.startTurnMaxCurrentHp == null || member.state.current_hp <= action.startTurnMaxCurrentHp)
         && !active(member, action)
+        && !(action.prohibitedEnvironmentContextId && setup
+          && window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS?.inside(
+            member, setup, action.prohibitedEnvironmentContextId,
+          ))
         && !concentrationGrantOnly(action)
         && (!action.concentration || !member.state.concentration)
         && !(action.resourceId && String(action.resourceId).startsWith("spell-slot-")

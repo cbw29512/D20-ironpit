@@ -13,6 +13,12 @@
       if (spendActionCost && !E().available(member.state, action.actionCost)) throw new Error(`${action.name} action cost is unavailable.`);
       if (action.resourceId != null && (member.state.resources[action.resourceId] || 0) < (action.resourceCost || 1)) throw new Error(`${action.name} resource is unavailable.`);
       if (active(member, action)) throw new Error(`${action.name} is already active.`);
+      if (action.prohibitedEnvironmentContextId
+        && window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS?.inside(
+          member, options.setup, action.prohibitedEnvironmentContextId,
+        )) {
+        throw new Error(`${action.name} cannot be activated in ${action.prohibitedEnvironmentContextId.replaceAll("_", " ")}.`);
+      }
       if (options.setup && action.resourceId && String(action.resourceId).startsWith("spell-slot-")
         && !action.expendSlotWithoutCast
         && window.IRON_PIT_BROWSER_SUPPRESSION_ZONES?.verbalBlocked(member, options.setup)) {
