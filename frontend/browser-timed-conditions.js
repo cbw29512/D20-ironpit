@@ -60,6 +60,7 @@
       source_is_magical: Boolean(options.sourceIsMagical),
       repeat_save_context: options.repeatSaveContext ? structuredClone(options.repeatSaveContext) : null,
       owned_damage_resistances: [...(options.ownedDamageResistances || [])],
+      all_damage_immunity: Boolean(options.allDamageImmunity),
       owned_debuff_counters: [...(options.ownedDebuffCounters || [])],
       owned_movement_mode_grants: [...(options.ownedMovementModeGrants || [])],
       removed_from_battlefield: Boolean(options.removedFromBattlefield),

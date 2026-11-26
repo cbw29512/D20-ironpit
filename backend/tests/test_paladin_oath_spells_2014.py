@@ -194,10 +194,13 @@ def test_cleansing_touch_reuses_effect_removal_without_roll_or_spell_slot() -> N
     cleansing = next(item for item in remover.state.resources if item.id == "cleansing-touch")
     assert cleansing.current_uses == 3
 
-    choice = choose_effect_removal_action(remover, setup, "1:aurelia")
-
-    assert choice is not None
-    action, effect = choice
+    # Preserve allied wards during automated selection.
+    assert choose_effect_removal_action(remover, setup, "1:aurelia") is None
+    # Deliberate/manual use remains RAW legal.
+    from app.combat.effect_removal_targets import removal_targets
+    action = next(a for a in remover.state.template.effect_removal_actions
+                  if a.id == "cleansing-touch")
+    effect = removal_targets(remover, setup, action)[0]
     assert action.id == "cleansing-touch"
     assert action.level == 0
     assert action.range_ft == 5

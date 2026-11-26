@@ -104,11 +104,13 @@ const setup = { heroes: [remover, source], monsters: [] };
 const turnKey = "1:aurelia";
 const choice = window.IRON_PIT_BROWSER_EFFECT_REMOVAL.choose(remover, setup, turnKey);
 
-assert.ok(choice);
-assert.equal(choice.action.id, "cleansing-touch");
+assert.equal(choice, null, "Automated cleansing must not strip allied wards.");
+const action = remover.state.template.effect_removal_actions[0];
+const effect = window.IRON_PIT_BROWSER_EFFECT_REMOVAL.effects(remover, setup, action)[0];
 const beforeSlot = remover.state.resources["spell-slot-3"];
+// Explicit cleansing stays legal under the shared 2014 rule.
 const event = window.IRON_PIT_BROWSER_EFFECT_REMOVAL.resolve(
-  1, 1, remover, setup, choice.action, choice.effect, turnKey,
+  1, 1, remover, setup, action, effect, turnKey,
 );
 
 assert.equal(spent, 1);
