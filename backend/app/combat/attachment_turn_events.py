@@ -3,7 +3,9 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.attachments import detach_for_combatant, record_attachment_hp_loss
+from app.combat.attachments import (
+    detach_for_combatant, record_attachment_hp_loss, sync_attachment_controls,
+)
 from app.combat.damage import roll_damage_component
 from app.combat.damage_defenses import apply_damage_defenses
 from app.combat.dice import roll_dice
@@ -30,6 +32,7 @@ def cleanup_invalid_attachments(setup: EncounterSetup) -> None:
                                              or owner.state.is_dead or not owner.state.is_alive
                                              else row.target_id)
         setup.attachments = list(links)
+        sync_attachment_controls(setup)
     except Exception:
         logger.exception("Failed to clean up encounter attachment links.")
         raise
@@ -49,6 +52,8 @@ def resolve_attachment_turn_start_events(
         events: list[BattleEvent] = []
         for row in tuple(setup.attachments):
             if row.source_id != owner.combatant_id or row.damage_timing != "source_turn_start":
+                continue
+            if row.periodic_effect_kind is None:
                 continue
             target = members.get(row.target_id)
             if target is None or target.state.is_dead or not target.state.is_alive:

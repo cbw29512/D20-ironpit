@@ -22,6 +22,11 @@
       || attacker.template.blind_beyond_blindsight
       || (obscured && obscured.blocked(attacker, defender)))
       && !Q().canSee(attacker, defender, distance)) disadvantage += 1; if (defender.active_effect_ids.includes("restrained")) advantage += 1; if (defender.active_effect_ids.includes("prone")) distance <= 5 ? advantage += 1 : disadvantage += 1;
+    const source = setup ? [...setup.heroes, ...setup.monsters]
+      .find((member) => member.state === attacker) : null;
+    advantage += window.IRON_PIT_BROWSER_ATTACHMENTS?.attackAdvantage(
+      setup, source?.combatant_id || attacker.template.id, targetId,
+    ) || 0;
     return { advantage, disadvantage };
   }
   function rangedCloseThreat(attacker, target, distance, setup) {
@@ -43,7 +48,7 @@
       distance = engagement.engagementDistance(attack);
     }
     if (attack.unavailableReason != null) throw new Error(`${attack.id} unavailable: ${attack.unavailableReason}`); if (attacker.state.is_dead || Q().incapacitated(attacker.state)) throw new Error("An incapacitated or dead creature cannot attack.");
-    if (window.IRON_PIT_BROWSER_ATTACHMENTS?.sourceAttacksBlocked(extra.setup, attacker.combatant_id))
+    if (window.IRON_PIT_BROWSER_ATTACHMENTS?.sourceAttacksBlocked(extra.setup, attacker.combatant_id, target.combatant_id))
       throw new Error("Source-declared attachment prevents another attack while linked.");
     if (target.state.is_dead || (target.state.template.kind === "monster" && target.state.current_hp <= 0)) throw new Error("Defeated monsters and dead combatants cannot be targeted.");
     if (extra.brutalStrikeEffectIds != null) BS()?.selectEffects?.(attacker.state, extra.brutalStrikeEffectIds); const spendAction = extra.spendAction !== false;
@@ -178,7 +183,7 @@
       if (living && attack.onHitAttachment) {
         const runtime = window.IRON_PIT_BROWSER_ATTACHMENTS;
         if (!runtime?.applyOnHit) throw new Error("Universal attachment hit runtime is unavailable.");
-        attachedOnHit = runtime.applyOnHit(extra.setup, attacker, actualTarget, attack);
+        attachedOnHit = runtime.applyOnHit(extra.setup, attacker, actualTarget, attack, mode);
       }
       const preHitGrappledByAttacker = (actualTarget.state.grapple_sources || [])
         .some((grapple) => grapple.source_id === attacker.combatant_id);

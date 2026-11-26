@@ -13,8 +13,9 @@ logger = logging.getLogger(__name__)
 def unable_to_breathe(state: CombatantState) -> bool:
     """The source's active Grapple, not creature identity, blocks respiration."""
     try:
-        return state.template.needs_air and any(
-            source.prevents_breathing for source in state.grapple_sources
+        return state.template.needs_air and (
+            bool(state.attachment_breathing_source_ids)
+            or any(source.prevents_breathing for source in state.grapple_sources)
         )
     except Exception:
         logger.exception("Failed breathing eligibility for %s.", state.template.name)
@@ -52,6 +53,12 @@ def _budget(state: CombatantState) -> tuple[int, int]:
 
 
 def _source_name(state: CombatantState, setup: EncounterSetup) -> str:
+    if state.attachment_breathing_source_ids:
+        source_id = state.attachment_breathing_source_ids[0]
+        link = next((row for row in setup.attachments
+                     if row.source_id == source_id and row.prevents_breathing), None)
+        if link is not None:
+            return link.source_name
     source = next(item for item in state.grapple_sources if item.prevents_breathing)
     for owner in [*setup.heroes, *setup.monsters]:
         if owner.combatant_id != source.source_id:

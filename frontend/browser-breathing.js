@@ -5,7 +5,8 @@
   // Mutable state: two countdowns and a post-zero recovery lock per fight.
   function unable(state) {
     return state.template.needs_air !== false
-      && (state.grapple_sources || []).some((source) => source.prevents_breathing);
+      && ((state.attachment_breathing_source_ids || []).length
+        || (state.grapple_sources || []).some((source) => source.prevents_breathing));
   }
 
   function reset(state) {
@@ -36,6 +37,12 @@
   }
 
   function sourceName(state, setup) {
+    if ((state.attachment_breathing_source_ids || []).length) {
+      const id = state.attachment_breathing_source_ids[0];
+      const link = (setup.attachments || []).find((row) =>
+        row.source_id === id && row.prevents_breathing);
+      if (link) return link.source_name;
+    }
     const source = state.grapple_sources.find((item) => item.prevents_breathing);
     const owner = [...setup.heroes, ...setup.monsters].find((item) =>
       item.combatant_id === source.source_id);

@@ -53,13 +53,27 @@ def build_report() -> dict[str, object]:
                 "attack_id": attack.id,
                 "source_name": effect.source_name,
                 "periodic_effect_kind": effect.periodic_effect_kind,
-                "damage_dice": f"{effect.dice_count}d{effect.dice_size}+{effect.damage_bonus}",
+                "damage_dice": (
+                    f"{effect.dice_count}d{effect.dice_size}+{effect.damage_bonus}"
+                    if effect.periodic_effect_kind is not None else None
+                ),
                 "tick_timing": effect.tick_timing,
                 "blocks_source_attacks": effect.blocks_source_attacks,
                 "action_removable": effect.action_removable,
                 "action_removal_range_ft": effect.action_removal_range_ft,
                 "source_detach_movement_ft": effect.source_detach_movement_ft,
                 "auto_end_after_hp_loss": effect.auto_end_after_hp_loss,
+                "attach_max_target_size": effect.attach_max_target_size,
+                "enhanced_on_attack_advantage": effect.enhanced_on_attack_advantage,
+                "enhanced_max_target_size": effect.enhanced_max_target_size,
+                "source_target_lock": effect.source_target_lock,
+                "source_advantage_against_target": effect.source_advantage_against_target,
+                "source_speed_zero": effect.source_speed_zero,
+                "moves_with_target": effect.moves_with_target,
+                "enhanced_blinds_target": effect.enhanced_blinds_target,
+                "enhanced_prevents_breathing": effect.enhanced_prevents_breathing,
+                "action_removal_check_ability": effect.action_removal_check_ability,
+                "action_removal_check_dc": effect.action_removal_check_dc,
             })
         wired = bool(wired_attacks)
         if not wired:

@@ -45,7 +45,10 @@ def resolve_attack(
             raise ValueError("An incapacitated or dead creature cannot attack.")
         if spend_action and not is_available(attacker, "action"):
             raise ValueError("Action is not available for an attack.")
-        if source_attacks_blocked(reaction_setup, actor_event_id or attacker.template.id):
+        if source_attacks_blocked(
+            reaction_setup, actor_event_id or attacker.template.id,
+            target_event_id or defender.template.id,
+        ):
             raise ValueError("Source-declared attachment prevents another attack while linked.")
         weapon = attack.weapon; defender_event_id = target_event_id or defender.template.id
         attacker_event_id = actor_event_id or attacker.template.id

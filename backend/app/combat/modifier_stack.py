@@ -150,6 +150,8 @@ def weapon_attack_damage_multiplier(state: CombatantState, attack: WeaponAttack)
 
 
 def effective_speed(state: CombatantState) -> int:
+    if state.attachment_speed_zero_source_ids:
+        return 0
     speed_delta = sum(
         item.flat_bonus
         for item in state.active_modifiers

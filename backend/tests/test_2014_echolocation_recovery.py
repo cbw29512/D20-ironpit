@@ -34,9 +34,7 @@ def test_echolocation_does_not_invent_runtime_sense_state() -> None:
         assert set(template.combat_traits) == expected_traits
 
 
-def test_darkmantle_remains_fail_closed_for_separate_mechanics() -> None:
+def test_darkmantle_echolocation_stays_preserved_after_crush_is_wired() -> None:
     darkmantle = _source()["darkmantle"]
     assert "Echolocation" in darkmantle.trait_names
-    blockers = set(basic_blockers_2014(darkmantle))
-    assert blockers
-    assert "attack:incomplete" in blockers
+    assert basic_blockers_2014(darkmantle) == ()

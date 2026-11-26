@@ -30,7 +30,9 @@
       environment_context_modes: Object.fromEntries(
         (template.environment_context_control_actions || []).map((action) => [action.id, action.initial_mode_id]),
       ),
-      grapple_sources: [], willing_attack_source_ids: [], breath_hold_rounds_remaining: null, breath_survival_rounds_remaining: null, suffocating_at_zero: false, swallowed: null, swallowed_target_ids: [], controlled_by: null, controlling_target_ids: [], timed_effects: [], deferred_effects: [], delayed_resource_refills: [], persistent_spell_attacks: [], active_modifiers: OM().build(template),
+      grapple_sources: [], attachment_blind_source_ids: [], attachment_blind_preexisting: false,
+      attachment_breathing_source_ids: [], attachment_speed_zero_source_ids: [],
+      willing_attack_source_ids: [], breath_hold_rounds_remaining: null, breath_survival_rounds_remaining: null, suffocating_at_zero: false, swallowed: null, swallowed_target_ids: [], controlled_by: null, controlling_target_ids: [], timed_effects: [], deferred_effects: [], delayed_resource_refills: [], persistent_spell_attacks: [], active_modifiers: OM().build(template),
       current_round: null, turns_started: 0, visual_aversion_windows: [], active_d20_bonus_dice: [], targeting_gate_immunity_keys: [], concentration: null, replacement_form: null,
       survival_save_uses: {}, pending_survival_save_logs: [], pending_zero_hp_replacement_logs: [],
       feature_last_turn_keys: {}, feature_use_counts: {}, spell_slot_expended_turn_key: null,
@@ -212,12 +214,13 @@
     try { return member.state.template.traits?.includes("pack-tactics") && hasAdjacentActiveAlly(member, target, setup); }
     catch (error) { console.error("Failed browser Pack Tactics evaluation", { member: member.combatant_id, error }); throw error; }
   }
-  function moveToward(member, target, desired, claimActivity = true) {
+  function moveToward(member, target, desired, claimActivity = true, setup = null) {
     const before = distance(member, target);
     const moved = Math.min(Math.max(0, before - desired), member.state.movement_remaining_ft);
     if (!moved) return null;
     if (claimActivity) window.IRON_PIT_ACTION_ECONOMY?.claimActivity?.(member.state, "movement");
     member.position_ft += (member.position_ft < target.position_ft ? 1 : -1) * moved;
+    if (setup) window.IRON_PIT_BROWSER_ATTACHMENTS?.moveWithTarget(setup, member.combatant_id);
     member.state.movement_remaining_ft -= moved;
     return { before, after: distance(member, target), moved };
   }

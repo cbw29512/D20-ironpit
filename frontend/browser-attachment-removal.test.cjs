@@ -20,6 +20,12 @@ window.IRON_PIT_ACTION_ECONOMY = {
 window.IRON_PIT_BROWSER_STATE = {
   distance: (a, b) => Math.abs(a.position_ft - b.position_ft),
 };
+window.IRON_PIT_BROWSER_ABILITY_CHECK_ESCAPE = { abilityCheckBonus: () => 2 };
+window.IRON_PIT_BROWSER_ABILITY_CHECKS = {
+  mode: () => "normal",
+  resolve: (_state, _ability, roll, dc) => ({ roll, succeeded: roll.total >= dc }),
+};
+window.IRON_PIT_BROWSER_EXHAUSTION = { d20Modifier: () => 0 };
 const member = (id, position_ft) => ({
   combatant_id: id, position_ft,
   state: {
@@ -27,7 +33,7 @@ const member = (id, position_ft) => ({
     movement_remaining_ft: 30,
   },
 });
-const newSetup = (distance = 5) => {
+const newSetup = (distance = 5, checked = false) => {
   const source = member("source", 0), victim = member("victim", distance);
   const setup = { monsters: [source], heroes: [victim], attachments: A.attach([], {
     source_id: "source", target_id: "victim", effect_id: "feed", source_name: "Printed Drain",
@@ -35,6 +41,8 @@ const newSetup = (distance = 5) => {
     periodic_effect_kind: "direct_hp_loss", damage_type: null,
     action_removable: true, action_removal_range_ft: 5, source_detach_movement_ft: 5,
     blocks_source_attacks: true,
+    action_removal_check_ability: checked ? "strength" : null,
+    action_removal_check_dc: checked ? 13 : null,
   }) };
   return { setup, source, victim };
 };
@@ -78,5 +86,23 @@ const newSetup = (distance = 5) => {
   source.state.movement_remaining_ft = 0;
   assert.equal(R.detachWithMovement(setup, source, "feed"), false);
   assert.equal(setup.attachments.length, 1);
+}
+{
+  const { setup, victim } = newSetup(5, true);
+  window.IRON_PIT_BROWSER_ROLLS = { d20: () => ({ natural: 10, total: 12 }) };
+  const failed = R.attemptByAction(setup, victim, "source", "feed");
+  assert.equal(failed.attempted, true);
+  assert.equal(failed.success, false);
+  assert.equal(victim.state.action_available, false);
+  assert.equal(setup.attachments.length, 1);
+}
+{
+  const { setup, victim } = newSetup(5, true);
+  window.IRON_PIT_BROWSER_ROLLS = { d20: () => ({ natural: 11, total: 13 }) };
+  const passed = R.attemptByAction(setup, victim, "source", "feed");
+  assert.equal(passed.attempted, true);
+  assert.equal(passed.success, true);
+  assert.equal(victim.state.action_available, false);
+  assert.deepEqual(setup.attachments, []);
 }
 console.log("Attachment Action and movement detachment browser regressions passed.");

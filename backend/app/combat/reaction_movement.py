@@ -141,7 +141,7 @@ def move_toward_with_reactions(
         if movement_source == "speed" and not compelled:
             claim_voluntary_activity(mover.state, "movement")
         movement = move_toward_combatant(
-            sequence, round_number, mover, target, desired_distance_ft,
+            sequence, round_number, mover, target, desired_distance_ft, setup,
         )
         if movement is not None:
             events.append(movement)

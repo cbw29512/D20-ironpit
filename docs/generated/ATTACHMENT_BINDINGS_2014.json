@@ -8,22 +8,74 @@
   ],
   "bindings": [
     {
-      "browser_wired": false,
+      "browser_wired": true,
       "card_id": "cloaker",
       "card_name": "Cloaker",
-      "parameters": [],
-      "python_wired": false,
+      "parameters": [
+        {
+          "action_removable": true,
+          "action_removal_check_ability": "strength",
+          "action_removal_check_dc": 16,
+          "action_removal_range_ft": 5,
+          "attach_max_target_size": "large",
+          "attack_id": "bite",
+          "auto_end_after_hp_loss": null,
+          "blocks_source_attacks": false,
+          "damage_dice": null,
+          "enhanced_blinds_target": true,
+          "enhanced_max_target_size": null,
+          "enhanced_on_attack_advantage": true,
+          "enhanced_prevents_breathing": true,
+          "moves_with_target": false,
+          "periodic_effect_kind": null,
+          "source_advantage_against_target": true,
+          "source_detach_movement_ft": 5,
+          "source_name": "Bite",
+          "source_speed_zero": false,
+          "source_target_lock": true,
+          "tick_timing": "source_turn_start"
+        }
+      ],
+      "python_wired": true,
       "semantic_source_match": true,
-      "wired_attack_ids": []
+      "wired_attack_ids": [
+        "bite"
+      ]
     },
     {
-      "browser_wired": false,
+      "browser_wired": true,
       "card_id": "darkmantle",
       "card_name": "Darkmantle",
-      "parameters": [],
-      "python_wired": false,
+      "parameters": [
+        {
+          "action_removable": true,
+          "action_removal_check_ability": "strength",
+          "action_removal_check_dc": 13,
+          "action_removal_range_ft": 5,
+          "attach_max_target_size": null,
+          "attack_id": "crush",
+          "auto_end_after_hp_loss": null,
+          "blocks_source_attacks": false,
+          "damage_dice": null,
+          "enhanced_blinds_target": true,
+          "enhanced_max_target_size": "medium",
+          "enhanced_on_attack_advantage": true,
+          "enhanced_prevents_breathing": true,
+          "moves_with_target": true,
+          "periodic_effect_kind": null,
+          "source_advantage_against_target": true,
+          "source_detach_movement_ft": 5,
+          "source_name": "Crush",
+          "source_speed_zero": true,
+          "source_target_lock": true,
+          "tick_timing": "source_turn_start"
+        }
+      ],
+      "python_wired": true,
       "semantic_source_match": true,
-      "wired_attack_ids": []
+      "wired_attack_ids": [
+        "crush"
+      ]
     },
     {
       "browser_wired": false,
@@ -41,14 +93,25 @@
       "parameters": [
         {
           "action_removable": true,
+          "action_removal_check_ability": null,
+          "action_removal_check_dc": null,
           "action_removal_range_ft": 5,
+          "attach_max_target_size": null,
           "attack_id": "blood-drain",
           "auto_end_after_hp_loss": 10,
           "blocks_source_attacks": true,
           "damage_dice": "1d4+3",
+          "enhanced_blinds_target": false,
+          "enhanced_max_target_size": null,
+          "enhanced_on_attack_advantage": false,
+          "enhanced_prevents_breathing": false,
+          "moves_with_target": false,
           "periodic_effect_kind": "direct_hp_loss",
+          "source_advantage_against_target": false,
           "source_detach_movement_ft": 5,
           "source_name": "Blood Drain",
+          "source_speed_zero": false,
+          "source_target_lock": false,
           "tick_timing": "source_turn_start"
         }
       ],
@@ -61,24 +124,18 @@
   ],
   "exceptions": [
     {
-      "card_id": "cloaker",
-      "reason": "conditional_control_attachment_profile_not_supported"
-    },
-    {
-      "card_id": "darkmantle",
-      "reason": "conditional_control_attachment_profile_not_supported"
-    },
-    {
       "card_id": "mimic",
       "reason": "grapple_or_restrained_link_uses_shared_grapple_family"
     }
   ],
-  "remaining_card_count": 3,
+  "remaining_card_count": 1,
   "source_cards_scanned": 327,
   "status": "complete_with_routed_exceptions",
-  "wired_browser_card_count": 1,
+  "wired_browser_card_count": 3,
   "wired_cards": [
+    "cloaker",
+    "darkmantle",
     "stirge"
   ],
-  "wired_python_card_count": 1
+  "wired_python_card_count": 3
 }

@@ -132,6 +132,7 @@ def resolve_attack_effects(
             active_turn_key=active_turn_key,
             affected_states=affected_states,
             setup=setup,
+            attack_mode=mode,
         )
         end_rage_if_incapacitated(defender)
         return result

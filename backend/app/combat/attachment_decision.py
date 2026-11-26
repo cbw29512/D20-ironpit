@@ -4,7 +4,7 @@ from __future__ import annotations
 import logging
 
 from app.combat.action_economy import is_available
-from app.combat.attachment_removal import remove_attachment_by_action
+from app.combat.attachment_removal import attempt_attachment_removal_by_action
 from app.combat.encounter_targeting import combatant_distance
 from app.domain.attachment_receipts import AttachmentChange
 from app.domain.encounters import EncounterCombatant, EncounterSetup
@@ -37,6 +37,8 @@ def choose_attachment_removal(
                     and combatant_distance(actor, source) > link.action_removal_range_ft):
                 continue
             average_loss = link.damage_dice_count * (link.damage_dice_size + 1) / 2
+            if link.blinds_target or link.prevents_breathing:
+                average_loss += 100
             choices.append((-(average_loss + link.damage_bonus),
                             link.source_id, link.effect_id, link))
         return sorted(choices)[0][3] if choices else None
@@ -47,14 +49,17 @@ def choose_attachment_removal(
 
 def resolve_attachment_removal_action(
     sequence: int, round_number: int, actor: EncounterCombatant,
-    setup: EncounterSetup,
+    setup: EncounterSetup, dice=None,
 ) -> BattleEvent | None:
     """Spend the Action and report a generic detach transition for replay."""
     try:
         link = choose_attachment_removal(actor, setup)
         if link is None:
             return None
-        if not remove_attachment_by_action(setup, actor, link.source_id, link.effect_id):
+        attempted, success, check = attempt_attachment_removal_by_action(
+            setup, actor, link.source_id, link.effect_id, dice, round_number,
+        )
+        if not attempted:
             raise ValueError("Selected attachment removal became illegal.")
         target = next(member for member in [*setup.heroes, *setup.monsters]
                       if member.combatant_id == link.target_id)
@@ -63,12 +68,19 @@ def resolve_attachment_removal_action(
             actor_id=actor.combatant_id, actor_name=actor.state.template.name,
             target_id=target.combatant_id, target_name=target.state.template.name,
             feature_id=link.source_name, animation="feature",
-            attachment_changes=[AttachmentChange(
+            ability_check_roll=check,
+            check_ability=link.action_removal_check_ability,
+            check_dc=link.action_removal_check_dc,
+            check_succeeded=success if check is not None else None,
+            attachment_changes=([AttachmentChange(
                 operation="detach", source_id=link.source_id, target_id=link.target_id,
                 effect_id=link.effect_id, source_name=link.source_name,
-            )],
-            description=(f"{actor.state.template.name} spends an Action to detach "
-                         f"{link.source_name} from {target.state.template.name}."),
+            )] if success else []),
+            description=(
+                f"{actor.state.template.name} spends an Action and "
+                f"{'detaches' if success else 'fails to detach'} {link.source_name} "
+                f"from {target.state.template.name}."
+            ),
         )
     except Exception:
         logger.exception("Failed to resolve attachment removal Action for %s.", actor.combatant_id)
