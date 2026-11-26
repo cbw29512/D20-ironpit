@@ -99,6 +99,9 @@
       if (rangeModifier) event.description += ` ${caster.state.template.name} uses ${rangeModifier.name}.`;
       return event;
     }
+    const duplicateInterception = window.IRON_PIT_BROWSER_ILLUSORY_DUPLICATES?.intercept(
+      caster.state, target.state, distance,
+    ) || null;
     const conditions = A().conditionSources(caster.state, target.state, distance, target.combatant_id, setup);
     const armorAdvantage = spell.advantageIfTargetWearingMetalArmor && target.state.template.wearing_metal_armor ? 1 : 0;
     const buffAdvantage = window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS?.spellAttackAdvantage?.(caster.state) ? 1 : 0;
@@ -109,7 +112,7 @@
       conditions.disadvantage + SAP().disadvantage(caster.state)
         + (T()?.nextAttackDisadvantage(caster.state) || 0) + (closeThreat ? 1 : 0),
     );
-    let targetAc = M().effectiveArmorClass(target.state);
+    let targetAc = duplicateInterception?.targetAc ?? M().effectiveArmorClass(target.state);
     const heroic = HI().rerollFailedAttack(caster.state, R().d20(spell.attackBonus, mode), targetAc);
     let attackRoll = M().applyD20Bonus(caster.state, "attack-roll-bonus-die", heroic.roll); const rollPenalty = window.IRON_PIT_BROWSER_REACTION_ROLL_PENALTIES?.applyIfUseful(caster, setup, "attack", attackRoll, targetAc); if (rollPenalty) attackRoll = rollPenalty.roll;
     M().consumeNextAttackAgainstAdvantage(caster.state, target.combatant_id);
@@ -121,12 +124,44 @@
     const rangeRemaining = spendCastCosts ? spendRangeModifier(caster.state, rangeModifier) : null;
     if (spendCastCosts) CE()?.applyTimedResistance(caster, spell, round);
     const natural = attackRoll.selected_roll;
-    const defenseUsed = window.IRON_PIT_BROWSER_REACTION_DEFENSE_SPELLS?.trigger(
-      target.state, target.combatant_id,
-      {attackTotal: attackRoll.total, natural},
-    );
+    const defenseUsed = duplicateInterception ? false
+      : window.IRON_PIT_BROWSER_REACTION_DEFENSE_SPELLS?.trigger(
+        target.state, target.combatant_id,
+        {attackTotal: attackRoll.total, natural},
+      );
     if (defenseUsed) targetAc += target.state.template.reaction_defense_spell.acBonus;
     const hit = natural !== 1 && (natural === 20 || attackRoll.total >= targetAc);
+    if (duplicateInterception) {
+      const duplicateRemaining = hit
+        ? window.IRON_PIT_BROWSER_ILLUSORY_DUPLICATES.consumeHit(target.state, duplicateInterception)
+        : duplicateInterception.effect.illusory_duplicates_remaining;
+      let description = `${caster.state.template.name}: ${hit ? "HIT" : "MISS"} with ${spell.name} against `
+        + `${target.state.template.name}'s ${duplicateInterception.featureName} duplicate.`;
+      description += hit
+        ? ` One duplicate is destroyed; ${duplicateRemaining} remain.`
+        : ` The duplicate remains; ${duplicateRemaining} remain.`;
+      if (rangeModifier) description += ` ${caster.state.template.name} uses ${rangeModifier.name}.`;
+      if (heroic.used) description += " Heroic Inspiration rerolls one d20.";
+      if (rollPenalty?.restorationName) description += ` ${rollPenalty.sourceName} uses ${rollPenalty.restorationName}.`;
+      if (rollPenalty) description += ` ${rollPenalty.sourceName} uses ${rollPenalty.actionId} to subtract ${rollPenalty.penaltyTotal} from the attack roll.`;
+      return {
+        sequence, round_number: round, event_type: "attack",
+        actor_id: caster.combatant_id, actor_name: caster.state.template.name,
+        target_id: target.combatant_id, target_name: target.state.template.name,
+        attack_id: spell.id, attack_name: spell.name, target_ac: targetAc,
+        attack_roll: attackRoll, feature_roll: duplicateInterception.redirectionRoll,
+        hit, critical: false,
+        hp_before: target.state.current_hp, hp_after: target.state.current_hp,
+        temporary_hp_before: target.state.temporary_hp, temporary_hp_after: target.state.temporary_hp,
+        death_save_successes_before: target.state.death_save_successes,
+        death_save_failures_before: target.state.death_save_failures,
+        death_save_successes: target.state.death_save_successes,
+        death_save_failures: target.state.death_save_failures,
+        is_stable: target.state.is_stable, is_dead: target.state.is_dead,
+        weapon_id: null, projectile: null, feature_id: duplicateInterception.featureId,
+        resource_remaining: duplicateRemaining, animation: "mirror-image", description,
+      };
+    }
     const critical = Boolean(hit && (natural === 20 || (Q().autoCritical(target.state) && distance <= 5)));
     const hpBefore = target.state.current_hp, temporaryHpBefore = target.state.temporary_hp;
     const deathSuccessBefore = target.state.death_save_successes, deathFailureBefore = target.state.death_save_failures;

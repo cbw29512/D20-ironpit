@@ -16,6 +16,7 @@ for (const file of [
   "browser-timed-self-buff-policy.js", "browser-timed-self-buffs.js",
   "browser-effective-senses.js", "browser-condition-rules.js", "browser-rolls.js",
   "browser-attack-outcome.js", "browser-illusory-duplicates.js", "browser-attack.js",
+  "browser-spellcasting.js", "browser-spell-attack.js",
 ]) load(file);
 
 function queuedDice(values) {
@@ -66,6 +67,37 @@ assert.equal(event.target_ac, 14);
 assert.equal(event.hp_before, event.hp_after);
 assert.equal(defender.state.timed_effects[0].illusory_duplicates_remaining, 2);
 
+attacker.state.action_available = true;
+attacker.state.resources["spell-slot-1"] = 1;
+attacker.position_ft = 30;
+const guidingBolt = {
+  id: "guiding-bolt", name: "Guiding Bolt", level: 1, actionCost: "action",
+  attackKind: "ranged", range: 120, attackBonus: 5,
+  damageDiceCount: 4, damageDiceSize: 6, damageBonus: 0, damageType: "radiant",
+  onHitModifierEffects: [{
+    kind: "attacks-against-advantage", flatBonus: 0, diceCount: 0, diceSize: 0,
+    damageType: null, consumeOnAttackAgainst: true, expiresAfterSourceTurns: 1,
+  }],
+  animation: "guiding-bolt",
+};
+window.IRON_PIT_DICE = queuedDice([2, 12]);
+const spellEvent = window.IRON_PIT_BROWSER_SPELL_ATTACK.resolve(
+  3, 1, attacker, defender, guidingBolt,
+  { heroes: [attacker], monsters: [defender] }, "1:hero",
+);
+assert.equal(spellEvent.attack_id, "guiding-bolt");
+assert.equal(spellEvent.feature_id, "phantasms");
+assert.equal(spellEvent.feature_roll.notation, "1d3");
+assert.equal(spellEvent.target_ac, 14);
+assert.equal(spellEvent.hit, true);
+assert.equal(spellEvent.damage_roll, undefined);
+assert.equal(spellEvent.hp_before, spellEvent.hp_after);
+assert.equal(defender.state.timed_effects[0].illusory_duplicates_remaining, 1);
+assert.equal(defender.state.active_modifiers.length, 0);
+assert.equal(attacker.state.resources["spell-slot-1"], 0);
+assert.equal(attacker.state.action_available, false);
+assert.match(spellEvent.description, /hero: HIT with Guiding Bolt against cloaker's Phantasms duplicate/i);
+
 defender.state.action_available = true;
 defender.state.resources.phantasms = 1;
 defender.state.timed_effects = [];
@@ -88,7 +120,7 @@ window.IRON_PIT_BROWSER_TIMED_SELF_BUFFS.resolve(3, 1, defender, phantasms, {
 assert.equal(defender.state.timed_effects[0].illusory_duplicates_remaining, 3);
 const bright = lightAction.modes[1];
 const lightEvent = window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXT_ACTIONS.resolve(
-  4, 1, light, lightAction, bright, [light.state, defender.state], setup,
+  5, 1, light, lightAction, bright, [light.state, defender.state], setup,
 );
 assert.equal(defender.state.timed_effects.length, 0);
 assert.match(lightEvent.description, /cloaker's Phantasms ends/i);

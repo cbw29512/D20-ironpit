@@ -3,7 +3,9 @@ from __future__ import annotations
 from app.combat.attacks import resolve_attack
 from app.combat.dice import FixedDiceProvider
 from app.combat.state import build_combatant_state
+from app.combat.spell_attack_resolution import resolve_spell_attack
 from app.combat.timed_self_buffs import resolve_timed_self_buff
+from app.content.offensive_spell_effects import build_guiding_bolt
 from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
 from app.content.monster_source_2014 import load_monster_source_2014
 from app.content.monster_source_phantasms_2014 import source_phantasms_action_2014
@@ -92,6 +94,52 @@ def test_phantasms_weapon_interception_uses_uniform_selection_and_source_ac():
     assert cloaker.state.current_hp < before
     assert cloaker.state.timed_effects[0].illusory_duplicates_remaining == 2
 
+
+def test_phantasms_harmful_spell_attack_intercepts_without_damaging_source():
+    cloaker_card = next(card for card in _cards() if card.id == "cloaker")
+    action, = source_phantasms_action_2014(cloaker_card)
+    cloaker_template = build_commoner().model_copy(update={
+        "id": "cloaker", "name": "Cloaker", "armor_class": 14,
+        "timed_self_buff_actions": [action],
+        "resources": [ResourceDefinition(id="phantasms", name="Phantasms", max_uses=1)],
+    })
+    spell = build_guiding_bolt(5)
+    caster_template = build_commoner().model_copy(update={
+        "id": "caster", "name": "Caster", "spell_attack_actions": [spell],
+        "resources": [ResourceDefinition(id="spell-slot-1", name="Level 1 Slot", max_uses=1)],
+    })
+    cloaker = EncounterCombatant(
+        combatant_id="cloaker", side="monsters", position_ft=30,
+        state=build_combatant_state(cloaker_template),
+    )
+    caster = EncounterCombatant(
+        combatant_id="caster", side="heroes", position_ft=0,
+        state=build_combatant_state(caster_template),
+    )
+    setup = EncounterSetup(
+        heroes=[caster], monsters=[cloaker], hero_total_levels=1, monster_total_cr="8",
+    )
+    resolve_timed_self_buff(1, 1, cloaker, action, affected_states=[cloaker.state])
+    hp_before = cloaker.state.current_hp
+
+    # d4=2 chooses a duplicate; 12+5 hits its source AC 14. No spell damage or
+    # Guiding Bolt rider reaches the Cloaker, while the slot and Action are spent.
+    event = resolve_spell_attack(
+        2, 1, caster, cloaker, spell, setup, "1:caster", FixedDiceProvider([2, 12]),
+    )
+
+    assert event.attack_id == "guiding-bolt"
+    assert event.feature_id == "phantasms"
+    assert event.feature_roll.notation == "1d4"
+    assert event.target_ac == 14
+    assert event.hit is True
+    assert event.damage_roll is None
+    assert event.hp_before == event.hp_after == hp_before == cloaker.state.current_hp
+    assert cloaker.state.timed_effects[0].illusory_duplicates_remaining == 2
+    assert cloaker.state.active_modifiers == []
+    assert caster.state.resources[0].current_uses == 0
+    assert caster.state.action_available is False
+    assert "Caster: HIT with Guiding Bolt against Cloaker's Phantasms duplicate" in event.description
 
 def test_phantasms_cannot_start_in_bright_light_and_expires_when_light_appears():
     card = next(card for card in _cards() if card.id == "cloaker")
