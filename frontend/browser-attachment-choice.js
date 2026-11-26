@@ -41,7 +41,8 @@
         && row.effect_id === candidate.effectId
         && row.target_id === candidate.targetId);
       if (!link) throw Error("Attachment removal candidate is stale.");
-      if (!R()?.removeByAction(setup, member, link.source_id, link.effect_id)) {
+      const attempt = R()?.attemptByAction(setup, member, link.source_id, link.effect_id, round);
+      if (!attempt?.attempted) {
         throw Error("Selected attachment removal became illegal.");
       }
       const target = [...setup.heroes, ...setup.monsters]
@@ -52,11 +53,15 @@
         actor_id: member.combatant_id, actor_name: member.state.template.name,
         target_id: target.combatant_id, target_name: target.state.template.name,
         feature_id: link.source_name, animation: "feature",
-        attachment_changes: [{
+        ability_check_roll: attempt.roll,
+        check_ability: link.action_removal_check_ability || null,
+        check_dc: link.action_removal_check_dc ?? null,
+        check_succeeded: attempt.roll ? attempt.success : null,
+        attachment_changes: attempt.success ? [{
           operation: "detach", source_id: link.source_id, target_id: link.target_id,
           effect_id: link.effect_id, source_name: link.source_name,
-        }],
-        description: `${member.state.template.name} spends an Action to detach ${link.source_name} from ${target.state.template.name}.`,
+        }] : [],
+        description: `${member.state.template.name} spends an Action and ${attempt.success ? "detaches" : "fails to detach"} ${link.source_name} from ${target.state.template.name}.`,
       }] };
     } catch (error) {
       console.error("Generic attachment removal choice failed", error);

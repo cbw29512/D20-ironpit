@@ -137,6 +137,7 @@
   }
   const effectiveArmorClass = (state) => Math.max(0, state.template.armor_class + flat(state, "armor-class") + (window.IRON_PIT_BROWSER_TIMED_CONTROL?.armorClassBonus(state) || 0) + Math.max(0, ...(state.active_modifiers || []).filter((item) => item.kind === "cover-armor-class").map((item) => item.flat_bonus || 0)), ...(state.active_modifiers || []).filter((item) => item.kind === "armor-class-minimum").map((item) => item.minimum_value || 0));
   const effectiveSpeed = (state) => {
+    if ((state.attachment_speed_zero_source_ids || []).length) return 0;
     const speedDelta = (state.active_modifiers || []).filter((item) => item.kind === "speed")
       .reduce((sum, item) => sum + (
         (item.flat_bonus || 0) < 0

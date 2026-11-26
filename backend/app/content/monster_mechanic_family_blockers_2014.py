@@ -24,6 +24,7 @@ from app.content.monster_legendary_bindings_2014 import supports_legendary_actio
 from app.content.monster_regeneration_2014 import supports_regeneration_2014
 from app.content.monster_save_capabilities_2014 import unsupported_save_actions_2014
 from app.content.monster_source_2014 import SourceMonster2014
+from app.content.monster_source_attachment_2014 import supports_source_attachment_2014
 from app.content.monster_source_breakable_restraint_2014 import source_recharge_breakable_restraint_2014
 from app.content.monster_source_start_turn_recurring_2014 import source_start_turn_recurring_damage_2014
 from app.content.monster_grapple_auto_hit_source_2014 import source_proves_grapple_auto_hit_2014
@@ -103,7 +104,8 @@ def attack_blockers_2014(monster: SourceMonster2014) -> list[str]:
             # Locked arena AI never selects a dousing Action (self or helper).
             # Its undefined helper range therefore cannot block this attack.
             # Preserve source-verified recurring fire and all other blockers.
-            if not attack.source_complete or not source_proves_ability_score_reduction_2014(monster, attack):
+            if ((not attack.source_complete and not supports_source_attachment_2014(attack))
+                    or not source_proves_ability_score_reduction_2014(monster, attack)):
                 blockers.append("attack:incomplete")
             # A zero-damage restraint has no printed damage type. Its hit is
             # resolved normally; a dummy damage type is never printed on the card.

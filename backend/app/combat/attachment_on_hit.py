@@ -3,14 +3,17 @@ from __future__ import annotations
 
 import logging
 
-from app.combat.attachments import attach
+from app.combat.attachments import attach, sync_attachment_controls
+from app.domain.models import RollMode
+from app.domain.size import size_at_most
 from app.domain.attachments import Attachment
 from app.domain.attachment_receipts import AttachmentChange
 
 logger = logging.getLogger(__name__)
 
 
-def apply_attack_hit_attachment(attack, attacker_id, target_id, target_state, setup) -> bool:
+def apply_attack_hit_attachment(attack, attacker_id, target_id, target_state, setup,
+                                attack_mode: RollMode = RollMode.NORMAL) -> bool:
     """The hit resolver has already handled attack roll, piercing, and zero HP."""
     try:
         spec = attack.on_hit_attachment
@@ -24,6 +27,15 @@ def apply_attack_hit_attachment(attack, attacker_id, target_id, target_state, se
         members = {item.combatant_id: item for item in [*setup.heroes, *setup.monsters]}
         if attacker_id not in members or target_id not in members:
             raise ValueError("Attachment needs both source and target in the encounter.")
+        size = target_state.template.size
+        if spec.attach_max_target_size is not None and not size_at_most(size, spec.attach_max_target_size):
+            return False
+        enhanced = (
+            spec.enhanced_on_attack_advantage
+            and attack_mode is RollMode.ADVANTAGE
+            and (spec.enhanced_max_target_size is None
+                 or size_at_most(size, spec.enhanced_max_target_size))
+        )
         row = Attachment(
             source_id=attacker_id, target_id=target_id,
             effect_id=spec.effect_id, source_name=spec.source_name,
@@ -37,8 +49,17 @@ def apply_attack_hit_attachment(attack, attacker_id, target_id, target_state, se
             action_removable=spec.action_removable,
             action_removal_range_ft=spec.action_removal_range_ft,
             source_detach_movement_ft=spec.source_detach_movement_ft,
+            source_target_lock=spec.source_target_lock,
+            source_advantage_against_target=spec.source_advantage_against_target,
+            source_speed_zero=spec.source_speed_zero,
+            moves_with_target=spec.moves_with_target,
+            blinds_target=bool(enhanced and spec.enhanced_blinds_target),
+            prevents_breathing=bool(enhanced and spec.enhanced_prevents_breathing),
+            action_removal_check_ability=spec.action_removal_check_ability,
+            action_removal_check_dc=spec.action_removal_check_dc,
         )
         setup.attachments = list(attach(tuple(setup.attachments), row))
+        sync_attachment_controls(setup)
         return True
     except Exception:
         logger.exception("Failed to apply source-owned attachment %s to %s.",

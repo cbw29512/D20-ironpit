@@ -166,7 +166,7 @@
           }
         }
       }
-      const movement = S().moveToward(mover, target, desired, !options.compelled);
+      const movement = S().moveToward(mover, target, desired, !options.compelled, setup);
       return { events, sequence, movement };
     } catch (error) {
       console.error("Failed browser reaction-aware movement", { mover: mover.combatant_id, error });

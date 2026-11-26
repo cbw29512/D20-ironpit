@@ -40,6 +40,7 @@ from app.combat.reckless_attack import attacks_against_reckless_advantage, reckl
 from app.combat.rolls import roll_d20
 from app.combat.sap import consume_sap, sap_disadvantage
 from app.combat.visual_source_aversion import visual_aversion_attack_disadvantage
+from app.combat.attachments import attachment_attack_advantage
 from app.domain.models import CombatantState, DiceRoll, RollMode, WeaponAttack
 from app.domain.modifiers import ModifierKind
 
@@ -125,7 +126,10 @@ def resolve_attack_roll(
             )
             + next_attack_against_advantage_sources(attacker, defender_event_id)
             + marked_target_advantage_sources(attacker, defender_event_id)
-            + first_turn_target_advantage_sources(attacker, defender),
+            + first_turn_target_advantage_sources(attacker, defender)
+            + (attachment_attack_advantage(
+                tuple(setup.attachments), attacker_event_id, defender_event_id,
+            ) if setup is not None else 0),
         )
         mode = resolve_attack_roll_mode(
             attack.weapon,

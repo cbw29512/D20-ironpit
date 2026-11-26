@@ -46,7 +46,7 @@ def test_darkness_aura_preserves_every_source_parameter_and_card_immutability() 
             if item.id == "darkness-aura"] == [("darkness-aura", 1)]
     blockers = set(basic_blockers_2014(card))
     assert "source:extra-action" not in blockers
-    assert "attack:incomplete" in blockers
+    assert "attack:incomplete" not in blockers
     assert card.model_dump_json() == snapshot
 
 

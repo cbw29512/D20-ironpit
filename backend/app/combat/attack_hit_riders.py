@@ -38,6 +38,7 @@ def resolve_attack_hit_riders(
     active_turn_key: str,
     affected_states,
     setup,
+    attack_mode,
 ) -> None:
     pre_hit_grappled_by_attacker = any(
         held.source_id == attacker_event_id for held in defender.grapple_sources
@@ -68,7 +69,9 @@ def resolve_attack_hit_riders(
         for condition_id in ("blinded", "restrained"):
             if condition_id not in result.applied_conditions:
                 result.applied_conditions.append(condition_id)
-    apply_attack_hit_attachment(attack, attacker_event_id, actual_event_id, defender, setup)
+    apply_attack_hit_attachment(
+        attack, attacker_event_id, actual_event_id, defender, setup, attack_mode,
+    )
     # A composite hit-save reuses the single poison-damage saving throw.
     shared = attack.on_hit_save_damage
     composite = shared.failed_save_condition if shared is not None else None

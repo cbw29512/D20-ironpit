@@ -20,9 +20,47 @@
       if (actor.combatant_id !== link.target_id && S().distance(actor, source) > link.action_removal_range_ft) return false;
       E().spend(actor.state, "action");
       setup.attachments = A().detach(setup.attachments, sourceId, effectId);
+      A().syncControls(setup);
       return true;
     } catch (error) {
       console.error("Action attachment removal failed", { sourceId, effectId, error });
+      throw error;
+    }
+  }
+
+  function attemptByAction(setup, actor, sourceId, effectId, round = 1) {
+    try {
+      const link = findLink(setup, sourceId, effectId);
+      if (!link || !link.action_removable || !E()?.available(actor.state, "action")) {
+        return { attempted: false, success: false, roll: null };
+      }
+      const source = participants(setup).find((row) => row.combatant_id === sourceId);
+      if (!source) throw Error("Attachment source is missing.");
+      if (actor.combatant_id !== link.target_id
+        && S().distance(actor, source) > link.action_removal_range_ft) {
+        return { attempted: false, success: false, roll: null };
+      }
+      let roll = null, success = true;
+      if (link.action_removal_check_ability) {
+        const ability = link.action_removal_check_ability, dc = link.action_removal_check_dc;
+        if (!Number.isInteger(dc)) throw Error("Checked attachment removal requires a printed DC.");
+        const bonus = window.IRON_PIT_BROWSER_ABILITY_CHECK_ESCAPE.abilityCheckBonus(actor.state, ability)
+          + (window.IRON_PIT_BROWSER_EXHAUSTION?.d20Modifier(actor.state) || 0);
+        const mode = window.IRON_PIT_BROWSER_ABILITY_CHECKS?.mode(actor.state, 0, 0,
+          { ability, member: actor, setup }) || "normal";
+        roll = window.IRON_PIT_BROWSER_ROLLS.d20(bonus, mode);
+        const resolved = window.IRON_PIT_BROWSER_ABILITY_CHECKS?.resolve(actor.state, ability,
+          roll, dc, { roller: actor, setup, round }) || { roll, succeeded: roll.total >= dc };
+        roll = resolved.roll; success = resolved.succeeded;
+      }
+      E().spend(actor.state, "action");
+      if (success) {
+        setup.attachments = A().detach(setup.attachments, sourceId, effectId);
+        A().syncControls(setup);
+      }
+      return { attempted: true, success, roll };
+    } catch (error) {
+      console.error("Checked attachment removal failed", { sourceId, effectId, error });
       throw error;
     }
   }
@@ -40,6 +78,7 @@
       E().claimActivity(source.state, "movement");
       source.state.movement_remaining_ft -= cost;
       setup.attachments = A().detach(setup.attachments, source.combatant_id, effectId);
+      A().syncControls(setup);
       return true;
     } catch (error) {
       console.error("Source attachment movement removal failed", { source: source.combatant_id, error });
@@ -81,6 +120,6 @@
   }
 
   window.IRON_PIT_BROWSER_ATTACHMENT_REMOVAL = {
-    removeByAction, detachWithMovement, resolveBlockedSource,
+    removeByAction, attemptByAction, detachWithMovement, resolveBlockedSource,
   };
 })();

@@ -44,7 +44,9 @@ def resolve_post_move_action(events, sequence, round_number, attacker, target, s
             return finish_turn(events, sequence, round_number, attacker, setup, dice, turn_key)
         pick = decide_post_move_offense(attacker, setup, turn_key)
         if pick.family == "dodge":
-            removal = resolve_attachment_removal_action(sequence, round_number, attacker, setup)
+            removal = resolve_attachment_removal_action(
+                sequence, round_number, attacker, setup, dice,
+            )
             if removal is not None:
                 events.append(removal)
                 sequence += 1

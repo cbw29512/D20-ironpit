@@ -18,6 +18,7 @@
         }
       }
       setup.attachments = links;
+      A().syncControls(setup);
     } catch (error) { console.error("Attachment cleanup failed", error); throw error; }
   }
 
@@ -30,6 +31,7 @@
       const states = members(setup).map((member) => member.state);
       for (const row of [...setup.attachments]) {
         if (row.source_id !== owner.combatant_id || row.damage_timing !== "source_turn_start") continue;
+        if (row.periodic_effect_kind == null) continue;
         const target = index.get(row.target_id);
         if (!alive(target)) continue;
         const before = target.state.current_hp;

@@ -5,6 +5,7 @@ import logging
 from app.combat.action_economy import is_available, spend
 from app.combat.encounter_targeting import combatant_distance
 from app.combat.modifier_stack import effective_speed
+from app.combat.attachments import move_attached_sources_with_target
 from app.domain.encounters import EncounterCombatant
 from app.domain.models import BattleEvent
 
@@ -17,6 +18,7 @@ def move_toward_combatant(
     mover: EncounterCombatant,
     target: EncounterCombatant,
     desired_distance_ft: int,
+    setup=None,
 ) -> BattleEvent | None:
     try:
         if desired_distance_ft < 0:
@@ -29,6 +31,8 @@ def move_toward_combatant(
 
         direction = 1 if mover.position_ft < target.position_ft else -1
         mover.position_ft += direction * moved
+        if setup is not None:
+            move_attached_sources_with_target(setup, mover.combatant_id)
         mover.state.movement_remaining_ft -= moved
         after = combatant_distance(mover, target)
         return BattleEvent(
