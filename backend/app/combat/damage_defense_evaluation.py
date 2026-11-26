@@ -82,7 +82,8 @@ def adjusted_damage_amount(
         template = target.template
         conditional = matching_conditional_defenses(target, damage_type, source_qualifiers or set())
         if (
-            matching_absorption(target, damage_type) is not None
+            any(effect.all_damage_immunity for effect in target.timed_effects)
+            or matching_absorption(target, damage_type) is not None
             or damage_type in template.damage_immunities
             or damage_type in target.zone_damage_immunities
             or DamageDefenseKind.IMMUNITY in conditional
