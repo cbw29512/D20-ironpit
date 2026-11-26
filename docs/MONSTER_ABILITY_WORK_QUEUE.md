@@ -1,3 +1,10 @@
+## [x] 2014 Darkmantle Darkness Aura — universal source-following magical darkness (merged PR #1354)
+
+- **Merged evidence:** [PR #1354](https://github.com/cbw29512/D20-ironpit/pull/1354) passed CI, 2014 Basic Roster, 2014 Hero Certification, Paired Edition Monster Report, generated-artifact sync, and exact-final-head technical review on `ffcc45a30bd366c3f9b1f6cda91ccd867df38553`; it squash-merged as `bf0aba3762f92f971b02cac0f4415d03786d6092`.
+- **Universal mechanic:** Immutable source data declares the 15-foot source-centered magical-darkness radius, movement with its source, concentration up to 10 minutes, one daily use, and the printed level-2 light-spell dispel ceiling. Fresh fight-local Python/browser suppression-zone state owns position following, concentration, resource use, visibility and reset; the non-spell Action remains usable in Silence and logs the printed ability name without monster-name runtime dispatch.
+- **327-card source scan:** **1 applicable / 1 Python-wired / 1 browser-wired / 0 remaining / 0 exceptions**: Darkmantle. Generated main remains **298/327 source-admitted, 29 blocked** because Darkmantle retains the independent `attack:incomplete` Crush attachment obligation. This merge does not claim a separately certified real webpage fight; production Netlify remained locked.
+- **Next unresolved item:** Darkmantle Crush conditional attachment (`attack:incomplete`), then Cloaker Bite attachment and Phantasms.
+
 ## [x] 2014 bright-light contexts and Cloaker Light Sensitivity (merged PR #1095)
 
 - **Merged evidence:** [PR #1095](https://github.com/cbw29512/D20-ironpit/pull/1095) passed CI, 2014 Basic Roster, 2014 Hero Certification, Paired Edition Monster Report, generated-artifact sync, and exact-head technical review on `349db669c8fa2a0591585abd9dbcad23e3c3a26d`; it squash-merged as `e74692862c59b001af4d50469447d137d976fa0e`.
