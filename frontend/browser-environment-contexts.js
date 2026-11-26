@@ -92,6 +92,30 @@
     }
   }
 
+  function expireProhibitedBuffs(setup) {
+    try {
+      const expired = [];
+      for (const member of [...(setup?.heroes || []), ...(setup?.monsters || [])]) {
+        const actions = new Map((member.state.template.timed_self_buff_actions || [])
+          .filter((action) => action.prohibitedEnvironmentContextId)
+          .map((action) => [action.id, action]));
+        for (const effect of [...(member.state.timed_effects || [])]) {
+          const action = actions.get(effect.source_effect_id);
+          if (!action || effect.source_id !== member.combatant_id) continue;
+          if (!inside(member, setup, action.prohibitedEnvironmentContextId)) continue;
+          const timed = window.IRON_PIT_BROWSER_TIMED;
+          if (!timed?.removeGroup) throw new Error("Context expiry requires timed-effect cleanup.");
+          timed.removeGroup(member.state, effect);
+          expired.push(`${member.state.template.name}'s ${action.name}`);
+        }
+      }
+      return expired;
+    } catch (error) {
+      console.error("Failed prohibited-context timed-buff expiry.", { error });
+      throw error;
+    }
+  }
+
   function resolveStartTurnDamage(sequence, round, member, setup) {
     try {
       const list = reactions(member).filter((reaction) =>
@@ -139,6 +163,6 @@
   }
 
   window.IRON_PIT_BROWSER_ENVIRONMENT_CONTEXTS = {
-    disadvantageSources, inside, resolveStartTurnDamage,
+    disadvantageSources, expireProhibitedBuffs, inside, resolveStartTurnDamage,
   };
 })();

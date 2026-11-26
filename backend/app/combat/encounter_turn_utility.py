@@ -38,6 +38,7 @@ def resolve_control_support(
             events.append(resolve_environment_context_action(
                 sequence, round_number, member, action, mode,
                 affected_states=[entry.state for entry in [*setup.heroes, *setup.monsters]],
+                setup=setup,
             ))
             return events, sequence + 1
         teleport = choose_teleport_action(member, setup, turn_key)

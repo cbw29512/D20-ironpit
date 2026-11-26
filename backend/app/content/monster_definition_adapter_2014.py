@@ -73,6 +73,7 @@ from app.content.monster_prepared_spells_2014 import (
     prepared_timed_self_buffs_2014,
 )
 from app.content.monster_source_invisibility_2014 import source_invisibility_action_2014, source_invisibility_resources_2014
+from app.content.monster_source_phantasms_2014 import source_phantasms_action_2014, source_phantasms_resources_2014
 from app.content.monster_source_enlarge_2014 import (
     source_enlarge_action_2014, source_enlarge_resources_2014,
     source_enlarge_ranged_weapon_2014,
@@ -292,6 +293,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
     resources.extend(zero_hp_prevention_resources_2014(monster))
     resources.extend(recharge_self_buff_resources_2014(monster))
     resources.extend(source_invisibility_resources_2014(monster))
+    resources.extend(source_phantasms_resources_2014(monster))
     resources.extend(source_enlarge_resources_2014(monster))
     legendary_resource = legendary_resistance_resource_2014(monster)
     if legendary_resource is not None:
@@ -388,6 +390,7 @@ def adapt_monster_mechanics_2014(monster: SourceMonster2014) -> CombatantDefinit
             *prepared_timed_self_buffs_2014(monster),
             *nature_spells.buffs,
             *source_invisibility_action_2014(monster),
+            *source_phantasms_action_2014(monster),
             *source_enlarge_action_2014(monster),
             *berserk_self_buffs_2014(monster),
             *heated_body_retaliation_2014(monster),

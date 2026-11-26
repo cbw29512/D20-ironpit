@@ -43,6 +43,15 @@ def resolve_timed_self_buff(
             raise ValueError(f"Resource {action.resource_id} is unavailable for {action.name}.")
         if timed_self_buff_active(member, action):
             raise ValueError(f"{action.name} is already active.")
+        if action.prohibited_environment_context_id is not None:
+            from app.combat.environment_contexts import actor_inside_environment_context
+            if actor_inside_environment_context(
+                member, setup, action.prohibited_environment_context_id,
+            ):
+                raise ValueError(
+                    f"{action.name} cannot be activated in "
+                    f"{action.prohibited_environment_context_id.replace('_', ' ')}."
+                )
         if setup is not None:
             from app.combat.suppression_zone_geometry import verbal_casting_blocked
             if action.resource_id and action.resource_id.startswith("spell-slot-") and not action.expend_slot_without_cast and verbal_casting_blocked(member, setup):

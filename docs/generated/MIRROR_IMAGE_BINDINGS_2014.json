@@ -8,9 +8,9 @@
   "exceptions": [
     {
       "ability": "Phantasms",
-      "disposition": "incompatible distinct mechanic",
+      "disposition": "incompatible distinct mechanic; partial independent binding",
       "monster": "cloaker",
-      "reason": "also changes AC/saves and harmful-spell targeting; not equivalent to Mirror Image"
+      "reason": "uniform weapon/spell-attack selection, source AC, and bright-light lifecycle are wired independently; harmful-spell save targeting and duplicate saves remain"
     }
   ],
   "remaining": [],

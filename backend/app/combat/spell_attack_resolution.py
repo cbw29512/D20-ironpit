@@ -12,6 +12,7 @@ from app.combat.environment_contexts import environment_context_disadvantage_sou
 from app.combat.conditions import attack_roll_condition_sources
 from app.combat.encounter_targeting import close_ranged_threat_exists, combatant_distance
 from app.combat.heroic_inspiration import reroll_failed_attack_with_heroic_inspiration
+from app.combat.illusory_duplicates import consume_hit, intercept_attack
 from app.combat.next_attack_disadvantage import (
     consume_next_attack_disadvantage,
     next_attack_disadvantage_sources,
@@ -101,6 +102,7 @@ def resolve_spell_attack(
             if range_modifier is not None:
                 event.description += f" {caster.state.template.name} uses {range_modifier.name}."
             return event
+        interception = intercept_attack(caster.state, target.state, distance, dice)
         condition_advantage, condition_disadvantage = attack_roll_condition_sources(
             caster.state, target.state, distance, target.combatant_id, setup=setup,
         )
@@ -121,7 +123,7 @@ def resolve_spell_attack(
             + environment_context_disadvantage_sources(caster, setup, "attack_rolls")
             + int(close_threat),
         )
-        target_ac = effective_armor_class(target.state)
+        target_ac = interception.target_ac if interception is not None else effective_armor_class(target.state)
         base_roll = roll_d20(dice, spell.attack_bonus, mode)
         base_roll, heroic_reroll = reroll_failed_attack_with_heroic_inspiration(caster.state, base_roll, target_ac, dice)
         attack_roll = apply_d20_bonus_dice(caster.state, ModifierKind.ATTACK_ROLL_BONUS_DIE, base_roll, dice)
@@ -145,13 +147,51 @@ def resolve_spell_attack(
         if spend_cast_costs:
             apply_spell_cast_timed_resistance(caster, spell, round_number)
         natural = attack_roll.selected_roll or 0
-        defense_used = trigger_reaction_defense(
+        defense_used = False if interception is not None else trigger_reaction_defense(
             target.state, incoming_attack_total=attack_roll.total,
             natural_roll=natural, source_id=target.combatant_id,
         )
         if defense_used:
             target_ac += target.state.template.reaction_defense_spell.ac_bonus
         hit = natural != 1 and (natural == 20 or attack_roll.total >= target_ac)
+        if interception is not None:
+            duplicate_remaining = (
+                consume_hit(target.state, interception)
+                if hit else interception.effect.illusory_duplicates_remaining
+            )
+            description = (
+                f"{caster.state.template.name}: {'HIT' if hit else 'MISS'} with {spell.name} "
+                f"against {target.state.template.name}'s {interception.feature_name} duplicate."
+            )
+            if hit:
+                description += f" One duplicate is destroyed; {duplicate_remaining} remain."
+            else:
+                description += f" The duplicate remains; {duplicate_remaining} remain."
+            if range_modifier is not None:
+                description += f" {caster.state.template.name} uses {range_modifier.name}."
+            if heroic_reroll:
+                description += " Heroic Inspiration rerolls one d20."
+            if reaction_penalty is not None:
+                description += reaction_penalty_description(reaction_penalty)
+            return BattleEvent(
+                sequence=sequence, round_number=round_number, event_type="attack",
+                actor_id=caster.combatant_id, actor_name=caster.state.template.name,
+                target_id=target.combatant_id, target_name=target.state.template.name,
+                attack_id=spell.id, attack_name=spell.name, target_ac=target_ac,
+                attack_roll=attack_roll, feature_roll=interception.redirection_roll,
+                hit=hit, critical=False,
+                hp_before=target.state.current_hp, hp_after=target.state.current_hp,
+                temporary_hp_before=target.state.temporary_hp,
+                temporary_hp_after=target.state.temporary_hp,
+                death_save_successes_before=target.state.death_save_successes,
+                death_save_failures_before=target.state.death_save_failures,
+                death_save_successes=target.state.death_save_successes,
+                death_save_failures=target.state.death_save_failures,
+                is_stable=target.state.is_stable, is_dead=target.state.is_dead,
+                feature_id=interception.feature_id,
+                resource_remaining=duplicate_remaining,
+                animation="mirror-image", description=description,
+            )
         critical = bool(hit and (natural == 20 or (close_hit_is_automatic_critical(target.state) and distance <= 5)))
         hp_before = target.state.current_hp; temporary_hp_before = target.state.temporary_hp
         death_success_before = target.state.death_save_successes; death_failure_before = target.state.death_save_failures

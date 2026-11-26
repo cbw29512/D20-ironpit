@@ -49,19 +49,31 @@ def intercept_attack(
             ):
                 return None
             remaining = effect.illusory_duplicates_remaining
-            if remaining >= len(rule.redirect_minimum_by_duplicates):
-                raise ValueError("Duplicate count exceeds its source threshold table.")
-            redirection = roll_d20(dice, 0, RollMode.NORMAL)
-            if redirection.total < rule.redirect_minimum_by_duplicates[remaining]:
-                return None
+            if rule.redirection_mode == "uniform_original_and_duplicates":
+                selected = dice.roll(remaining + 1)
+                redirection = DiceRoll(
+                    notation=f"1d{remaining + 1}", rolls=[selected], modifier=0,
+                    selected_roll=selected, mode=RollMode.NORMAL, total=selected,
+                )
+                if selected == 1:
+                    return None
+            else:
+                if remaining >= len(rule.redirect_minimum_by_duplicates):
+                    raise ValueError("Duplicate count exceeds its source threshold table.")
+                redirection = roll_d20(dice, 0, RollMode.NORMAL)
+                if redirection.total < rule.redirect_minimum_by_duplicates[remaining]:
+                    return None
             return IllusoryDuplicateInterception(
                 effect=effect,
                 feature_id=action.id,
                 feature_name=action.name,
                 redirection_roll=redirection,
                 target_ac=(
-                    rule.armor_class_base
-                    + effective_ability_modifier(defender, rule.armor_class_ability)
+                    defender.template.armor_class
+                    if rule.armor_class_mode == "source_armor_class"
+                    else rule.armor_class_base + effective_ability_modifier(
+                        defender, rule.armor_class_ability
+                    )
                 ),
             )
         return None
