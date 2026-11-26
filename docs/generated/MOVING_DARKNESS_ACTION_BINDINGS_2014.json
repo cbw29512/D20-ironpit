@@ -1,0 +1,48 @@
+{
+  "applicable_card_count": 1,
+  "applicable_cards": [
+    "darkmantle"
+  ],
+  "bindings": [
+    {
+      "ability_name": "Darkness Aura (1/Day)",
+      "browser_wired": true,
+      "card_id": "darkmantle",
+      "card_name": "Darkmantle",
+      "exception": null,
+      "parameters": {
+        "action_cost": "action",
+        "animation": "darkness",
+        "blocks_verbal_spells": false,
+        "cast_range_ft": 0,
+        "center_on_source": true,
+        "concentration": true,
+        "deafens": false,
+        "dispel_light_spell_max_level": 2,
+        "duration_rounds": 100,
+        "expends_spell_slot": false,
+        "follows_source": true,
+        "id": "darkness-aura",
+        "is_spell": false,
+        "level": 0,
+        "name": "Darkness Aura (1/Day)",
+        "obscuration_kind": "magical-darkness",
+        "radius_ft": 15,
+        "resource_cost": 1,
+        "resource_id": "darkness-aura",
+        "source": "SRD 5.1 (2014)",
+        "thunder_immunity": false
+      },
+      "python_wired": true,
+      "source_text": "A 15-\u00ad-foot radius of magical darkness extends out from the darkmantle, moves with it, and spreads around corners. The darkness lasts as long as the darkmantle maintains concentration, up to 10 minutes (as if concentrating on a spell). Darkvision can't penetrate this darkness, and no natural light can illuminate it. If any of the darkness overlaps with an area of light created by a spell of 2nd level or lower, the spell creating the light is dispelled."
+    }
+  ],
+  "exceptions": [],
+  "remaining_card_count": 0,
+  "source_cards_scanned": 327,
+  "wired_browser_card_count": 1,
+  "wired_cards": [
+    "darkmantle"
+  ],
+  "wired_python_card_count": 1
+}

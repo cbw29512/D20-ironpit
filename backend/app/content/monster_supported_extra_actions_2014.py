@@ -15,6 +15,7 @@ from app.content.monster_arena_action_policy_2014 import (
 from app.content.monster_animate_chains_2014 import supports_animate_chains_arena_unavailable_2014
 from app.content.monster_change_shape_policy_2014 import approved_inert_change_shape_2014
 from app.content.monster_fetid_cloud_2014 import fetid_cloud_zone_2014
+from app.content.monster_source_darkness_aura_2014 import source_proven_darkness_aura_2014
 from app.content.monster_healing_2014 import healing_action_names_2014
 from app.content.monster_innate_support_2014 import innate_spell_names_2014
 from app.content.monster_leadership_2014 import leadership_labels_2014
@@ -136,6 +137,11 @@ def source_supported_extra_action_labels_2014(monster: SourceMonster2014) -> set
             | {
                 _label(zone.name)
                 for zone in (fetid_cloud_zone_2014(monster),)
+                if zone is not None
+            }
+            | {
+                _label(zone.name)
+                for zone in (source_proven_darkness_aura_2014(monster),)
                 if zone is not None
             }
         )

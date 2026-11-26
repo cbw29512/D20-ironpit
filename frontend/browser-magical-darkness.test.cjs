@@ -120,3 +120,36 @@ test("physical fog cannot be bypassed by Truesight; a missing position fails clo
   target.position = null;
   assert.equal(obscuration.blocked(observer, target, { truesightReaches: true }), true);
 });
+
+test("source-following non-spell darkness moves with its owner and spends one use", () => {
+  const caster = member("darkmantle", "monsters", 1);
+  const target = member("target", "heroes", 3);
+  caster.state.resources = { "darkness-aura": 1 };
+  caster.state.template.suppression_zone_actions = [{
+    id: "darkness-aura", name: "Darkness Aura (1/Day)", level: 0,
+    actionCost: "action", castRangeFt: 0, radiusFt: 15,
+    durationRounds: 100, resourceId: "darkness-aura", resourceCost: 1,
+    centerOnSource: true, followsSource: true, isSpell: false,
+    concentration: true, obscurationKind: "magical-darkness",
+    dispelLightSpellMaxLevel: 2,
+    deafens: false, blocksVerbalSpells: false, thunderImmunity: false,
+  }];
+  const setup = {
+    monsters: [caster], heroes: [target], map_definition: {}, suppression_zones: [],
+  };
+  const chosen = zones.choose(caster, setup, "1:darkmantle");
+  assert.deepEqual(chosen.center, caster.state.position);
+  const event = zones.cast(
+    1, 1, caster, setup, chosen.action, chosen.center, "1:darkmantle",
+  );
+  assert.equal(event.description, "darkmantle uses Darkness Aura (1/Day).");
+  assert.equal(caster.state.resources["darkness-aura"], 0);
+  assert.equal(setup.suppression_zones[0].dispel_light_spell_max_level, 2);
+  assert.deepEqual(target.state.active_effect_ids, ["magical-darkness"]);
+
+  caster.state.position = { x: 9, y: 7 };
+  zones.sync(setup, 1);
+  assert.deepEqual(setup.suppression_zones[0].position, caster.state.position);
+  assert.equal(target.state.active_effect_ids.includes("magical-darkness"), false);
+  assert.equal(caster.state.active_effect_ids.includes("magical-darkness"), true);
+});
