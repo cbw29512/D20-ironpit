@@ -1,16 +1,23 @@
+## [x] 2014 conditional control attachments — Darkmantle Crush and Cloaker Bite (merged PR #1356)
+
+- **Merged evidence:** [PR #1356](https://github.com/cbw29512/D20-ironpit/pull/1356) passed CI (source/Python, browser regressions, and combat certification), 2014 Basic Roster, 2014 Hero Certification, Paired Edition Monster Report, generated-artifact sync, and exact-final-head technical review on `37d5a206a263c2d9304aa02b720ed2350cb74a75`; it squash-merged as `f1bdc8bb75d4402513978d268b227991734bb50c`.
+- **Universal mechanic:** The immutable attack text supplies attachment eligibility, Advantage-qualified head control, Blinded, breath denial, source-only target lock and Advantage, source speed/movement linkage, 5-foot self-detachment, and the printed Strength check (Darkmantle DC 13; Cloaker DC 16). Shared Python/browser attachment, action economy, ability-check, breathing, movement, modifier, cleanup, and fresh-fight state own execution without monster-name runtime dispatch.
+- **327-card source scan:** **4 applicable / 3 Python-wired / 3 browser-wired / 1 routed exception**: Cloaker, Darkmantle, and Stirge are wired; Mimic remains explicitly routed to the existing grapple/restrained family. Owner-generated main is now **299/327 source-admitted, 28 blocked**: Darkmantle is clear; Cloaker's Bite attack obligation is clear but Cloaker retains the independent `source:extra-action` Phantasms obligation. This merge does not claim a separately certified real webpage fight; production Netlify remained locked.
+- **Next unresolved item:** Cloaker Phantasms (`source:extra-action`), preserving its printed AC/save/harmful-spell redirection and bright-light expiry rather than approximating it as ordinary Mirror Image.
+
 ## [x] 2014 Darkmantle Darkness Aura — universal source-following magical darkness (merged PR #1354)
 
 - **Merged evidence:** [PR #1354](https://github.com/cbw29512/D20-ironpit/pull/1354) passed CI, 2014 Basic Roster, 2014 Hero Certification, Paired Edition Monster Report, generated-artifact sync, and exact-final-head technical review on `ffcc45a30bd366c3f9b1f6cda91ccd867df38553`; it squash-merged as `bf0aba3762f92f971b02cac0f4415d03786d6092`.
 - **Universal mechanic:** Immutable source data declares the 15-foot source-centered magical-darkness radius, movement with its source, concentration up to 10 minutes, one daily use, and the printed level-2 light-spell dispel ceiling. Fresh fight-local Python/browser suppression-zone state owns position following, concentration, resource use, visibility and reset; the non-spell Action remains usable in Silence and logs the printed ability name without monster-name runtime dispatch.
 - **327-card source scan:** **1 applicable / 1 Python-wired / 1 browser-wired / 0 remaining / 0 exceptions**: Darkmantle. Generated main remains **298/327 source-admitted, 29 blocked** because Darkmantle retains the independent `attack:incomplete` Crush attachment obligation. This merge does not claim a separately certified real webpage fight; production Netlify remained locked.
-- **Next unresolved item:** Darkmantle Crush conditional attachment (`attack:incomplete`), then Cloaker Bite attachment and Phantasms.
+- **Historical next item at that merge:** Darkmantle Crush and Cloaker Bite were subsequently completed by merged PR #1356. Cloaker Phantasms remains the independent unresolved extra-action obligation.
 
 ## [x] 2014 bright-light contexts and Cloaker Light Sensitivity (merged PR #1095)
 
 - **Merged evidence:** [PR #1095](https://github.com/cbw29512/D20-ironpit/pull/1095) passed CI, 2014 Basic Roster, 2014 Hero Certification, Paired Edition Monster Report, generated-artifact sync, and exact-head technical review on `349db669c8fa2a0591585abd9dbcad23e3c3a26d`; it squash-merged as `e74692862c59b001af4d50469447d137d976fa0e`.
 - **Universal mechanic:** Immutable source data declares permanent emission or Action/Bonus Action light modes; fresh fight-local state owns the active mode and resets each encounter. Shared Python/browser action economy, owner-action expiry, context lookup, and roll modifiers resolve the printed behavior without monster-name or ability-name runtime dispatch.
 - **327-card source scan:** **8 applicable / 8 Python-wired / 8 browser-wired / 0 remaining / 0 exceptions**: Azer, Cloaker, Fire Elemental, Flameskull, Giant Fire Beetle, Magmin, Nightmare, and Will-o'-Wisp. Generated main remains **298/327 source-admitted, 29 blocked** because Cloaker retains independent Bite attachment/Phantasms obligations and Flameskull retains Spellcasting. This merge does not claim a separately certified real webpage fight; production Netlify remained locked.
-- **Next unresolved item:** Cloaker Bite attachment and Phantasms remain `attack:incomplete` / `source:extra-action`; Light Sensitivity is complete and must not remain active.
+- **Historical next item at that merge:** Cloaker Bite was subsequently completed by merged PR #1356. Phantasms remains `source:extra-action`; Light Sensitivity is complete and must not remain active.
 
 ## [x] 2014 Cloaker Moan — universal audible one-turn condition (merged PR #1351)
 
