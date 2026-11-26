@@ -73,8 +73,11 @@ def report() -> dict:
     cloaker = next(card for card in cards if card.id == "cloaker")
     exceptions = [{
         "monster": cloaker.id, "ability": "Phantasms",
-        "disposition": "incompatible distinct mechanic",
-        "reason": "also changes AC/saves and harmful-spell targeting; not equivalent to Mirror Image",
+        "disposition": "incompatible distinct mechanic; partial independent binding",
+        "reason": (
+            "uniform weapon-attack selection and source AC are wired independently; "
+            "harmful-spell save/attack targeting and bright-light activation/expiry remain"
+        ),
     }] if "Phantasms" in cloaker.source_actions else []
     return {
         "source_cards_scanned": len(cards), "applicable_card_count": len(applicable),

@@ -1,0 +1,87 @@
+from __future__ import annotations
+
+from app.combat.attacks import resolve_attack
+from app.combat.dice import FixedDiceProvider
+from app.combat.state import build_combatant_state
+from app.combat.timed_self_buffs import resolve_timed_self_buff
+from app.content.monster_definition_adapter_2014 import adapt_monster_mechanics_2014
+from app.content.monster_source_2014 import load_monster_source_2014
+from app.content.monster_source_phantasms_2014 import source_phantasms_action_2014
+from app.content.monsters import build_commoner
+from app.domain.encounters import EncounterCombatant
+from app.domain.combatants import ResourceDefinition
+
+
+def _cards():
+    cards = load_monster_source_2014()
+    assert len(cards) == 327
+    return cards
+
+
+def test_semantic_327_card_scan_binds_only_complete_printed_phantasms():
+    cards = _cards()
+    applicable = [card for card in cards if source_phantasms_action_2014(card)]
+    assert [(card.id, card.name) for card in applicable] == [("cloaker", "Cloaker")]
+    action, = source_phantasms_action_2014(applicable[0])
+    assert action.name == "Phantasms"
+    assert action.resource_id == "phantasms"
+    compiled = adapt_monster_mechanics_2014(applicable[0])
+    assert action in compiled.timed_self_buff_actions
+    assert ResourceDefinition(id="phantasms", name="Phantasms", max_uses=1) in compiled.resources
+    assert action.illusory_duplicate_defense.redirection_mode == "uniform_original_and_duplicates"
+    assert action.illusory_duplicate_defense.armor_class_mode == "source_armor_class"
+
+    renamed = applicable[0].model_copy(update={"id": "renamed-source", "name": "Unrelated Aberration"})
+    assert source_phantasms_action_2014(renamed) == [action]
+
+    altered = applicable[0].model_copy(update={
+        "source_actions": applicable[0].source_actions.replace(
+            "three illusory duplicates", "two illusory duplicates",
+        ),
+    })
+    assert source_phantasms_action_2014(altered) == []
+
+
+def test_phantasms_weapon_interception_uses_uniform_selection_and_source_ac():
+    cloaker_card = next(card for card in _cards() if card.id == "cloaker")
+    action, = source_phantasms_action_2014(cloaker_card)
+    cloaker_template = build_commoner().model_copy(update={
+        "id": "cloaker", "name": "Cloaker", "armor_class": 14,
+        "timed_self_buff_actions": [action],
+        "resources": [ResourceDefinition(id="phantasms", name="Phantasms", max_uses=1)],
+    })
+    cloaker = EncounterCombatant(
+        combatant_id="cloaker", side="monsters", position_ft=0,
+        state=build_combatant_state(cloaker_template),
+    )
+    hero = EncounterCombatant(
+        combatant_id="hero", side="heroes", position_ft=5,
+        state=build_combatant_state(build_commoner()),
+    )
+    resolve_timed_self_buff(1, 1, cloaker, action, affected_states=[cloaker.state])
+    assert cloaker.state.timed_effects[0].illusory_duplicates_remaining == 3
+
+    # d4=2 chooses a duplicate; the attack then hits the duplicate's printed AC 14.
+    event = resolve_attack(
+        2, 1, hero.state, cloaker.state, hero.state.template.weapon_attack,
+        5, FixedDiceProvider([2, 12]), actor_event_id="hero", target_event_id="cloaker",
+        affected_states=[hero.state, cloaker.state],
+    )
+    assert event.feature_id == "phantasms"
+    assert event.feature_roll.notation == "1d4"
+    assert event.target_ac == 14
+    assert event.hit is True
+    assert event.hp_before == event.hp_after == cloaker.state.current_hp
+    assert cloaker.state.timed_effects[0].illusory_duplicates_remaining == 2
+
+    hero.state.action_available = True
+    before = cloaker.state.current_hp
+    # d3=1 selects the original Cloaker, so the normal attack path deals damage.
+    original = resolve_attack(
+        3, 1, hero.state, cloaker.state, hero.state.template.weapon_attack,
+        5, FixedDiceProvider([1, 19, 4]), actor_event_id="hero", target_event_id="cloaker",
+        affected_states=[hero.state, cloaker.state],
+    )
+    assert original.feature_id != "phantasms"
+    assert cloaker.state.current_hp < before
+    assert cloaker.state.timed_effects[0].illusory_duplicates_remaining == 2

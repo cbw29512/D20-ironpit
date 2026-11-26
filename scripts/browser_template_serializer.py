@@ -1022,7 +1022,9 @@ def _timed_self_buff(action: Any) -> dict[str, Any]:
         defense = action.illusory_duplicate_defense
         row["illusoryDuplicateDefense"] = {
             "initialDuplicates": defense.initial_duplicates,
+            "redirectionMode": defense.redirection_mode,
             "redirectMinimumByDuplicates": list(defense.redirect_minimum_by_duplicates),
+            "armorClassMode": defense.armor_class_mode,
             "armorClassBase": defense.armor_class_base,
             "armorClassAbility": defense.armor_class_ability,
             "bypassAttackerSenses": list(defense.bypass_attacker_senses),

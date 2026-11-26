@@ -23,14 +23,19 @@
         if (!senses) throw new Error("Illusory duplicates require effective-senses runtime.");
         if ((rule.bypassAttackerSenses || []).some((sense) =>
           senses.effectiveSenseRangeFt(attacker, sense) >= distance)) return null;
+        const uniform = rule.redirectionMode === "uniform_original_and_duplicates";
+        const sides = uniform ? remaining + 1 : 20;
         const thresholds = rule.redirectMinimumByDuplicates || [];
-        if (remaining >= thresholds.length) throw new Error("Duplicate count exceeds its source threshold table.");
-        const result = window.IRON_PIT_DICE.roll(20);
-        const redirectionRoll = { notation: "1d20", rolls: [result], modifier: 0,
+        if (!uniform && remaining >= thresholds.length)
+          throw new Error("Duplicate count exceeds its source threshold table.");
+        const result = window.IRON_PIT_DICE.roll(sides);
+        const redirectionRoll = { notation: `1d${sides}`, rolls: [result], modifier: 0,
           selected_roll: result, mode: "normal", total: result };
-        if (result < thresholds[remaining]) return null;
+        if (uniform ? result === 1 : result < thresholds[remaining]) return null;
         return { effect, featureId: action.id, featureName: action.name, redirectionRoll,
-          targetAc: Number(rule.armorClassBase) + effectiveModifier(defender, rule.armorClassAbility) };
+          targetAc: rule.armorClassMode === "source_armor_class"
+            ? Number(defender.template.armor_class)
+            : Number(rule.armorClassBase) + effectiveModifier(defender, rule.armorClassAbility) };
       }
       return null;
     } catch (error) {

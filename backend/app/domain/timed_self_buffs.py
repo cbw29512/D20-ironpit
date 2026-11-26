@@ -37,10 +37,12 @@ class MeleeHitRetaliation(BaseModel):
 
 
 class IllusoryDuplicateDefense(BaseModel):
-    """Attack-only interception by a finite set of source-declared duplicates."""
+    """Interception by a finite set of source-declared illusory duplicates."""
 
     initial_duplicates: int = Field(default=3, ge=1, le=20)
+    redirection_mode: Literal["d20_threshold", "uniform_original_and_duplicates"] = "d20_threshold"
     redirect_minimum_by_duplicates: list[int] = Field(default_factory=lambda: [0, 11, 8, 6])
+    armor_class_mode: Literal["base_plus_ability", "source_armor_class"] = "base_plus_ability"
     armor_class_base: int = Field(default=10, ge=0, le=40)
     armor_class_ability: AbilityName = "dexterity"
     bypass_attacker_senses: list[Literal["blindsight", "truesight"]] = Field(
@@ -49,6 +51,8 @@ class IllusoryDuplicateDefense(BaseModel):
 
     @model_validator(mode="after")
     def validate_thresholds(self) -> "IllusoryDuplicateDefense":
+        if self.redirection_mode == "uniform_original_and_duplicates":
+            return self
         if len(self.redirect_minimum_by_duplicates) != self.initial_duplicates + 1:
             raise ValueError("Duplicate redirection thresholds must cover zero through the initial count.")
         if self.redirect_minimum_by_duplicates[0] != 0:
